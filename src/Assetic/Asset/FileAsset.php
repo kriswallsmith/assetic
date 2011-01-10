@@ -9,8 +9,6 @@ namespace Assetic\Asset;
  */
 class FileAsset extends Asset
 {
-    private $path;
-
     /**
      * Constructor.
      *
@@ -19,14 +17,6 @@ class FileAsset extends Asset
      */
     public function __construct($path, $filters = array())
     {
-        $this->path = $path;
-        parent::__construct(null, $filters);
-    }
-
-    /** @inheritDoc */
-    public function load()
-    {
-        $this->originalContent = file_get_contents($this->path);
-        parent::load();
+        parent::__construct(file_get_contents($path), $filters);
     }
 }

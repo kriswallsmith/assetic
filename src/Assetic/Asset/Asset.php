@@ -12,10 +12,11 @@ use Assetic\Filter\FilterInterface;
  */
 class Asset implements AssetInterface
 {
-    protected $originalContent;
-
     private $filters;
     private $content;
+    private $path;
+    private $originalContent;
+    private $originalPath;
 
     /**
      * Constructor.
@@ -50,6 +51,22 @@ class Asset implements AssetInterface
         $asset = clone $this;
         $this->filters->filterDump($asset);
         return $asset->getContent();
+    }
+
+    /** @inheritDoc */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /** @inheritDoc */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        if (null === $this->originalPath) {
+            $this->originalPath = $path;
+        }
     }
 
     /** @inheritDoc */

@@ -6,6 +6,12 @@ use Assetic\Filter\FilterCollection;
 
 class FilterCollectionTest extends \PHPUnit_Framework_TestCase
 {
+    public function testInterface()
+    {
+        $filter = new FilterCollection();
+        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'FilterCollection implements FilterInterface');
+    }
+
     public function testEnsure()
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');

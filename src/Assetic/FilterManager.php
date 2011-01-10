@@ -1,6 +1,8 @@
 <?php
 
-namespace Assetic\Filter;
+namespace Assetic;
+
+use Assetic\Filter\FilterInterface;
 
 /**
  * Manages the available filters.
