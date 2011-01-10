@@ -4,7 +4,6 @@ namespace Assetic\Test\Asset;
 
 use Assetic\Asset\Asset;
 use Assetic\Asset\AssetCollection;
-use Assetic\Asset\AssetInterface;
 use Assetic\Filter\CallablesFilter;
 
 class AssetCollectionTest extends \PHPUnit_Framework_TestCase
@@ -56,7 +55,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $count = 0;
         $matches = array();
-        $filter = new CallablesFilter(function(AssetInterface $asset) use ($content, & $matches, & $count)
+        $filter = new CallablesFilter(function($asset) use ($content, & $matches, & $count)
         {
             ++$count;
             if ($content == $asset->getContent()) {
@@ -70,6 +69,27 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, count($matches), '->load() applies filters to leaves');
         $this->assertEquals(1, $count, '->load() applies filters to leaves only');
+    }
+
+    /**
+     * @group functional
+     */
+    public function testMixedIteration()
+    {
+        $asset = new Asset('asset');
+        $nestedAsset = new Asset('nested');
+        $innerColl = new AssetCollection(array($nestedAsset));
+
+        $contents = array();
+        $filter = new CallablesFilter(function($asset) use(& $contents)
+        {
+            $contents[] = $asset->getContent();
+        });
+
+        $coll = new AssetCollection(array($asset, $innerColl), array($filter));
+        $coll->load();
+
+        $this->assertEquals(array('asset', 'nested'), $contents, '->load() iterates over multiple levels');
     }
 
     /**
