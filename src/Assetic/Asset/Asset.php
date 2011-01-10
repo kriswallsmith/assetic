@@ -15,6 +15,7 @@ class Asset implements AssetInterface
     private $filters;
     private $body;
     private $path;
+    private $context;
     private $originalBody;
 
     /**
@@ -74,5 +75,17 @@ class Asset implements AssetInterface
     public function setBody($body)
     {
         $this->body = $body;
+    }
+
+    /** @inheritDoc */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /** @inheritDoc */
+    public function setContext(AssetInterface $context = null)
+    {
+        $this->context = $context;
     }
 }

@@ -56,6 +56,16 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($body));
     }
 
+    public function getContext()
+    {
+        return $this->callAsset(__FUNCTION__);
+    }
+
+    public function setContext(AssetInterface $context = null)
+    {
+        $this->callAsset(__FUNCTION__, array($context));
+    }
+
     private function callAsset($method, $arguments = array())
     {
         return call_user_func_array(array($this->am->get($this->name), $method), $arguments);

@@ -16,6 +16,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     private $filters;
     private $path;
     private $body;
+    private $context;
 
     /**
      * Constructor.
@@ -55,7 +56,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         $parts = array();
         foreach (new \RecursiveIteratorIterator($this) as $asset) {
             $copy = clone $asset;
-            $copy->setPath($this->path);
+            $copy->setContext($this->context ?: $this);
             $copy->ensureFilter($this->filters);
             $copy->load();
 
@@ -72,7 +73,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         $parts = array();
         foreach (new \RecursiveIteratorIterator($this) as $asset) {
             $copy = clone $asset;
-            $copy->setPath($this->path);
+            $copy->setContext($this->context ?: $this);
             $copy->ensureFilter($this->filters);
 
             $parts[] = $copy->dump();
@@ -103,6 +104,18 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     public function setBody($body)
     {
         $this->body = $body;
+    }
+
+    /** @inheritDoc */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /** @inheritDoc */
+    public function setContext(AssetInterface $context = null)
+    {
+        $this->context = $context;
     }
 
     /** @inheritDoc */
