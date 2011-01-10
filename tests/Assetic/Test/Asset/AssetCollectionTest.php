@@ -19,14 +19,10 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadFilter()
     {
-        $asset = new Asset('');
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter->expects($this->once())->method('filterLoad');
 
-        $filter->expects($this->once())
-            ->method('filterLoad')
-            ->with($asset);
-
-        $coll = new AssetCollection(array($asset), array($filter));
+        $coll = new AssetCollection(array(new Asset('')), array($filter));
         $coll->load();
     }
 
@@ -35,14 +31,10 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testDumpFilter()
     {
-        $asset = new Asset('');
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter->expects($this->once())->method('filterDump');
 
-        $filter->expects($this->once())
-            ->method('filterDump')
-            ->with($asset);
-
-        $coll = new AssetCollection(array($asset), array($filter));
+        $coll = new AssetCollection(array(new Asset('')), array($filter));
         $coll->dump();
     }
 
