@@ -7,6 +7,10 @@
         </testsuite>
     </testsuites>
 
+    <php>
+        <!-- <server name="YUI_COMPRESSOR_PATH" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+    </php>
+
     <filter>
         <whitelist>
             <directory suffix=".php">./src/Assetic/</directory>
