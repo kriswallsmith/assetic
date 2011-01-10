@@ -16,7 +16,6 @@ class Asset implements AssetInterface
     private $content;
     private $path;
     private $originalContent;
-    private $originalPath;
 
     /**
      * Constructor.
@@ -63,10 +62,6 @@ class Asset implements AssetInterface
     public function setPath($path)
     {
         $this->path = $path;
-
-        if (null === $this->originalPath) {
-            $this->originalPath = $path;
-        }
     }
 
     /** @inheritDoc */

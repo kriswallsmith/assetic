@@ -49,7 +49,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     }
 
     /** @inheritDoc */
-    public function load($glue = "\n")
+    public function load()
     {
         // loop through leaves and load each asset
         $parts = array();
@@ -62,11 +62,11 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
             $parts[] = $copy->getContent();
         }
 
-        $this->content = implode($glue, $parts);
+        $this->content = implode("\n", $parts);
     }
 
     /** @inheritDoc */
-    public function dump($glue = "\n")
+    public function dump()
     {
         // loop through leaves and dump each asset
         $parts = array();
@@ -78,7 +78,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
             $parts[] = $copy->dump();
         }
 
-        return implode($glue, $parts);
+        return implode("\n", $parts);
     }
 
     /** @inheritDoc */

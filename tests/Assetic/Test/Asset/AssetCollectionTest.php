@@ -91,29 +91,4 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('asset', 'nested'), $contents, '->load() iterates over multiple levels');
     }
-
-    /**
-     * @dataProvider provideForLoadAssets
-     * @group functional
-     */
-    public function testLoadAssets($contents, $glue, $expected)
-    {
-        $assets = array();
-        foreach ($contents as $content) {
-            $assets[] = new Asset($content);
-        }
-
-        $coll = new AssetCollection($assets);
-        $coll->load($glue);
-
-        $this->assertEquals($expected, $coll->getContent(), '->load() merges the content of the assets');
-    }
-
-    public function provideForLoadAssets()
-    {
-        return array(
-            array(array('asdf1', 'asdf2'), ' ', 'asdf1 asdf2'),
-            array(array('foo1', 'foo2'), "\n", "foo1\nfoo2"),
-        );
-    }
 }
