@@ -12,7 +12,7 @@ use Assetic\Asset\AssetInterface;
 interface FilterInterface
 {
     /**
-     * Filters an asset after its contents have been loaded.
+     * Filters an asset after it has been loaded.
      */
     function filterLoad(AssetInterface $asset);
 

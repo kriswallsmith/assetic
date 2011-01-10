@@ -15,7 +15,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     private $assets = array();
     private $filters;
     private $path;
-    private $content;
+    private $body;
 
     /**
      * Constructor.
@@ -59,10 +59,10 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
             $copy->ensureFilter($this->filters);
             $copy->load();
 
-            $parts[] = $copy->getContent();
+            $parts[] = $copy->getBody();
         }
 
-        $this->content = implode("\n", $parts);
+        $this->body = implode("\n", $parts);
     }
 
     /** @inheritDoc */
@@ -94,15 +94,15 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     }
 
     /** @inheritDoc */
-    public function getContent()
+    public function getBody()
     {
-        return $this->content;
+        return $this->body;
     }
 
     /** @inheritDoc */
-    public function setContent($content)
+    public function setBody($body)
     {
-        $this->content = $content;
+        $this->body = $body;
     }
 
     /** @inheritDoc */

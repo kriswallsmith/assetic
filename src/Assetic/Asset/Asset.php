@@ -13,19 +13,19 @@ use Assetic\Filter\FilterInterface;
 class Asset implements AssetInterface
 {
     private $filters;
-    private $content;
+    private $body;
     private $path;
-    private $originalContent;
+    private $originalBody;
 
     /**
      * Constructor.
      *
-     * @param string $content The content of the asset
+     * @param string $body The body of the asset
      * @param array  $filters Filters for the asset
      */
-    public function __construct($content, $filters = array())
+    public function __construct($body, $filters = array())
     {
-        $this->originalContent = $content;
+        $this->originalBody = $body;
         $this->filters = new FilterCollection($filters);
     }
 
@@ -39,9 +39,9 @@ class Asset implements AssetInterface
     public function load()
     {
         $asset = clone $this;
-        $asset->setContent($this->originalContent);
+        $asset->setBody($this->originalBody);
         $this->filters->filterLoad($asset);
-        $this->setContent($asset->getContent());
+        $this->setBody($asset->getBody());
     }
 
     /** @inheritDoc */
@@ -49,7 +49,7 @@ class Asset implements AssetInterface
     {
         $asset = clone $this;
         $this->filters->filterDump($asset);
-        return $asset->getContent();
+        return $asset->getBody();
     }
 
     /** @inheritDoc */
@@ -65,14 +65,14 @@ class Asset implements AssetInterface
     }
 
     /** @inheritDoc */
-    public function getContent()
+    public function getBody()
     {
-        return $this->content;
+        return $this->body;
     }
 
     /** @inheritDoc */
-    public function setContent($content)
+    public function setBody($body)
     {
-        $this->content = $content;
+        $this->body = $body;
     }
 }

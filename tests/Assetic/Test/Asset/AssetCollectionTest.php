@@ -51,19 +51,19 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testNestedCollectionLoad()
     {
-        $content = 'foobar';
+        $body = 'foobar';
 
         $count = 0;
         $matches = array();
-        $filter = new CallablesFilter(function($asset) use ($content, & $matches, & $count)
+        $filter = new CallablesFilter(function($asset) use ($body, & $matches, & $count)
         {
             ++$count;
-            if ($content == $asset->getContent()) {
+            if ($body == $asset->getBody()) {
                 $matches[] = $asset;
             }
         });
 
-        $innerColl = new AssetCollection(array(new Asset($content)));
+        $innerColl = new AssetCollection(array(new Asset($body)));
         $outerColl = new AssetCollection(array($innerColl), array($filter));
         $outerColl->load();
 
@@ -80,15 +80,15 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $nestedAsset = new Asset('nested');
         $innerColl = new AssetCollection(array($nestedAsset));
 
-        $contents = array();
-        $filter = new CallablesFilter(function($asset) use(& $contents)
+        $bodys = array();
+        $filter = new CallablesFilter(function($asset) use(& $bodys)
         {
-            $contents[] = $asset->getContent();
+            $bodys[] = $asset->getBody();
         });
 
         $coll = new AssetCollection(array($asset, $innerColl), array($filter));
         $coll->load();
 
-        $this->assertEquals(array('asset', 'nested'), $contents, '->load() iterates over multiple levels');
+        $this->assertEquals(array('asset', 'nested'), $bodys, '->load() iterates over multiple levels');
     }
 }

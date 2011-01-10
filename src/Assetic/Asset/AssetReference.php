@@ -46,13 +46,13 @@ class AssetReference implements AssetInterface
         $this->am->get($this->name)->setPath($path);
     }
 
-    public function getContent()
+    public function getBody()
     {
-        return $this->am->get($this->name)->getContent();
+        return $this->am->get($this->name)->getBody();
     }
 
-    public function setContent($content)
+    public function setBody($body)
     {
-        $this->am->get($this->name)->setContent($content);
+        $this->am->get($this->name)->setBody($body);
     }
 }

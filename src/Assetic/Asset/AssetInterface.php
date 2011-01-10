@@ -5,7 +5,7 @@ namespace Assetic\Asset;
 use Assetic\Filter\Filterable;
 
 /**
- * An asset has a mutable path and content and can be loaded and dumped.
+ * An asset has a mutable path and body and can be loaded and dumped.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
@@ -40,16 +40,16 @@ interface AssetInterface extends Filterable
     function setPath($path);
 
     /**
-     * Returns the loaded content of the current asset.
+     * Returns the loaded body of the current asset.
      *
-     * @return string The content
+     * @return string The body
      */
-    function getContent();
+    function getBody();
 
     /**
-     * Sets the loaded content for the current asset.
+     * Sets the loaded body for the current asset.
      *
-     * @param string $content The content
+     * @param string $body The body
      */
-    function setContent($content);
+    function setBody($body);
 }
