@@ -23,36 +23,41 @@ class AssetReference implements AssetInterface
 
     public function ensureFilter(FilterInterface $filter)
     {
-        $this->am->get($this->name)->ensureFilter($filter);
+        $this->callAsset(__FUNCTION__, array($filter));
     }
 
     public function load()
     {
-        $this->am->get($this->name)->load();
+        return $this->callAsset(__FUNCTION__);
     }
 
     public function dump()
     {
-        return $this->am->get($this->name)->dump();
+        return $this->callAsset(__FUNCTION__);
     }
 
     public function getPath()
     {
-        return $this->am->get($this->name)->getPath();
+        return $this->callAsset(__FUNCTION__);
     }
 
     public function setPath($path)
     {
-        $this->am->get($this->name)->setPath($path);
+        $this->callAsset(__FUNCTION__, array($path));
     }
 
     public function getBody()
     {
-        return $this->am->get($this->name)->getBody();
+        return $this->callAsset(__FUNCTION__);
     }
 
     public function setBody($body)
     {
-        $this->am->get($this->name)->setBody($body);
+        $this->callAsset(__FUNCTION__, array($body));
+    }
+
+    private function callAsset($method, $arguments = array())
+    {
+        return call_user_func_array(array($this->am->get($this->name), $method), $arguments);
     }
 }
