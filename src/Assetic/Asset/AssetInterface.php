@@ -52,4 +52,18 @@ interface AssetInterface extends Filterable
      * @param string $body The body
      */
     function setBody($body);
+
+    /**
+     * Returns the context of the current asset.
+     *
+     * @return AssetInterface|null The current context, if any
+     */
+    function getContext();
+
+    /**
+     * Sets that the current asset is in the context of another asset.
+     *
+     * @param AssetInterface $context An asset
+     */
+    function setContext(AssetInterface $context = null);
 }
