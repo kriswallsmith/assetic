@@ -12,14 +12,17 @@ class GlobAsset extends AssetCollection
     /**
      * Constructor.
      *
-     * @param string $glob A glob path
+     * @param string|array $globs   A single glob path or array of paths
+     * @param array        $filters An array of filters
      */
-    public function __construct($glob, $filters = array())
+    public function __construct($globs, $filters = array())
     {
         $assets = array();
-        if (false !== $paths = glob($glob)) {
-            foreach ($paths as $path) {
-                $assets[] = new FileAsset($path);
+        foreach ((array) $globs as $glob) {
+            if (false !== $paths = glob($glob)) {
+                foreach ($paths as $path) {
+                    $assets[] = new FileAsset($path);
+                }
             }
         }
 
