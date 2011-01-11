@@ -5,6 +5,15 @@ namespace Assetic\Asset;
 use Assetic\AssetManager;
 use Assetic\Filter\FilterInterface;
 
+/*
+ * This file is part of the Assetic package.
+ *
+ * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /**
  * A reference to an asset in the asset manager.
  *
