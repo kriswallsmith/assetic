@@ -26,6 +26,18 @@ class FileAsset extends Asset
      */
     public function __construct($path, $filters = array())
     {
-        parent::__construct(file_get_contents($path), $filters);
+        parent::__construct(null, $filters);
+
+        $this->path = $path;
+    }
+
+    /** @inheritDoc */
+    public function load()
+    {
+        if (null === $this->originalBody) {
+            $this->originalBody = file_get_contents($this->path);
+        }
+
+        parent::load();
     }
 }
