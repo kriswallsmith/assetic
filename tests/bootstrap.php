@@ -19,3 +19,6 @@ spl_autoload_register(function($class)
         }
     }
 });
+
+// this will register the CodeSniffer autoloader if it's there
+@include_once 'PHP/CodeSniffer.php';

@@ -2,6 +2,7 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\Asset;
 use Assetic\Filter\CssRewriteFilter;
 
 /*
@@ -19,5 +20,55 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
     {
         $filter = new CssRewriteFilter();
         $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CssRewriteFilter implements FilterInterface');
+    }
+
+    /**
+     * @group functional
+     * @dataProvider provideUrls
+     */
+    public function testUrls($format, $source, $target, $inputUrl, $expectedUrl)
+    {
+        if (!class_exists('PHP_CodeSniffer_Tokenizers_CSS')) {
+            $this->markTestSkipped('CodeSniffer is not installed.');
+        }
+
+        $context = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $context->expects($this->once())
+            ->method('getUrl')
+            ->will($this->returnValue($target));
+
+        $asset = new Asset(sprintf($format, $inputUrl));
+        $asset->setUrl($source);
+        $asset->setContext($context);
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterDump($asset);
+
+        $this->assertEquals(sprintf($format, $expectedUrl), $asset->getBody(), '->filterDump() rewrites relative urls');
+    }
+
+    public function provideUrls()
+    {
+        return array(
+            // url variants
+            array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
+            array('body { background: url("%s"); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
+            array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
+
+            // @import variants
+            array('@import "%s";', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
+            array('@import url(%s);', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
+            array('@import url("%s");', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
+            array('@import url(\'%s\');', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
+
+            // path diffs
+            array('body { background: url(%s); }', 'css/body/bg.css', 'css/build/main.css', '../../images/bg.gif', '../../images/bg.gif'),
+            array('body { background: url(%s); }', 'http://foo.com/css/body/bg.css', 'http://bar.com/css/build/main.css', '../../images/bg.gif', 'http://foo.com/images/bg.gif'),
+
+            // url diffs
+            array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/bar.gif', 'http://foo.com/bar.gif'),
+            array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '/images/foo.gif', '/images/foo.gif'),
+        );
     }
 }

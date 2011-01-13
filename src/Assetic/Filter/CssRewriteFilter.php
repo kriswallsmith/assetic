@@ -26,5 +26,63 @@ class CssRewriteFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
+        if (!class_exists('PHP_CodeSniffer_Tokenizers_CSS')) {
+            throw new \Exception('The CssRewrite filter requires the PEAR PHP_CodeSniffer package.');
+        }
+
+        $context = $asset->getContext();
+        if (null === $context) {
+            return;
+        }
+
+        $source = $asset->getUrl();
+        $target = $context->getUrl();
+        if (null === $source || null === $target || $source == $target) {
+            return;
+        }
+
+        // todo: compute the difference in paths
+        $filter = function($url) use($source, $target)
+        {
+            return '../'.$url;
+        };
+
+        // tokenize and filter the asset body
+        $tokenizer = new \PHP_CodeSniffer_Tokenizers_CSS();
+        $tokens = $tokenizer->tokenizeString($asset->getBody());
+
+        // cleanup the php tags codesniffer adds
+        $tokens = array_slice($tokens, 1, -1);
+        $token = array_pop($tokens);
+        if (' ' != $token['content']) {
+            $token['content'] = substr($token['content'], 0, -1);
+            $tokens[] = $token;
+        }
+
+        $code = '';
+        $inUrl = $inImport = 0;
+        for ($i = 0; $i < count($tokens); $i++) {
+            $token = $tokens[$i];
+
+            if (T_URL == $token['code']) {
+                $token['content'] = $filter($token['content']);
+            } elseif (T_STRING == $token['code'] && 'url' == $token['content']) {
+                $inUrl = 1;
+            } elseif (T_STRING == $token['code'] && 'import' == $token['content'] && isset($tokens[$i - 1]) && T_ASPERAND == $tokens[$i - 1]['code']) {
+                $inImport = 1;
+            } elseif (T_OPEN_PARENTHESIS == $token['code'] && 1 == $inUrl) {
+                $inUrl = 2;
+            } elseif (T_CONSTANT_ENCAPSED_STRING == $token['code'] && (2 == $inUrl || 1 == $inImport)) {
+                $quote = $token['content'][0];
+                $url = $filter(substr($token['content'], 1, -1));
+                $token['content'] = $quote.$url.$quote;
+            } elseif (T_WHITESPACE != $token['code']) {
+                $inUrl = $inImport = 0;
+            }
+
+            $code .= $token['content'];
+        }
+
+        $asset->setBody($code);
     }
 }
