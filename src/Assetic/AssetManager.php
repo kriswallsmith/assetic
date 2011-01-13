@@ -3,6 +3,7 @@
 namespace Assetic;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Asset\AssetReference;
 use Assetic\Filter\Filterable;
 use Assetic\Filter\FilterCollection;
 use Assetic\Filter\FilterInterface;
@@ -56,6 +57,19 @@ class AssetManager implements Filterable
         }
 
         $asset = $this->assets[$name];
+
+        if ($asset instanceof AssetReference) {
+            // resolve the asset recursively, detect circular refs
+            $visited = array($asset);
+            while ($asset instanceof AssetReference) {
+                $asset = $asset->resolve();
+                if (in_array($asset, $visited, true)) {
+                    throw new \LogicException(sprintf('The "%s" asset is a circular reference.', $name));
+                }
+                $visited[] = $asset;
+            }
+        }
+
         $asset->ensureFilter($this->filters);
 
         return $asset;
