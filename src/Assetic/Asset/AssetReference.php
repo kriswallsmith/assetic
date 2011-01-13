@@ -30,6 +30,16 @@ class AssetReference implements AssetInterface
         $this->name = $name;
     }
 
+    /**
+     * Returns the referenced asset.
+     *
+     * @return AssetInterface The referenced asset
+     */
+    public function resolve()
+    {
+        return $this->am->get($this->name);
+    }
+
     public function ensureFilter(FilterInterface $filter)
     {
         $this->callAsset(__FUNCTION__, array($filter));
@@ -75,8 +85,10 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($context));
     }
 
+    // private
+
     private function callAsset($method, $arguments = array())
     {
-        return call_user_func_array(array($this->am->get($this->name), $method), $arguments);
+        return call_user_func_array(array($this->resolve(), $method), $arguments);
     }
 }
