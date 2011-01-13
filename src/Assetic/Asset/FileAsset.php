@@ -18,26 +18,24 @@ namespace Assetic\Asset;
  */
 class FileAsset extends Asset
 {
+    private $path;
+
     /**
      * Constructor.
      *
-     * @param string $path    The absolute file system path
+     * @param string $path    The absolute path to the asset
      * @param array  $filters Filters for the asset
      */
     public function __construct($path, $filters = array())
     {
-        parent::__construct(null, $filters);
-
         $this->path = $path;
+
+        parent::__construct(null, $filters);
     }
 
     /** @inheritDoc */
     public function load()
     {
-        if (null === $this->originalBody) {
-            $this->originalBody = file_get_contents($this->path);
-        }
-
-        parent::load();
+        $this->doLoad(file_get_contents($this->path));
     }
 }

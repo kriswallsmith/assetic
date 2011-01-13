@@ -20,4 +20,13 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__FILE__);
         $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
     }
+
+    public function testLazyLoading()
+    {
+        $asset = new FileAsset(__FILE__);
+        $this->assertEmpty($asset->getBody(), 'The asset body is empty before load');
+
+        $asset->load();
+        $this->assertNotEmpty($asset->getBody(), 'The asset body is not empty after load');
+    }
 }

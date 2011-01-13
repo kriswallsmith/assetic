@@ -48,8 +48,18 @@ class Asset implements AssetInterface
     /** @inheritDoc */
     public function load()
     {
+        $this->doLoad($this->originalBody);
+    }
+
+    /**
+     * Loads the body of the current asset.
+     *
+     * @param string $body The asset body
+     */
+    protected function doLoad($body)
+    {
         $asset = clone $this;
-        $asset->setBody($this->originalBody);
+        $asset->setBody($body);
         $this->filters->filterLoad($asset);
         $this->setBody($asset->getBody());
     }
