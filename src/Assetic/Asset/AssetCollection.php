@@ -23,7 +23,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
 {
     private $assets = array();
     private $filters;
-    private $path;
+    private $url;
     private $body;
     private $context;
 
@@ -92,15 +92,15 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     }
 
     /** @inheritDoc */
-    public function getPath()
+    public function getUrl()
     {
-        return $this->path;
+        return $this->url;
     }
 
     /** @inheritDoc */
-    public function setPath($path)
+    public function setUrl($url)
     {
-        $this->path = $path;
+        $this->url = $url;
     }
 
     /** @inheritDoc */

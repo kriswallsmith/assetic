@@ -55,14 +55,14 @@ class AssetReference implements AssetInterface
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function getPath()
+    public function getUrl()
     {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function setPath($path)
+    public function setUrl($url)
     {
-        $this->callAsset(__FUNCTION__, array($path));
+        $this->callAsset(__FUNCTION__, array($url));
     }
 
     public function getBody()

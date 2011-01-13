@@ -23,7 +23,7 @@ class Asset implements AssetInterface
 {
     private $filters;
     private $body;
-    private $path;
+    private $url;
     private $context;
     private $originalBody;
 
@@ -73,15 +73,15 @@ class Asset implements AssetInterface
     }
 
     /** @inheritDoc */
-    public function getPath()
+    public function getUrl()
     {
-        return $this->path;
+        return $this->url;
     }
 
     /** @inheritDoc */
-    public function setPath($path)
+    public function setUrl($url)
     {
-        $this->path = $path;
+        $this->url = $url;
     }
 
     /** @inheritDoc */

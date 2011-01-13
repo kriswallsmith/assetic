@@ -35,18 +35,18 @@ interface AssetInterface extends Filterable
     function dump();
 
     /**
-     * Returns the web path for the current asset.
+     * Returns the URL for the current asset.
      *
-     * @return string A web path
+     * @return string $url A URL for the current asset
      */
-    function getPath();
+    function getUrl();
 
     /**
-     * Sets the web path for the current asset.
+     * Sets the URL for the current asset.
      *
-     * @param string $path A web path
+     * @param string $url A URL for the current asset
      */
-    function setPath($path);
+    function setUrl($url);
 
     /**
      * Returns the loaded body of the current asset.
