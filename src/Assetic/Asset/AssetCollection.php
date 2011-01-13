@@ -59,33 +59,59 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     }
 
     /** @inheritDoc */
-    public function load()
+    public function load(FilterInterface $additionalFilter = null)
     {
+        $filter = clone $this->filters;
+        if ($additionalFilter) {
+            $filter->ensure($additionalFilter);
+        }
+
         // loop through leaves and load each asset
         $parts = array();
+        $visited = array();
         foreach (new \RecursiveIteratorIterator($this) as $asset) {
-            $copy = clone $asset;
-            $copy->setContext($this->context ?: $this);
-            $copy->ensureFilter($this->filters);
-            $copy->load();
+            if (!in_array($asset, $visited, true)) {
+                $visited[] = $asset;
 
-            $parts[] = $copy->getBody();
+                // snapshot
+                $context = $asset->getContext();
+                $asset->setContext($this->context ?: $this);
+
+                $asset->load($filter);
+                $parts[] = $asset->getBody();
+
+                // restore
+                $asset->setContext($context);
+            }
         }
 
         $this->body = implode("\n", $parts);
     }
 
     /** @inheritDoc */
-    public function dump()
+    public function dump(FilterInterface $additionalFilter = null)
     {
+        $filter = clone $this->filters;
+        if ($additionalFilter) {
+            $filter->ensure($additionalFilter);
+        }
+
         // loop through leaves and dump each asset
         $parts = array();
+        $visited = array();
         foreach (new \RecursiveIteratorIterator($this) as $asset) {
-            $copy = clone $asset;
-            $copy->setContext($this->context ?: $this);
-            $copy->ensureFilter($this->filters);
+            if (!in_array($asset, $visited, true)) {
+                $visited[] = $asset;
 
-            $parts[] = $copy->dump();
+                // snapshot
+                $context = $asset->getContext();
+                $asset->setContext($this->context ?: $this);
+
+                $parts[] = $asset->dump($filter);
+
+                // restore
+                $asset->setContext($context);
+            }
         }
 
         return implode("\n", $parts);
@@ -130,7 +156,9 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     /** @inheritDoc */
     public function current()
     {
-        return current($this->assets);
+        $asset = current($this->assets);
+
+        return $asset instanceof AssetReference ? $asset->resolve() : $asset;
     }
 
     /** @inheritDoc */

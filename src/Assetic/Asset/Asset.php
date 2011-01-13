@@ -46,29 +46,43 @@ class Asset implements AssetInterface
     }
 
     /** @inheritDoc */
-    public function load()
+    public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad($this->originalBody);
+        $this->doLoad($this->originalBody, $additionalFilter);
     }
 
     /**
      * Loads the body of the current asset.
      *
-     * @param string $body The asset body
+     * @param string          $body             The asset body
+     * @param FilterInterface $additionalFilter An additional filter
      */
-    protected function doLoad($body)
+    protected function doLoad($body, FilterInterface $additionalFilter = null)
     {
+        $filter = clone $this->filters;
+        if ($additionalFilter) {
+            $filter->ensure($additionalFilter);
+        }
+
         $asset = clone $this;
         $asset->setBody($body);
-        $this->filters->filterLoad($asset);
+
+        $filter->filterLoad($asset);
+
         $this->setBody($asset->getBody());
     }
 
     /** @inheritDoc */
-    public function dump()
+    public function dump(FilterInterface $additionalFilter = null)
     {
+        $filter = clone $this->filters;
+        if ($additionalFilter) {
+            $filter->ensure($additionalFilter);
+        }
+
         $asset = clone $this;
-        $this->filters->filterDump($asset);
+        $filter->filterDump($asset);
+
         return $asset->getBody();
     }
 

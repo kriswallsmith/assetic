@@ -3,6 +3,7 @@
 namespace Assetic\Asset;
 
 use Assetic\Filter\Filterable;
+use Assetic\Filter\FilterInterface;
 
 /*
  * This file is part of the Assetic package.
@@ -22,17 +23,21 @@ interface AssetInterface extends Filterable
 {
     /**
      * Loads the asset into memory and applies load filters.
+     *
+     * @param FilterInterface $additionalFilter An additional filter
      */
-    function load();
+    function load(FilterInterface $additionalFilter = null);
 
     /**
      * Applies dump filters and returns the asset as a string.
      *
      * Dumping an asset should not change its state.
      *
+     * @param FilterInterface $filter An additional filter
+     *
      * @return string The asset
      */
-    function dump();
+    function dump(FilterInterface $additionalFilter = null);
 
     /**
      * Returns the URL for the current asset.

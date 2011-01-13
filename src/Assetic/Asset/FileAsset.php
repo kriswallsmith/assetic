@@ -2,6 +2,8 @@
 
 namespace Assetic\Asset;
 
+use Assetic\Filter\FilterInterface;
+
 /*
  * This file is part of the Assetic package.
  *
@@ -34,8 +36,8 @@ class FileAsset extends Asset
     }
 
     /** @inheritDoc */
-    public function load()
+    public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad(file_get_contents($this->path));
+        $this->doLoad(file_get_contents($this->path), $additionalFilter);
     }
 }

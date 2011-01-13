@@ -92,4 +92,30 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('asset', 'nested'), $bodys, '->load() iterates over multiple levels');
     }
+
+    /**
+     * @group functional
+     */
+    public function testLoadDuplicates()
+    {
+        $asset = new Asset('asset');
+
+        $coll = new AssetCollection(array($asset, $asset));
+        $coll->load();
+
+        $this->assertEquals('asset', $coll->getBody(), '->load() detects duplicate assets');
+    }
+
+    /**
+     * @group functional
+     */
+    public function testDumpDuplicates()
+    {
+        $asset = new Asset('asset');
+
+        $coll = new AssetCollection(array($asset, $asset));
+        $coll->load();
+
+        $this->assertEquals('asset', $coll->dump(), '->dump() detects duplicate assets');
+    }
 }
