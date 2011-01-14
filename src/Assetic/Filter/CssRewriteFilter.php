@@ -20,16 +20,19 @@ use Assetic\Asset\AssetInterface;
  */
 class CssRewriteFilter implements FilterInterface
 {
+    private $tokenizer;
+
+    public function __construct(\PHP_CodeSniffer_Tokenizers_CSS $tokenizer)
+    {
+        $this->tokenizer = $tokenizer;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
 
     public function filterDump(AssetInterface $asset)
     {
-        if (!class_exists('PHP_CodeSniffer_Tokenizers_CSS')) {
-            throw new \Exception('The CssRewrite filter requires the PEAR PHP_CodeSniffer package.');
-        }
-
         $context = $asset->getContext();
         if (null === $context) {
             return;
@@ -41,15 +44,14 @@ class CssRewriteFilter implements FilterInterface
             return;
         }
 
-        // todo: compute the difference in paths
+        // todo: compute the difference in urls
         $filter = function($url) use($source, $target)
         {
             return '../'.$url;
         };
 
         // tokenize and filter the asset body
-        $tokenizer = new \PHP_CodeSniffer_Tokenizers_CSS();
-        $tokens = $tokenizer->tokenizeString($asset->getBody());
+        $tokens = $this->tokenizer->tokenizeString($asset->getBody());
 
         // cleanup the php tags codesniffer adds
         $tokens = array_slice($tokens, 1, -1);

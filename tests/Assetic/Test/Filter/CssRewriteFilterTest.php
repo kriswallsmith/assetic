@@ -16,9 +16,16 @@ use Assetic\Filter\CssRewriteFilter;
 
 class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        if (!class_exists('PHP_CodeSniffer_Tokenizers_CSS')) {
+            $this->markTestSkipped('CodeSniffer is not installed.');
+        }
+    }
+
     public function testInterface()
     {
-        $filter = new CssRewriteFilter();
+        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
         $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CssRewriteFilter implements FilterInterface');
     }
 
@@ -28,10 +35,6 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testUrls($format, $source, $target, $inputUrl, $expectedUrl)
     {
-        if (!class_exists('PHP_CodeSniffer_Tokenizers_CSS')) {
-            $this->markTestSkipped('CodeSniffer is not installed.');
-        }
-
         $context = $this->getMock('Assetic\\Asset\\AssetInterface');
         $context->expects($this->once())
             ->method('getUrl')
@@ -42,7 +45,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $asset->setContext($context);
         $asset->load();
 
-        $filter = new CssRewriteFilter();
+        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
         $filter->filterDump($asset);
 
         $this->assertEquals(sprintf($format, $expectedUrl), $asset->getBody(), '->filterDump() rewrites relative urls');
