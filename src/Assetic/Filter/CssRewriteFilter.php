@@ -44,10 +44,47 @@ class CssRewriteFilter implements FilterInterface
             return;
         }
 
-        // todo: compute the difference in urls
-        $filter = function($url) use($source, $target)
+        // learn how to get from the target back to the source
+        if (false !== strpos($source, '://')) {
+            // the source is absolute, this should be easy
+            $parts = parse_url($source);
+
+            $host = $parts['scheme'].'://'.$parts['host'];
+            $path = dirname($parts['path']).'/';
+        } else {
+            // assume source and target are on the same host
+            $host = '';
+
+            // pop entries off the target until it fits in the source
+            $path = '';
+            $targetDir = dirname($target);
+            while (0 !== strpos($source, $targetDir)) {
+                if (false !== $pos = strrpos($targetDir, '/')) {
+                    $targetDir = substr($targetDir, 0, $pos);
+                    $path .= '../';
+                } else {
+                    throw new \RuntimeException(sprintf('Unable to calculate relative path from "%s" to "%s"', $target, $source));
+                }
+            }
+            $path .= substr(dirname($source).'/', strlen($targetDir) + 1);
+        }
+
+        $filter = function($url) use($host, $path)
         {
-            return '../'.$url;
+            if (false !== strpos($url, '://')) {
+                // absolute
+                return $url;
+            } elseif ('/' == $url[0]) {
+                // root relative
+                return $host.$url;
+            } else {
+                // document relative
+                while (0 === strpos($url, '../') && 2 <= substr_count($path, '/')) {
+                    $path = substr($path, 0, strrpos(rtrim($path, '/'), '/') + 1);
+                    $url = substr($url, 3);
+                }
+                return $host.$path.$url;
+            }
         };
 
         // tokenize and filter the asset body
