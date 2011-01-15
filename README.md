@@ -37,11 +37,6 @@ The asset manager can also be used to reference assets to avoid duplication.
 
 ---
 
-Todo
-----
-
- * CssRewriteFilter to fix relative URLs in stylesheets
-
 Assetic is based on the Python [webassets][1] library (available on
 [GitHub][2]).
 
