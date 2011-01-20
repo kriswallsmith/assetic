@@ -22,15 +22,21 @@ class GlobAsset extends AssetCollection
      * Constructor.
      *
      * @param string|array $globs   A single glob path or array of paths
+     * @param string       $baseDir A base directory to use for determining each URL
      * @param array        $filters An array of filters
      */
-    public function __construct($globs, $filters = array())
+    public function __construct($globs, $baseDir = null, $filters = array())
     {
         $assets = array();
         foreach ((array) $globs as $glob) {
             if (false !== $paths = glob($glob)) {
                 foreach ($paths as $path) {
-                    $assets[] = new FileAsset($path);
+                    $assets[] = $asset = new FileAsset($path);
+
+                    // determine url based on the base filesystem directory
+                    if (null !== $baseDir && 0 === strpos($path, $baseDir)) {
+                        $asset->setUrl(substr($path, strlen($baseDir)));
+                    }
                 }
             }
         }
