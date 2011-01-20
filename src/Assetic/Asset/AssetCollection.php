@@ -68,21 +68,16 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
 
         // loop through leaves and load each asset
         $parts = array();
-        $visited = array();
-        foreach (new \RecursiveIteratorIterator($this) as $asset) {
-            if (!in_array($asset, $visited, true)) {
-                $visited[] = $asset;
+        foreach (new AssetCollectionIterator($this) as $asset) {
+            // snapshot
+            $context = $asset->getContext();
+            $asset->setContext($this->context ?: $this);
 
-                // snapshot
-                $context = $asset->getContext();
-                $asset->setContext($this->context ?: $this);
+            $asset->load($filter);
+            $parts[] = $asset->getBody();
 
-                $asset->load($filter);
-                $parts[] = $asset->getBody();
-
-                // restore
-                $asset->setContext($context);
-            }
+            // restore
+            $asset->setContext($context);
         }
 
         $this->body = implode("\n", $parts);
@@ -98,20 +93,15 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
 
         // loop through leaves and dump each asset
         $parts = array();
-        $visited = array();
-        foreach (new \RecursiveIteratorIterator($this) as $asset) {
-            if (!in_array($asset, $visited, true)) {
-                $visited[] = $asset;
+        foreach (new AssetCollectionIterator($this) as $asset) {
+            // snapshot
+            $context = $asset->getContext();
+            $asset->setContext($this->context ?: $this);
 
-                // snapshot
-                $context = $asset->getContext();
-                $asset->setContext($this->context ?: $this);
+            $parts[] = $asset->dump($filter);
 
-                $parts[] = $asset->dump($filter);
-
-                // restore
-                $asset->setContext($context);
-            }
+            // restore
+            $asset->setContext($context);
         }
 
         return implode("\n", $parts);
