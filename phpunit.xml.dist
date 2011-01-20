@@ -9,6 +9,7 @@
 
     <php>
         <!-- <server name="YUI_COMPRESSOR_PATH" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+        <!-- <server name="BUZZ_DIR" value="/path/to/buzz/lib" /> -->
     </php>
 
     <filter>
