@@ -24,6 +24,8 @@ interface AssetInterface extends Filterable
     /**
      * Loads the asset into memory and applies load filters.
      *
+     * You can optionally provide an additional filter to apply during load.
+     *
      * @param FilterInterface $additionalFilter An additional filter
      */
     function load(FilterInterface $additionalFilter = null);
@@ -31,6 +33,7 @@ interface AssetInterface extends Filterable
     /**
      * Applies dump filters and returns the asset as a string.
      *
+     * You can optionally provide an additional filter to apply during dump.
      * Dumping an asset should not change its state.
      *
      * @param FilterInterface $filter An additional filter
@@ -76,6 +79,9 @@ interface AssetInterface extends Filterable
 
     /**
      * Sets that the current asset is in the context of another asset.
+     *
+     * The context can be set to null to indicate the current asset is not
+     * in the context of any other asset.
      *
      * @param AssetInterface $context An asset
      */
