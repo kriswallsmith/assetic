@@ -9,6 +9,9 @@ Assetic is an asset management framework for PHP.
     // the merged code is returned when the asset is dumped
     echo $js->dump();
 
+Filters
+-------
+
 Filters can be applied to manipulate assets.
 
     $css = new AssetCollection(array(
@@ -22,6 +25,21 @@ Filters can be applied to manipulate assets.
     // this will echo CSS compiled by LESS and compressed by YUI
     echo $css->dump();
 
+The following filters are include in the core:
+
+ * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new
+   URL
+ * `GoogleClosureCompilerFiler`: compiles Javascript using the Google Closure
+   Compiler API
+ * `LessFilter`: parses LESS into CSS
+ * `SassFilter`: parses SASS into CSS
+ * `ScssFilter`: parses SCSS into CSS
+ * `YuiCompressorCssFilter`: compresses CSS using the YUI compressor
+ * `YuiCompressorJsFilter`: compresses Javascript using the YUI compressor
+
+Asset Manager
+-------------
+
 An asset manager is provided for organizing assets.
 
     $am = new AssetManager();
@@ -34,6 +52,9 @@ The asset manager can also be used to reference assets to avoid duplication.
         new AssetReference($am, 'jquery'),
         new FileAsset('/path/to/jquery.plugin.js'),
     )));
+
+Caching
+-------
 
 A simple caching mechanism is provided to avoid unnecessary work.
 
