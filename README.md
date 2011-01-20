@@ -35,6 +35,20 @@ The asset manager can also be used to reference assets to avoid duplication.
         new FileAsset('/path/to/jquery.plugin.js'),
     )));
 
+A simple caching mechanism is provided to avoid unnecessary work.
+
+    $yui = new YuiCompressorJsFilter('/path/to/yuicompressor.jar');
+    $js = new AssetCache(
+        new FileAsset('/path/to/some.js', 'js/some.js', array($yui)),
+        new FilesystemCache('/path/to/cache')
+    );
+
+    // filtering will only happen the first time each method is called
+    $js->load();
+    $js->load();
+    $js->dump();
+    $js->dump();
+
 ---
 
 Assetic is based on the Python [webassets][1] library (available on
