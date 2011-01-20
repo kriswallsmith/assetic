@@ -26,13 +26,14 @@ class FileAsset extends Asset
      * Constructor.
      *
      * @param string $path    The absolute path to the asset
+     * @param string $url     The asset URL
      * @param array  $filters Filters for the asset
      */
-    public function __construct($path, $filters = array())
+    public function __construct($path, $url = null, $filters = array())
     {
         $this->path = $path;
 
-        parent::__construct(null, $filters);
+        parent::__construct(null, $url, $filters);
     }
 
     /** @inheritDoc */

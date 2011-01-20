@@ -12,7 +12,7 @@ Assetic is an asset management framework for PHP.
 Filters can be applied to manipulate assets.
 
     $css = new AssetCollection(array(
-        new FileAsset('/path/to/styles.less', array(new LessFilter()),
+        new FileAsset('/path/to/src/styles.less', 'css/compiled.css', array(new LessFilter()),
         new GlobAsset('/path/to/css/*'),
     ), array(
         new YuiCompressorCssFilter('/path/to/yuicompressor.jar'),

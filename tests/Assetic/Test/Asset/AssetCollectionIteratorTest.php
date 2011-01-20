@@ -13,12 +13,9 @@ class AssetCollectionIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteration()
     {
-        $asset1 = new Asset('asset1');
-        $asset1->setUrl('foo.bar');
-        $asset2 = new Asset('asset2');
-        $asset2->setUrl('foo.bar');
-        $asset3 = new Asset('asset3');
-        $asset3->setUrl('foo.bar.baz');
+        $asset1 = new Asset('asset1', 'foo.bar');
+        $asset2 = new Asset('asset2', 'foo.bar');
+        $asset3 = new Asset('asset3', 'foo.bar.baz');
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
         $it = new AssetCollectionIterator($coll);

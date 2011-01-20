@@ -30,12 +30,14 @@ class Asset implements AssetInterface
     /**
      * Constructor.
      *
-     * @param string $body The body of the asset
+     * @param string $body    The body of the asset
+     * @param string $url     The asset URL
      * @param array  $filters Filters for the asset
      */
-    public function __construct($body, $filters = array())
+    public function __construct($body, $url = null, $filters = array())
     {
         $this->originalBody = $body;
+        $this->url = $url;
         $this->filters = new FilterCollection($filters);
     }
 

@@ -40,8 +40,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             ->method('getUrl')
             ->will($this->returnValue($target));
 
-        $asset = new Asset(sprintf($format, $inputUrl));
-        $asset->setUrl($source);
+        $asset = new Asset(sprintf($format, $inputUrl), $source);
         $asset->setContext($context);
         $asset->load();
 

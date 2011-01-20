@@ -98,9 +98,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadDuplicates()
     {
-        $asset = new Asset('asset');
-        $asset->setUrl('foo.bar');
-
+        $asset = new Asset('asset', 'foo.bar');
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 
@@ -112,9 +110,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testDumpDuplicates()
     {
-        $asset = new Asset('asset');
-        $asset->setUrl('foo.bar');
-
+        $asset = new Asset('asset', 'foo.bar');
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 

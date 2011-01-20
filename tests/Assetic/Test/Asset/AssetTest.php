@@ -26,7 +26,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())->method('filterLoad');
 
-        $asset = new Asset('foo', array($filter));
+        $asset = new Asset('foo', null, array($filter));
         $asset->load();
     }
 }
