@@ -24,4 +24,11 @@ interface Filterable
      * @param FilterInterface $filter A filter
      */
     function ensureFilter(FilterInterface $filter);
+
+    /**
+     * Returns an array of filters currently applied.
+     *
+     * @return array An array of filters
+     */
+    function getFilters();
 }

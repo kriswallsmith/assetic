@@ -41,6 +41,12 @@ class AssetManager implements Filterable
         $this->filters->ensure($filter);
     }
 
+    /** @inheritDoc */
+    public function getFilters()
+    {
+        return $this->filters->all();
+    }
+
     /**
      * Gets an asset by name.
      *

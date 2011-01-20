@@ -45,6 +45,11 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($filter));
     }
 
+    public function getFilters()
+    {
+        $this->callAsset(__FUNCTION__);
+    }
+
     public function load(FilterInterface $additionalFilter = null)
     {
         return $this->callAsset(__FUNCTION__, array($additionalFilter));

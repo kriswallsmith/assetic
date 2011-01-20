@@ -59,6 +59,12 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     }
 
     /** @inheritDoc */
+    public function getFilters()
+    {
+        return $this->filters->all();
+    }
+
+    /** @inheritDoc */
     public function load(FilterInterface $additionalFilter = null)
     {
         $filter = clone $this->filters;

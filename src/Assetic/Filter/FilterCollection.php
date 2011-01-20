@@ -46,6 +46,11 @@ class FilterCollection implements FilterInterface, \IteratorAggregate
         }
     }
 
+    public function all()
+    {
+        return $this->filters;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         foreach ($this->filters as $filter) {

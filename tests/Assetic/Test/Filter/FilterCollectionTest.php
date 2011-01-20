@@ -33,4 +33,20 @@ class FilterCollectionTest extends \PHPUnit_Framework_TestCase
         $coll->ensure($filter);
         $coll->filterLoad($asset);
     }
+
+    public function testAll()
+    {
+        $filter = new FilterCollection(array(
+            $this->getMock('Assetic\\Filter\\FilterInterface'),
+            $this->getMock('Assetic\\Filter\\FilterInterface'),
+        ));
+
+        $this->assertInternalType('array', $filter->all(), '->all() returns an array');
+    }
+
+    public function testEmptyAll()
+    {
+        $filter = new FilterCollection();
+        $this->assertInternalType('array', $filter->all(), '->all() returns an array');
+    }
 }

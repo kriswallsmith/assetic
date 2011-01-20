@@ -48,6 +48,12 @@ class Asset implements AssetInterface
     }
 
     /** @inheritDoc */
+    public function getFilters()
+    {
+        return $this->filters->all();
+    }
+
+    /** @inheritDoc */
     public function load(FilterInterface $additionalFilter = null)
     {
         $this->doLoad($this->originalBody, $additionalFilter);
