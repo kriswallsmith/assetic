@@ -35,4 +35,9 @@ class FilterManager
 
         return $this->filters[$alias];
     }
+
+    public function all()
+    {
+        return $this->filters;
+    }
 }

@@ -62,4 +62,14 @@ class AssetManager
     {
         $this->assets[$name] = $asset;
     }
+
+    /**
+     * Returns all assets.
+     *
+     * @return array An array of assets
+     */
+    public function all()
+    {
+        return $this->assets;
+    }
 }
