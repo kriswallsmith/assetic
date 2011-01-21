@@ -4,9 +4,6 @@ namespace Assetic;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Asset\AssetReference;
-use Assetic\Filter\Filterable;
-use Assetic\Filter\FilterCollection;
-use Assetic\Filter\FilterInterface;
 
 /*
  * This file is part of the Assetic package.
@@ -20,32 +17,11 @@ use Assetic\Filter\FilterInterface;
 /**
  * Manages assets.
  *
- * Filters applied to the asset manager will be applied to all assets it
- * manages.
- *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class AssetManager implements Filterable
+class AssetManager
 {
-    private $filters;
     private $assets = array();
-
-    public function __construct()
-    {
-        $this->filters = new FilterCollection();
-    }
-
-    /** @inheritDoc */
-    public function ensureFilter(FilterInterface $filter)
-    {
-        $this->filters->ensure($filter);
-    }
-
-    /** @inheritDoc */
-    public function getFilters()
-    {
-        return $this->filters->all();
-    }
 
     /**
      * Gets an asset by name.
@@ -75,8 +51,6 @@ class AssetManager implements Filterable
                 $visited[] = $asset;
             }
         }
-
-        $asset->ensureFilter($this->filters);
 
         return $asset;
     }
