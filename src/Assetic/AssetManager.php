@@ -3,7 +3,6 @@
 namespace Assetic;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Asset\AssetReference;
 
 /*
  * This file is part of the Assetic package.
@@ -38,21 +37,7 @@ class AssetManager
             throw new \InvalidArgumentException(sprintf('There is no "%s" asset.', $name));
         }
 
-        $asset = $this->assets[$name];
-
-        if ($asset instanceof AssetReference) {
-            // resolve the asset recursively, detect circular refs
-            $visited = array($asset);
-            while ($asset instanceof AssetReference) {
-                $asset = $asset->resolve();
-                if (in_array($asset, $visited, true)) {
-                    throw new \LogicException(sprintf('The "%s" asset is a circular reference.', $name));
-                }
-                $visited[] = $asset;
-            }
-        }
-
-        return $asset;
+        return $this->assets[$name];
     }
 
     /**
