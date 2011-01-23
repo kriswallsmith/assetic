@@ -21,14 +21,14 @@ use Assetic\Filter\FilterInterface;
  */
 abstract class BaseYuiCompressorFilter implements FilterInterface
 {
-    private $yuiCompressorPath;
+    private $jarPath;
     private $javaPath;
     private $charset = 'utf-8';
     private $lineBreak;
 
-    public function __construct($yuiCompressorPath, $javaPath = '/usr/bin/java')
+    public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
-        $this->yuiCompressorPath = $yuiCompressorPath;
+        $this->jarPath = $jarPath;
         $this->javaPath = $javaPath;
     }
 
@@ -61,7 +61,7 @@ abstract class BaseYuiCompressorFilter implements FilterInterface
         $options = array_merge(array(
             $this->javaPath,
             '-jar',
-            $this->yuiCompressorPath,
+            $this->jarPath,
             '--type',
             $type,
         ), $options);
