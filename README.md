@@ -25,17 +25,16 @@ Filters can be applied to manipulate assets.
     // this will echo CSS compiled by LESS and compressed by YUI
     echo $css->dump();
 
-The following filters are include in the core:
+The core provides the following filters in the `Assetic\Filter` namespace:
 
- * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new
-   URL
- * `GoogleClosureCompilerFiler`: compiles Javascript using the Google Closure
-   Compiler API
+ * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
+ * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
+ * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
  * `LessFilter`: parses LESS into CSS
- * `SassFilter`: parses SASS into CSS
- * `ScssFilter`: parses SCSS into CSS
- * `YuiCompressorCssFilter`: compresses CSS using the YUI compressor
- * `YuiCompressorJsFilter`: compresses Javascript using the YUI compressor
+ * `Sass\SassFilter`: parses SASS into CSS
+ * `Sass\ScssFilter`: parses SCSS into CSS
+ * `Yui\YuiCompressorCssFilter`: compresses CSS using the YUI compressor
+ * `Yui\YuiCompressorJsFilter`: compresses Javascript using the YUI compressor
 
 Asset Manager
 -------------
