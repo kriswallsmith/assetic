@@ -19,7 +19,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseYuiCompressorFilter implements FilterInterface
+abstract class BaseCompressorFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;

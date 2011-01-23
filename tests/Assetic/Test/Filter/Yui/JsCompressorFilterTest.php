@@ -3,7 +3,7 @@
 namespace Assetic\Test\Filter\Yui;
 
 use Assetic\Asset\Asset;
-use Assetic\Filter\Yui\YuiCompressorJsFilter;
+use Assetic\Filter\Yui\JsCompressorFilter;
 
 /*
  * This file is part of the Assetic package.
@@ -14,12 +14,12 @@ use Assetic\Filter\Yui\YuiCompressorJsFilter;
  * file that was distributed with this source code.
  */
 
-class YuiCompressorJsFilterTest extends \PHPUnit_Framework_TestCase
+class JsCompressorFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testInterface()
     {
-        $filter = new YuiCompressorJsFilter('/path/to/jar');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'YuiCompressorJsFilter implements FilterInterface');
+        $filter = new JsCompressorFilter('/path/to/jar');
+        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'JsCompressorFilter implements FilterInterface');
     }
 
     /**
@@ -54,7 +54,7 @@ JAVASCRIPT;
         $asset = new Asset($source);
         $asset->load();
 
-        $filter = new YuiCompressorJsFilter($_SERVER['YUI_COMPRESSOR_PATH']);
+        $filter = new JsCompressorFilter($_SERVER['YUI_COMPRESSOR_PATH']);
         $filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getBody(), '->filterDump()');

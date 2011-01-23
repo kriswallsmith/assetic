@@ -18,7 +18,7 @@ Filters can be applied to manipulate assets.
         new FileAsset('/path/to/src/styles.less', 'css/compiled.css', array(new LessFilter()),
         new GlobAsset('/path/to/css/*'),
     ), array(
-        new YuiCompressorCssFilter('/path/to/yuicompressor.jar'),
+        new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'),
     ));
     $css->load();
 
@@ -33,8 +33,8 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `LessFilter`: parses LESS into CSS
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
- * `Yui\YuiCompressorCssFilter`: compresses CSS using the YUI compressor
- * `Yui\YuiCompressorJsFilter`: compresses Javascript using the YUI compressor
+ * `Yui\CssCompressorFilter`: compresses CSS using the YUI compressor
+ * `Yui\JsCompressorFilter`: compresses Javascript using the YUI compressor
 
 Asset Manager
 -------------
@@ -57,7 +57,7 @@ Caching
 
 A simple caching mechanism is provided to avoid unnecessary work.
 
-    $yui = new YuiCompressorJsFilter('/path/to/yuicompressor.jar');
+    $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
     $js = new AssetCache(
         new FileAsset('/path/to/some.js', 'js/some.js', array($yui)),
         new FilesystemCache('/path/to/cache')

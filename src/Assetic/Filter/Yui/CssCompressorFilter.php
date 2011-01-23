@@ -18,7 +18,7 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class YuiCompressorCssFilter extends BaseYuiCompressorFilter
+class CssCompressorFilter extends BaseCompressorFilter
 {
     public function filterDump(AssetInterface $asset)
     {

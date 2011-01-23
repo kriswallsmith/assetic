@@ -3,7 +3,7 @@
 namespace Assetic\Test\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\Yui\BaseYuiCompressorFilter;
+use Assetic\Filter\Yui\BaseCompressorFilter;
 
 /*
  * This file is part of the Assetic package.
@@ -14,16 +14,16 @@ use Assetic\Filter\Yui\BaseYuiCompressorFilter;
  * file that was distributed with this source code.
  */
 
-class BaseYuiCompressorFilterTest extends \PHPUnit_Framework_TestCase
+class BaseCompressorFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testInterface()
     {
         $filter = new YuiCompressorFilterForTest('/path/to/jar');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'BaseYuiCompressorFilter implements FilterInterface');
+        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'BaseCompressorFilter implements FilterInterface');
     }
 }
 
-class YuiCompressorFilterForTest extends BaseYuiCompressorFilter
+class YuiCompressorFilterForTest extends BaseCompressorFilter
 {
     public function filterDump(AssetInterface $asset)
     {

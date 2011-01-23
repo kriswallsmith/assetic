@@ -18,7 +18,7 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class YuiCompressorJsFilter extends BaseYuiCompressorFilter
+class JsCompressorFilter extends BaseCompressorFilter
 {
     private $nomunge;
     private $preserveSemi;

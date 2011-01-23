@@ -2,7 +2,7 @@
 
 namespace Assetic\Test\Filter\Yui;
 
-use Assetic\Filter\Yui\YuiCompressorCssFilter;
+use Assetic\Filter\Yui\CssCompressorFilter;
 
 /*
  * This file is part of the Assetic package.
@@ -13,11 +13,11 @@ use Assetic\Filter\Yui\YuiCompressorCssFilter;
  * file that was distributed with this source code.
  */
 
-class YuiCompressorCssFilterTest extends \PHPUnit_Framework_TestCase
+class CssCompressorFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testInterface()
     {
-        $filter = new YuiCompressorCssFilter('/path/to/jar');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'YuiCompressorCssFilter implements FilterInterface');
+        $filter = new CssCompressorFilter('/path/to/jar');
+        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CssCompressorFilter implements FilterInterface');
     }
 }
