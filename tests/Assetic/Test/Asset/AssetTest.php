@@ -29,4 +29,13 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $asset = new Asset('foo', null, array($filter));
         $asset->load();
     }
+
+    public function testAutomaticLoad()
+    {
+        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter->expects($this->once())->method('filterLoad');
+
+        $asset = new Asset('foo', null, array($filter));
+        $asset->dump();
+    }
 }

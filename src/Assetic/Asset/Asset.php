@@ -21,6 +21,7 @@ use Assetic\Filter\FilterInterface;
  */
 class Asset implements AssetInterface
 {
+    private $loaded;
     private $filters;
     private $body;
     private $url;
@@ -78,11 +79,16 @@ class Asset implements AssetInterface
         $filter->filterLoad($asset);
 
         $this->setBody($asset->getBody());
+        $this->loaded = true;
     }
 
     /** @inheritDoc */
     public function dump(FilterInterface $additionalFilter = null)
     {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
         $filter = clone $this->filters;
         if ($additionalFilter) {
             $filter->ensure($additionalFilter);
