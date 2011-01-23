@@ -3,8 +3,6 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
-use Buzz\Browser;
-use Buzz\Message\Request;
 
 /*
  * This file is part of the Assetic package.
@@ -22,13 +20,6 @@ use Buzz\Message\Request;
  */
 class CompilerApiFilter extends BaseCompilerFilter
 {
-    private $browser;
-
-    public function __construct(Browser $browser)
-    {
-        $this->browser = $browser;
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $query = array(
@@ -65,12 +56,14 @@ class CompilerApiFilter extends BaseCompilerFilter
             $query['warning_level'] = $this->warningLevel;
         }
 
-        $request = new Request('POST', '/compile', 'http://closure-compiler.appspot.com');
-        $request->addHeader('Content-Type: application/x-www-form-urlencoded');
-        $request->setContent(http_build_query($query));
+        $context = stream_context_create(array('http' => array(
+            'method'  => 'POST',
+            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+            'content' => http_build_query($query),
+        )));
 
-        $response = $this->browser->send($request);
-        $data = json_decode($response->getContent());
+        $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
+        $data = json_decode($response);
 
         if (isset($data->serverErrors) && 0 < count($data->serverErrors)) {
             throw new \RuntimeException(sprintf('The Google Closure Compiler API threw some server errors: '.print_r($data->serverErrors, true)));

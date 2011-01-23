@@ -4,7 +4,6 @@ namespace Assetic\Test\Filter\GoogleClosure;
 
 use Assetic\Asset\Asset;
 use Assetic\Filter\GoogleClosure\CompilerApiFilter;
-use Buzz\Browser;
 
 /*
  * This file is part of the Assetic package.
@@ -17,13 +16,6 @@ use Buzz\Browser;
 
 class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('Buzz\\Browser')) {
-            $this->markTestSkipped('Buzz is not available.');
-        }
-    }
-
     /**
      * @group functional
      */

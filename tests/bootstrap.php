@@ -17,12 +17,6 @@ spl_autoload_register(function($class)
             require_once $file;
             return true;
         }
-    } elseif (isset($_SERVER['BUZZ_DIR']) && 0 === strpos($class, 'Buzz\\')) {
-        $file = $_SERVER['BUZZ_DIR'] . '/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) {
-            require_once $file;
-            return true;
-        }
     }
 });
 
