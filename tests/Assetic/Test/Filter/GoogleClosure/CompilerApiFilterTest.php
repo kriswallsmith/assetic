@@ -1,9 +1,9 @@
 <?php
 
-namespace Assetic\Test\Filter;
+namespace Assetic\Test\Filter\GoogleClosure;
 
 use Assetic\Asset\Asset;
-use Assetic\Filter\GoogleClosureCompilerFilter;
+use Assetic\Filter\GoogleClosure\CompilerApiFilter;
 use Buzz\Browser;
 
 /*
@@ -15,7 +15,7 @@ use Buzz\Browser;
  * file that was distributed with this source code.
  */
 
-class GoogleClosureCompilerFilterTest extends \PHPUnit_Framework_TestCase
+class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -43,7 +43,7 @@ EOF;
         $asset = new Asset($input);
         $asset->load();
 
-        $filter = new GoogleClosureCompilerFilter(new Browser());
+        $filter = new CompilerApiFilter(new Browser());
         $filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getBody());

@@ -3,6 +3,7 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Filter\FilterInterface;
 
 /*
  * This file is part of the Assetic package.
