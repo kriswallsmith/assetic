@@ -4,9 +4,8 @@ Assetic is an asset management framework for PHP.
         new GlobAsset('/path/to/js/*'),
         new FileAsset('/path/to/another.js'),
     ));
-    $js->load();
 
-    // the merged code is returned when the asset is dumped
+    // the code is merged when the asset is dumped
     echo $js->dump();
 
 Filters
@@ -20,7 +19,6 @@ Filters can be applied to manipulate assets.
     ), array(
         new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'),
     ));
-    $css->load();
 
     // this will echo CSS compiled by LESS and compressed by YUI
     echo $css->dump();
@@ -62,7 +60,6 @@ A simple caching mechanism is provided to avoid unnecessary work.
         new FileAsset('/path/to/some.js', 'js/some.js', array($yui)),
         new FilesystemCache('/path/to/cache')
     );
-    $js->load();
 
     // the YUI compressor will only run on the first call
     $js->dump();
