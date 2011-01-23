@@ -71,6 +71,11 @@ class CompilerJarFilter extends BaseCompilerFilter
             $options[] = '--manage_closure_dependencies';
         }
 
+        if (null !== $this->warningLevel) {
+            $options[] = '--warning_level';
+            $options[] = $this->warningLevel;
+        }
+
         $options[] = '--js';
         $options[] = $cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
         file_put_contents($input, $asset->getBody());

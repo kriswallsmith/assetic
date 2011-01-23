@@ -61,6 +61,10 @@ class CompilerApiFilter extends BaseCompilerFilter
             $query['use_closure_library'] = $this->useClosureLibrary ? 'true' : 'false';
         }
 
+        if (null !== $this->warningLevel) {
+            $query['warning_level'] = $this->warningLevel;
+        }
+
         $request = new Request('POST', '/compile', 'http://closure-compiler.appspot.com');
         $request->addHeader('Content-Type: application/x-www-form-urlencoded');
         $request->setContent(http_build_query($query));
