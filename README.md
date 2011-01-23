@@ -62,10 +62,10 @@ A simple caching mechanism is provided to avoid unnecessary work.
         new FileAsset('/path/to/some.js', 'js/some.js', array($yui)),
         new FilesystemCache('/path/to/cache')
     );
+    $js->load();
 
-    // filtering will only happen the first time each method is called
-    $js->load();
-    $js->load();
+    // the YUI compressor will only run on the first call
+    $js->dump();
     $js->dump();
     $js->dump();
 
