@@ -65,6 +65,8 @@ class AssetFactory
      * @param string $url         An URL for the asset
      *
      * @return AssetInterface An asset
+     *
+     * @todo support nested collections with their own filters
      */
     public function createAsset($assetUrls = array(), $filterNames = array(), $url = null)
     {
