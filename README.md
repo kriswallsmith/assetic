@@ -50,6 +50,22 @@ The asset manager can also be used to reference assets to avoid duplication.
         new FileAsset('/path/to/jquery.plugin.js'),
     )));
 
+Asset Factory
+-------------
+
+If you'd rather not create all these objects by hand, you can use the asset
+factory, which will do most of the work for you.
+
+    $factory = new AssetFactory('/path/to/web', $am, $fm);
+    $asset = $factory->createAsset(array(
+        '@reset',         // load the asset manager's "reset" asset
+        'css/src/*.scss', // load everything in the core directory
+        'css/foo.scss',   // load a single file
+    ), array(
+        'scss',           // filter through the filter manager's "scss" filter
+        '?yui_css',       // use the filter manager's "yui_css" filter, if available
+    ), 'css');
+
 Caching
 -------
 
