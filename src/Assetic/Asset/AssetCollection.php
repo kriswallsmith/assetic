@@ -152,9 +152,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     /** @inheritDoc */
     public function current()
     {
-        $asset = current($this->assets);
-
-        return $asset instanceof AssetReference ? $asset->resolve() : $asset;
+        return current($this->assets);
     }
 
     /** @inheritDoc */
