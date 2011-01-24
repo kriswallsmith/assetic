@@ -3,6 +3,7 @@
 namespace Assetic;
 
 use Assetic\Filter\FilterInterface;
+use Assetic\Filter\NoopFilter;
 
 /*
  * This file is part of the Assetic package.
@@ -22,18 +23,25 @@ class FilterManager
 {
     private $filters = array();
 
+    public function __construct()
+    {
+        $this->filters['_noop'] = new NoopFilter();
+    }
+
     public function set($alias, FilterInterface $filter)
     {
         $this->filters[$alias] = $filter;
     }
 
-    public function get($alias)
+    public function get($alias, $throwException = true)
     {
-        if (!isset($this->filters[$alias])) {
+        if (isset($this->filters[$alias])) {
+            return $this->filters[$alias];
+        } elseif (!$throwException) {
+            return $this->filters['_noop'];
+        } else {
             throw new \InvalidArgumentException(sprintf('There is no "%s" filter.', $alias));
         }
-
-        return $this->filters[$alias];
     }
 
     public function has($alias)
