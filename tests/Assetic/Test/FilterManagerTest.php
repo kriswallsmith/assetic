@@ -33,4 +33,17 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($filter, $fm->get($name), '->set() sets a filter');
     }
+
+    public function testHas()
+    {
+        $fm = new FilterManager();
+        $fm->set('foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
+        $this->assertTrue($fm->has('foo'), '->has() returns true if the filter is set');
+    }
+
+    public function testHasInvalid()
+    {
+        $fm = new FilterManager();
+        $this->assertFalse($fm->has('foo'), '->has() returns false if the filter is not set');
+    }
 }

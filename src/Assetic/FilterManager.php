@@ -36,6 +36,11 @@ class FilterManager
         return $this->filters[$alias];
     }
 
+    public function has($alias)
+    {
+        return isset($this->filters[$alias]);
+    }
+
     public function all()
     {
         return $this->filters;
