@@ -37,10 +37,10 @@ class FilterManager
     {
         if (isset($this->filters[$alias])) {
             return $this->filters[$alias];
-        } elseif (!$throwException) {
-            return $this->filters['_noop'];
-        } else {
+        } elseif ($throwException) {
             throw new \InvalidArgumentException(sprintf('There is no "%s" filter.', $alias));
+        } else {
+            return $this->filters['_noop'];
         }
     }
 
