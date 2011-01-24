@@ -183,16 +183,16 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     public function getChildren()
     {
         $asset = current($this->assets);
-        if ($asset instanceof \RecursiveIterator) {
+        if ($asset instanceof self) {
             return $asset;
         } else {
-            return new \RecursiveArrayIterator(array());
+            return new self();
         }
     }
 
     /** @inheritDoc */
     public function hasChildren()
     {
-        return current($this->assets) instanceof \RecursiveIterator;
+        return current($this->assets) instanceof self;
     }
 }
