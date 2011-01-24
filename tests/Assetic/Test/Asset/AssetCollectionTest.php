@@ -116,4 +116,20 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('asset', $coll->dump(), '->dump() detects duplicate assets');
     }
+
+    public function testIterationFilters()
+    {
+        $count = 0;
+        $filter = new CallablesFilter(function() use(&$count) { ++$count; });
+
+        $coll = new AssetCollection();
+        $coll->add(new Asset(''));
+        $coll->ensureFilter($filter);
+
+        foreach ($coll as $asset) {
+            $asset->dump();
+        }
+
+        $this->assertEquals(1, $count, 'collection filters are called when child assets are iterated over');
+    }
 }
