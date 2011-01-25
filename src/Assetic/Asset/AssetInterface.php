@@ -34,11 +34,15 @@ interface AssetInterface extends Filterable
      * Applies dump filters and returns the asset as a string.
      *
      * You can optionally provide an additional filter to apply during dump.
+     *
      * Dumping an asset should not change its state.
      *
-     * @param FilterInterface $filter An additional filter
+     * If the current asset has not been loaded yet, it should be
+     * automatically loaded at this time.
      *
-     * @return string The asset
+     * @param FilterInterface $additionalFilter An additional filter
+     *
+     * @return string The filtered body of the current asset
      */
     function dump(FilterInterface $additionalFilter = null);
 

@@ -62,12 +62,12 @@ factory, which will do most of the work for you.
         'css/src/*.scss', // load everything in the core directory
     ), array(
         'scss',           // filter through the filter manager's "scss" filter
-        '?yui_css',       // use the filter manager's "yui_css" filter, if available
+        '?yui_css',       // don't use this filter in debug mode
     ), 'css');
     echo $css->dump();
 
-In this case the "yui_css" filter is marked as optional so you can exclude
-that filter from your development environment's filter manager, for example.
+Prefixing a filter name with a question mark, as `yui_css` is here, will cause
+that filter to be omitted when the factory is in debug mode.
 
 Caching
 -------
