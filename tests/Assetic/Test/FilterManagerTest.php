@@ -46,21 +46,4 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
         $fm = new FilterManager();
         $this->assertFalse($fm->has('foo'), '->has() returns false if the filter is not set');
     }
-
-    public function testGetInvalid()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-
-        $fm = new FilterManager();
-        $fm->get('invalid');
-    }
-
-    /**
-     * @depends testGetInvalid
-     */
-    public function testGetInvalidNoException()
-    {
-        $fm = new FilterManager();
-        $fm->get('invalid', false);
-    }
 }
