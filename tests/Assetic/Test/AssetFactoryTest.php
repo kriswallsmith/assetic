@@ -101,10 +101,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testOptionalInvalidFilter()
     {
-        $this->fm->expects($this->once())
-            ->method('has')
-            ->with('foo')
-            ->will($this->returnValue(false));
+        $this->factory->setDebug(true);
 
         $asset = $this->factory->createAsset(array(), array('?foo'));
 

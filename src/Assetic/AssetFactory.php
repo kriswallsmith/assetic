@@ -26,6 +26,7 @@ class AssetFactory
     private $baseDir;
     private $am;
     private $fm;
+    private $debug;
 
     /**
      * Constructor.
@@ -34,11 +35,22 @@ class AssetFactory
      * @param AssetManager  $am      An asset manager
      * @param FilterManager $fm      The filter manager
      */
-    public function __construct($baseDir, AssetManager $am, FilterManager $fm)
+    public function __construct($baseDir, AssetManager $am, FilterManager $fm, $debug = false)
     {
         $this->baseDir = $baseDir;
         $this->am = $am;
         $this->fm = $fm;
+        $this->debug = $debug;
+    }
+
+    /**
+     * Sets debug mode for the current factory.
+     *
+     * @param Boolean $debug Debug mode
+     */
+    public function setDebug($debug)
+    {
+        $this->debug = $debug;
     }
 
     /**
@@ -50,8 +62,16 @@ class AssetFactory
      *  * js/core/*:    A glob relative to the base directory
      *  * js/jquery.js: A file path relative to the base directory
      *
-     * Filters can be marked as optional by prefixing the filter name with a
-     * "?" character.
+     * Prefixing a filter name with a question mark will cause it to be
+     * omitted when the factory is in debug mode.
+     *
+     * For example, the following asset will always go through the SASS filter
+     * but only be compressed by YUI when not in debug mode:
+     *
+     *     $factory->createAsset(
+     *         array('css/main.sass'),
+     *         array('sass', '?yui_css')
+     *     );
      *
      * If no URL for the new asset is provided, one will be automatically
      * generated. This behavior can be disabled by passing a value of false.
@@ -88,12 +108,10 @@ class AssetFactory
         // build an array of filters
         $filters = array();
         foreach ($filterNames as $filterName) {
-            if ('?' == $filterName[0]) {
-                if ($filter = $this->getFilter(substr($filterName, 1), true)) {
-                    $filters[] = $filter;
-                }
-            } else {
+            if ('?' != $filterName[0]) {
                 $filters[] = $this->getFilter($filterName);
+            } elseif (!$this->debug) {
+                $filters[] = $this->getFilter(substr($filterName, 1));
             }
         }
 
@@ -163,10 +181,8 @@ class AssetFactory
         return new FileAsset($path, $url);
     }
 
-    protected function getFilter($name, $optional = false)
+    protected function getFilter($name)
     {
-        if (!$optional || $this->fm->has($name)) {
-            return $this->fm->get($name);
-        }
+        return $this->fm->get($name);
     }
 }
