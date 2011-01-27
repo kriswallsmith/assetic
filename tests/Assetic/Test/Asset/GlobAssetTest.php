@@ -23,7 +23,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testBaseDir()
     {
-        $assets = new GlobAsset(__DIR__.'/*.php', __DIR__.'/');
+        $assets = new GlobAsset(__DIR__.'/*.php', __DIR__);
         foreach ($assets as $asset) {
             $this->assertRegExp('/^\w+\.php$/', $asset->getUrl(), 'GlobAsset uses the base directory to determine URL');
         }
