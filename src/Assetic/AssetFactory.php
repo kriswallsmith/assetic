@@ -88,7 +88,7 @@ class AssetFactory
      *
      * @todo support nested collections with their own filters
      */
-    public function createAsset($assetUrls = array(), $filterNames = array(), $url = null)
+    public function createAsset(array $assetUrls = array(), array $filterNames = array(), $url = null)
     {
         // build an array of child assets and collect extensions
         $assets = array();
@@ -143,6 +143,20 @@ class AssetFactory
         }
 
         return $this->buildAsset($assets, $filters, $url);
+    }
+
+    /**
+     * Generates an asset name.
+     *
+     * @param array  $assetUrls   An array of URLs relative to the base directory
+     * @param array  $filterNames An array of filter names
+     * @param string $url         An URL for the asset
+     *
+     * @return string An asset name
+     */
+    public function createAssetName(array $assetUrls = array(), array $filterNames = array(), $url = null)
+    {
+        return md5(serialize(array_merge($assetUrls, $filterNames)) . $url);
     }
 
     protected function buildAsset($assets, $filters, $url)
