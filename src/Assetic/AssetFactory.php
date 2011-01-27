@@ -133,9 +133,7 @@ class AssetFactory
         }
 
         if (null === $url) {
-            $parts = array_merge($assetUrls, $filterNames);
-            sort($parts);
-            $url = substr(sha1(serialize($parts)), 0, 7);
+            $url = substr(sha1(serialize(array_merge($assetUrls, $filterNames))), 0, 7);
 
             if ($extension) {
                 $url = $extension . '/' . $url . '.' . $extension;
