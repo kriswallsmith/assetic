@@ -2,7 +2,6 @@
 
 namespace Assetic\Asset;
 
-use Assetic\Filter\Filterable;
 use Assetic\Filter\FilterInterface;
 
 /*
@@ -19,7 +18,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-interface AssetInterface extends Filterable
+interface AssetInterface
 {
     /**
      * Loads the asset into memory and applies load filters.
@@ -45,6 +44,20 @@ interface AssetInterface extends Filterable
      * @return string The filtered body of the current asset
      */
     function dump(FilterInterface $additionalFilter = null);
+
+    /**
+     * Ensures the current filterable includes the supplied filter.
+     *
+     * @param FilterInterface $filter A filter
+     */
+    function ensureFilter(FilterInterface $filter);
+
+    /**
+     * Returns an array of filters currently applied.
+     *
+     * @return array An array of filters
+     */
+    function getFilters();
 
     /**
      * Returns the URL for the current asset.
