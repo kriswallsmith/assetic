@@ -15,11 +15,11 @@ use Assetic\Filter\FilterInterface;
  */
 
 /**
- * Represents an asset.
+ * Represents a string asset.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class Asset implements AssetInterface
+class StringAsset implements AssetInterface
 {
     private $loaded;
     private $filters;

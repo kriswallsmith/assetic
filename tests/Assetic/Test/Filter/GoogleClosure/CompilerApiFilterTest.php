@@ -2,7 +2,7 @@
 
 namespace Assetic\Test\Filter\GoogleClosure;
 
-use Assetic\Asset\Asset;
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerApiFilter;
 
 /*
@@ -32,7 +32,7 @@ EOF;
 
         $expected = 'function foo(a){return"foo"+a}alert(foo("bar"));';
 
-        $asset = new Asset($input);
+        $asset = new StringAsset($input);
         $asset->load();
 
         $filter = new CompilerApiFilter(new Browser());

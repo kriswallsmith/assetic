@@ -18,7 +18,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FileAsset extends Asset
+class FileAsset extends StringAsset
 {
     private $path;
 

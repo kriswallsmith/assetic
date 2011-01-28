@@ -2,7 +2,7 @@
 
 namespace Assetic\Test\Filter\Yui;
 
-use Assetic\Asset\Asset;
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\Yui\JsCompressorFilter;
 
 /*
@@ -51,7 +51,7 @@ JAVASCRIPT;
 (function(){var a="asdf";var b="qwer";if(a.indexOf(b)){alert("That's not possible!")}else{alert("Boom.")}})();
 JAVASCRIPT;
 
-        $asset = new Asset($source);
+        $asset = new StringAsset($source);
         $asset->load();
 
         $filter = new JsCompressorFilter($_SERVER['YUI_COMPRESSOR_PATH']);

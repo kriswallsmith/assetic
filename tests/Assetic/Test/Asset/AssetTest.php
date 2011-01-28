@@ -2,7 +2,7 @@
 
 namespace Assetic\Test\Asset;
 
-use Assetic\Asset\Asset;
+use Assetic\Asset\StringAsset;
 
 /*
  * This file is part of the Assetic package.
@@ -17,7 +17,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
 {
     public function testInterface()
     {
-        $asset = new Asset('');
+        $asset = new StringAsset('');
         $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
     }
 
@@ -26,7 +26,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())->method('filterLoad');
 
-        $asset = new Asset('foo', null, array($filter));
+        $asset = new StringAsset('foo', null, array($filter));
         $asset->load();
     }
 
@@ -35,7 +35,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())->method('filterLoad');
 
-        $asset = new Asset('foo', null, array($filter));
+        $asset = new StringAsset('foo', null, array($filter));
         $asset->dump();
     }
 }

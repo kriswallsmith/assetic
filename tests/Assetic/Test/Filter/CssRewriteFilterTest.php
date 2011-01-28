@@ -2,7 +2,7 @@
 
 namespace Assetic\Test\Filter;
 
-use Assetic\Asset\Asset;
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssRewriteFilter;
 
 /*
@@ -40,7 +40,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             ->method('getUrl')
             ->will($this->returnValue($target));
 
-        $asset = new Asset(sprintf($format, $inputUrl), $source);
+        $asset = new StringAsset(sprintf($format, $inputUrl), $source);
         $asset->setContext($context);
         $asset->load();
 

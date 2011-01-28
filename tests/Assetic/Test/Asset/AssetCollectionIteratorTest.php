@@ -2,7 +2,7 @@
 
 namespace Assetic\Test\Asset;
 
-use Assetic\Asset\Asset;
+use Assetic\Asset\StringAsset;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\AssetCollectionIterator;
 
@@ -22,9 +22,9 @@ class AssetCollectionIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteration()
     {
-        $asset1 = new Asset('asset1', 'foo.bar');
-        $asset2 = new Asset('asset2', 'foo.bar');
-        $asset3 = new Asset('asset3', 'foo.bar.baz');
+        $asset1 = new StringAsset('asset1', 'foo.bar');
+        $asset2 = new StringAsset('asset2', 'foo.bar');
+        $asset3 = new StringAsset('asset3', 'foo.bar.baz');
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
         $it = new AssetCollectionIterator($coll);

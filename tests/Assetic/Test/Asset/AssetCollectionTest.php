@@ -2,7 +2,7 @@
 
 namespace Assetic\Test\Asset;
 
-use Assetic\Asset\Asset;
+use Assetic\Asset\StringAsset;
 use Assetic\Asset\AssetCollection;
 use Assetic\Filter\CallablesFilter;
 
@@ -31,7 +31,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())->method('filterLoad');
 
-        $coll = new AssetCollection(array(new Asset('')), array($filter));
+        $coll = new AssetCollection(array(new StringAsset('')), array($filter));
         $coll->load();
     }
 
@@ -43,7 +43,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())->method('filterDump');
 
-        $coll = new AssetCollection(array(new Asset('')), array($filter));
+        $coll = new AssetCollection(array(new StringAsset('')), array($filter));
         $coll->dump();
     }
 
@@ -64,7 +64,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
             }
         });
 
-        $innerColl = new AssetCollection(array(new Asset($body)));
+        $innerColl = new AssetCollection(array(new StringAsset($body)));
         $outerColl = new AssetCollection(array($innerColl), array($filter));
         $outerColl->load();
 
@@ -77,8 +77,8 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMixedIteration()
     {
-        $asset = new Asset('asset');
-        $nestedAsset = new Asset('nested');
+        $asset = new StringAsset('asset');
+        $nestedAsset = new StringAsset('nested');
         $innerColl = new AssetCollection(array($nestedAsset));
 
         $bodys = array();
@@ -98,7 +98,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadDuplicates()
     {
-        $asset = new Asset('asset', 'foo.bar');
+        $asset = new StringAsset('asset', 'foo.bar');
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 
@@ -110,7 +110,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testDumpDuplicates()
     {
-        $asset = new Asset('asset', 'foo.bar');
+        $asset = new StringAsset('asset', 'foo.bar');
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 
@@ -123,7 +123,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $filter = new CallablesFilter(function() use(&$count) { ++$count; });
 
         $coll = new AssetCollection();
-        $coll->add(new Asset(''));
+        $coll->add(new StringAsset(''));
         $coll->ensureFilter($filter);
 
         foreach ($coll as $asset) {
