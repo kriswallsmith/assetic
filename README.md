@@ -8,6 +8,14 @@ Assetic is an asset management framework for PHP.
     // the code is merged when the asset is dumped
     echo $js->dump();
 
+Alternatively, you can iterate over the collection and work with each asset
+individually.
+
+    // each asset "leaf" is dumped
+    foreach ($js as $leaf) {
+        echo $leaf->dump();
+    }
+
 Filters
 -------
 
@@ -22,6 +30,14 @@ Filters can be applied to manipulate assets.
 
     // this will echo CSS compiled by LESS and compressed by YUI
     echo $css->dump();
+
+The filters applied to the collection will cascade to each asset leaf if you
+iterate over it.
+
+    foreach ($css as $leaf) {
+        // each leaf is compressed by YUI
+        echo $leaf->dump();
+    }
 
 The core provides the following filters in the `Assetic\Filter` namespace:
 

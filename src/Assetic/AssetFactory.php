@@ -34,6 +34,7 @@ class AssetFactory
      * @param string        $baseDir Path to the base directory for relative URLs
      * @param AssetManager  $am      An asset manager
      * @param FilterManager $fm      The filter manager
+     * @param Boolean       $debug   Filters prefixed with a "?" will be omitted in debug mode
      */
     public function __construct($baseDir, AssetManager $am, FilterManager $fm, $debug = false)
     {
