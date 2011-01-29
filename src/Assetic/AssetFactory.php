@@ -162,11 +162,7 @@ class AssetFactory
 
     protected function buildAsset($assets, $filters, $url)
     {
-        if (1 == count($assets)) {
-            $asset = $assets[0];
-        } else {
-            $asset = new AssetCollection($assets);
-        }
+        $asset = new AssetCollection($assets);
 
         foreach ($filters as $filter) {
             $asset->ensureFilter($filter);

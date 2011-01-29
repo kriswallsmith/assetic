@@ -31,20 +31,23 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateAssetReference()
     {
-        $asset = $this->factory->createAsset(array('@jquery'), array(), false);
-        $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $asset, '->createAsset() creates a reference');
+        $assets = $this->factory->createAsset(array('@jquery'), array(), false);
+        $arr = iterator_to_array($assets);
+        $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $arr[0], '->createAsset() creates a reference');
     }
 
     public function testCreateFileAsset()
     {
-        $asset = $this->factory->createAsset(array(basename(__FILE__)));
-        $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $asset, '->createAsset() creates a file asset');
+        $assets = $this->factory->createAsset(array(basename(__FILE__)));
+        $arr = iterator_to_array($assets);
+        $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $arr[0], '->createAsset() creates a file asset');
     }
 
     public function testCreateGlobAsset()
     {
-        $asset = $this->factory->createAsset(array('*'));
-        $this->assertInstanceOf('Assetic\\Asset\\GlobAsset', $asset, '->createAsset() creates a glob asset');
+        $assets = $this->factory->createAsset(array('*'));
+        $arr = iterator_to_array($assets);
+        $this->assertInstanceOf('Assetic\\Asset\\GlobAsset', $arr[0], '->createAsset() creates a glob asset');
     }
 
     public function testCreateAssetCollection()
