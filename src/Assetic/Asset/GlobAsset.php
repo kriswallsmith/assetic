@@ -2,6 +2,8 @@
 
 namespace Assetic\Asset;
 
+use Assetic\Filter\FilterInterface;
+
 /*
  * This file is part of the Assetic package.
  *
@@ -18,6 +20,10 @@ namespace Assetic\Asset;
  */
 class GlobAsset extends AssetCollection
 {
+    private $globs;
+    private $baseDir;
+    private $initialized;
+
     /**
      * Constructor.
      *
@@ -29,24 +35,120 @@ class GlobAsset extends AssetCollection
      */
     public function __construct($globs, $baseDir = null, $filters = array())
     {
+        $this->globs = (array) $globs;
+        $this->baseDir = $baseDir;
+
+        $this->initialized = false;
+
+        parent::__construct(array(), $filters);
+    }
+
+    /**
+     * Initializes the collection based on the glob(s) passed in.
+     */
+    private function initialize()
+    {
+        $baseDir = $this->baseDir;
         if (null !== $baseDir && false === $baseDir = realpath($baseDir)) {
             throw new \InvalidArgumentException('Invalid base directory.');
         }
 
-        $assets = array();
-        foreach ((array) $globs as $glob) {
+        foreach ($this->globs as $glob) {
             if (false !== $paths = glob($glob)) {
                 foreach (array_map('realpath', $paths) as $path) {
-                    $assets[] = $asset = new FileAsset($path);
+                    $asset = new FileAsset($path);
 
                     // determine url based on the base filesystem directory
                     if (null !== $baseDir && 0 === strpos($path, $baseDir)) {
                         $asset->setUrl(substr($path, strlen($baseDir) + 1));
                     }
+
+                    $this->add($asset);
                 }
             }
         }
 
-        parent::__construct($assets, $filters);
+        $this->initialized = true;
+    }
+
+    public function load(FilterInterface $additionalFilter = null)
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        parent::load($additionalFilter);
+    }
+
+    public function dump(FilterInterface $additionalFilter = null)
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::dump($additionalFilter);
+    }
+
+    public function current()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::current();
+    }
+
+    public function key()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::key();
+    }
+
+    public function next()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::next();
+    }
+
+    public function rewind()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::rewind();
+    }
+
+    public function valid()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::valid();
+    }
+
+    public function getChildren()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::getChildren();
+    }
+
+    public function hasChildren()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::hasChildren();
     }
 }
