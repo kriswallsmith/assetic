@@ -3,6 +3,7 @@
 namespace Assetic\Asset;
 
 use Assetic\AssetManager;
+use Assetic\Filter\FilterCollection;
 use Assetic\Filter\FilterInterface;
 
 /*
@@ -23,30 +24,38 @@ class AssetReference implements AssetInterface
 {
     private $am;
     private $name;
+    private $filters;
 
     public function __construct(AssetManager $am, $name)
     {
         $this->am = $am;
         $this->name = $name;
+        $this->filters = new FilterCollection();
     }
 
     public function ensureFilter(FilterInterface $filter)
     {
-        $this->callAsset(__FUNCTION__, array($filter));
+        $this->filters->ensure($filter);
     }
 
     public function getFilters()
     {
-        $this->callAsset(__FUNCTION__);
+        $this->flushFilters();
+
+        return $this->callAsset(__FUNCTION__);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
+        $this->flushFilters();
+
         return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
     public function dump(FilterInterface $additionalFilter = null)
     {
+        $this->flushFilters();
+
         return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
@@ -84,6 +93,16 @@ class AssetReference implements AssetInterface
 
     private function callAsset($method, $arguments = array())
     {
-        return call_user_func_array(array($this->am->get($this->name), $method), $arguments);
+        $asset = $this->am->get($this->name);
+
+        return call_user_func_array(array($asset, $method), $arguments);
+    }
+
+    private function flushFilters()
+    {
+        $asset = $this->am->get($this->name);
+
+        $asset->ensureFilter($this->filters);
+        $this->filters = new FilterCollection();
     }
 }
