@@ -20,7 +20,23 @@ use Assetic\Filter\FilterInterface;
  */
 class FileAsset extends BaseAsset
 {
+    static private $knownContentTypes = array(
+        'css' => 'text/css',
+        'js'  => 'text/javascript',
+    );
+
     private $path;
+
+    /**
+     * Registers a new file extension and content type.
+     *
+     * @param string $extension   A file extension
+     * @param string $contentType A content type
+     */
+    static public function registerContentType($extension, $contentType)
+    {
+        self::$knownContentTypes[$extension] = $contentType;
+    }
 
     /**
      * Constructor.
@@ -40,6 +56,15 @@ class FileAsset extends BaseAsset
     public function load(FilterInterface $additionalFilter = null)
     {
         $this->doLoad(file_get_contents($this->path), $additionalFilter);
+    }
+
+    public function getContentType()
+    {
+        $extension = pathinfo($this->path, PATHINFO_EXTENSION);
+
+        if (isset(self::$knownContentTypes[$extension])) {
+            return self::$knownContentTypes[$extension];
+        }
     }
 
     public function getLastModified()

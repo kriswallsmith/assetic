@@ -8,8 +8,9 @@ use Assetic\Filter\FilterInterface;
 /**
  * A base abstract asset.
  *
- * The methods load() and getLastModified() are left undefined, although a
- * reusable doLoad() method is available to child classes.
+ * The methods load(), getContentType() and getLastModified() are left
+ * undefined, although a reusable doLoad() method is available to child
+ * classes.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */

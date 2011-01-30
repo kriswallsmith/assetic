@@ -105,9 +105,16 @@ interface AssetInterface
     function setContext(AssetInterface $context = null);
 
     /**
+     * Returns the content type of the current asset.
+     *
+     * @return string|null The content type
+     */
+    function getContentType();
+
+    /**
      * Returns the time the current asset was last modified.
      *
-     * @return integer A UNIX timestamp
+     * @return integer|null A UNIX timestamp
      */
     function getLastModified();
 }

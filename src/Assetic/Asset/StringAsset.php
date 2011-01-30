@@ -22,6 +22,7 @@ class StringAsset extends BaseAsset
 {
     private $originalBody;
     private $lastModified;
+    private $contentType;
 
     /**
      * Constructor.
@@ -41,6 +42,16 @@ class StringAsset extends BaseAsset
     public function load(FilterInterface $additionalFilter = null)
     {
         $this->doLoad($this->originalBody, $additionalFilter);
+    }
+
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    public function getContentType()
+    {
+        return $this->contentType;
     }
 
     public function setLastModified($lastModified)

@@ -139,6 +139,23 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         $this->context = $context;
     }
 
+    /**
+     * Returns the content type of the first asset in the current collection.
+     *
+     * @return string|null The content type
+     */
+    public function getContentType()
+    {
+        if (isset($this->assets[0])) {
+            return $this->assets[0]->getContentType();
+        }
+    }
+
+    /**
+     * Returns the highest last-modified value of all assets in the current collection.
+     *
+     * @return integer|null A UNIX timestamp
+     */
     public function getLastModified()
     {
         $lastModified = null;
