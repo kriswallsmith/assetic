@@ -103,4 +103,11 @@ interface AssetInterface
      * @param AssetInterface $context An asset
      */
     function setContext(AssetInterface $context = null);
+
+    /**
+     * Returns the time the current asset was last modified.
+     *
+     * @return integer A UNIX timestamp
+     */
+    function getLastModified();
 }

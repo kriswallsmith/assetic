@@ -18,7 +18,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FileAsset extends StringAsset
+class FileAsset extends BaseAsset
 {
     private $path;
 
@@ -31,14 +31,19 @@ class FileAsset extends StringAsset
      */
     public function __construct($path, $url = null, $filters = array())
     {
-        $this->path = $path;
+        parent::__construct($filters);
 
-        parent::__construct(null, $url, $filters);
+        $this->path = $path;
+        $this->setUrl($url);
     }
 
-    /** @inheritDoc */
     public function load(FilterInterface $additionalFilter = null)
     {
         $this->doLoad(file_get_contents($this->path), $additionalFilter);
+    }
+
+    public function getLastModified()
+    {
+        return filemtime($this->path);
     }
 }

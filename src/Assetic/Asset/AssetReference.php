@@ -89,6 +89,11 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($context));
     }
 
+    public function getLastModified()
+    {
+        return $this->callAsset(__FUNCTION__);
+    }
+
     // private
 
     private function callAsset($method, $arguments = array())

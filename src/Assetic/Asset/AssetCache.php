@@ -95,6 +95,11 @@ class AssetCache implements AssetInterface
         $this->asset->setContext($context);
     }
 
+    public function getLastModified()
+    {
+        return $this->asset->getLastModified();
+    }
+
     /**
      * Returns a cache key for the current asset.
      *

@@ -89,6 +89,15 @@ class GlobAsset extends AssetCollection
         return parent::dump($additionalFilter);
     }
 
+    public function getLastModified()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::getLastModified();
+    }
+
     public function current()
     {
         if (!$this->initialized) {

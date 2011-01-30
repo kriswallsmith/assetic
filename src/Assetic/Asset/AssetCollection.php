@@ -139,6 +139,19 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         $this->context = $context;
     }
 
+    public function getLastModified()
+    {
+        $lastModified = null;
+        foreach ($this->assets as $asset) {
+            $mtime = $asset->getLastModified();
+            if ($lastModified < $mtime) {
+                $lastModified = $mtime;
+            }
+        }
+
+        return $lastModified;
+    }
+
     /** @inheritDoc */
     public function current()
     {
