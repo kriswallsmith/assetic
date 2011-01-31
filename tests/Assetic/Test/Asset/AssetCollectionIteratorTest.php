@@ -22,9 +22,9 @@ class AssetCollectionIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteration()
     {
-        $asset1 = new StringAsset('asset1', 'foo.bar');
-        $asset2 = new StringAsset('asset2', 'foo.bar');
-        $asset3 = new StringAsset('asset3', 'foo.bar.baz');
+        $asset1 = new StringAsset('asset1', 'foo.css');
+        $asset2 = new StringAsset('asset2', 'foo.css');
+        $asset3 = new StringAsset('asset3', 'bar.css');
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
         $it = new AssetCollectionIterator($coll);

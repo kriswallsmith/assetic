@@ -10,6 +10,8 @@
     <php>
         <!-- <server name="YUI_COMPRESSOR_PATH" value="/path/to/yuicompressor-2.4.2.jar" /> -->
         <!-- <server name="GOOGLE_CLOSURE_COMPILER_PATH" value="/path/to/google-closure/compiler.jar" /> -->
+        <!-- <server name="LESSC_PATH" value="/path/to/lessc" /> -->
+        <!-- <server name="SASS_PATH" value="/path/to/sass" /> -->
     </php>
 
     <filter>

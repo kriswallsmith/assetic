@@ -11,13 +11,43 @@
 
 namespace Assetic\Test\Filter\GoogleClosure;
 
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerJarFilter;
 
 class CompilerJarFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterface()
+    /**
+     * @group functional
+     */
+    public function testCompile()
     {
-        $filter = new CompilerJarFilter('/path/to/jar');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CompilerJarFilter implements FilterInterface');
+        if (!isset($_SERVER['GOOGLE_CLOSURE_COMPILER_PATH'])) {
+            $this->markTestSkipped('There is no GOOGLE_CLOSURE_COMPILER_PATH environment variable.');
+        }
+
+        $input = <<<EOF
+(function() {
+function unused(){}
+function foo(bar) {
+    var foo = 'foo';
+    return foo + bar;
+}
+alert(foo("bar"));
+})();
+EOF;
+
+        $expected = <<<EOF
+(function(){alert("foobar")})();
+
+EOF;
+
+        $asset = new StringAsset($input);
+        $asset->load();
+
+        $filter = new CompilerJarFilter($_SERVER['GOOGLE_CLOSURE_COMPILER_PATH']);
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+
+        $this->assertEquals($expected, $asset->getContent());
     }
 }

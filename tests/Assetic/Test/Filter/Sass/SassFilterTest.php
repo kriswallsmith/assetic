@@ -11,13 +11,30 @@
 
 namespace Assetic\Test\Filter\Sass;
 
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\Sass\SassFilter;
 
 class SassFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterface()
+    public function testSass()
     {
-        $filter = new SassFilter('/path/to/sass');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'SassFilter implements FilterInterface');
+        if (!isset($_SERVER['SASS_PATH'])) {
+            $this->markTestSkipped('There is no SASS_PATH environment variable.');
+        }
+
+        $input = <<<EOF
+body
+  color: #F00
+EOF;
+
+        $asset = new StringAsset($input);
+        $asset->load();
+
+        $filter = new SassFilter($_SERVER['SASS_PATH']);
+        $filter->setStyle(SassFilter::STYLE_COMPACT);
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+
+        $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the sass');
     }
 }

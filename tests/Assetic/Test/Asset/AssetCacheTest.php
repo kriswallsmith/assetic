@@ -30,10 +30,11 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
     public function testLoadFromCache()
     {
         $content = 'asdf';
+        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
 
         $this->inner->expects($this->once())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue(array($filter)));
         $this->cache->expects($this->once())
             ->method('has')
             ->with($this->isType('string'))
@@ -46,7 +47,7 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
             ->method('setContent')
             ->with($content);
 
-        $this->asset->load();
+        $this->asset->load($filter);
     }
 
     public function testLoadToCache()
@@ -109,5 +110,57 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
             ->with($this->isType('string'), $content);
 
         $this->assertEquals($content, $this->asset->dump(), '->dump() returns the dumped value');
+    }
+
+    public function testEnsureFilter()
+    {
+        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $this->inner->expects($this->once())->method('ensureFilter');
+        $this->asset->ensureFilter($filter);
+    }
+
+    public function testGetFilters()
+    {
+        $this->inner->expects($this->once())
+            ->method('getFilters')
+            ->will($this->returnValue(array()));
+
+        $this->assertInternalType('array', $this->asset->getFilters(), '->getFilters() returns the inner asset filters');
+    }
+
+    public function testGetContent()
+    {
+        $this->inner->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue('asdf'));
+
+        $this->assertEquals('asdf', $this->asset->getContent(), '->getContent() returns the inner asset content');
+    }
+
+    public function testSetContent()
+    {
+        $this->inner->expects($this->once())
+            ->method('setContent')
+            ->with('asdf');
+
+        $this->asset->setContent('asdf');
+    }
+
+    public function testGetSourceUrl()
+    {
+        $this->inner->expects($this->once())
+            ->method('getSourceUrl')
+            ->will($this->returnValue('asdf'));
+
+        $this->assertEquals('asdf', $this->asset->getSourceUrl(), '->getSourceUrl() returns the inner asset source URL');
+    }
+
+    public function testGetLastModified()
+    {
+        $this->inner->expects($this->once())
+            ->method('getLastModified')
+            ->will($this->returnValue(123));
+
+        $this->assertEquals(123, $this->asset->getLastModified(), '->getLastModified() returns the inner asset last modified');
     }
 }

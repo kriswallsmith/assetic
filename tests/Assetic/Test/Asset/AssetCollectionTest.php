@@ -132,4 +132,69 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $count, 'collection filters are called when child assets are iterated over');
     }
+
+    public function testSetContent()
+    {
+        $coll = new AssetCollection();
+        $coll->setContent('asdf');
+
+        $this->assertEquals('asdf', $coll->getContent(), '->setContent() sets the content');
+    }
+
+    /**
+     * @dataProvider getTimestampsAndExpected
+     */
+    public function testGetLastModified($timestamps, $expected)
+    {
+        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+
+        for ($i = 0; $i < count($timestamps); $i++) {
+            $asset->expects($this->at($i))
+                ->method('getLastModified')
+                ->will($this->returnValue($timestamps[$i]));
+        }
+
+        $coll = new AssetCollection(array_fill(0, count($timestamps), $asset));
+
+        $this->assertEquals($expected, $coll->getLastModified(), '->getLastModifed() returns the highest last modified');
+    }
+
+    public function getTimestampsAndExpected()
+    {
+        return array(
+            array(array(1, 2, 3), 3),
+            array(array(5, 4, 3), 5),
+            array(array(3, 8, 5), 8),
+        );
+    }
+
+    public function testNaturalIteration()
+    {
+        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+
+        $innerColl = new AssetCollection(array($asset, $asset));
+        $coll = new AssetCollection(array($innerColl, $asset));
+
+        $i = 0;
+        foreach ($coll as $a) {
+            $i++;
+        }
+
+        $this->assertEquals(2, $i, 'iteration is naturally non-recursive');
+    }
+
+    public function testRecursiveIteration()
+    {
+        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+
+        $innerColl = new AssetCollection(array($asset, $asset));
+        $coll = new AssetCollection(array($innerColl, $asset));
+
+        $i = 0;
+        foreach (new \RecursiveIteratorIterator($coll) as $a) {
+            $i++;
+        }
+
+        $this->assertEquals(3, $i, 'iteration with a recursive iterator is recursive');
+    }
 }

@@ -20,7 +20,7 @@ class FilesystemCache implements CacheInterface
 {
     private $dir;
 
-    public function __construct($dir, $lifetime = 3600)
+    public function __construct($dir)
     {
         $this->dir = $dir;
     }

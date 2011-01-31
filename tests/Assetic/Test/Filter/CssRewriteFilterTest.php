@@ -39,6 +39,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
+        $filter->filterLoad($asset);
         $filter->filterDump($asset, $targetUrl);
 
         $this->assertEquals(sprintf($format, $expectedUrl), $asset->getContent(), '->filterDump() rewrites relative urls');
@@ -66,5 +67,19 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/bar.gif', 'http://foo.com/bar.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '/images/foo.gif', '/images/foo.gif'),
         );
+    }
+
+    public function testNoTargetUrl()
+    {
+        $content = 'body{url(foo.gif)}';
+
+        $asset = new StringAsset($content);
+        $asset->load();
+
+        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+
+        $this->assertEquals($content, $asset->getContent(), '->filterDump() urls are not changed without urls');
     }
 }

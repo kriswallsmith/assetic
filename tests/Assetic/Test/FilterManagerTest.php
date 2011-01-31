@@ -15,12 +15,18 @@ use Assetic\FilterManager;
 
 class FilterManagerTest extends \PHPUnit_Framework_TestCase
 {
+    private $fm;
+
+    protected function setUp()
+    {
+        $this->fm = new FilterManager();
+    }
+
     public function testInvalidName()
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $fm = new FilterManager();
-        $fm->get('foo');
+        $this->fm->get('foo');
     }
 
     public function testGetFilter()
@@ -28,22 +34,24 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $name = 'foo';
 
-        $fm = new FilterManager();
-        $fm->set($name, $filter);
+        $this->fm->set($name, $filter);
 
-        $this->assertSame($filter, $fm->get($name), '->set() sets a filter');
+        $this->assertSame($filter, $this->fm->get($name), '->set() sets a filter');
     }
 
     public function testHas()
     {
-        $fm = new FilterManager();
-        $fm->set('foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
-        $this->assertTrue($fm->has('foo'), '->has() returns true if the filter is set');
+        $this->fm->set('foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
+        $this->assertTrue($this->fm->has('foo'), '->has() returns true if the filter is set');
     }
 
     public function testHasInvalid()
     {
-        $fm = new FilterManager();
-        $this->assertFalse($fm->has('foo'), '->has() returns false if the filter is not set');
+        $this->assertFalse($this->fm->has('foo'), '->has() returns false if the filter is not set');
+    }
+
+    public function testAll()
+    {
+        $this->assertInternalType('array', $this->fm->all(), '->all() returns an array');
     }
 }

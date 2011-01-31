@@ -27,10 +27,7 @@ class AssetCollectionIterator extends \RecursiveFilterIterator
 
     public function accept()
     {
-        // no asset
-        if (!$asset = $this->current()) {
-            return false;
-        }
+        $asset = $this->current();
 
         // no url == unique
         if (!$sourceUrl = $asset->getSourceUrl()) {

@@ -24,18 +24,17 @@ class AssetReference implements AssetInterface
 {
     private $am;
     private $name;
-    private $filters;
+    private $filters = array();
 
     public function __construct(AssetManager $am, $name)
     {
         $this->am = $am;
         $this->name = $name;
-        $this->filters = new FilterCollection();
     }
 
     public function ensureFilter(FilterInterface $filter)
     {
-        $this->filters->ensure($filter);
+        $this->filters[] = $filter;
     }
 
     public function getFilters()
@@ -56,7 +55,7 @@ class AssetReference implements AssetInterface
     {
         $this->flushFilters();
 
-        return $this->callAsset(__FUNCTION__, array($additionalFilter));
+        return $this->callAsset(__FUNCTION__, array($targetUrl, $additionalFilter));
     }
 
     public function getContent()
@@ -92,7 +91,8 @@ class AssetReference implements AssetInterface
     {
         $asset = $this->am->get($this->name);
 
-        $asset->ensureFilter($this->filters);
-        $this->filters = new FilterCollection();
+        while ($filter = array_shift($this->filters)) {
+            $asset->ensureFilter($filter);
+        }
     }
 }

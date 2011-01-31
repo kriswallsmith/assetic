@@ -21,6 +21,11 @@ use Assetic\Asset\AssetInterface;
  */
 class SassFilter implements FilterInterface
 {
+    const STYLE_NESTED     = 'nested';
+    const STYLE_EXPANDED   = 'expanded';
+    const STYLE_COMPACT    = 'compact';
+    const STYLE_COMPRESSED = 'compressed';
+
     private $sassPath;
     private $unixNewlines;
     private $scss;
@@ -128,6 +133,8 @@ class SassFilter implements FilterInterface
 
         // finally
         $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_sass');
+        file_put_contents($input, $asset->getContent());
+
         $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
 
         // todo: check for a valid return code

@@ -22,20 +22,35 @@ class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
     public function testRoundTrip()
     {
         $input = <<<EOF
+(function() {
+function unused(){}
 function foo(bar) {
     var foo = 'foo';
     return foo + bar;
 }
 alert(foo("bar"));
-
+})();
 EOF;
 
-        $expected = 'function foo(a){return"foo"+a}alert(foo("bar"));';
+        $expected = <<<EOF
+(function() {
+  alert("foobar")
+})();
+EOF;
 
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new CompilerApiFilter(new Browser());
+        $filter = new CompilerApiFilter();
+        $filter->setCompilationLevel(CompilerApiFilter::COMPILE_SIMPLE_OPTIMIZATIONS);
+        $filter->setJsExterns('');
+        $filter->setExternsUrl('');
+        $filter->setExcludeDefaultExterns(true);
+        $filter->setFormatting(CompilerApiFilter::FORMAT_PRETTY_PRINT);
+        $filter->setUseClosureLibrary(false);
+        $filter->setWarningLevel(CompilerApiFilter::LEVEL_VERBOSE);
+
+        $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getContent());

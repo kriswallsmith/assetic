@@ -20,4 +20,20 @@ class CallablesFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new CallablesFilter();
         $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CallablesFilter implements FilterInterface');
     }
+
+    public function testLoader()
+    {
+        $nb = 0;
+        $filter = new CallablesFilter(function($asset) use(&$nb) { $nb++; });
+        $filter->filterLoad($this->getMock('Assetic\\Asset\\AssetInterface'));
+        $this->assertEquals(1, $nb, '->filterLoad() calls the loader callable');
+    }
+
+    public function testDumper()
+    {
+        $nb = 0;
+        $filter = new CallablesFilter(null, function($asset) use(&$nb) { $nb++; });
+        $filter->filterDUmp($this->getMock('Assetic\\Asset\\AssetInterface'));
+        $this->assertEquals(1, $nb, '->filterDUmp() calls the loader callable');
+    }
 }

@@ -11,13 +11,24 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\LessFilter;
 
 class LessFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterface()
+    public function testLessc()
     {
-        $filter = new LessFilter();
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'LessFilter implements FilterInterface');
+        if (!isset($_SERVER['LESSC_PATH'])) {
+            $this->markTestSkipped('There is no LESSC_PATH environment variable.');
+        }
+
+        $asset = new StringAsset('body{color:red;}');
+        $asset->load();
+
+        $filter = new LessFilter($_SERVER['LESSC_PATH']);
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+
+        $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the content');
     }
 }

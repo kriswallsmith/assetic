@@ -66,11 +66,15 @@ class CompilerApiFilter extends BaseCompilerFilter
         $data = json_decode($response);
 
         if (isset($data->serverErrors) && 0 < count($data->serverErrors)) {
+            // @codeCoverageIgnoreStart
             throw new \RuntimeException(sprintf('The Google Closure Compiler API threw some server errors: '.print_r($data->serverErrors, true)));
+            // @codeCoverageIgnoreEnd
         }
 
         if (isset($data->errors) && 0 < count($data->errors)) {
+            // @codeCoverageIgnoreStart
             throw new \RuntimeException(sprintf('The Google Closure Compiler API threw some errors: '.print_r($data->errors, true)));
+            // @codeCoverageIgnoreEnd
         }
 
         $asset->setContent($data->compiledCode);

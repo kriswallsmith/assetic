@@ -98,4 +98,14 @@ class ExpiringCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->cache->remove($key);
     }
+
+    public function testGet()
+    {
+        $this->inner->expects($this->once())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue('bar'));
+
+        $this->assertEquals('bar', $this->cache->get('foo'), '->get() returns the cached value');
+    }
 }

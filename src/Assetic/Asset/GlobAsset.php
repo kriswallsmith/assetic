@@ -89,33 +89,6 @@ class GlobAsset extends AssetCollection
         return parent::getLastModified();
     }
 
-    public function current()
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        return parent::current();
-    }
-
-    public function key()
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        return parent::key();
-    }
-
-    public function next()
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        return parent::next();
-    }
-
     public function rewind()
     {
         if (!$this->initialized) {
@@ -123,32 +96,5 @@ class GlobAsset extends AssetCollection
         }
 
         return parent::rewind();
-    }
-
-    public function valid()
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        return parent::valid();
-    }
-
-    public function getChildren()
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        return parent::getChildren();
-    }
-
-    public function hasChildren()
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        return parent::hasChildren();
     }
 }

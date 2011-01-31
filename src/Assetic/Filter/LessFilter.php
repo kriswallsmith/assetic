@@ -41,8 +41,9 @@ class LessFilter implements FilterInterface
             $options[] = '--debug';
         }
 
-        // finally
         $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_less');
+        file_put_contents($input, $asset->getContent());
+
         $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_less');
 
         // todo: check for a valid return code
