@@ -59,7 +59,7 @@ class AssetCache implements AssetInterface
             return $this->cache->get($cacheKey);
         }
 
-        $content = $this->asset->dump($additionalFilter);
+        $content = $this->asset->dump($targetUrl, $additionalFilter);
         $this->cache->set($cacheKey, $content);
 
         return $content;
