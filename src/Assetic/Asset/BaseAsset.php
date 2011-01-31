@@ -26,6 +26,7 @@ abstract class BaseAsset implements AssetInterface
 {
     private $filters;
     private $sourceUrl;
+    private $targetUrl;
     private $content;
     private $loaded;
 
@@ -72,7 +73,7 @@ abstract class BaseAsset implements AssetInterface
         $this->loaded = true;
     }
 
-    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
+    public function dump(FilterInterface $additionalFilter = null)
     {
         if (!$this->loaded) {
             $this->load();
@@ -84,7 +85,7 @@ abstract class BaseAsset implements AssetInterface
         }
 
         $asset = clone $this;
-        $filter->filterDump($asset, $targetUrl);
+        $filter->filterDump($asset);
 
         return $asset->getContent();
     }
@@ -102,5 +103,15 @@ abstract class BaseAsset implements AssetInterface
     public function getSourceUrl()
     {
         return $this->sourceUrl;
+    }
+
+    public function getTargetUrl()
+    {
+        return $this->targetUrl;
+    }
+
+    public function setTargetUrl($targetUrl)
+    {
+        $this->targetUrl = $targetUrl;
     }
 }

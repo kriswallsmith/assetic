@@ -36,11 +36,12 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
     public function testUrls($format, $sourceUrl, $targetUrl, $inputUrl, $expectedUrl)
     {
         $asset = new StringAsset(sprintf($format, $inputUrl), $sourceUrl);
+        $asset->setTargetUrl($targetUrl);
         $asset->load();
 
         $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
         $filter->filterLoad($asset);
-        $filter->filterDump($asset, $targetUrl);
+        $filter->filterDump($asset);
 
         $this->assertEquals(sprintf($format, $expectedUrl), $asset->getContent(), '->filterDump() rewrites relative urls');
     }

@@ -39,7 +39,7 @@ class JsCompressorFilter extends BaseCompressorFilter
         $this->disableOptimizations = $disableOptimizations;
     }
 
-    public function filterDump(AssetInterface $asset, $targetUrl = null)
+    public function filterDump(AssetInterface $asset)
     {
         $options = array();
 

@@ -51,11 +51,11 @@ class AssetReference implements AssetInterface
         return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
-    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
+    public function dump(FilterInterface $additionalFilter = null)
     {
         $this->flushFilters();
 
-        return $this->callAsset(__FUNCTION__, array($targetUrl, $additionalFilter));
+        return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
     public function getContent()
@@ -71,6 +71,16 @@ class AssetReference implements AssetInterface
     public function getSourceUrl()
     {
         return $this->callAsset(__FUNCTION__);
+    }
+
+    public function getTargetUrl()
+    {
+        return $this->callAsset(__FUNCTION__);
+    }
+
+    public function setTargetUrl($targetUrl)
+    {
+        $this->callAsset(__FUNCTION__, array($targetUrl));
     }
 
     public function getLastModified()

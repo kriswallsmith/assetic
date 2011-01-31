@@ -52,14 +52,14 @@ class AssetCache implements AssetInterface
         $this->cache->set($cacheKey, $this->asset->getContent());
     }
 
-    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
+    public function dump(FilterInterface $additionalFilter = null)
     {
-        $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'dumpTo'.$targetUrl);
+        $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'dump');
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
 
-        $content = $this->asset->dump($targetUrl, $additionalFilter);
+        $content = $this->asset->dump($additionalFilter);
         $this->cache->set($cacheKey, $content);
 
         return $content;
@@ -78,6 +78,16 @@ class AssetCache implements AssetInterface
     public function getSourceUrl()
     {
         return $this->asset->getSourceUrl();
+    }
+
+    public function getTargetUrl()
+    {
+        return $this->asset->getTargetUrl();
+    }
+
+    public function setTargetUrl($targetUrl)
+    {
+        $this->asset->setTargetUrl();
     }
 
     public function getLastModified()
@@ -108,6 +118,7 @@ class AssetCache implements AssetInterface
         }
 
         $cacheKey  = $asset->getSourceUrl();
+        $cacheKey .= $asset->getTargetUrl();
         $cacheKey .= $asset->getLastModified();
 
         foreach ($asset->getFilters() as $filter) {

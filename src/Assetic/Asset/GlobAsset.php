@@ -71,13 +71,13 @@ class GlobAsset extends AssetCollection
         parent::load($additionalFilter);
     }
 
-    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
+    public function dump(FilterInterface $additionalFilter = null)
     {
         if (!$this->initialized) {
             $this->initialize();
         }
 
-        return parent::dump($targetUrl, $additionalFilter);
+        return parent::dump($additionalFilter);
     }
 
     public function getLastModified()

@@ -36,10 +36,10 @@ class CallablesFilter implements FilterInterface
         }
     }
 
-    public function filterDump(AssetInterface $asset, $targetUrl = null)
+    public function filterDump(AssetInterface $asset)
     {
         if (null !== $callable = $this->dumper) {
-            $callable($asset, $targetUrl);
+            $callable($asset);
         }
     }
 }

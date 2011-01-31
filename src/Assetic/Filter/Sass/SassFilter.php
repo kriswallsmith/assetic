@@ -147,7 +147,7 @@ class SassFilter implements FilterInterface
         unlink($output);
     }
 
-    public function filterDump(AssetInterface $asset, $targetUrl = null)
+    public function filterDump(AssetInterface $asset)
     {
     }
 }

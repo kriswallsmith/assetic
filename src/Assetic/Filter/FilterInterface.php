@@ -32,10 +32,9 @@ interface FilterInterface
     /**
      * Filters an asset just before it's dumped.
      *
-     * @param AssetInterface $asset     An asset
-     * @param string         $targetUrl URL where the dumped asset will be served
+     * @param AssetInterface $asset An asset
      *
      * @return string|null The filter asset content, or null for no effect
      */
-    function filterDump(AssetInterface $asset, $targetUrl = null);
+    function filterDump(AssetInterface $asset);
 }

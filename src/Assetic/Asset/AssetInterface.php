@@ -58,7 +58,7 @@ interface AssetInterface
      *
      * @return string The filtered content of the current asset
      */
-    function dump($targetUrl = null, FilterInterface $additionalFilter = null);
+    function dump(FilterInterface $additionalFilter = null);
 
     /**
      * Returns the loaded content of the current asset.
@@ -90,6 +90,20 @@ interface AssetInterface
      * @return string|null A web URL for the source asset, if there is one
      */
     function getSourceUrl();
+
+    /**
+     * Returns the target URL for the current asset.
+     *
+     * @return string|null A web URL where the asset will be dumped
+     */
+    function getTargetUrl();
+
+    /**
+     * Sets the target URL for the current asset.
+     *
+     * @param string $targetUrl A web URL where the asset will be dumped
+     */
+    function setTargetUrl($targetUrl);
 
     /**
      * Returns the time the current asset was last modified.

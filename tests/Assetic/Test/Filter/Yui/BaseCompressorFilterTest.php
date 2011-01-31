@@ -25,7 +25,7 @@ class BaseCompressorFilterTest extends \PHPUnit_Framework_TestCase
 
 class YuiCompressorFilterForTest extends BaseCompressorFilter
 {
-    public function filterDump(AssetInterface $asset, $targetUrl = null)
+    public function filterDump(AssetInterface $asset)
     {
     }
 }

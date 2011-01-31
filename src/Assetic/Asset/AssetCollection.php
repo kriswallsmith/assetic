@@ -23,7 +23,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
 {
     private $assets = array();
     private $filters;
-    private $url;
+    private $targetUrl;
     private $content;
 
     /**
@@ -73,12 +73,12 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         $this->content = implode("\n", $parts);
     }
 
-    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
+    public function dump(FilterInterface $additionalFilter = null)
     {
         // loop through leaves and dump each asset
         $parts = array();
         foreach (new AssetCollectionIterator($this) as $asset) {
-            $parts[] = $asset->dump($targetUrl, $additionalFilter);
+            $parts[] = $asset->dump($additionalFilter);
         }
 
         return implode("\n", $parts);
@@ -94,9 +94,22 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         $this->content = $content;
     }
 
+    /**
+     * An aggregation of assets does not have a single source URL.
+     */
     public function getSourceUrl()
     {
-        return $this->url;
+        return null;
+    }
+
+    public function getTargetUrl()
+    {
+        return $this->targetUrl;
+    }
+
+    public function setTargetUrl($targetUrl)
+    {
+        $this->targetUrl = $targetUrl;
     }
 
     /**

@@ -29,7 +29,7 @@ class CompilerJarFilter extends BaseCompilerFilter
         $this->javaPath = $javaPath;
     }
 
-    public function filterDump(AssetInterface $asset, $targetUrl = null)
+    public function filterDump(AssetInterface $asset)
     {
         $cleanup = array();
 

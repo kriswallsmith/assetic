@@ -31,9 +31,11 @@ class CssRewriteFilter implements FilterInterface
     {
     }
 
-    public function filterDump(AssetInterface $asset, $targetUrl = null)
+    public function filterDump(AssetInterface $asset)
     {
         $sourceUrl = $asset->getSourceUrl();
+        $targetUrl = $asset->getTargetUrl();
+
         if (null === $sourceUrl || null === $targetUrl || $sourceUrl == $targetUrl) {
             return;
         }

@@ -117,8 +117,8 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($asset));
         $asset->expects($this->once())
             ->method('dump')
-            ->with('asdf', $filter);
+            ->with($filter);
 
-        $this->ref->dump('asdf', $filter);
+        $this->ref->dump($filter);
     }
 }

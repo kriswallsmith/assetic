@@ -20,7 +20,7 @@ use Assetic\Asset\AssetInterface;
  */
 class CompilerApiFilter extends BaseCompilerFilter
 {
-    public function filterDump(AssetInterface $asset, $targetUrl = null)
+    public function filterDump(AssetInterface $asset)
     {
         $query = array(
             'js_code'       => $asset->getContent(),

@@ -65,9 +65,9 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())
             ->method('filterDump')
-            ->with($asset, 'url');
+            ->with($asset);
 
-        $asset->dump('url', $filter);
+        $asset->dump($filter);
     }
 
     public function testLastModified()
