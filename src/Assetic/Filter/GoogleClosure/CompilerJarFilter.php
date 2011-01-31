@@ -29,7 +29,7 @@ class CompilerJarFilter extends BaseCompilerFilter
         $this->javaPath = $javaPath;
     }
 
-    public function filterDump(AssetInterface $asset)
+    public function filterDump(AssetInterface $asset, $targetUrl = null)
     {
         $cleanup = array();
 
@@ -78,7 +78,7 @@ class CompilerJarFilter extends BaseCompilerFilter
 
         $options[] = '--js';
         $options[] = $cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
-        file_put_contents($input, $asset->getBody());
+        file_put_contents($input, $asset->getContent());
 
         // todo: check for a valid return code
         $output = shell_exec(implode(' ', array_map('escapeshellarg', $options)));
@@ -86,6 +86,6 @@ class CompilerJarFilter extends BaseCompilerFilter
         // cleanup temp files
         array_map('unlink', $cleanup);
 
-        $asset->setBody($output);
+        $asset->setContent($output);
     }
 }

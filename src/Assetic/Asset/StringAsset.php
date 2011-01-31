@@ -20,38 +20,26 @@ use Assetic\Filter\FilterInterface;
  */
 class StringAsset extends BaseAsset
 {
-    private $originalBody;
+    private $originalContent;
     private $lastModified;
-    private $contentType;
 
     /**
      * Constructor.
      *
-     * @param string $body    The body of the asset
-     * @param string $url     The asset URL
-     * @param array  $filters Filters for the asset
+     * @param string $content   The content of the asset
+     * @param string $sourceUrl The source URL
+     * @param array  $filters   Filters for the asset
      */
-    public function __construct($body, $url = null, $filters = array())
+    public function __construct($content, $sourceUrl = null, $filters = array())
     {
-        parent::__construct($filters);
+        $this->originalContent = $content;
 
-        $this->originalBody = $body;
-        $this->setUrl($url);
+        parent::__construct($sourceUrl, $filters);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad($this->originalBody, $additionalFilter);
-    }
-
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-
-    public function getContentType()
-    {
-        return $this->contentType;
+        $this->doLoad($this->originalContent, $additionalFilter);
     }
 
     public function setLastModified($lastModified)

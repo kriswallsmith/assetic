@@ -29,7 +29,7 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadFromCache()
     {
-        $body = 'asdf';
+        $content = 'asdf';
 
         $this->inner->expects($this->once())
             ->method('getFilters')
@@ -41,17 +41,17 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method('get')
             ->with($this->isType('string'))
-            ->will($this->returnValue($body));
+            ->will($this->returnValue($content));
         $this->inner->expects($this->once())
-            ->method('setBody')
-            ->with($body);
+            ->method('setContent')
+            ->with($content);
 
         $this->asset->load();
     }
 
     public function testLoadToCache()
     {
-        $body = 'asdf';
+        $content = 'asdf';
 
         $this->inner->expects($this->once())
             ->method('getFilters')
@@ -62,18 +62,18 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
         $this->inner->expects($this->once())->method('load');
         $this->inner->expects($this->once())
-            ->method('getBody')
-            ->will($this->returnValue($body));
+            ->method('getContent')
+            ->will($this->returnValue($content));
         $this->cache->expects($this->once())
             ->method('set')
-            ->with($this->isType('string'), $body);
+            ->with($this->isType('string'), $content);
 
         $this->asset->load();
     }
 
     public function testDumpFromCache()
     {
-        $body = 'asdf';
+        $content = 'asdf';
 
         $this->inner->expects($this->once())
             ->method('getFilters')
@@ -85,14 +85,14 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method('get')
             ->with($this->isType('string'))
-            ->will($this->returnValue($body));
+            ->will($this->returnValue($content));
 
-        $this->assertEquals($body, $this->asset->dump(), '->dump() returns the cached value');
+        $this->assertEquals($content, $this->asset->dump(), '->dump() returns the cached value');
     }
 
     public function testDumpToCache()
     {
-        $body = 'asdf';
+        $content = 'asdf';
 
         $this->inner->expects($this->once())
             ->method('getFilters')
@@ -103,11 +103,11 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
         $this->inner->expects($this->once())
             ->method('dump')
-            ->will($this->returnValue($body));
+            ->will($this->returnValue($content));
         $this->cache->expects($this->once())
             ->method('set')
-            ->with($this->isType('string'), $body);
+            ->with($this->isType('string'), $content);
 
-        $this->assertEquals($body, $this->asset->dump(), '->dump() returns the dumped value');
+        $this->assertEquals($content, $this->asset->dump(), '->dump() returns the dumped value');
     }
 }

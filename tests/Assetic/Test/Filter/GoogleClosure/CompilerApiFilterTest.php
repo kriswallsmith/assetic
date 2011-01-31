@@ -38,6 +38,6 @@ EOF;
         $filter = new CompilerApiFilter(new Browser());
         $filter->filterDump($asset);
 
-        $this->assertEquals($expected, $asset->getBody());
+        $this->assertEquals($expected, $asset->getContent());
     }
 }

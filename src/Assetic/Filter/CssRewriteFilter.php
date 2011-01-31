@@ -31,15 +31,14 @@ class CssRewriteFilter implements FilterInterface
     {
     }
 
-    public function filterDump(AssetInterface $asset)
+    public function filterDump(AssetInterface $asset, $targetUrl = null)
     {
-        $context = $asset->getContext();
-        if (null === $context) {
+        if (null === $targetUrl) {
             return;
         }
 
-        $source = $asset->getUrl();
-        $target = $context->getUrl();
+        $source = $asset->getSourceUrl();
+        $target = $targetUrl;
         if (null === $source || null === $target || $source == $target) {
             return;
         }
@@ -87,8 +86,8 @@ class CssRewriteFilter implements FilterInterface
             }
         };
 
-        // tokenize and filter the asset body
-        $tokens = $this->tokenizer->tokenizeString($asset->getBody());
+        // tokenize and filter the asset content
+        $tokens = $this->tokenizer->tokenizeString($asset->getContent());
 
         // cleanup the php tags codesniffer adds
         $tokens = array_slice($tokens, 1, -1);
@@ -122,6 +121,6 @@ class CssRewriteFilter implements FilterInterface
             $code .= $token['content'];
         }
 
-        $asset->setBody($code);
+        $asset->setContent($code);
     }
 }

@@ -52,19 +52,19 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testNestedCollectionLoad()
     {
-        $body = 'foobar';
+        $content = 'foobar';
 
         $count = 0;
         $matches = array();
-        $filter = new CallablesFilter(function($asset) use ($body, & $matches, & $count)
+        $filter = new CallablesFilter(function($asset) use ($content, & $matches, & $count)
         {
             ++$count;
-            if ($body == $asset->getBody()) {
+            if ($content == $asset->getContent()) {
                 $matches[] = $asset;
             }
         });
 
-        $innerColl = new AssetCollection(array(new StringAsset($body)));
+        $innerColl = new AssetCollection(array(new StringAsset($content)));
         $outerColl = new AssetCollection(array($innerColl), array($filter));
         $outerColl->load();
 
@@ -81,16 +81,16 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $nestedAsset = new StringAsset('nested');
         $innerColl = new AssetCollection(array($nestedAsset));
 
-        $bodys = array();
-        $filter = new CallablesFilter(function($asset) use(& $bodys)
+        $contents = array();
+        $filter = new CallablesFilter(function($asset) use(& $contents)
         {
-            $bodys[] = $asset->getBody();
+            $contents[] = $asset->getContent();
         });
 
         $coll = new AssetCollection(array($asset, $innerColl), array($filter));
         $coll->load();
 
-        $this->assertEquals(array('asset', 'nested'), $bodys, '->load() iterates over multiple levels');
+        $this->assertEquals(array('asset', 'nested'), $contents, '->load() iterates over multiple levels');
     }
 
     /**
@@ -102,7 +102,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 
-        $this->assertEquals('asset', $coll->getBody(), '->load() detects duplicate assets');
+        $this->assertEquals('asset', $coll->getContent(), '->load() detects duplicate assets');
     }
 
     /**

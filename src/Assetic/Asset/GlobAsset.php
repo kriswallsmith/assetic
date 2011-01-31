@@ -28,7 +28,7 @@ class GlobAsset extends AssetCollection
      * Constructor.
      *
      * @param string|array $globs   A single glob path or array of paths
-     * @param string       $baseDir A base directory to use for determining each URL
+     * @param string       $baseDir A base directory to use for determining each source URL
      * @param array        $filters An array of filters
      *
      * @throws InvalidArgumentException If the base directory doesn't exist
@@ -36,7 +36,10 @@ class GlobAsset extends AssetCollection
     public function __construct($globs, $baseDir = null, $filters = array())
     {
         $this->globs = (array) $globs;
-        $this->baseDir = $baseDir;
+
+        if (null !== $baseDir && $this->baseDir = realpath($baseDir)) {
+            $this->baseDir .= DIRECTORY_SEPARATOR;
+        }
 
         $this->initialized = false;
 
@@ -48,22 +51,10 @@ class GlobAsset extends AssetCollection
      */
     private function initialize()
     {
-        $baseDir = $this->baseDir;
-        if (null !== $baseDir && false === $baseDir = realpath($baseDir)) {
-            throw new \InvalidArgumentException('Invalid base directory.');
-        }
-
         foreach ($this->globs as $glob) {
             if (false !== $paths = glob($glob)) {
                 foreach (array_map('realpath', $paths) as $path) {
-                    $asset = new FileAsset($path);
-
-                    // determine url based on the base filesystem directory
-                    if (null !== $baseDir && 0 === strpos($path, $baseDir)) {
-                        $asset->setUrl(substr($path, strlen($baseDir) + 1));
-                    }
-
-                    $this->add($asset);
+                    $this->add(new FileAsset($path, 0 === strpos($path, $this->baseDir) ? substr($path, strlen($this->baseDir)) : null));
                 }
             }
         }
@@ -80,13 +71,13 @@ class GlobAsset extends AssetCollection
         parent::load($additionalFilter);
     }
 
-    public function dump(FilterInterface $additionalFilter = null)
+    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
     {
         if (!$this->initialized) {
             $this->initialize();
         }
 
-        return parent::dump($additionalFilter);
+        return parent::dump($targetUrl, $additionalFilter);
     }
 
     public function getLastModified()

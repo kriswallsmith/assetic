@@ -58,7 +58,7 @@ class FilterCollection implements FilterInterface, \IteratorAggregate
         }
     }
 
-    public function filterDump(AssetInterface $asset)
+    public function filterDump(AssetInterface $asset, $targetUrl = null)
     {
         foreach ($this->filters as $filter) {
             $filter->filterDump($asset);

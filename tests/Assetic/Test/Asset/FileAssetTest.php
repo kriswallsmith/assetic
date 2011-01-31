@@ -24,9 +24,9 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
     public function testLazyLoading()
     {
         $asset = new FileAsset(__FILE__);
-        $this->assertEmpty($asset->getBody(), 'The asset body is empty before load');
+        $this->assertEmpty($asset->getContent(), 'The asset content is empty before load');
 
         $asset->load();
-        $this->assertNotEmpty($asset->getBody(), 'The asset body is not empty after load');
+        $this->assertNotEmpty($asset->getContent(), 'The asset content is not empty after load');
     }
 }

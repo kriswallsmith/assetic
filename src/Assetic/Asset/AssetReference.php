@@ -52,44 +52,24 @@ class AssetReference implements AssetInterface
         return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
-    public function dump(FilterInterface $additionalFilter = null)
+    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
     {
         $this->flushFilters();
 
         return $this->callAsset(__FUNCTION__, array($additionalFilter));
     }
 
-    public function getUrl()
+    public function getContent()
     {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function setUrl($url)
+    public function setContent($content)
     {
-        $this->callAsset(__FUNCTION__, array($url));
+        $this->callAsset(__FUNCTION__, array($content));
     }
 
-    public function getBody()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
-
-    public function setBody($body)
-    {
-        $this->callAsset(__FUNCTION__, array($body));
-    }
-
-    public function getContext()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
-
-    public function setContext(AssetInterface $context = null)
-    {
-        $this->callAsset(__FUNCTION__, array($context));
-    }
-
-    public function getContentType()
+    public function getSourceUrl()
     {
         return $this->callAsset(__FUNCTION__);
     }

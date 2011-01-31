@@ -25,7 +25,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     {
         $assets = new GlobAsset(__DIR__.'/*.php', __DIR__);
         foreach ($assets as $asset) {
-            $this->assertRegExp('/^\w+\.php$/', $asset->getUrl(), 'GlobAsset uses the base directory to determine URL');
+            $this->assertRegExp('/^\w+\.php$/', $asset->getSourceUrl(), 'GlobAsset uses the base directory to determine URL');
         }
     }
 
@@ -36,7 +36,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     {
         $assets = new GlobAsset(__DIR__.'/*.php', $baseDir);
         foreach ($assets as $asset) {
-            $this->assertNull($asset->getUrl(), 'GlobAsset does not set URL when provided an invalid base directory');
+            $this->assertNull($asset->getSourceUrl(), 'GlobAsset does not set URL when provided an invalid base directory');
         }
     }
 

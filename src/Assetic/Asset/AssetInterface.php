@@ -14,39 +14,14 @@ use Assetic\Filter\FilterInterface;
  */
 
 /**
- * An asset has a mutable path and body and can be loaded and dumped.
+ * An asset has a mutable path and content and can be loaded and dumped.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 interface AssetInterface
 {
     /**
-     * Loads the asset into memory and applies load filters.
-     *
-     * You can optionally provide an additional filter to apply during load.
-     *
-     * @param FilterInterface $additionalFilter An additional filter
-     */
-    function load(FilterInterface $additionalFilter = null);
-
-    /**
-     * Applies dump filters and returns the asset as a string.
-     *
-     * You can optionally provide an additional filter to apply during dump.
-     *
-     * Dumping an asset should not change its state.
-     *
-     * If the current asset has not been loaded yet, it should be
-     * automatically loaded at this time.
-     *
-     * @param FilterInterface $additionalFilter An additional filter
-     *
-     * @return string The filtered body of the current asset
-     */
-    function dump(FilterInterface $additionalFilter = null);
-
-    /**
-     * Ensures the current filterable includes the supplied filter.
+     * Ensures the current asset includes the supplied filter.
      *
      * @param FilterInterface $filter A filter
      */
@@ -60,56 +35,61 @@ interface AssetInterface
     function getFilters();
 
     /**
-     * Returns the URL for the current asset.
+     * Loads the asset into memory and applies load filters.
      *
-     * @return string $url A URL for the current asset
+     * You may provide an additional filter to apply during load.
+     *
+     * @param FilterInterface $additionalFilter An additional filter
      */
-    function getUrl();
+    function load(FilterInterface $additionalFilter = null);
 
     /**
-     * Sets the URL for the current asset.
+     * Applies dump filters and returns the asset as a string.
      *
-     * @param string $url A URL for the current asset
+     * You may provide an additional filter to apply during dump.
+     *
+     * Dumping an asset should not change its state.
+     *
+     * If the current asset has not been loaded yet, it should be
+     * automatically loaded at this time.
+     *
+     * @param string          $targetUrl        The URL where the dumped asset will be served
+     * @param FilterInterface $additionalFilter An additional filter
+     *
+     * @return string The filtered content of the current asset
      */
-    function setUrl($url);
+    function dump($targetUrl = null, FilterInterface $additionalFilter = null);
 
     /**
-     * Returns the loaded body of the current asset.
+     * Returns the loaded content of the current asset.
      *
-     * @return string The body
+     * @return string The content
      */
-    function getBody();
+    function getContent();
 
     /**
-     * Sets the loaded body for the current asset.
+     * Sets the content of the current asset.
      *
-     * @param string $body The body
+     * Filters can use this method to change the content of the asset.
+     *
+     * @param string $content The asset content
      */
-    function setBody($body);
+    function setContent($content);
 
     /**
-     * Returns the context of the current asset.
+     * Returns the URL for the source asset.
      *
-     * @return AssetInterface|null The current context, if any
+     * This is a web URL and can be either document-relative, root-relative,
+     * or absolute.
+     *
+     * Some possible source paths:
+     *
+     *  * js/main.js
+     *  * https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js
+     *
+     * @return string|null A web URL for the source asset, if there is one
      */
-    function getContext();
-
-    /**
-     * Sets that the current asset is in the context of another asset.
-     *
-     * The context can be set to null to indicate the current asset is not
-     * in the context of any other asset.
-     *
-     * @param AssetInterface $context An asset
-     */
-    function setContext(AssetInterface $context = null);
-
-    /**
-     * Returns the content type of the current asset.
-     *
-     * @return string|null The content type
-     */
-    function getContentType();
+    function getSourceUrl();
 
     /**
      * Returns the time the current asset was last modified.

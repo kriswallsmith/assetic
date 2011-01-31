@@ -133,14 +133,14 @@ class SassFilter implements FilterInterface
         // todo: check for a valid return code
         shell_exec(implode(' ', array_map('escapeshellarg', $options)));
 
-        $asset->setBody(file_get_contents($output));
+        $asset->setContent(file_get_contents($output));
 
         // cleanup
         unlink($input);
         unlink($output);
     }
 
-    public function filterDump(AssetInterface $asset)
+    public function filterDump(AssetInterface $asset, $targetUrl = null)
     {
     }
 }

@@ -57,6 +57,6 @@ JAVASCRIPT;
         $filter = new JsCompressorFilter($_SERVER['YUI_COMPRESSOR_PATH']);
         $filter->filterDump($asset);
 
-        $this->assertEquals($expected, $asset->getBody(), '->filterDump()');
+        $this->assertEquals($expected, $asset->getContent(), '->filterDump()');
     }
 }

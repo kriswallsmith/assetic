@@ -18,7 +18,7 @@ namespace Assetic\Asset;
  */
 class AssetCollectionIterator extends \RecursiveFilterIterator
 {
-    private $urls = array();
+    private $sourceUrls = array();
 
     public function __construct(AssetCollection $coll)
     {
@@ -33,17 +33,17 @@ class AssetCollectionIterator extends \RecursiveFilterIterator
         }
 
         // no url == unique
-        if (!$url = $asset->getUrl()) {
+        if (!$sourceUrl = $asset->getSourceUrl()) {
             return true;
         }
 
         // duplicate
-        if (in_array($url, $this->urls)) {
+        if (in_array($sourceUrl, $this->sourceUrls)) {
             return false;
         }
 
         // remember we've been here
-        $this->urls[] = $url;
+        $this->sourceUrls[] = $sourceUrl;
         return true;
     }
 }

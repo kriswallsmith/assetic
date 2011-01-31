@@ -31,7 +31,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateAssetReference()
     {
-        $assets = $this->factory->createAsset(array('@jquery'), array(), false);
+        $assets = $this->factory->createAsset(array('@jquery'));
         $arr = iterator_to_array($assets);
         $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $arr[0], '->createAsset() creates a reference');
     }
@@ -54,29 +54,6 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $asset = $this->factory->createAsset(array('*', basename(__FILE__)));
         $this->assertInstanceOf('Assetic\\Asset\\AssetCollection', $asset, '->createAsset() creates an asset collection');
-    }
-
-    public function testUrl()
-    {
-        $asset = $this->factory->createAsset(array(), array(), 'js/foo.js');
-        $this->assertEquals('js/foo.js', $asset->getUrl(), '->createAsset() assigns an URL');
-    }
-
-    /**
-     * @dataProvider provideAssetUrls
-     */
-    public function testGeneratedUrl($assetUrls, $expectedExtension)
-    {
-        $asset = $this->factory->createAsset($assetUrls);
-        $this->assertEquals($expectedExtension, pathinfo($asset->getUrl(), PATHINFO_EXTENSION), '->createAsset() uses the most common extension when generating an URL');
-    }
-
-    public function provideAssetUrls()
-    {
-        return array(
-            array(array('foo.js'), 'js'),
-            array(array('foo.js', 'foo.css', 'bar.css'), 'css'),
-        );
     }
 
     public function testFilter()

@@ -8,28 +8,26 @@ use Assetic\Filter\FilterInterface;
 /**
  * A base abstract asset.
  *
- * The methods load(), getContentType() and getLastModified() are left
- * undefined, although a reusable doLoad() method is available to child
- * classes.
+ * The methods load() and getLastModified() are left undefined, although a
+ * reusable doLoad() method is available to child classes.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 abstract class BaseAsset implements AssetInterface
 {
     private $filters;
-    private $url;
-    private $body;
-    private $context;
+    private $sourceUrl;
+    private $content;
     private $loaded;
 
     /**
      * Constructor.
      *
-     * @param string $url     The asset URL
-     * @param array  $filters Filters for the asset
+     * @param array $filters Filters for the asset
      */
-    public function __construct($filters = array())
+    public function __construct($sourceUrl = null, $filters = array())
     {
+        $this->sourceUrl = $sourceUrl;
         $this->filters = new FilterCollection($filters);
     }
 
@@ -46,10 +44,10 @@ abstract class BaseAsset implements AssetInterface
     /**
      * Encapsulates asset loading logic.
      *
-     * @param string          $body             The asset body
+     * @param string          $content          The asset content
      * @param FilterInterface $additionalFilter An additional filter
      */
-    protected function doLoad($body, FilterInterface $additionalFilter = null)
+    protected function doLoad($content, FilterInterface $additionalFilter = null)
     {
         $filter = clone $this->filters;
         if ($additionalFilter) {
@@ -57,15 +55,15 @@ abstract class BaseAsset implements AssetInterface
         }
 
         $asset = clone $this;
-        $asset->setBody($body);
+        $asset->setContent($content);
 
         $filter->filterLoad($asset);
+        $this->content = $asset->getContent();
 
-        $this->setBody($asset->getBody());
         $this->loaded = true;
     }
 
-    public function dump(FilterInterface $additionalFilter = null)
+    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
     {
         if (!$this->loaded) {
             $this->load();
@@ -77,38 +75,23 @@ abstract class BaseAsset implements AssetInterface
         }
 
         $asset = clone $this;
-        $filter->filterDump($asset);
+        $filter->filterDump($asset, $targetUrl);
 
-        return $asset->getBody();
+        return $asset->getContent();
     }
 
-    public function getUrl()
+    public function getContent()
     {
-        return $this->url;
+        return $this->content;
     }
 
-    public function setUrl($url)
+    public function setContent($content)
     {
-        $this->url = $url;
+        $this->content = $content;
     }
 
-    public function getBody()
+    public function getSourceUrl()
     {
-        return $this->body;
-    }
-
-    public function setBody($body)
-    {
-        $this->body = $body;
-    }
-
-    public function getContext()
-    {
-        return $this->context;
-    }
-
-    public function setContext(AssetInterface $context = null)
-    {
-        $this->context = $context;
+        return $this->sourceUrl;
     }
 }

@@ -57,11 +57,12 @@ class AssetFactory
     /**
      * Creates a new asset.
      *
-     * Each asset URL can take one of three forms:
+     * Each source URL can take one of three forms:
      *
-     *  * @jquery:      A reference to the asset manager's "jquery" asset
-     *  * js/core/*:    A glob relative to the base directory
-     *  * js/jquery.js: A file path relative to the base directory
+     *  * @jquery:       A reference to the asset manager's "jquery" asset
+     *  * js/core/*:     A glob relative to the base directory
+     *  * js/jquery.js:  A file path relative to the base directory
+     *  * http://etc...: An absolute URL
      *
      * Prefixing a filter name with a question mark will cause it to be
      * omitted when the factory is in debug mode.
@@ -74,105 +75,51 @@ class AssetFactory
      *         array('sass', '?yui_css')
      *     );
      *
-     * If no URL for the new asset is provided, one will be automatically
-     * generated. This behavior can be disabled by passing a value of false.
+     * A multi-dimensional collection can be built by passing in an array
+     * source URL value that includes more source URLs and filter names:
      *
-     * If the provided URL does not include a slash or dot, it is assumed to
-     * be an extension and the rest of the URL will be automatically
-     * generated.
+     *     $factory->createAsset(
+     *         array('css/main.css', array(array('css/more.sass'), array('sass'))),
+     *         array('yui_css')
+     *     );
      *
-     * @param array  $assetUrls   An array of URLs relative to the base directory
-     * @param array  $filterNames An array of filter names
-     * @param string $url         An URL for the asset
+     * @param array $sourceUrls  An array of URLs relative to the base directory
+     * @param array $filterNames An array of filter names
      *
      * @return AssetInterface An asset
-     *
-     * @todo support nested collections with their own filters
      */
-    public function createAsset(array $assetUrls = array(), array $filterNames = array(), $url = null)
+    public function createAsset(array $sourceUrls = array(), array $filterNames = array())
     {
-        // build an array of child assets and collect extensions
-        $assets = array();
-        $extensions = array();
-        foreach ($assetUrls as $assetUrl) {
-            if ('@' == $assetUrl[0]) {
-                $assets[] = $this->createAssetReference(substr($assetUrl, 1));
-            } elseif (false !== strpos($assetUrl, '*')) {
-                $assets[] = $this->createGlobAsset($this->baseDir . '/' . $assetUrl, $this->baseDir);
-            } else {
-                $assets[] = $this->createFileAsset($this->baseDir . '/' . $assetUrl, $assetUrl);
-            }
+        $asset = $this->createAssetCollection();
 
-            $extensions[] = pathinfo($assetUrl, PATHINFO_EXTENSION);
+        // add assets
+        foreach ($sourceUrls as $sourceUrl) {
+            if (is_array($sourceUrl)) {
+                $asset->add($this->createAsset($sourceUrl[0], $sourceUrl[1]));
+            } elseif ('@' == $sourceUrl[0]) {
+                $asset->add($this->createAssetReference(substr($sourceUrl, 1)));
+            } elseif (false !== strpos($sourceUrl, '*')) {
+                $asset->add($this->createGlobAsset($this->baseDir . '/' . $sourceUrl, $this->baseDir));
+            } else {
+                $asset->add($this->createFileAsset($this->baseDir . '/' . $sourceUrl, $sourceUrl));
+            }
         }
 
-        // build an array of filters
-        $filters = array();
+        // ensure filters
         foreach ($filterNames as $filterName) {
             if ('?' != $filterName[0]) {
-                $filters[] = $this->getFilter($filterName);
+                $asset->ensureFilter($this->getFilter($filterName));
             } elseif (!$this->debug) {
-                $filters[] = $this->getFilter(substr($filterName, 1));
+                $asset->ensureFilter($this->getFilter(substr($filterName, 1)));
             }
-        }
-
-        if (is_string($url) && false === strpos($url, '/') && false === strpos($url, '.')) {
-            // just an extension
-            $extension = $url;
-            $url = null;
-        } elseif (null === $url) {
-            // use the most common extension
-            $extensions = array_filter($extensions);
-            if (count($extensions)) {
-                $votes = array_count_values($extensions);
-                arsort($votes);
-                $extensions = array_keys($votes);
-                $extension = $extensions[0];
-            } else {
-                $extension = null;
-            }
-        }
-
-        if (null === $url) {
-            $url = substr(sha1(serialize(array_merge($assetUrls, $filterNames))), 0, 7);
-
-            if ($extension) {
-                $url = $extension . '/' . $url . '.' . $extension;
-            } else {
-                $url = 'assets/' . $url;
-            }
-        }
-
-        return $this->buildAsset($assets, $filters, $url);
-    }
-
-    /**
-     * Generates an asset name.
-     *
-     * @param array  $assetUrls   An array of URLs relative to the base directory
-     * @param array  $filterNames An array of filter names
-     * @param string $url         An URL for the asset
-     *
-     * @return string An asset name
-     */
-    public function createAssetName(array $assetUrls = array(), array $filterNames = array(), $url = null)
-    {
-        return md5(serialize(array_merge($assetUrls, $filterNames)) . $url);
-    }
-
-    protected function buildAsset($assets, $filters, $url)
-    {
-        $asset = new AssetCollection($assets);
-
-        foreach ($filters as $filter) {
-            $asset->ensureFilter($filter);
-        }
-
-        if (false !== $url) {
-            $asset->setUrl($url);
         }
 
         return $asset;
+    }
+
+    protected function createAssetCollection()
+    {
+        return new AssetCollection();
     }
 
     protected function createAssetReference($name)

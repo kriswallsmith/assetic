@@ -44,60 +44,40 @@ class AssetCache implements AssetInterface
     {
         $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'load');
         if ($this->cache->has($cacheKey)) {
-            $this->asset->setBody($this->cache->get($cacheKey));
+            $this->asset->setContent($this->cache->get($cacheKey));
             return;
         }
 
         $this->asset->load($additionalFilter);
-        $this->cache->set($cacheKey, $this->asset->getBody());
+        $this->cache->set($cacheKey, $this->asset->getContent());
     }
 
-    public function dump(FilterInterface $additionalFilter = null)
+    public function dump($targetUrl = null, FilterInterface $additionalFilter = null)
     {
-        $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'dump');
+        $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'dumpTo'.$targetUrl);
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
 
-        $body = $this->asset->dump($additionalFilter);
-        $this->cache->set($cacheKey, $body);
+        $content = $this->asset->dump($additionalFilter);
+        $this->cache->set($cacheKey, $content);
 
-        return $body;
+        return $content;
     }
 
-    public function getUrl()
+    public function getContent()
     {
-        return $this->asset->getUrl();
+        return $this->asset->getContent();
     }
 
-    public function setUrl($url)
+    public function setContent($content)
     {
-        $this->asset->setUrl($url);
+        $this->asset->setContent($content);
     }
 
-    public function getBody()
+    public function getSourceUrl()
     {
-        return $this->asset->getBody();
-    }
-
-    public function setBody($body)
-    {
-        $this->asset->setBody($body);
-    }
-
-    public function getContext()
-    {
-        return $this->asset->getContext();
-    }
-
-    public function setContext(AssetInterface $context = null)
-    {
-        $this->asset->setContext($context);
-    }
-
-    public function getContentType()
-    {
-        return $this->asset->getContentType();
+        return $this->asset->getSourceUrl();
     }
 
     public function getLastModified()
@@ -108,11 +88,11 @@ class AssetCache implements AssetInterface
     /**
      * Returns a cache key for the current asset.
      *
-     * The key is composed of everything but an asset's body:
+     * The key is composed of everything but an asset's content:
      *
-     *  * url
+     *  * source url
+     *  * last modified
      *  * filters
-     *  * context (recursive)
      *
      * @param AssetInterface  $asset            The asset
      * @param FilterInterface $additionalFilter Any additional filter being applied
@@ -127,15 +107,11 @@ class AssetCache implements AssetInterface
             $asset->ensureFilter($additionalFilter);
         }
 
-        $cacheKey = $asset->getUrl();
+        $cacheKey  = $asset->getSourceUrl();
+        $cacheKey .= $asset->getLastModified();
 
         foreach ($asset->getFilters() as $filter) {
             $cacheKey .= serialize($filter);
-        }
-
-        $context = $asset->getContext();
-        if ($context && $asset !== $context) {
-            $cacheKey .= self::getCacheKey($context);
         }
 
         return md5($cacheKey.$salt);

@@ -39,7 +39,7 @@ class JsCompressorFilter extends BaseCompressorFilter
         $this->disableOptimizations = $disableOptimizations;
     }
 
-    public function filterDump(AssetInterface $asset)
+    public function filterDump(AssetInterface $asset, $targetUrl = null)
     {
         $options = array();
 
@@ -55,6 +55,6 @@ class JsCompressorFilter extends BaseCompressorFilter
             $options[] = '--disable-optimizations';
         }
 
-        $asset->setBody($this->compress($asset->getBody(), 'js', $options));
+        $asset->setContent($this->compress($asset->getContent(), 'js', $options));
     }
 }

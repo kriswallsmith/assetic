@@ -20,10 +20,10 @@ use Assetic\Asset\AssetInterface;
  */
 class CompilerApiFilter extends BaseCompilerFilter
 {
-    public function filterDump(AssetInterface $asset)
+    public function filterDump(AssetInterface $asset, $targetUrl = null)
     {
         $query = array(
-            'js_code'       => $asset->getBody(),
+            'js_code'       => $asset->getContent(),
             'output_format' => 'json',
             'output_info'   => 'compiled_code',
         );
@@ -73,6 +73,6 @@ class CompilerApiFilter extends BaseCompilerFilter
             throw new \RuntimeException(sprintf('The Google Closure Compiler API threw some errors: '.print_r($data->errors, true)));
         }
 
-        $asset->setBody($data->compiledCode);
+        $asset->setContent($data->compiledCode);
     }
 }
