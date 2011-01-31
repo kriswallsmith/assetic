@@ -33,21 +33,13 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
      * @group functional
      * @dataProvider provideUrls
      */
-    public function testUrls($format, $source, $target, $inputUrl, $expectedUrl)
+    public function testUrls($format, $sourceUrl, $targetUrl, $inputUrl, $expectedUrl)
     {
-        $this->markTestIncomplete('needs update');
-
-        $context = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $context->expects($this->once())
-            ->method('getUrl')
-            ->will($this->returnValue($target));
-
-        $asset = new StringAsset(sprintf($format, $inputUrl), $source);
-        $asset->setContext($context);
+        $asset = new StringAsset(sprintf($format, $inputUrl), $sourceUrl);
         $asset->load();
 
         $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
-        $filter->filterDump($asset);
+        $filter->filterDump($asset, $targetUrl);
 
         $this->assertEquals(sprintf($format, $expectedUrl), $asset->getContent(), '->filterDump() rewrites relative urls');
     }

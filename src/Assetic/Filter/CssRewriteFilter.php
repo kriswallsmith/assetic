@@ -33,20 +33,15 @@ class CssRewriteFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset, $targetUrl = null)
     {
-        if (null === $targetUrl) {
-            return;
-        }
-
-        $source = $asset->getSourceUrl();
-        $target = $targetUrl;
-        if (null === $source || null === $target || $source == $target) {
+        $sourceUrl = $asset->getSourceUrl();
+        if (null === $sourceUrl || null === $targetUrl || $sourceUrl == $targetUrl) {
             return;
         }
 
         // learn how to get from the target back to the source
-        if (false !== strpos($source, '://')) {
+        if (false !== strpos($sourceUrl, '://')) {
             // the source is absolute, this should be easy
-            $parts = parse_url($source);
+            $parts = parse_url($sourceUrl);
 
             $host = $parts['scheme'].'://'.$parts['host'];
             $path = dirname($parts['path']).'/';
@@ -56,16 +51,16 @@ class CssRewriteFilter implements FilterInterface
 
             // pop entries off the target until it fits in the source
             $path = '';
-            $targetDir = dirname($target);
-            while (0 !== strpos($source, $targetDir)) {
+            $targetDir = dirname($targetUrl);
+            while (0 !== strpos($sourceUrl, $targetDir)) {
                 if (false !== $pos = strrpos($targetDir, '/')) {
                     $targetDir = substr($targetDir, 0, $pos);
                     $path .= '../';
                 } else {
-                    throw new \RuntimeException(sprintf('Unable to calculate relative path from "%s" to "%s"', $target, $source));
+                    throw new \RuntimeException(sprintf('Unable to calculate relative path from "%s" to "%s"', $targetUrl, $sourceUrl));
                 }
             }
-            $path .= substr(dirname($source).'/', strlen($targetDir) + 1);
+            $path .= substr(dirname($sourceUrl).'/', strlen($targetDir) + 1);
         }
 
         $filter = function($url) use($host, $path)
@@ -97,7 +92,7 @@ class CssRewriteFilter implements FilterInterface
             $tokens[] = $token;
         }
 
-        $code = '';
+        $content = '';
         $inUrl = $inImport = 0;
         for ($i = 0; $i < count($tokens); $i++) {
             $token = $tokens[$i];
@@ -118,9 +113,9 @@ class CssRewriteFilter implements FilterInterface
                 $inUrl = $inImport = 0;
             }
 
-            $code .= $token['content'];
+            $content .= $token['content'];
         }
 
-        $asset->setContent($code);
+        $asset->setContent($content);
     }
 }
