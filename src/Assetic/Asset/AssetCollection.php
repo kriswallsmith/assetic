@@ -1,10 +1,5 @@
 <?php
 
-namespace Assetic\Asset;
-
-use Assetic\Filter\FilterCollection;
-use Assetic\Filter\FilterInterface;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -13,6 +8,11 @@ use Assetic\Filter\FilterInterface;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Asset;
+
+use Assetic\Filter\FilterCollection;
+use Assetic\Filter\FilterInterface;
 
 /**
  * A collection of assets.

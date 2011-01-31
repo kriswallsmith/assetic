@@ -1,10 +1,5 @@
 <?php
 
-namespace Assetic\Test\Filter\GoogleClosure;
-
-use Assetic\Asset\StringAsset;
-use Assetic\Filter\GoogleClosure\CompilerApiFilter;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -13,6 +8,11 @@ use Assetic\Filter\GoogleClosure\CompilerApiFilter;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Test\Filter\GoogleClosure;
+
+use Assetic\Asset\StringAsset;
+use Assetic\Filter\GoogleClosure\CompilerApiFilter;
 
 class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
 {

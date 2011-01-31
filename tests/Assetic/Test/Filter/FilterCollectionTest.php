@@ -1,9 +1,5 @@
 <?php
 
-namespace Assetic\Test\Filter;
-
-use Assetic\Filter\FilterCollection;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -12,6 +8,10 @@ use Assetic\Filter\FilterCollection;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Test\Filter;
+
+use Assetic\Filter\FilterCollection;
 
 class FilterCollectionTest extends \PHPUnit_Framework_TestCase
 {

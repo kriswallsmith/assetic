@@ -1,10 +1,5 @@
 <?php
 
-namespace Assetic\Asset;
-
-use Assetic\Cache\CacheInterface;
-use Assetic\Filter\FilterInterface;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -13,6 +8,11 @@ use Assetic\Filter\FilterInterface;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Asset;
+
+use Assetic\Cache\CacheInterface;
+use Assetic\Filter\FilterInterface;
 
 /**
  * Caches an asset to avoid the cost of loading and dumping.

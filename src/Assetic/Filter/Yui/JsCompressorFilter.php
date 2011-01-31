@@ -1,9 +1,5 @@
 <?php
 
-namespace Assetic\Filter\Yui;
-
-use Assetic\Asset\AssetInterface;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -12,6 +8,10 @@ use Assetic\Asset\AssetInterface;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Filter\Yui;
+
+use Assetic\Asset\AssetInterface;
 
 /**
  * Javascript YUI compressor filter.

@@ -1,10 +1,5 @@
 <?php
 
-namespace Assetic\Test\Filter;
-
-use Assetic\Asset\StringAsset;
-use Assetic\Filter\CssRewriteFilter;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -13,6 +8,11 @@ use Assetic\Filter\CssRewriteFilter;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Test\Filter;
+
+use Assetic\Asset\StringAsset;
+use Assetic\Filter\CssRewriteFilter;
 
 class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,12 +1,5 @@
 <?php
 
-namespace Assetic;
-
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\AssetReference;
-use Assetic\Asset\GlobAsset;
-use Assetic\Asset\FileAsset;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -15,6 +8,13 @@ use Assetic\Asset\FileAsset;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic;
+
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetReference;
+use Assetic\Asset\GlobAsset;
+use Assetic\Asset\FileAsset;
 
 /**
  * The asset factory creates asset objects.

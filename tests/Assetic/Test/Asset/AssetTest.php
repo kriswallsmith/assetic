@@ -1,9 +1,5 @@
 <?php
 
-namespace Assetic\Test\Asset;
-
-use Assetic\Asset\StringAsset;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -12,6 +8,10 @@ use Assetic\Asset\StringAsset;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Test\Asset;
+
+use Assetic\Asset\StringAsset;
 
 class AssetTest extends \PHPUnit_Framework_TestCase
 {

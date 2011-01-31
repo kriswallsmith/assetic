@@ -1,9 +1,5 @@
 <?php
 
-namespace Assetic\Test\Asset;
-
-use Assetic\Asset\AssetReference;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -12,6 +8,10 @@ use Assetic\Asset\AssetReference;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Test\Asset;
+
+use Assetic\Asset\AssetReference;
 
 class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 {

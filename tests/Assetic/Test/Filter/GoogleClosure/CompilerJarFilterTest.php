@@ -1,9 +1,5 @@
 <?php
 
-namespace Assetic\Test\Filter\GoogleClosure;
-
-use Assetic\Filter\GoogleClosure\CompilerJarFilter;
-
 /*
  * This file is part of the Assetic package.
  *
@@ -12,6 +8,10 @@ use Assetic\Filter\GoogleClosure\CompilerJarFilter;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Assetic\Test\Filter\GoogleClosure;
+
+use Assetic\Filter\GoogleClosure\CompilerJarFilter;
 
 class CompilerJarFilterTest extends \PHPUnit_Framework_TestCase
 {
