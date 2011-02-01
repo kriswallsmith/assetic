@@ -13,7 +13,7 @@ namespace Assetic\Extension\Twig;
 
 use Assetic\Factory\Factory;
 
-class Extension extends \Twig_Extension
+class AsseticExtension extends \Twig_Extension
 {
     private $factory;
     private $debug;

@@ -107,7 +107,7 @@ Twig
 To use the Assetic [Twig][3] extension you must register it to your Twig
 environment:
 
-    $twig->addExtension(new Extension($factory, $debug));
+    $twig->addExtension(new AsseticExtension($factory, $debug));
 
 Once in place, the extension exposes an `assetic` tag with a syntax similar
 to what the asset factory uses:

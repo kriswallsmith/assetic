@@ -12,10 +12,10 @@
 namespace Assetic\Test\Extension\Twig;
 
 use Assetic\Factory\Factory;
-use Assetic\Extension\Twig\Extension;
+use Assetic\Extension\Twig\AsseticExtension;
 use Assetic\Extension\Twig\TokenParser;
 
-class ExtensionTest extends \PHPUnit_Framework_TestCase
+class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 {
     private $am;
     private $fm;
@@ -32,7 +32,7 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->twig = new \Twig_Environment();
         $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new Extension(new Factory(__DIR__.'/templates', $this->am, $this->fm)));
+        $this->twig->addExtension(new AsseticExtension(new Factory(__DIR__.'/templates', $this->am, $this->fm)));
     }
 
     public function testReference()
