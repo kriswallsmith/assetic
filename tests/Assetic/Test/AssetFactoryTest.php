@@ -97,16 +97,4 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->factory->createAsset(array('foo.css'), array('?foo'));
     }
-
-    public function testNestedCollection()
-    {
-        $this->fm->expects($this->exactly(2))
-            ->method('get')
-            ->will($this->returnValue($this->getMock('Assetic\\Filter\\FilterInterface')));
-
-        $sassFiles = array(array('css/src/main.sass'), array('sass'));
-        $assets = $this->factory->createAsset(array('css/main.css', $sassFiles), array('yui_css'));
-
-        $this->assertEquals(2, count(iterator_to_array($assets)), '->createAsset() creates nested collections');
-    }
 }
