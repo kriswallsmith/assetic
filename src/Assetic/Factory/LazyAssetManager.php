@@ -18,12 +18,12 @@ use Assetic\AssetManager;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FactoryAwareAssetManager extends AssetManager
+class LazyAssetManager extends AssetManager
 {
     private $factory;
     private $formulae = array();
 
-    public function __construct(Factory $factory)
+    public function __construct(AssetFactory $factory)
     {
         $this->factory = $factory;
         $factory->setAssetManager($this);
@@ -71,7 +71,11 @@ class FactoryAwareAssetManager extends AssetManager
      */
     private function flush($name)
     {
-        $asset = call_user_func_array(array($this->factory, 'createAsset'), $this->formulae[$name]);
-        $this->set($name, $asset);
+        static $defaults = array(array(), array(), null, null, null);
+
+        $formula = $this->formulae[$name] + $defaults;
+        $formula[3] = $name;
+
+        $this->set($name, call_user_func_array(array($this->factory, 'createAsset'), $formula));
     }
 }
