@@ -9,31 +9,39 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension;
+namespace Assetic\Factory;
 
-use Assetic\Asset\AssetInterface;
-use Assetic\AssetFactory;
+use Assetic\AssetManager;
 
-class CachedAssetManager extends AssetManager
+/**
+ * An asset manager that also knows how to create assets.
+ *
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ */
+class FactoryAwareAssetManager extends AssetManager
 {
     private $factory;
     private $formulae = array();
 
-    public function __construct($cacheFiles = array())
-    {
-        foreach ($cacheFiles as $cacheFile) {
-            $this->formulae += require $cacheFile;
-        }
-    }
-
-    public function setFactory(AssetFactory $factory)
+    public function __construct(Factory $factory)
     {
         $this->factory = $factory;
+        $factory->setAssetManager($this);
+    }
+
+    public function addFormulae(array $formulae)
+    {
+        $this->formulae = $formulae + $this->formulae;
+    }
+
+    public function getFormulae()
+    {
+        return $this->formulae;
     }
 
     public function get($name)
     {
-        if (isset($this->formulae[$name])) {
+        if (!parent::has($name) && isset($this->formulae[$name])) {
             $this->flush($name);
         }
 
@@ -45,17 +53,12 @@ class CachedAssetManager extends AssetManager
         return isset($this->formulae[$name]) || parent::has($name);
     }
 
-    public function set($name, AssetInterface $asset)
-    {
-        unset($this->formulae[$name]);
-
-        parent::set($name, $asset);
-    }
-
     public function all()
     {
         foreach (array_keys($this->formulae) as $name) {
-            $this->flush($name);
+            if (!parent::has($name)) {
+                $this->flush($name);
+            }
         }
 
         return parent::all();
@@ -68,7 +71,7 @@ class CachedAssetManager extends AssetManager
      */
     private function flush($name)
     {
-        $this->set($name, call_user_func_array(array($this->factory, 'createAsset'), $this->formulae[$name]));
-        unset($this->formulae[$name]);
+        $asset = call_user_func_array(array($this->factory, 'createAsset'), $this->formulae[$name]);
+        $this->set($name, $asset);
     }
 }

@@ -14,7 +14,7 @@ namespace Assetic\Extension\Twig;
 /**
  * Loads asset formulae from Twig templates.
  *
- * A formula is an array of arguments for {@link AssetFactory::createAsset()}.
+ * A formula is an array of arguments for {@link Factory::createAsset()}.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */

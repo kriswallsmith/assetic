@@ -72,7 +72,7 @@ Asset Factory
 If you'd rather not create all these objects by hand, you can use the asset
 factory, which will do most of the work for you.
 
-    $factory = new AssetFactory('/path/to/web', $am, $fm);
+    $factory = new Factory('/path/to/web', $am, $fm);
     $css = $factory->createAsset(array(
         '@reset',         // load the asset manager's "reset" asset
         'css/src/*.scss', // load everything in the core directory
@@ -118,6 +118,20 @@ to what the asset factory uses:
 
 This example will render one `link` element on the page that includes a URL
 where the configured asset can be found.
+
+These assets need to be dumped to the web directory so these URLs don't return
+404 errors.
+
+    $am = new FactoryAwareAssetManager($factory);
+
+    // loop through all your templates
+    $loader = new Twig\FormulaLoader($twig);
+    foreach ($templates as $template) {
+        $am->addFormulae($loader->load($template));
+    }
+
+    $writer = new AssetWriter('/path/to/web');
+    $writer->writeManager($am);
 
 ---
 

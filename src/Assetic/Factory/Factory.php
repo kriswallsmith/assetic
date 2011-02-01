@@ -9,19 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic;
+namespace Assetic\Factory;
 
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
+use Assetic\AssetManager;
+use Assetic\FilterManager;
 
 /**
  * The asset factory creates asset objects.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class AssetFactory
+class Factory
 {
     private $baseDir;
     private $am;

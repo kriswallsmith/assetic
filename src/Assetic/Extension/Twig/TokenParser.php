@@ -11,7 +11,7 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\AssetFactory;
+use Assetic\Factory\Factory;
 use Assetic\Asset\AssetCollectionIterator;
 
 class TokenParser extends \Twig_TokenParser
@@ -19,7 +19,7 @@ class TokenParser extends \Twig_TokenParser
     private $factory;
     private $debug;
 
-    public function __construct(AssetFactory $factory, $debug = false)
+    public function __construct(Factory $factory, $debug = false)
     {
         $this->factory = $factory;
         $this->debug = $debug;

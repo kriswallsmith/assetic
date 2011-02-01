@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test;
+namespace Assetic\Test\Factory;
 
-use Assetic\AssetFactory;
+use Assetic\Factory\Factory;
 
-class AssetFactoryTest extends \PHPUnit_Framework_TestCase
+class FactoryTest extends \PHPUnit_Framework_TestCase
 {
     private $baseDir;
     private $am;
@@ -26,7 +26,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->am = $this->getMock('Assetic\\AssetManager');
         $this->fm = $this->getMock('Assetic\\FilterManager');
 
-        $this->factory = new AssetFactory($this->baseDir, $this->am, $this->fm);
+        $this->factory = new Factory($this->baseDir, $this->am, $this->fm);
     }
 
     public function testCreateAssetReference()

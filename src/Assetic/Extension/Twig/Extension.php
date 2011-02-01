@@ -11,14 +11,14 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\AssetFactory;
+use Assetic\Factory\Factory;
 
 class Extension extends \Twig_Extension
 {
     private $factory;
     private $debug;
 
-    public function __construct(AssetFactory $factory, $debug = false)
+    public function __construct(Factory $factory, $debug = false)
     {
         $this->factory = $factory;
         $this->debug = $debug;
@@ -36,7 +36,7 @@ class Extension extends \Twig_Extension
         return 'assetic';
     }
 
-    protected function createTokenParser(AssetFactory $factory, $debug = false)
+    protected function createTokenParser(Factory $factory, $debug = false)
     {
         return new TokenParser($factory, $debug);
     }
