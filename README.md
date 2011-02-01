@@ -131,7 +131,7 @@ These assets need to be dumped to the web directory so these URLs don't return
     }
 
     $writer = new AssetWriter('/path/to/web');
-    $writer->writeManager($am);
+    $writer->writeManagerAssets($am);
 
 ---
 

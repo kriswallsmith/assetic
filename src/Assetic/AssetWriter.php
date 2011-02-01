@@ -32,7 +32,7 @@ class AssetWriter
         $this->dir = $dir;
     }
 
-    public function writeManager(AssetManager $am)
+    public function writeManagerAssets(AssetManager $am)
     {
         foreach ($am->all() as $asset) {
             $this->writeAsset($asset);
