@@ -36,7 +36,7 @@ class Node extends \Twig_Node
             ->subcompile($this->getAssetUrlNode($this->getNode('body')))
             ->raw(";\n")
             ->subcompile($this->getNode('body'))
-            ->write("unset(\$context['_asset_url']);\n")
+            ->write("unset(\$context['asset_url']);\n")
         ;
     }
 
