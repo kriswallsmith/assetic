@@ -11,9 +11,9 @@
 
 namespace Assetic\Test\Factory;
 
-use Assetic\Factory\Factory;
+use Assetic\Factory\AssetFactory;
 
-class FactoryTest extends \PHPUnit_Framework_TestCase
+class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 {
     private $baseDir;
     private $am;
@@ -26,7 +26,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->am = $this->getMock('Assetic\\AssetManager');
         $this->fm = $this->getMock('Assetic\\FilterManager');
 
-        $this->factory = new Factory($this->baseDir, $this->am, $this->fm);
+        $this->factory = new AssetFactory($this->baseDir);
+        $this->factory->setAssetManager($this->am);
+        $this->factory->setFilterManager($this->fm);
     }
 
     public function testCreateAssetReference()

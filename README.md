@@ -72,7 +72,11 @@ Asset Factory
 If you'd rather not create all these objects by hand, you can use the asset
 factory, which will do most of the work for you.
 
-    $factory = new Factory('/path/to/web', $am, $fm);
+    $factory = new AssetFactory('/path/to/web');
+    $factory->setAssetManager($am);
+    $factory->setFilterManager($fm);
+    $factory->setDebug(true);
+
     $css = $factory->createAsset(array(
         '@reset',         // load the asset manager's "reset" asset
         'css/src/*.scss', // load everything in the core directory
@@ -80,6 +84,7 @@ factory, which will do most of the work for you.
         'scss',           // filter through the filter manager's "scss" filter
         '?yui_css',       // don't use this filter in debug mode
     ), 'css');
+
     echo $css->dump();
 
 Prefixing a filter name with a question mark, as `yui_css` is here, will cause
@@ -100,6 +105,15 @@ A simple caching mechanism is provided to avoid unnecessary work.
     $js->dump();
     $js->dump();
     $js->dump();
+
+Static Assets
+-------------
+
+Alternatively you can just write filtered assets to your web directory and be
+done with it.
+
+    $writer = new AssetWriter('/path/to/web');
+    $writer->writeManagerAssets($am);
 
 Twig
 ----
@@ -122,7 +136,7 @@ where the configured asset can be found.
 These assets need to be dumped to the web directory so these URLs don't return
 404 errors.
 
-    $am = new FactoryAwareAssetManager($factory);
+    $am = new LazyAssetManager($factory);
 
     // loop through all your templates
     $loader = new Twig\FormulaLoader($twig);

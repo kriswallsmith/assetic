@@ -23,26 +23,22 @@ use Assetic\FilterManager;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class Factory
+class AssetFactory
 {
     private $baseDir;
+    private $debug;
     private $am;
     private $fm;
-    private $debug;
 
     /**
      * Constructor.
      *
-     * @param string        $baseDir Path to the base directory for relative URLs
-     * @param AssetManager  $am      An asset manager
-     * @param FilterManager $fm      The filter manager
-     * @param Boolean       $debug   Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $baseDir Path to the base directory for relative URLs
+     * @param Boolean $debug   Filters prefixed with a "?" will be omitted in debug mode
      */
-    public function __construct($baseDir, AssetManager $am, FilterManager $fm, $debug = false)
+    public function __construct($baseDir, $debug = false)
     {
         $this->baseDir = rtrim($baseDir, '/').'/';
-        $this->am = $am;
-        $this->fm = $fm;
         $this->debug = $debug;
     }
 
@@ -54,6 +50,26 @@ class Factory
     public function setDebug($debug)
     {
         $this->debug = $debug;
+    }
+
+    /**
+     * Sets the asset manager to use when creating asset references.
+     *
+     * @param AssetManager $am The asset manager
+     */
+    public function setAssetManager(AssetManager $am)
+    {
+        $this->am = $am;
+    }
+
+    /**
+     * Sets the filter manager to use when adding filters.
+     *
+     * @param FilterManager $fm The filter manager
+     */
+    public function setFilterManager(FilterManager $fm)
+    {
+        $this->fm = $fm;
     }
 
     /**
@@ -153,6 +169,10 @@ class Factory
 
     protected function createAssetReference($name)
     {
+        if (!$this->am) {
+            throw new \LogicException('There is no asset manager.');
+        }
+
         return new AssetReference($this->am, $name);
     }
 
@@ -168,6 +188,10 @@ class Factory
 
     protected function getFilter($name)
     {
+        if (!$this->fm) {
+            throw new \LogicException('There is not filter manager.');
+        }
+
         return $this->fm->get($name);
     }
 }

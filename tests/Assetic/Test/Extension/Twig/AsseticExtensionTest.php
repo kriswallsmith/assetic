@@ -11,7 +11,7 @@
 
 namespace Assetic\Test\Extension\Twig;
 
-use Assetic\Factory\Factory;
+use Assetic\Factory\AssetFactory;
 use Assetic\Extension\Twig\AsseticExtension;
 use Assetic\Extension\Twig\TokenParser;
 
@@ -30,9 +30,13 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->am = $this->getMock('Assetic\\AssetManager');
         $this->fm = $this->getMock('Assetic\\FilterManager');
 
+        $factory = new AssetFactory(__DIR__.'/templates');
+        $factory->setAssetManager($this->am);
+        $factory->setFilterManager($this->fm);
+
         $this->twig = new \Twig_Environment();
         $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new AsseticExtension(new Factory(__DIR__.'/templates', $this->am, $this->fm)));
+        $this->twig->addExtension(new AsseticExtension($factory));
     }
 
     public function testReference()
