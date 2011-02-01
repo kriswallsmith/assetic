@@ -117,15 +117,17 @@ class AssetFactory
         // target url
         if (false !== strpos($targetUrl, '*')) {
             // pattern
-            $targetUrl = str_replace('*', $this->generateAssetName($sourceUrls, $filterNames), $targetUrl);
+            $asset->setTargetUrl(str_replace('*', $this->generateAssetName($sourceUrls, $filterNames), $targetUrl));
         } elseif (ctype_alpha($targetUrl)) {
             // extension
-            $targetUrl = sprintf('%s/%s.%1$s', $targetUrl, $this->generateAssetName($sourceUrls, $filterNames));
-        } elseif (!$targetUrl) {
-            // blank
-            $targetUrl = 'assets/'.$this->generateAssetName($sourceUrls, $filterNames);
+            $asset->setTargetUrl(sprintf('%s/%s.%1$s', $targetUrl, $this->generateAssetName($sourceUrls, $filterNames)));
+        } elseif ($targetUrl) {
+            // simple
+            $asset->setTargetUrl($targetUrl);
+        } elseif (!$asset->getTargetUrl()) {
+            // generate
+            $asset->setTargetUrl('assets/'.$this->generateAssetName($sourceUrls, $filterNames));
         }
-        $asset->setTargetUrl($targetUrl);
 
         return $asset;
     }
