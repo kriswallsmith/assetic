@@ -17,6 +17,12 @@ spl_autoload_register(function($class)
             require_once $file;
             return true;
         }
+    } elseif (isset($_SERVER['TWIG_PATH']) && 0 === strpos($class, 'Twig_')) {
+        $file = $_SERVER['TWIG_PATH'] . '/' . str_replace('_', '/', $class) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return true;
+        }
     }
 });
 
