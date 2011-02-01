@@ -76,7 +76,7 @@ class TokenParser extends \Twig_TokenParser
         }
 
         if (!$debug) {
-            return $this->createNode($body, $sourceUrls, $coll->getTargetUrl(), $filterNames, $assetName, $token->getLine(), $this->getTag());
+            return static::createNode($body, $sourceUrls, $coll->getTargetUrl(), $filterNames, $assetName, $debug, $token->getLine(), $this->getTag());
         }
 
         // create a pattern for each leaf's target url
@@ -90,7 +90,7 @@ class TokenParser extends \Twig_TokenParser
         $nodes = array();
         foreach (new AssetCollectionIterator($coll) as $leaf) {
             $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filterNames, $pattern, null, $debug);
-            $nodes[] = $this->createNode($body, array($asset->getSourceUrl()), $asset->getTargetUrl(), $filterNames, $assetName.'_'.count($nodes), $token->getLine(), $this->getTag());
+            $nodes[] = static::createNode($body, array($asset->getSourceUrl()), $asset->getTargetUrl(), $filterNames, $assetName.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
         }
 
         return new \Twig_Node($nodes, array(), $token->getLine(), $this->getTag());
@@ -101,8 +101,8 @@ class TokenParser extends \Twig_TokenParser
         return 'assetic';
     }
 
-    protected function createNode(\Twig_NodeInterface $body, array $sourceUrls, $targetUrl, array $filterNames, $assetName, $lineno = 0, $tag = null)
+    static protected function createNode(\Twig_NodeInterface $body, array $sourceUrls, $targetUrl, array $filterNames, $assetName, $debug = false, $lineno = 0, $tag = null)
     {
-        return new Node($body, $sourceUrls, $targetUrl, $filterNames, $assetName, $lineno, $tag);
+        return new Node($body, $sourceUrls, $targetUrl, $filterNames, $assetName, $debug, $lineno, $tag);
     }
 }
