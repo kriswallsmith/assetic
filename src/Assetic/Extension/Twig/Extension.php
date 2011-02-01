@@ -11,25 +11,33 @@
 
 namespace Assetic\Extension\Twig;
 
+use Assetic\AssetFactory;
+
 class Extension extends \Twig_Extension
 {
-    private $tokenParser;
+    private $factory;
+    private $debug;
 
-    /**
-     * The token parser is injected because it depends on the asset factory and manager...
-     */
-    public function __construct(TokenParser $tokenParser)
+    public function __construct(AssetFactory $factory, $debug = false)
     {
-        $this->tokenParser = $tokenParser;
+        $this->factory = $factory;
+        $this->debug = $debug;
     }
 
     public function getTokenParsers()
     {
-        return array($this->tokenParser);
+        return array(
+            $this->createTokenParser($this->factory, $this->debug),
+        );
     }
 
     public function getName()
     {
         return 'assetic';
+    }
+
+    protected function createTokenParser(AssetFactory $factory, $debug = false)
+    {
+        return new TokenParser($factory, $debug);
     }
 }

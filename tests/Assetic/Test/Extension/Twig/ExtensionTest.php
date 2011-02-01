@@ -28,7 +28,7 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->twig = new \Twig_Environment();
         $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new Extension(new TokenParser(new AssetFactory(__DIR__.'/templates', $this->am, $this->fm))));
+        $this->twig->addExtension(new Extension(new AssetFactory(__DIR__.'/templates', $this->am, $this->fm)));
     }
 
     public function testReference()

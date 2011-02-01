@@ -101,6 +101,24 @@ A simple caching mechanism is provided to avoid unnecessary work.
     $js->dump();
     $js->dump();
 
+Twig
+----
+
+To use the Assetic [Twig][3] extension you must register it to your Twig
+environment:
+
+    $twig->addExtension(new Extension($factory, $debug));
+
+Once in place, the extension exposes an `assetic` tag with a syntax similar
+to what the asset factory uses:
+
+    {% assetic 'css/src/*.sass', filter='sass,?yui_css' %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+    {% endassetic %}
+
+This example will render one `link` element on the page that includes a URL
+where the configured asset can be found.
+
 ---
 
 Assetic is based on the Python [webassets][1] library (available on
@@ -108,3 +126,4 @@ Assetic is based on the Python [webassets][1] library (available on
 
 [1]: http://elsdoerfer.name/docs/webassets
 [2]: https://github.com/miracle2k/webassets
+[3]: http://www.twig-project.org
