@@ -23,6 +23,10 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        if (!class_exists('Twig_Environment')) {
+            $this->markTestSkipped('Twig is not installed.');
+        }
+
         $this->am = $this->getMock('Assetic\\AssetManager');
         $this->fm = $this->getMock('Assetic\\FilterManager');
 
