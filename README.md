@@ -126,15 +126,24 @@ environment:
 Once in place, the extension exposes an `assetic` tag with a syntax similar
 to what the asset factory uses:
 
-    {% assetic 'css/src/*.sass', filter='sass,?yui_css' %}
+    {% assetic 'css/src/*.sass', filter='sass,?yui_css', url='css/main.css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
     {% endassetic %}
 
 This example will render one `link` element on the page that includes a URL
-where the configured asset can be found.
+where the filtered asset can be found.
 
-These assets need to be dumped to the web directory so these URLs don't return
-404 errors.
+When the extension is in debug mode, this same tag will render multiple `link`
+elements, one for each asset referenced by the `css/src/*.sass` glob. The
+specified filters will still be applied, unless they are marked as optional
+using the `?` prefix.
+
+This behavior can also be triggered by setting a `debug` attribute on the tag:
+
+    {% assetic 'css/*', debug=true %} ... {% endassetic %}
+
+These assets need to be written to the web directory so these URLs don't
+return 404 errors.
 
     $am = new LazyAssetManager($factory);
 
