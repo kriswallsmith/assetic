@@ -31,6 +31,7 @@ class TokenParser extends \Twig_TokenParser
         $targetUrl   = null;
         $filterNames = array();
         $assetName   = null;
+        $debug       = $this->debug;
 
         $stream = $this->parser->getStream();
         while (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
@@ -52,6 +53,11 @@ class TokenParser extends \Twig_TokenParser
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $assetName = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
+            } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'debug')) {
+                // debug=true
+                $stream->next();
+                $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+                $debug = 'true' == $stream->expect(\Twig_Token::NAME_TYPE, array('true', 'false'))->getValue();
             } else {
                 $stream->expect(\Twig_Token::PUNCTUATION_TYPE, ',');
             }
@@ -64,12 +70,12 @@ class TokenParser extends \Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        $coll = $this->factory->createAsset($sourceUrls, $filterNames, $targetUrl);
+        $coll = $this->factory->createAsset($sourceUrls, $filterNames, $targetUrl, $assetName, $debug);
         if (null === $assetName) {
             $assetName = $this->factory->generateAssetName($sourceUrls, $filterNames);
         }
 
-        if (!$this->debug) {
+        if (!$debug) {
             return $this->createNode($body, $sourceUrls, $coll->getTargetUrl(), $filterNames, $assetName, $token->getLine(), $this->getTag());
         }
 
@@ -83,7 +89,7 @@ class TokenParser extends \Twig_TokenParser
 
         $nodes = array();
         foreach (new AssetCollectionIterator($coll) as $leaf) {
-            $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filterNames, $pattern);
+            $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filterNames, $pattern, null, $debug);
             $nodes[] = $this->createNode($body, array($asset->getSourceUrl()), $asset->getTargetUrl(), $filterNames, $assetName.'_'.count($nodes), $token->getLine(), $this->getTag());
         }
 

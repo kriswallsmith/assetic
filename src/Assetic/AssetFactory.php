@@ -76,13 +76,20 @@ class AssetFactory
      *         array('sass', '?yui_css')
      *     );
      *
-     * @param array $sourceUrls  An array of URLs relative to the base directory
-     * @param array $filterNames An array of filter names
+     * @param array   $sourceUrls  An array of URLs relative to the base directory
+     * @param array   $filterNames An array of filter names
+     * @param string  $targetUrl   A target URL for the asset
+     * @param string  $assetName   The asset name, for interpolation only
+     * @param Boolean $debug       Debug mode for the asset
      *
      * @return AssetInterface An asset
      */
-    public function createAsset(array $sourceUrls = array(), array $filterNames = array(), $targetUrl = null)
+    public function createAsset(array $sourceUrls = array(), array $filterNames = array(), $targetUrl = null, $assetName = null, $debug = null)
     {
+        if (null === $debug) {
+            $debug = $this->debug;
+        }
+
         $asset = $this->createAssetCollection();
 
         // inner assets
@@ -109,7 +116,7 @@ class AssetFactory
         foreach ($filterNames as $filterName) {
             if ('?' != $filterName[0]) {
                 $asset->ensureFilter($this->getFilter($filterName));
-            } elseif (!$this->debug) {
+            } elseif (!$debug) {
                 $asset->ensureFilter($this->getFilter(substr($filterName, 1)));
             }
         }
@@ -117,16 +124,16 @@ class AssetFactory
         // target url
         if (false !== strpos($targetUrl, '*')) {
             // pattern
-            $asset->setTargetUrl(str_replace('*', $this->generateAssetName($sourceUrls, $filterNames), $targetUrl));
+            $asset->setTargetUrl(str_replace('*', $assetName ?: $this->generateAssetName($sourceUrls, $filterNames), $targetUrl));
         } elseif (ctype_alpha($targetUrl)) {
             // extension
-            $asset->setTargetUrl(sprintf('%s/%s.%1$s', $targetUrl, $this->generateAssetName($sourceUrls, $filterNames)));
+            $asset->setTargetUrl(sprintf('%s/%s.%1$s', $targetUrl, $assetName ?: $this->generateAssetName($sourceUrls, $filterNames)));
         } elseif ($targetUrl) {
             // simple
             $asset->setTargetUrl($targetUrl);
         } elseif (!$asset->getTargetUrl()) {
             // generate
-            $asset->setTargetUrl('assets/'.$this->generateAssetName($sourceUrls, $filterNames));
+            $asset->setTargetUrl('assets/'.$assetName ?: $this->generateAssetName($sourceUrls, $filterNames));
         }
 
         return $asset;
