@@ -13,7 +13,6 @@ namespace Assetic\Test\Extension\Twig;
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Extension\Twig\AsseticExtension;
-use Assetic\Extension\Twig\TokenParser;
 
 class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 {

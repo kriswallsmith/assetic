@@ -15,20 +15,46 @@ use Assetic\Factory\AssetFactory;
 
 class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    private $baseDir;
     private $am;
     private $fm;
     private $factory;
 
     protected function setUp()
     {
-        $this->baseDir = __DIR__;
         $this->am = $this->getMock('Assetic\\AssetManager');
         $this->fm = $this->getMock('Assetic\\FilterManager');
 
-        $this->factory = new AssetFactory($this->baseDir);
+        $this->factory = new AssetFactory(__DIR__);
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
+    }
+
+    public function testCreateHttpAsset()
+    {
+        $factory = new AssetFactory('.');
+        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $factory->createAsset(array('http://example.com/main.css')));
+    }
+
+    public function testNoAssetManagerReference()
+    {
+        $this->setExpectedException('LogicException', 'There is no asset manager.');
+
+        $factory = new AssetFactory('.');
+        $factory->createAsset(array('@foo'));
+    }
+
+    public function testNoAssetManagerNotReference()
+    {
+        $factory = new AssetFactory('.');
+        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $factory->createAsset(array('foo')));
+    }
+
+    public function testNoFilterManager()
+    {
+        $this->setExpectedException('LogicException', 'There is no filter manager.');
+
+        $factory = new AssetFactory('.');
+        $factory->createAsset(array('foo'), array('foo'));
     }
 
     public function testCreateAssetReference()

@@ -189,7 +189,7 @@ class AssetFactory
     protected function getFilter($name)
     {
         if (!$this->fm) {
-            throw new \LogicException('There is not filter manager.');
+            throw new \LogicException('There is no filter manager.');
         }
 
         return $this->fm->get($name);
