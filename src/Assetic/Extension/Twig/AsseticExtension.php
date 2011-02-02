@@ -27,7 +27,7 @@ class AsseticExtension extends \Twig_Extension
     public function getTokenParsers()
     {
         return array(
-            $this->createTokenParser($this->factory, $this->debug),
+            static::createTokenParser($this->factory, $this->debug),
         );
     }
 
@@ -36,7 +36,7 @@ class AsseticExtension extends \Twig_Extension
         return 'assetic';
     }
 
-    protected function createTokenParser(AssetFactory $factory, $debug = false)
+    static protected function createTokenParser(AssetFactory $factory, $debug = false)
     {
         return new TokenParser($factory, $debug);
     }
