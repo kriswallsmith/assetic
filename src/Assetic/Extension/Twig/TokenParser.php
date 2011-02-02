@@ -70,10 +70,10 @@ class TokenParser extends \Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        $coll = $this->factory->createAsset($sourceUrls, $filterNames, $targetUrl, $assetName, $debug);
         if (null === $assetName) {
             $assetName = $this->factory->generateAssetName($sourceUrls, $filterNames);
         }
+        $coll = $this->factory->createAsset($sourceUrls, $filterNames, $targetUrl, $assetName, $debug);
 
         if (!$debug) {
             return static::createNode($body, $sourceUrls, $coll->getTargetUrl(), $filterNames, $assetName, $debug, $token->getLine(), $this->getTag());
@@ -82,14 +82,14 @@ class TokenParser extends \Twig_TokenParser
         // create a pattern for each leaf's target url
         $pattern = $coll->getTargetUrl();
         if (false !== $pos = strrpos($pattern, '.')) {
-            $pattern = substr($pattern, 0, $pos).'-*'.substr($pattern, $pos);
+            $pattern = substr($pattern, 0, $pos).'_*'.substr($pattern, $pos);
         } else {
-            $pattern .= '-*';
+            $pattern .= '_*';
         }
 
         $nodes = array();
         foreach (new AssetCollectionIterator($coll) as $leaf) {
-            $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filterNames, $pattern, null, $debug);
+            $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filterNames, $pattern, 'part'.(count($nodes) + 1), $debug);
             $nodes[] = static::createNode($body, array($asset->getSourceUrl()), $asset->getTargetUrl(), $filterNames, $assetName.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
         }
 
