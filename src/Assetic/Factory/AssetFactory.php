@@ -16,6 +16,7 @@ use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
 use Assetic\AssetManager;
+use Assetic\Factory\Worker\WorkerInterface;
 use Assetic\FilterManager;
 
 /**
@@ -29,6 +30,7 @@ class AssetFactory
     private $debug;
     private $am;
     private $fm;
+    private $workers = array();
 
     /**
      * Constructor.
@@ -70,6 +72,16 @@ class AssetFactory
     public function setFilterManager(FilterManager $fm)
     {
         $this->fm = $fm;
+    }
+
+    /**
+     * Adds a factory worker.
+     *
+     * @param WorkerInterface $worker A worker
+     */
+    public function addWorker(WorkerInterface $worker)
+    {
+        $this->workers[] = $worker;
     }
 
     /**
@@ -152,6 +164,10 @@ class AssetFactory
         } elseif (!$asset->getTargetUrl()) {
             // generate
             $asset->setTargetUrl('assets/'.$assetName ?: $this->generateAssetName($sourceUrls, $filterNames));
+        }
+
+        foreach ($this->workers as $worker) {
+            $worker->process($asset);
         }
 
         return $asset;

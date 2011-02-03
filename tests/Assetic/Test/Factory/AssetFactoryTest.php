@@ -125,4 +125,15 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->factory->createAsset(array('foo.css'), array('?foo'));
     }
+
+    public function testWorkers()
+    {
+        $worker = $this->getMock('Assetic\\Factory\\Worker\\WorkerInterface');
+        $worker->expects($this->once())
+            ->method('process')
+            ->with($this->isInstanceOf('Assetic\\Asset\\AssetInterface'));
+
+        $this->factory->addWorker($worker);
+        $this->factory->createAsset();
+    }
 }
