@@ -65,7 +65,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     {
         // loop through leaves and load each asset
         $parts = array();
-        foreach (new AssetCollectionIterator($this) as $asset) {
+        foreach (new \RecursiveIteratorIterator(new AssetCollectionIterator($this)) as $asset) {
             $asset->load($additionalFilter);
             $parts[] = $asset->getContent();
         }
@@ -77,7 +77,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     {
         // loop through leaves and dump each asset
         $parts = array();
-        foreach (new AssetCollectionIterator($this) as $asset) {
+        foreach (new \RecursiveIteratorIterator(new AssetCollectionIterator($this)) as $asset) {
             $parts[] = $asset->dump($additionalFilter);
         }
 
