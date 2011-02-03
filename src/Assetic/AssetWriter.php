@@ -46,6 +46,10 @@ class AssetWriter
 
     static protected function write($path, $contents)
     {
+        if (!is_dir($dir = dirname($path))) {
+            mkdir($dir, 0777, true);
+        }
+
         file_put_contents($path, $contents);
     }
 }
