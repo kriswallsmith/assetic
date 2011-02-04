@@ -47,6 +47,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `LessFilter`: parses LESS into CSS
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
+ * `SprocketsFilter`: Sprockets Javascript dependency management
  * `Yui\CssCompressorFilter`: compresses CSS using the YUI compressor
  * `Yui\JsCompressorFilter`: compresses Javascript using the YUI compressor
 
