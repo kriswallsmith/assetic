@@ -165,6 +165,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
             array(array(1, 2, 3), 3),
             array(array(5, 4, 3), 5),
             array(array(3, 8, 5), 8),
+            array(array(3, 8, null), 8),
         );
     }
 

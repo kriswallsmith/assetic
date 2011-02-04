@@ -124,15 +124,12 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
      */
     public function getLastModified()
     {
-        $lastModified = null;
-        foreach ($this->assets as $asset) {
-            $mtime = $asset->getLastModified();
-            if ($lastModified < $mtime) {
-                $lastModified = $mtime;
-            }
-        }
+        $mapper = function (AssetInterface $asset)
+        {
+            return $asset->getLastModified();
+        };
 
-        return $lastModified;
+        return max(array_map($mapper, $this->assets));
     }
 
     /**
