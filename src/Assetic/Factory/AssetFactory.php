@@ -130,7 +130,7 @@ class AssetFactory
             }
 
             if (false !== strpos($sourceUrl, '://')) {
-                $asset->add($this->createFileAsset($sourceUrl));
+                $asset->add($this->createFileAsset($sourceUrl, $sourceUrl));
                 continue;
             }
 
