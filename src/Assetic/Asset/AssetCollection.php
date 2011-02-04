@@ -19,7 +19,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class AssetCollection implements AssetInterface, \RecursiveIterator
+class AssetCollection implements AssetInterface, \IteratorAggregate
 {
     private $assets = array();
     private $filters;
@@ -51,6 +51,11 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         $this->assets[] = $asset;
     }
 
+    public function all()
+    {
+        return $this->assets;
+    }
+
     public function ensureFilter(FilterInterface $filter)
     {
         $this->filters->ensure($filter);
@@ -65,7 +70,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     {
         // loop through leaves and load each asset
         $parts = array();
-        foreach (new \RecursiveIteratorIterator(new AssetCollectionIterator($this)) as $asset) {
+        foreach ($this as $asset) {
             $asset->load($additionalFilter);
             $parts[] = $asset->getContent();
         }
@@ -77,7 +82,7 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
     {
         // loop through leaves and dump each asset
         $parts = array();
-        foreach (new \RecursiveIteratorIterator(new AssetCollectionIterator($this)) as $asset) {
+        foreach ($this as $asset) {
             $parts[] = $asset->dump($additionalFilter);
         }
 
@@ -130,10 +135,60 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         return $lastModified;
     }
 
+    /**
+     * Returns an iterator for looping recursively over unique leaves.
+     */
+    public function getIterator()
+    {
+        return new \RecursiveIteratorIterator(new AssetCollectionFilterIterator(new AssetCollectionIterator($this)));
+    }
+}
+
+class AssetCollectionFilterIterator extends \RecursiveFilterIterator
+{
+    private $sourceUrls = array();
+
+    public function accept()
+    {
+        $asset = $this->current();
+
+        // no url == unique
+        if (!$sourceUrl = $asset->getSourceUrl()) {
+            return true;
+        }
+
+        // duplicate
+        if (in_array($sourceUrl, $this->sourceUrls)) {
+            return false;
+        }
+
+        // remember we've been here
+        $this->sourceUrls[] = $sourceUrl;
+        return true;
+    }
+}
+
+class AssetCollectionIterator implements \RecursiveIterator
+{
+    private $assets;
+    private $filters;
+
+    public function __construct(AssetCollection $coll)
+    {
+        $this->assets = $coll->all();
+        $this->filters = $coll->getFilters();
+    }
+
+    /**
+     * Returns a copy of the current asset with filters applied.
+     */
     public function current()
     {
         $asset = clone current($this->assets);
-        $asset->ensureFilter($this->filters);
+
+        foreach ($this->filters as $filter) {
+            $asset->ensureFilter($filter);
+        }
 
         return $asset;
     }
@@ -158,13 +213,13 @@ class AssetCollection implements AssetInterface, \RecursiveIterator
         return false !== current($this->assets);
     }
 
-    public function getChildren()
-    {
-        return current($this->assets);
-    }
-
     public function hasChildren()
     {
-        return current($this->assets) instanceof self;
+        return current($this->assets) instanceof AssetCollection;
+    }
+
+    public function getChildren()
+    {
+        return new self($this->current());
     }
 }

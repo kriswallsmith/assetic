@@ -88,7 +88,7 @@ class TokenParser extends \Twig_TokenParser
         }
 
         $nodes = array();
-        foreach (new \RecursiveIteratorIterator(new AssetCollectionIterator($coll)) as $leaf) {
+        foreach ($coll as $leaf) {
             $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filterNames, $pattern, 'part'.(count($nodes) + 1), $debug);
             $nodes[] = static::createNode($body, array($leaf->getSourceUrl()), $asset->getTargetUrl(), $filterNames, $assetName.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
         }

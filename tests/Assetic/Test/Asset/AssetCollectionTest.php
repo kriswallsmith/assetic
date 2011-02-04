@@ -168,33 +168,35 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testNaturalIteration()
-    {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
-
-        $innerColl = new AssetCollection(array($asset, $asset));
-        $coll = new AssetCollection(array($innerColl, $asset));
-
-        $i = 0;
-        foreach ($coll as $a) {
-            $i++;
-        }
-
-        $this->assertEquals(2, $i, 'iteration is naturally non-recursive');
-    }
-
     public function testRecursiveIteration()
     {
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
 
-        $innerColl = new AssetCollection(array($asset, $asset));
-        $coll = new AssetCollection(array($innerColl, $asset));
+        $coll3 = new AssetCollection(array($asset, $asset));
+        $coll2 = new AssetCollection(array($asset, $coll3));
+        $coll1 = new AssetCollection(array($asset, $coll2));
 
         $i = 0;
-        foreach (new \RecursiveIteratorIterator($coll) as $a) {
+        foreach ($coll1 as $a) {
             $i++;
         }
 
-        $this->assertEquals(3, $i, 'iteration with a recursive iterator is recursive');
+        $this->assertEquals(4, $i, 'iteration with a recursive iterator is recursive');
+    }
+
+    public function testIteration()
+    {
+        $asset1 = new StringAsset('asset1', 'foo.css');
+        $asset2 = new StringAsset('asset2', 'foo.css');
+        $asset3 = new StringAsset('asset3', 'bar.css');
+
+        $coll = new AssetCollection(array($asset1, $asset2, $asset3));
+
+        $count = 0;
+        foreach ($coll as $a) {
+            ++$count;
+        }
+
+        $this->assertEquals(2, $count, 'iterator filters duplicates based on url');
     }
 }

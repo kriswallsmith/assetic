@@ -57,7 +57,6 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     public function testRecursiveIteration()
     {
         $assets = new GlobAsset(__DIR__.'/*.php');
-        $it = new \RecursiveIteratorIterator($assets);
         $this->assertGreaterThan(0, iterator_count($assets), 'GlobAsset initializes for recursive iteration');
     }
 

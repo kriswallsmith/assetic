@@ -62,6 +62,15 @@ class GlobAsset extends AssetCollection
         $this->initialized = true;
     }
 
+    public function all()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::all();
+    }
+
     public function load(FilterInterface $additionalFilter = null)
     {
         if (!$this->initialized) {
@@ -89,12 +98,12 @@ class GlobAsset extends AssetCollection
         return parent::getLastModified();
     }
 
-    public function rewind()
+    public function getIterator()
     {
         if (!$this->initialized) {
             $this->initialize();
         }
 
-        return parent::rewind();
+        return parent::getIterator();
     }
 }
