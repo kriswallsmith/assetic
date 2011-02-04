@@ -13,6 +13,7 @@
         <!-- <server name="GOOGLE_CLOSURE_COMPILER_PATH" value="/path/to/google-closure/compiler.jar" /> -->
         <!-- <server name="LESSC_PATH" value="/path/to/lessc" /> -->
         <!-- <server name="SASS_PATH" value="/path/to/sass" /> -->
+        <!-- <server name="SPROCKETIZE_PATH" value="/path/to/sprocketize" /> -->
     </php>
 
     <filter>
