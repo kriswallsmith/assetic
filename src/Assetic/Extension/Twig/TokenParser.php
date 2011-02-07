@@ -27,32 +27,32 @@ class TokenParser extends \Twig_TokenParser
 
     public function parse(\Twig_Token $token)
     {
-        $sourceUrls  = array();
-        $targetUrl   = null;
-        $filterNames = array();
-        $assetName   = null;
-        $debug       = $this->debug;
+        $inputs  = array();
+        $output  = null;
+        $filters = array();
+        $name    = null;
+        $debug   = $this->debug;
 
         $stream = $this->parser->getStream();
         while (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
             if ($stream->test(\Twig_Token::STRING_TYPE)) {
                 // '@jquery', 'js/src/core/*', 'js/src/extra.js'
-                $sourceUrls[] = $stream->next()->getValue();
+                $inputs[] = $stream->next()->getValue();
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'filter')) {
                 // filter='yui_js'
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
-                $filterNames = array_merge($filterNames, array_map('trim', explode(',', $stream->expect(\Twig_Token::STRING_TYPE)->getValue())));
+                $filters = array_merge($filters, array_map('trim', explode(',', $stream->expect(\Twig_Token::STRING_TYPE)->getValue())));
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'output')) {
                 // output='js' OR output='js/packed/*.js' OR output='js/core.js'
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
-                $targetUrl = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
+                $output = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'name')) {
                 // name='core_js'
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
-                $assetName = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
+                $name = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'debug')) {
                 // debug=true
                 $stream->next();
@@ -70,13 +70,18 @@ class TokenParser extends \Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        if (null === $assetName) {
-            $assetName = $this->factory->generateAssetName($sourceUrls, $filterNames);
+        if (null === $name) {
+            $name = $this->factory->generateAssetName($inputs, $filters);
         }
-        $coll = $this->factory->createAsset($sourceUrls, $filterNames, $targetUrl, $assetName, $debug);
+
+        $coll = $this->factory->createAsset($inputs, $filters, array(
+            'output' => $output,
+            'name'   => $name,
+            'debug'  => $debug,
+        ));
 
         if (!$debug) {
-            return static::createNode($body, $sourceUrls, $coll->getTargetUrl(), $filterNames, $assetName, $debug, $token->getLine(), $this->getTag());
+            return static::createNode($body, $inputs, $coll->getTargetUrl(), $filters, $name, $debug, $token->getLine(), $this->getTag());
         }
 
         // create a pattern for each leaf's target url
@@ -89,8 +94,12 @@ class TokenParser extends \Twig_TokenParser
 
         $nodes = array();
         foreach ($coll as $leaf) {
-            $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filterNames, $pattern, 'part'.(count($nodes) + 1), $debug);
-            $nodes[] = static::createNode($body, array($leaf->getSourceUrl()), $asset->getTargetUrl(), $filterNames, $assetName.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
+            $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filters, array(
+                'output' => $pattern,
+                'name'   => 'part'.(count($nodes) + 1),
+                'debug'  => $debug,
+            ));
+            $nodes[] = static::createNode($body, array($leaf->getSourceUrl()), $asset->getTargetUrl(), $filters, $name.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
         }
 
         return new \Twig_Node($nodes, array(), $token->getLine(), $this->getTag());
@@ -101,8 +110,8 @@ class TokenParser extends \Twig_TokenParser
         return 'assetic';
     }
 
-    static protected function createNode(\Twig_NodeInterface $body, array $sourceUrls, $targetUrl, array $filterNames, $assetName, $debug = false, $lineno = 0, $tag = null)
+    static protected function createNode(\Twig_NodeInterface $body, array $inputs, $targetUrl, array $filters, $name, $debug = false, $lineno = 0, $tag = null)
     {
-        return new Node($body, $sourceUrls, $targetUrl, $filterNames, $assetName, $debug, $lineno, $tag);
+        return new Node($body, $inputs, $targetUrl, $filters, $name, $debug, $lineno, $tag);
     }
 }

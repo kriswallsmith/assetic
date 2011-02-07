@@ -32,14 +32,16 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $formula = array(
             $sourceUrls  = array('@jquery', 'js/jquery.plugin.js'),
             $filterNames = array('?yui_css'),
-            $targetUrl   = 'js/packed.js',
+            array(
+                'output' => $targetUrl = 'js/packed.js',
+            ),
         );
 
         $expected = $this->getMock('Assetic\\Asset\\AssetInterface');
 
         $this->factory->expects($this->once())
             ->method('createAsset')
-            ->with($sourceUrls, $filterNames, $targetUrl, 'core')
+            ->with($sourceUrls, $filterNames, array('output' => $targetUrl, 'name' => 'core'))
             ->will($this->returnValue($expected));
 
         $this->am->addFormulae(array('core' => $formula));
@@ -56,14 +58,16 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $formula = array(
             $sourceUrls  = array('@jquery', 'js/jquery.plugin.js'),
             $filterNames = array('?yui_css'),
-            $targetUrl   = 'js/packed.js',
+            array(
+                'output' => $targetUrl = 'js/packed.js',
+            )
         );
 
         $expected = $this->getMock('Assetic\\Asset\\AssetInterface');
 
         $this->factory->expects($this->once())
             ->method('createAsset')
-            ->with($sourceUrls, $filterNames, $targetUrl, 'core')
+            ->with($sourceUrls, $filterNames, array('output' => $targetUrl, 'name' => 'core'))
             ->will($this->returnValue($expected));
 
         $this->am->addFormulae(array('core' => $formula));

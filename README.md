@@ -85,7 +85,7 @@ factory, which will do most of the work for you.
     ), array(
         'scss',           // filter through the filter manager's "scss" filter
         '?yui_css',       // don't use this filter in debug mode
-    ), 'css');
+    ));
 
     echo $css->dump();
 

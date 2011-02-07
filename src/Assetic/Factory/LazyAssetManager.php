@@ -73,10 +73,10 @@ class LazyAssetManager extends AssetManager
      */
     private function flush($name)
     {
-        static $defaults = array(array(), array(), null, null, null);
+        static $defaults = array(array(), array(), array());
 
         $formula = $this->formulae[$name] + $defaults;
-        $formula[3] = $name;
+        $formula[2]['name'] = $name;
 
         $this->set($name, call_user_func_array(array($this->factory, 'createAsset'), $formula));
     }

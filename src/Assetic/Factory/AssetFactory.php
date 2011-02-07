@@ -101,46 +101,58 @@ class AssetFactory
      * Prefixing a filter name with a question mark will cause it to be
      * omitted when the factory is in debug mode.
      *
-     * @param array   $sourceUrls  An array of URLs relative to the base directory
-     * @param array   $filterNames An array of filter names
-     * @param string  $output      An output string
-     * @param string  $assetName   The asset name, for interpolation only
-     * @param Boolean $debug       Debug mode for the asset
+     * Available options:
+     *
+     *  * output: An output string
+     *  * name:   An asset name for interpolation in output patterns
+     *  * debug:  Forces debug mode on or off for this asset
+     *
+     * @param array|string $inputs  An array of input strings
+     * @param array|string $filters An array of filter names
+     * @param array        $options An array of options
      *
      * @return AssetInterface An asset
      */
-    public function createAsset(array $sourceUrls = array(), array $filterNames = array(), $output = null, $assetName = null, $debug = null)
+    public function createAsset($inputs = array(), $filters = array(), array $options = array())
     {
-        if (null === $output) {
-            $output = $this->defaultOutput;
+        if (!is_array($inputs)) {
+            $inputs = array($inputs);
         }
 
-        if (null === $assetName) {
-            $assetName = $this->generateAssetName($sourceUrls, $filterNames);
+        if (!is_array($filters)) {
+            $filters = array($filters);
         }
 
-        if (null === $debug) {
-            $debug = $this->debug;
+        if (!isset($options['output'])) {
+            $options['output'] = $this->defaultOutput;
+        }
+
+        if (!isset($options['name'])) {
+            $options['name'] = $this->generateAssetName($inputs, $filters);
+        }
+
+        if (!isset($options['debug'])) {
+            $options['debug'] = $this->debug;
         }
 
         $asset = $this->createAssetCollection();
 
         // inner assets
-        foreach ($sourceUrls as $sourceUrl) {
-            $asset->add($this->parseAsset($sourceUrl));
+        foreach ($inputs as $input) {
+            $asset->add($this->parseInput($input));
         }
 
         // filters
-        foreach ($filterNames as $filterName) {
-            if ('?' != $filterName[0]) {
-                $asset->ensureFilter($this->getFilter($filterName));
-            } elseif (!$debug) {
-                $asset->ensureFilter($this->getFilter(substr($filterName, 1)));
+        foreach ($filters as $filter) {
+            if ('?' != $filter[0]) {
+                $asset->ensureFilter($this->getFilter($filter));
+            } elseif (!$options['debug']) {
+                $asset->ensureFilter($this->getFilter(substr($filter, 1)));
             }
         }
 
         // output --> target url
-        if ($targetUrl = $this->parseOutput($output, $assetName)) {
+        if ($targetUrl = $this->parseOutput($options['output'], $options['name'])) {
             $asset->setTargetUrl($targetUrl);
         }
 
@@ -151,15 +163,15 @@ class AssetFactory
         return $asset;
     }
 
-    public function generateAssetName($sourceUrls, $filterNames)
+    public function generateAssetName($inputs, $filters)
     {
-        return substr(sha1(serialize(array_merge($sourceUrls, $filterNames))), 0, 7);
+        return substr(sha1(serialize(array_merge($inputs, $filters))), 0, 7);
     }
 
     /**
-     * Parses an source URL string into an asset.
+     * Parses an input string string into an asset.
      *
-     * The source URL string can be one of the following:
+     * The input string can be one of the following:
      *
      *  * A reference:     If the string starts with a "@" it will be interpreted as a reference to an asset in the asset manager
      *  * An absolute URL: If the string contains "://" it will be interpreted as a remote asset
@@ -168,25 +180,27 @@ class AssetFactory
      *
      * Both globs and paths will be absolutized using the current base directory.
      *
-     * @param string $sourceUrl A source URL
+     * @param string $input An input string
      *
      * @return AssetInterface An asset
      */
-    protected function parseAsset($sourceUrl)
+    protected function parseInput($input)
     {
-        if ('@' == $sourceUrl[0]) {
-            return $this->createAssetReference(substr($sourceUrl, 1));
+        if ('@' == $input[0]) {
+            return $this->createAssetReference(substr($input, 1));
         }
 
-        if (false !== strpos($sourceUrl, '://')) {
-            return $this->createFileAsset($sourceUrl, $sourceUrl);
+        if (false !== strpos($input, '://')) {
+            return $this->createFileAsset($input, $input);
         }
 
-        $baseDir = '/' == $sourceUrl[0] ? '' : $this->baseDir;
-        if (false !== strpos($sourceUrl, '*')) {
-            return $this->createGlobAsset($baseDir . $sourceUrl, $this->baseDir);
+        // todo: a better isAbsolutePath()
+        $baseDir = '/' == $input[0] ? '' : $this->baseDir;
+
+        if (false !== strpos($input, '*')) {
+            return $this->createGlobAsset($baseDir . $input, $this->baseDir);
         } else {
-            return $this->createFileAsset($baseDir . $sourceUrl, $sourceUrl);
+            return $this->createFileAsset($baseDir . $input, $input);
         }
     }
 
