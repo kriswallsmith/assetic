@@ -19,7 +19,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class EnsureFilterByTargetUrlWorker implements WorkerInterface
+class EnsureFilterWorker implements WorkerInterface
 {
     private $pattern;
     private $filter;

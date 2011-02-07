@@ -11,9 +11,9 @@
 
 namespace Assetic\Test\Factory\Worker;
 
-use Assetic\Factory\Worker\EnsureFilterByTargetUrlWorker;
+use Assetic\Factory\Worker\EnsureFilterWorker;
 
-class EnsureFilterByTargetUrlWorkerTest extends \PHPUnit_Framework_TestCase
+class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
 {
     public function testMatch()
     {
@@ -27,7 +27,7 @@ class EnsureFilterByTargetUrlWorkerTest extends \PHPUnit_Framework_TestCase
             ->method('ensureFilter')
             ->with($filter);
 
-        $worker = new EnsureFilterByTargetUrlWorker('/\.css$/', $filter);
+        $worker = new EnsureFilterWorker('/\.css$/', $filter);
         $worker->process($asset);
     }
 
@@ -41,7 +41,7 @@ class EnsureFilterByTargetUrlWorkerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('js/all.js'));
         $asset->expects($this->never())->method('ensureFilter');
 
-        $worker = new EnsureFilterByTargetUrlWorker('/\.css$/', $filter);
+        $worker = new EnsureFilterWorker('/\.css$/', $filter);
         $worker->process($asset);
     }
 }
