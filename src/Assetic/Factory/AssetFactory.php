@@ -124,22 +124,7 @@ class AssetFactory
 
         // inner assets
         foreach ($sourceUrls as $sourceUrl) {
-            if ('@' == $sourceUrl[0]) {
-                $asset->add($this->createAssetReference(substr($sourceUrl, 1)));
-                continue;
-            }
-
-            if (false !== strpos($sourceUrl, '://')) {
-                $asset->add($this->createFileAsset($sourceUrl, $sourceUrl));
-                continue;
-            }
-
-            $baseDir = '/' == $sourceUrl[0] ? '' : $this->baseDir;
-            if (false !== strpos($sourceUrl, '*')) {
-                $asset->add($this->createGlobAsset($baseDir . $sourceUrl, $this->baseDir));
-            } else {
-                $asset->add($this->createFileAsset($baseDir . $sourceUrl, $sourceUrl));
-            }
+            $asset->add($this->parseAsset($sourceUrl));
         }
 
         // filters
@@ -176,6 +161,24 @@ class AssetFactory
     public function generateAssetName($sourceUrls, $filterNames)
     {
         return substr(sha1(serialize(array_merge($sourceUrls, $filterNames))), 0, 7);
+    }
+
+    protected function parseAsset($sourceUrl)
+    {
+        if ('@' == $sourceUrl[0]) {
+            return $this->createAssetReference(substr($sourceUrl, 1));
+        }
+
+        if (false !== strpos($sourceUrl, '://')) {
+            return $this->createFileAsset($sourceUrl, $sourceUrl);
+        }
+
+        $baseDir = '/' == $sourceUrl[0] ? '' : $this->baseDir;
+        if (false !== strpos($sourceUrl, '*')) {
+            return $this->createGlobAsset($baseDir . $sourceUrl, $this->baseDir);
+        } else {
+            return $this->createFileAsset($baseDir . $sourceUrl, $sourceUrl);
+        }
     }
 
     protected function createAssetCollection()
