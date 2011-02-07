@@ -45,4 +45,9 @@ class FileAsset extends BaseAsset
     {
         return filemtime($this->path);
     }
+    
+    public function getPath()
+    {
+        return $this->path;
+    }
 }
