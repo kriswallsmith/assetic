@@ -42,7 +42,7 @@ class TokenParser extends \Twig_TokenParser
                 // filter='yui_js'
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
-                $filterNames = array_merge($filterNames, explode(',', $stream->expect(\Twig_Token::STRING_TYPE)->getValue()));
+                $filterNames = array_merge($filterNames, array_map('trim', explode(',', $stream->expect(\Twig_Token::STRING_TYPE)->getValue())));
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'url')) {
                 // url='js/core.js'
                 $stream->next();
