@@ -3,6 +3,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Filter\Sass\SassFilter;
 
 /*
  * This file is part of the Assetic package.
@@ -49,22 +50,20 @@ class CompassFilter implements FilterInterface
         --relative-assets            Make compass asset helpers generate relative urls to assets.
         --no-line-comments           Disable line comments.
     */
+    // dont need : quiet, trace, boring
     private $compassPath;
     private $time;
     private $require;
     private $loadPath;
     private $loadAllPath;
-    private $quiet;
-    private $trace;
     private $force;
     private $dryRun;
-    private $boring;
     private $configFile;
     private $sassDir;
     private $imagesDir;
-    private $javascriptDir;
+    private $javascriptsDir;
     private $environment;
-    private $outputStyle = 'expanded';
+    private $outputStyle = SassFilter::STYLE_EXPANDED;
     private $relativeAsset;
     private $noLineComments;
 
@@ -114,22 +113,6 @@ class CompassFilter implements FilterInterface
     }
 
     /**
-     * @param boolean $quiet
-     */
-    public function setQuiet ($quiet)
-    {
-        $this->quiet = $quiet;
-    }
-
-    /**
-     * @param boolean $trace
-     */
-    public function setTrace ($trace)
-    {
-        $this->trace = $trace;
-    }
-
-    /**
      * @param boolean $force
      */
     public function setForce ($force)
@@ -143,14 +126,6 @@ class CompassFilter implements FilterInterface
     public function setDryRun ($dryRun)
     {
         $this->dryRun = $dryRun;
-    }
-
-    /**
-     * @param boolean $boring
-     */
-    public function setBoring ($boring)
-    {
-        $this->boring = $boring;
     }
 
     /**
@@ -239,24 +214,12 @@ class CompassFilter implements FilterInterface
             $options[] = $this->loadAllPath;
         }
 
-        if ($this->quiet) {
-            $options[] = '--quiet';
-        }
-
-        if ($this->trace) {
-            $options[] = '--trace';
-        }
-
         if ($this->force) {
             $options[] = '--force';
         }
 
         if ($this->dryRun) {
             $options[] = '--dry-run';
-        }
-
-        if ($this->boring) {
-            $options[] = '--boring';
         }
 
         if ($this->configFile) {
@@ -330,6 +293,14 @@ class CompassFilter implements FilterInterface
 
         Maybe it's a brutal approch...
         */
+        
+        if (empty($this->sassDir) and is_a($asset, 'Assetic\Asset\FileAsset')) {
+            $this->sassDir = dirname($asset->getPath());
+        }
+        else
+        {
+        	$this->sassDir = realpath($this->sassDir);
+        }
 
         $tempPath = sys_get_temp_dir();
         $tempKey = 'assetic_compass';
@@ -338,14 +309,15 @@ class CompassFilter implements FilterInterface
         $basename = '';
         if ($diff < 0)
         {
-            $tempKey .= str_repeat('-', -$diff);
+            $tempKey .= str_repeat('-', -$diff + 1);
         }
         $basename .= tempnam($tempPath, $tempKey);
-        $input .=  $basename . '.scss';
+        $input =  $basename . '.scss';
+        
+        // +1 if for the trailing slash which if removed by compass
+        $output = $tempPath . '/' . substr($basename, strlen($this->sassDir) + 1) . '.css';
 
-        $output = $tempPath . '/' . substr($basename, strlen($this->sassDir)) . '.css';
-
-        file_put_contents($input, $asset->getBody());
+        file_put_contents($input, $asset->getContent());
 
         $options[] = '--sass-dir';
         $options[] = $this->sassDir;
@@ -358,7 +330,11 @@ class CompassFilter implements FilterInterface
         // todo: check for a valid return code
         $commandOutput = shell_exec($cmd);
 
-        $asset->setBody(file_get_contents($output));
+        //if(!is_readable($output)) {
+            // @todo throw an Exception if there is no file ?
+        //}
+        
+        $asset->setContent(file_get_contents($output));
 
         // cleanup
         unlink($input);
