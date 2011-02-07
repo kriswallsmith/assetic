@@ -47,9 +47,11 @@ class FormulaLoaderTest extends \PHPUnit_Framework_TestCase
             'mixture' => array(
                 array('foo', 'foo/*', '@foo'),
                 array(),
-                'packed/mixture',
-                'mixture',
-                false,
+                array(
+                    'output' => 'packed/mixture',
+                    'name'   => 'mixture',
+                    'debug'  => false,
+                ),
             ),
         );
         

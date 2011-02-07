@@ -56,9 +56,11 @@ class FormulaLoader
             $assets[$node->getAttribute('asset_name')] = array(
                 $node->getAttribute('source_urls'),
                 $node->getAttribute('filter_names'),
-                $node->getAttribute('target_url'),
-                $node->getAttribute('asset_name'),
-                $node->getAttribute('debug'),
+                array(
+                    'output' => $node->getAttribute('target_url'),
+                    'name'   => $node->getAttribute('asset_name'),
+                    'debug'  => $node->getAttribute('debug'),
+                ),
             );
         }
 
