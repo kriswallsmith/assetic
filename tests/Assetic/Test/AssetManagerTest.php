@@ -57,4 +57,11 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $assets = $this->am->all();
         $this->assertContains($asset, $assets, '->all() includes assets');
     }
+
+    public function testInvalidName()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $this->am->set('@foo', $this->getMock('Assetic\\Asset\\AssetInterface'));
+    }
 }

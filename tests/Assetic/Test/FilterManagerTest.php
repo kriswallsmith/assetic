@@ -54,4 +54,10 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInternalType('array', $this->fm->all(), '->all() returns an array');
     }
+
+    public function testInvalidAlias()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->fm->set('@foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
+    }
 }

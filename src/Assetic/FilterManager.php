@@ -24,6 +24,8 @@ class FilterManager
 
     public function set($alias, FilterInterface $filter)
     {
+        $this->checkName($alias);
+
         $this->filters[$alias] = $filter;
     }
 
@@ -44,5 +46,19 @@ class FilterManager
     public function all()
     {
         return $this->filters;
+    }
+
+    /**
+     * Checks that a name is valid.
+     *
+     * @param string $name An asset name candidate
+     *
+     * @throws InvalidArgumentException If the asset name is invalid
+     */
+    protected function checkName($name)
+    {
+        if (!ctype_alnum(str_replace('_', '', $name))) {
+            throw new \InvalidArgumentException(sprintf('The name "%s" is invalid.', $name));
+        }
     }
 }

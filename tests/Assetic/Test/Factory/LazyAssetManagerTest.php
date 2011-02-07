@@ -97,4 +97,11 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->am->addFormulae($formulae);
         $this->assertEquals($formulae, $this->am->getFormulae());
     }
+
+    public function testInvalidName()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $this->am->addFormulae(array('@foo' => $this->getMock('Assetic\\Asset\\AssetInterface')));
+    }
 }
