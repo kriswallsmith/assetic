@@ -128,7 +128,7 @@ environment:
 Once in place, the extension exposes an `assetic` tag with a syntax similar
 to what the asset factory uses:
 
-    {% assetic 'css/src/*.sass', filter='sass,?yui_css', url='css/main.css' %}
+    {% assetic '/path/to/sass/main.sass', filter='sass,?yui_css', output='css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
     {% endassetic %}
 
