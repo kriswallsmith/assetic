@@ -30,6 +30,7 @@ class AssetFactory
     private $debug;
     private $am;
     private $fm;
+    private $defaultOutput = 'assets/*';
     private $workers = array();
 
     /**
@@ -75,6 +76,16 @@ class AssetFactory
     }
 
     /**
+     * Sets the default output value.
+     *
+     * @param string $output An output string
+     */
+    public function setDefaultOutput($output)
+    {
+        $this->defaultOutput = $output;
+    }
+
+    /**
      * Adds a factory worker.
      *
      * @param WorkerInterface $worker A worker
@@ -87,35 +98,27 @@ class AssetFactory
     /**
      * Creates a new asset.
      *
-     * Each source URL can take one of the following forms:
-     *
-     *  * @jquery:         A reference to the asset manager's "jquery" asset
-     *  * js/core/*:       A glob relative to the base directory
-     *  * js/jquery.js:    A file path relative to the base directory
-     *  * /path/to/foo.js: An absolute filesytem path
-     *  * http://etc...:   An absolute URL
-     *
      * Prefixing a filter name with a question mark will cause it to be
      * omitted when the factory is in debug mode.
      *
-     * For example, the following asset will always go through the SASS filter
-     * but only be compressed by YUI when not in debug mode:
-     *
-     *     $factory->createAsset(
-     *         array('css/main.sass'),
-     *         array('sass', '?yui_css')
-     *     );
-     *
      * @param array   $sourceUrls  An array of URLs relative to the base directory
      * @param array   $filterNames An array of filter names
-     * @param string  $targetUrl   A target URL for the asset
+     * @param string  $output      An output string
      * @param string  $assetName   The asset name, for interpolation only
      * @param Boolean $debug       Debug mode for the asset
      *
      * @return AssetInterface An asset
      */
-    public function createAsset(array $sourceUrls = array(), array $filterNames = array(), $targetUrl = null, $assetName = null, $debug = null)
+    public function createAsset(array $sourceUrls = array(), array $filterNames = array(), $output = null, $assetName = null, $debug = null)
     {
+        if (null === $output) {
+            $output = $this->defaultOutput;
+        }
+
+        if (null === $assetName) {
+            $assetName = $this->generateAssetName($sourceUrls, $filterNames);
+        }
+
         if (null === $debug) {
             $debug = $this->debug;
         }
@@ -136,19 +139,9 @@ class AssetFactory
             }
         }
 
-        // target url
-        if (false !== strpos($targetUrl, '*')) {
-            // pattern
-            $asset->setTargetUrl(str_replace('*', $assetName ?: $this->generateAssetName($sourceUrls, $filterNames), $targetUrl));
-        } elseif (ctype_alpha($targetUrl)) {
-            // extension
-            $asset->setTargetUrl(sprintf('%s/%s.%1$s', $targetUrl, $assetName ?: $this->generateAssetName($sourceUrls, $filterNames)));
-        } elseif ($targetUrl) {
-            // simple
+        // output --> target url
+        if ($targetUrl = $this->parseOutput($output, $assetName)) {
             $asset->setTargetUrl($targetUrl);
-        } elseif (!$asset->getTargetUrl()) {
-            // generate
-            $asset->setTargetUrl('assets/'.$assetName ?: $this->generateAssetName($sourceUrls, $filterNames));
         }
 
         foreach ($this->workers as $worker) {
@@ -163,6 +156,22 @@ class AssetFactory
         return substr(sha1(serialize(array_merge($sourceUrls, $filterNames))), 0, 7);
     }
 
+    /**
+     * Parses an source URL string into an asset.
+     *
+     * The source URL string can be one of the following:
+     *
+     *  * A reference:     If the string starts with a "@" it will be interpreted as a reference to an asset in the asset manager
+     *  * An absolute URL: If the string contains "://" it will be interpreted as a remote asset
+     *  * A glob:          If the string contains a "*" it will be interpreted as a glob
+     *  * A path:          Otherwise the string is interpreted as a path
+     *
+     * Both globs and paths will be absolutized using the current base directory.
+     *
+     * @param string $sourceUrl A source URL
+     *
+     * @return AssetInterface An asset
+     */
     protected function parseAsset($sourceUrl)
     {
         if ('@' == $sourceUrl[0]) {
@@ -178,6 +187,34 @@ class AssetFactory
             return $this->createGlobAsset($baseDir . $sourceUrl, $this->baseDir);
         } else {
             return $this->createFileAsset($baseDir . $sourceUrl, $sourceUrl);
+        }
+    }
+
+    /**
+     * Converts an output string to a target URL.
+     *
+     * An output string can be one of the following:
+     *
+     *  * A pattern:    If the string contains a "*" the "*" will be replaced with the provided asset name
+     *  * An extension: If the string contains only letters it will be interpreted as an extension and exploded to the pattern "ext/*.ext"
+     *  * An URL:       Otherwise, the output string will be returned untouched
+     *
+     * @param string $output    An output string
+     * @param string $assetName The asset name
+     *
+     * @return string A target URL
+     */
+    protected function parseOutput($output, $assetName)
+    {
+        if (ctype_alpha($output)) {
+            // extension
+            return sprintf('%s/%s.%1$s', $output, $assetName);
+        } elseif (false !== strpos($output, '*')) {
+            // pattern
+            return str_replace('*', $assetName, $output);
+        } else {
+            // simple
+            return $output;
         }
     }
 
