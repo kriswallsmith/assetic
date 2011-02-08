@@ -24,6 +24,7 @@ interface WorkerInterface
      * Processes an asset.
      *
      * @param AssetInterface $asset An asset
+     * @param Boolean        $debug Debug mode
      */
-    function process(AssetInterface $asset);
+    function process(AssetInterface $asset, $debug = false);
 }

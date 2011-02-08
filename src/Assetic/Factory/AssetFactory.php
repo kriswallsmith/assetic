@@ -157,7 +157,7 @@ class AssetFactory
         }
 
         foreach ($this->workers as $worker) {
-            $worker->process($asset);
+            $worker->process($asset, $options['debug']);
         }
 
         return $asset;
