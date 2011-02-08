@@ -23,7 +23,6 @@ class SprocketsFilter implements FilterInterface
 {
     private $baseDir;
     private $sprocketizePath;
-    private $directory;
     private $includeDirs = array();
     private $assetRoot;
 
@@ -31,11 +30,6 @@ class SprocketsFilter implements FilterInterface
     {
         $this->baseDir = $baseDir;
         $this->sprocketizePath = $sprocketizePath;
-    }
-
-    public function setDirectory($directory)
-    {
-        $this->directory = $directory;
     }
 
     public function addIncludeDir($directory)
@@ -51,18 +45,11 @@ class SprocketsFilter implements FilterInterface
     public function filterLoad(AssetInterface $asset)
     {
         $sourceUrl = $asset->getSourceUrl();
-
-        // fixme: shouldn't the -C option do this?
         if (!$sourceUrl || false !== strpos($sourceUrl, '://')) {
             return;
         }
 
         $options = array($this->sprocketizePath);
-
-        if (null !== $this->directory) {
-            $options[] = '-C';
-            $options[] = $this->directory;
-        }
 
         foreach ($this->includeDirs as $directory) {
             $options[] = '-I';
@@ -74,20 +61,17 @@ class SprocketsFilter implements FilterInterface
             $options[] = $this->assetRoot;
         }
 
-        // fixme: shouldn't the -C option do this?
+        // hack in a temporary file sibling
+        $options[] = $input = dirname($this->baseDir.'/'.$sourceUrl).'/.'.rand(11111, 99999).'-'.basename($sourceUrl);
         $tmp = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
         file_put_contents($tmp, $asset->getContent());
-
-        // create a file "sibling"
-        $options[] = $input = $this->baseDir.'/'.dirname($sourceUrl).'/.'.rand(11111, 99999).'-'.basename($sourceUrl);
         rename($tmp, $input);
 
         // todo: check for a valid return code
         $output = shell_exec(implode(' ', array_map('escapeshellarg', $options)));
+        $asset->setContent($output);
 
         unlink($input);
-
-        $asset->setContent($output);
     }
 
     public function filterDump(AssetInterface $asset)

@@ -43,7 +43,6 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new SprocketsFilter(__DIR__.'/fixtures/sprockets', $_SERVER['SPROCKETIZE_PATH']);
-        $filter->setDirectory(__DIR__.'/fixtures/sprockets');
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib1');
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib2');
         $filter->setAssetRoot($this->assetRoot);
