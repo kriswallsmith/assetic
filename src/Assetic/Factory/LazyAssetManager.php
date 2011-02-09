@@ -36,6 +36,13 @@ class LazyAssetManager extends AssetManager
         $this->formulae = $formulae + $this->formulae;
     }
 
+    public function setFormula($name, array $formula)
+    {
+        $this->checkName($name);
+
+        $this->formulae[$name] = $formula;
+    }
+
     public function getFormulae()
     {
         return $this->formulae;
