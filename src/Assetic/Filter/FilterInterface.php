@@ -24,8 +24,6 @@ interface FilterInterface
      * Filters an asset after it has been loaded.
      *
      * @param AssetInterface $asset An asset
-     *
-     * @return string|null The filter asset content, or null for no effect
      */
     function filterLoad(AssetInterface $asset);
 
@@ -33,8 +31,6 @@ interface FilterInterface
      * Filters an asset just before it's dumped.
      *
      * @param AssetInterface $asset An asset
-     *
-     * @return string|null The filter asset content, or null for no effect
      */
     function filterDump(AssetInterface $asset);
 }
