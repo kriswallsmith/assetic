@@ -59,7 +59,8 @@ class TokenParser extends \Twig_TokenParser
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $debug = 'true' == $stream->expect(\Twig_Token::NAME_TYPE, array('true', 'false'))->getValue();
             } else {
-                $stream->expect(\Twig_Token::PUNCTUATION_TYPE, ',');
+                $token = $stream->getCurrent();
+                throw new \Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', \Twig_Token::typeToEnglish($token->getType(), $token->getLine()), $token->getValue()), $token->getLine());
             }
         }
 
