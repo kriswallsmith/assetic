@@ -22,7 +22,7 @@ Filters
 Filters can be applied to manipulate assets.
 
     $css = new AssetCollection(array(
-        new FileAsset('/path/to/src/styles.less', 'css/compiled.css', array(new LessFilter()),
+        new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
         new GlobAsset('/path/to/css/*'),
     ), array(
         new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'),
@@ -99,7 +99,7 @@ A simple caching mechanism is provided to avoid unnecessary work.
 
     $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
     $js = new AssetCache(
-        new FileAsset('/path/to/some.js', 'js/some.js', array($yui)),
+        new FileAsset('/path/to/some.js', array($yui)),
         new FilesystemCache('/path/to/cache')
     );
 

@@ -26,14 +26,14 @@ class FileAsset extends BaseAsset
      * Constructor.
      *
      * @param string $path      The absolute path to the asset
-     * @param string $sourceUrl The source URL
      * @param array  $filters   Filters for the asset
+     * @param string $sourceUrl The source URL
      */
-    public function __construct($path, $sourceUrl = null, $filters = array())
+    public function __construct($path, $filters = array(), $sourceUrl = null)
     {
         $this->path = $path;
 
-        parent::__construct($sourceUrl, $filters);
+        parent::__construct($filters, $sourceUrl);
     }
 
     public function load(FilterInterface $additionalFilter = null)

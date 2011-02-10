@@ -33,12 +33,13 @@ abstract class BaseAsset implements AssetInterface
     /**
      * Constructor.
      *
-     * @param array $filters Filters for the asset
+     * @param array  $filters   Filters for the asset
+     * @param string $sourceUrl The source URL
      */
-    public function __construct($sourceUrl = null, $filters = array())
+    public function __construct($filters = array(), $sourceUrl = null)
     {
-        $this->sourceUrl = $sourceUrl;
         $this->filters = new FilterCollection($filters);
+        $this->sourceUrl = $sourceUrl;
     }
 
     public function ensureFilter(FilterInterface $filter)

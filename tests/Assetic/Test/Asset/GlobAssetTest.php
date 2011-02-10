@@ -23,7 +23,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testBaseDir()
     {
-        $assets = new GlobAsset(__DIR__.'/*.php', __DIR__);
+        $assets = new GlobAsset(__DIR__.'/*.php', array(), __DIR__);
         foreach ($assets as $asset) {
             $this->assertRegExp('/^\w+\.php$/', $asset->getSourceUrl(), 'GlobAsset uses the base directory to determine URL');
         }
@@ -34,7 +34,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidBaseDir($baseDir)
     {
-        $assets = new GlobAsset(__DIR__.'/*.php', $baseDir);
+        $assets = new GlobAsset(__DIR__.'/*.php', array(), $baseDir);
         foreach ($assets as $asset) {
             $this->assertNull($asset->getSourceUrl(), 'GlobAsset does not set URL when provided an invalid base directory');
         }

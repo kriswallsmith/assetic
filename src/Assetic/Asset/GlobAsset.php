@@ -28,12 +28,12 @@ class GlobAsset extends AssetCollection
      * Constructor.
      *
      * @param string|array $globs   A single glob path or array of paths
-     * @param string       $baseDir A base directory to use for determining each source URL
      * @param array        $filters An array of filters
+     * @param string       $baseDir A base directory to use for determining each source URL
      *
      * @throws InvalidArgumentException If the base directory doesn't exist
      */
-    public function __construct($globs, $baseDir = null, $filters = array())
+    public function __construct($globs, $filters = array(), $baseDir = null)
     {
         $this->globs = (array) $globs;
 
@@ -54,7 +54,7 @@ class GlobAsset extends AssetCollection
         foreach ($this->globs as $glob) {
             if (false !== $paths = glob($glob)) {
                 foreach (array_map('realpath', $paths) as $path) {
-                    $this->add(new FileAsset($path, 0 === strpos($path, $this->baseDir) ? substr($path, strlen($this->baseDir)) : null));
+                    $this->add(new FileAsset($path, array(), 0 === strpos($path, $this->baseDir) ? substr($path, strlen($this->baseDir)) : null));
                 }
             }
         }

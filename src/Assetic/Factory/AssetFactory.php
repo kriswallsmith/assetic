@@ -248,12 +248,12 @@ class AssetFactory
 
     protected function createGlobAsset($glob, $baseDir = null)
     {
-        return new GlobAsset($glob, $baseDir);
+        return new GlobAsset($glob, array(), $baseDir);
     }
 
     protected function createFileAsset($path, $sourceUrl = null)
     {
-        return new FileAsset($path, $sourceUrl);
+        return new FileAsset($path, array(), $sourceUrl);
     }
 
     protected function getFilter($name)

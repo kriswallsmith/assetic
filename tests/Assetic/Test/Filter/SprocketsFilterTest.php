@@ -39,7 +39,7 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('There is no SPROCKETIZE_PATH environment variable.');
         }
 
-        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js', 'main.js');
+        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js', array(), 'main.js');
         $asset->load();
 
         $filter = new SprocketsFilter(__DIR__.'/fixtures/sprockets', $_SERVER['SPROCKETIZE_PATH']);
