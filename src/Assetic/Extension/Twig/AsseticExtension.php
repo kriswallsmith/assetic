@@ -28,6 +28,8 @@ class AsseticExtension extends \Twig_Extension
     {
         return array(
             new TokenParser($this->factory, $this->debug),
+            new TokenParser($this->factory, $this->debug, 'js/*.js', 'javascripts'),
+            new TokenParser($this->factory, $this->debug, 'css/*.css', 'stylesheets'),
         );
     }
 
