@@ -15,8 +15,8 @@ use Assetic\Factory\AssetFactory;
 
 class AsseticExtension extends \Twig_Extension
 {
-    private $factory;
-    private $debug;
+    protected $factory;
+    protected $debug;
 
     public function __construct(AssetFactory $factory, $debug = false)
     {
