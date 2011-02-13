@@ -28,10 +28,10 @@ class AssetFactory
 {
     private $baseDir;
     private $debug;
+    private $defaultOutput;
+    private $workers;
     private $am;
     private $fm;
-    private $defaultOutput = 'assets/*';
-    private $workers = array();
 
     /**
      * Constructor.
@@ -43,6 +43,8 @@ class AssetFactory
     {
         $this->baseDir = rtrim($baseDir, '/').'/';
         $this->debug = $debug;
+        $this->defaultOutput = 'assets/*';
+        $this->workers = array();
     }
 
     /**
@@ -53,26 +55,6 @@ class AssetFactory
     public function setDebug($debug)
     {
         $this->debug = $debug;
-    }
-
-    /**
-     * Sets the asset manager to use when creating asset references.
-     *
-     * @param AssetManager $am The asset manager
-     */
-    public function setAssetManager(AssetManager $am)
-    {
-        $this->am = $am;
-    }
-
-    /**
-     * Sets the filter manager to use when adding filters.
-     *
-     * @param FilterManager $fm The filter manager
-     */
-    public function setFilterManager(FilterManager $fm)
-    {
-        $this->fm = $fm;
     }
 
     /**
@@ -93,6 +75,26 @@ class AssetFactory
     public function addWorker(WorkerInterface $worker)
     {
         $this->workers[] = $worker;
+    }
+
+    /**
+     * Sets the asset manager to use when creating asset references.
+     *
+     * @param AssetManager $am The asset manager
+     */
+    public function setAssetManager(AssetManager $am)
+    {
+        $this->am = $am;
+    }
+
+    /**
+     * Sets the filter manager to use when adding filters.
+     *
+     * @param FilterManager $fm The filter manager
+     */
+    public function setFilterManager(FilterManager $fm)
+    {
+        $this->fm = $fm;
     }
 
     /**
@@ -152,9 +154,7 @@ class AssetFactory
         }
 
         // output --> target url
-        if ($targetUrl = $this->parseOutput($options['output'], $options['name'])) {
-            $asset->setTargetUrl($targetUrl);
-        }
+        $asset->setTargetUrl(str_replace('*', $options['name'], $options['output']));
 
         foreach ($this->workers as $worker) {
             $worker->process($asset, $options['debug']);
@@ -201,34 +201,6 @@ class AssetFactory
             return $this->createGlobAsset($baseDir . $input, $this->baseDir);
         } else {
             return $this->createFileAsset($baseDir . $input, $input);
-        }
-    }
-
-    /**
-     * Converts an output string to a target URL.
-     *
-     * An output string can be one of the following:
-     *
-     *  * A pattern:    If the string contains a "*" the "*" will be replaced with the provided asset name
-     *  * An extension: If the string contains only letters it will be interpreted as an extension and exploded to the pattern "ext/*.ext"
-     *  * An URL:       Otherwise, the output string will be returned untouched
-     *
-     * @param string $output    An output string
-     * @param string $assetName The asset name
-     *
-     * @return string A target URL
-     */
-    protected function parseOutput($output, $assetName)
-    {
-        if (ctype_alpha($output)) {
-            // extension
-            return sprintf('%s/%s.%1$s', $output, $assetName);
-        } elseif (false !== strpos($output, '*')) {
-            // pattern
-            return str_replace('*', $assetName, $output);
-        } else {
-            // simple
-            return $output;
         }
     }
 
