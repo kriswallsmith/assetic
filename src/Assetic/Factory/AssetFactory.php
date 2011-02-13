@@ -113,7 +113,7 @@ class AssetFactory
      * @param array|string $filters An array of filter names
      * @param array        $options An array of options
      *
-     * @return AssetInterface An asset
+     * @return AssetCollection An asset collection
      */
     public function createAsset($inputs = array(), $filters = array(), array $options = array())
     {
