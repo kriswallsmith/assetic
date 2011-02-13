@@ -91,7 +91,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('assets/', (string) $xml->asset['url']);
     }
 
-    public function testUrlPattern()
+    public function testOutputPattern()
     {
         $xml = $this->renderXml('output_pattern.twig');
         $this->assertEquals(1, count($xml->asset));
@@ -99,7 +99,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertStringEndsWith('.css', (string) $xml->asset['url']);
     }
 
-    public function testUrl()
+    public function testOutput()
     {
         $xml = $this->renderXml('output_url.twig');
         $this->assertEquals(1, count($xml->asset));
