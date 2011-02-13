@@ -77,7 +77,8 @@ class TokenParser extends \Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        $test = function(\Twig_Token $token) { return $token->test('endassetic'); };
+        $endtag = 'end'.$this->getTag();
+        $test = function(\Twig_Token $token) use($endtag) { return $token->test($endtag); };
         $body = $this->parser->subparse($test, true);
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);

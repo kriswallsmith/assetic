@@ -130,7 +130,7 @@ to what the asset factory uses:
 
     {% assets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
-    {% endassetic %}
+    {% endassets %}
 
 This example will render one `link` element on the page that includes a URL
 where the filtered asset can be found.
@@ -142,7 +142,7 @@ using the `?` prefix.
 
 This behavior can also be triggered by setting a `debug` attribute on the tag:
 
-    {% assets 'css/*' debug=true %} ... {% endassetic %}
+    {% assets 'css/*' debug=true %} ... {% endassets %}
 
 These assets need to be written to the web directory so these URLs don't
 return 404 errors.
