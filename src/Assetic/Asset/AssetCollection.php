@@ -169,19 +169,33 @@ class AssetCollectionIterator implements \RecursiveIterator
 {
     private $assets;
     private $filters;
+    private $output;
 
     public function __construct(AssetCollection $coll)
     {
         $this->assets = $coll->all();
         $this->filters = $coll->getFilters();
+
+        $this->output = $coll->getTargetUrl();
+        if (false === $pos = strpos($this->output, '.')) {
+            $this->output .= '_*';
+        } else {
+            $this->output = substr($this->output, 0, $pos).'_*'.substr($this->output, $pos);
+        }
     }
 
     /**
-     * Returns a copy of the current asset with filters applied.
+     * Returns a copy of the current asset with filters and a target URL applied.
      */
     public function current()
     {
         $asset = clone current($this->assets);
+
+        // generate a target url
+        if (!$name = pathinfo($asset->getTargetUrl(), PATHINFO_FILENAME)) {
+            $name = 'part'.($this->key() + 1);
+        }
+        $asset->setTargetUrl(str_replace('*', $name, $this->output));
 
         foreach ($this->filters as $filter) {
             $asset->ensureFilter($filter);

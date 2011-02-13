@@ -60,7 +60,12 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateAssetReference()
     {
         $referenced = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $this->am->expects($this->once())->method('get')->with('jquery')->will($this->returnValue($referenced));
+
+        $this->am->expects($this->any())
+            ->method('get')
+            ->with('jquery')
+            ->will($this->returnValue($referenced));
+
         $assets = $this->factory->createAsset(array('@jquery'));
         $arr = iterator_to_array($assets);
         $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $arr[0], '->createAsset() creates a reference');

@@ -117,7 +117,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
 
-        $this->fm->expects($this->exactly(3))
+        $this->fm->expects($this->once())
             ->method('get')
             ->with('bar')
             ->will($this->returnValue($filter));

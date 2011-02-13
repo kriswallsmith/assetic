@@ -97,22 +97,9 @@ class TokenParser extends \Twig_TokenParser
             return static::createNode($body, $inputs, $coll->getTargetUrl(), $filters, $name, $debug, $token->getLine(), $this->getTag());
         }
 
-        // create a pattern for each leaf's target url
-        $pattern = $coll->getTargetUrl();
-        if (false !== $pos = strrpos($pattern, '.')) {
-            $pattern = substr($pattern, 0, $pos).'_*'.substr($pattern, $pos);
-        } else {
-            $pattern .= '_*';
-        }
-
         $nodes = array();
-        foreach ($coll as $leaf) {
-            $asset = $this->factory->createAsset(array($leaf->getSourceUrl()), $filters, array(
-                'output' => $pattern,
-                'name'   => 'part'.(count($nodes) + 1),
-                'debug'  => $debug,
-            ));
-            $nodes[] = static::createNode($body, array($leaf->getSourceUrl()), $asset->getTargetUrl(), $filters, $name.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
+        foreach ($coll as $asset) {
+            $nodes[] = static::createNode($body, array($asset->getSourceUrl()), $asset->getTargetUrl(), $filters, $name.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
         }
 
         return new \Twig_Node($nodes, array(), $token->getLine(), $this->getTag());
