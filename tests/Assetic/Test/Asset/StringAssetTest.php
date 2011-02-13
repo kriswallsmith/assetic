@@ -26,7 +26,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())->method('filterLoad');
 
-        $asset = new StringAsset('foo', null, array($filter));
+        $asset = new StringAsset('foo', array($filter));
         $asset->load();
     }
 
@@ -35,7 +35,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $filter->expects($this->once())->method('filterLoad');
 
-        $asset = new StringAsset('foo', null, array($filter));
+        $asset = new StringAsset('foo', array($filter));
         $asset->dump();
     }
 

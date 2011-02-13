@@ -35,7 +35,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testUrls($format, $sourceUrl, $targetUrl, $inputUrl, $expectedUrl)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl), $sourceUrl);
+        $asset = new StringAsset(sprintf($format, $inputUrl), array(), $sourceUrl);
         $asset->setTargetUrl($targetUrl);
         $asset->load();
 

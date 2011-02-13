@@ -98,7 +98,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadDuplicates()
     {
-        $asset = new StringAsset('asset', 'foo.bar');
+        $asset = new StringAsset('asset', array(), 'foo.bar');
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 
@@ -110,7 +110,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testDumpDuplicates()
     {
-        $asset = new StringAsset('asset', 'foo.bar');
+        $asset = new StringAsset('asset', array(), 'foo.bar');
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 
@@ -187,9 +187,9 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testIteration()
     {
-        $asset1 = new StringAsset('asset1', 'foo.css');
-        $asset2 = new StringAsset('asset2', 'foo.css');
-        $asset3 = new StringAsset('asset3', 'bar.css');
+        $asset1 = new StringAsset('asset1', array(), 'foo.css');
+        $asset2 = new StringAsset('asset2', array(), 'foo.css');
+        $asset3 = new StringAsset('asset3', array(), 'bar.css');
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
 

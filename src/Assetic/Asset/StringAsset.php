@@ -27,10 +27,10 @@ class StringAsset extends BaseAsset
      * Constructor.
      *
      * @param string $content   The content of the asset
-     * @param string $sourceUrl The source URL
      * @param array  $filters   Filters for the asset
+     * @param string $sourceUrl The source URL
      */
-    public function __construct($content, $sourceUrl = null, $filters = array())
+    public function __construct($content, $filters = array(), $sourceUrl = null)
     {
         $this->originalContent = $content;
 
