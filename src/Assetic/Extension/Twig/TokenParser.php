@@ -12,23 +12,34 @@
 namespace Assetic\Extension\Twig;
 
 use Assetic\Factory\AssetFactory;
-use Assetic\Asset\AssetCollectionIterator;
 
 class TokenParser extends \Twig_TokenParser
 {
     private $factory;
     private $debug;
+    private $defaultOutput;
+    private $tag;
 
-    public function __construct(AssetFactory $factory, $debug = false)
+    /**
+     * Constructor.
+     *
+     * @param AssetFactory $factory       The asset factory
+     * @param Boolean      $debug         The debug mode
+     * @param string       $defaultOutput The default output string
+     * @param string       $tag           The tag name
+     */
+    public function __construct(AssetFactory $factory, $debug = false, $defaultOutput = null, $tag = 'assets')
     {
         $this->factory = $factory;
         $this->debug = $debug;
+        $this->defaultOutput = $defaultOutput;
+        $this->tag = $tag;
     }
 
     public function parse(\Twig_Token $token)
     {
         $inputs  = array();
-        $output  = null;
+        $output  = $this->defaultOutput;
         $filters = array();
         $name    = null;
         $debug   = $this->debug;
@@ -108,7 +119,7 @@ class TokenParser extends \Twig_TokenParser
 
     public function getTag()
     {
-        return 'assets';
+        return $this->tag;
     }
 
     static protected function createNode(\Twig_NodeInterface $body, array $inputs, $targetUrl, array $filters, $name, $debug = false, $lineno = 0, $tag = null)

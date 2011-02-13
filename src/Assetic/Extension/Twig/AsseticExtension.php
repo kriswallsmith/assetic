@@ -27,17 +27,12 @@ class AsseticExtension extends \Twig_Extension
     public function getTokenParsers()
     {
         return array(
-            static::createTokenParser($this->factory, $this->debug),
+            new TokenParser($this->factory, $this->debug),
         );
     }
 
     public function getName()
     {
         return 'assetic';
-    }
-
-    static protected function createTokenParser(AssetFactory $factory, $debug = false)
-    {
-        return new TokenParser($factory, $debug);
     }
 }
