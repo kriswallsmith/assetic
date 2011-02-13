@@ -108,7 +108,7 @@ class TokenParser extends \Twig_TokenParser
 
     public function getTag()
     {
-        return 'assetic';
+        return 'assets';
     }
 
     static protected function createNode(\Twig_NodeInterface $body, array $inputs, $targetUrl, array $filters, $name, $debug = false, $lineno = 0, $tag = null)
