@@ -141,30 +141,85 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
     }
 }
 
+/**
+ * Asset collection filter iterator.
+ *
+ * The filter iterator is responsible for de-duplication of leaf assets based
+ * on both strict equality and source URL.
+ *
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @access private
+ */
 class AssetCollectionFilterIterator extends \RecursiveFilterIterator
 {
-    private $sourceUrls = array();
+    private $visited;
+    private $sourceUrls;
 
+    /**
+     * Constructor.
+     *
+     * @param AssetCollectionIterator $iterator   The inner iterator
+     * @param array                   $visited    An array of visited asset objects
+     * @param array                   $sourceUrls An array of visited source URLs
+     */
+    public function __construct(AssetCollectionIterator $iterator, array $visited = array(), array $sourceUrls = array())
+    {
+        parent::__construct($iterator);
+
+        $this->visited = $visited;
+        $this->sourceUrls = $sourceUrls;
+    }
+
+    /**
+     * Determines whether the current asset is a duplicate.
+     *
+     * De-duplication is performed based on either strict equality or by
+     * matching source URLs.
+     *
+     * @return Boolean Returns true if we have not seen this asset yet
+     */
     public function accept()
     {
-        $asset = $this->current();
+        $asset = $this->getInnerIterator()->current(true);
+        $duplicate = false;
 
-        // no url == unique
-        if (!$sourceUrl = $asset->getSourceUrl()) {
-            return true;
+        // check strict equality
+        if (in_array($asset, $this->visited, true)) {
+            $duplicate = true;
+        } else {
+            $this->visited[] = $asset;
         }
 
-        // duplicate
-        if (in_array($sourceUrl, $this->sourceUrls)) {
-            return false;
+        // check source url
+        if ($sourceUrl = $asset->getSourceUrl()) {
+            if (in_array($sourceUrl, $this->sourceUrls)) {
+                $duplicate = true;
+            } else {
+                $this->sourceUrls[] = $sourceUrl;
+            }
         }
 
-        // remember we've been here
-        $this->sourceUrls[] = $sourceUrl;
-        return true;
+        return !$duplicate;
+    }
+
+    /**
+     * Passes visited objects and source URLs to the child iterator.
+     */
+    public function getChildren()
+    {
+        return new self($this->getInnerIterator()->getChildren(), $this->visited, $this->sourceUrls);
     }
 }
 
+/**
+ * Iterates over an asset collection.
+ *
+ * The iterator is responsible for cascading filters and target URL patterns
+ * from parent to child assets.
+ *
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @access private
+ */
 class AssetCollectionIterator implements \RecursiveIterator
 {
     private $assets;
@@ -186,22 +241,31 @@ class AssetCollectionIterator implements \RecursiveIterator
 
     /**
      * Returns a copy of the current asset with filters and a target URL applied.
+     *
+     * @param Boolean $raw Returns the unmodified asset if true
      */
-    public function current()
+    public function current($raw = false)
     {
-        $asset = clone current($this->assets);
+        $asset = current($this->assets);
 
-        // generate a target url
+        if ($raw) {
+            return $asset;
+        }
+
+        // clone before making changes
+        $clone = clone $asset;
+
+        // generate a target url based on asset name
         if (!$name = pathinfo($asset->getTargetUrl(), PATHINFO_FILENAME)) {
             $name = 'part'.($this->key() + 1);
         }
-        $asset->setTargetUrl(str_replace('*', $name, $this->output));
+        $clone->setTargetUrl(str_replace('*', $name, $this->output));
 
         foreach ($this->filters as $filter) {
-            $asset->ensureFilter($filter);
+            $clone->ensureFilter($filter);
         }
 
-        return $asset;
+        return $clone;
     }
 
     public function key()
@@ -229,6 +293,9 @@ class AssetCollectionIterator implements \RecursiveIterator
         return current($this->assets) instanceof AssetCollection;
     }
 
+    /**
+     * @uses current()
+     */
     public function getChildren()
     {
         return new self($this->current());
