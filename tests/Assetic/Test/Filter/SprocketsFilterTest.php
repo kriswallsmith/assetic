@@ -33,6 +33,9 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
         shell_exec('rm -rf '.escapeshellarg($this->assetRoot).'/*');
     }
 
+    /**
+     * @group integration
+     */
     public function testFilterLoad()
     {
         if (!isset($_SERVER['SPROCKETIZE_PATH'])) {

@@ -16,6 +16,9 @@ use Assetic\Filter\LessFilter;
 
 class LessFilterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group integration
+     */
     public function testLessc()
     {
         if (!isset($_SERVER['LESSC_PATH'])) {

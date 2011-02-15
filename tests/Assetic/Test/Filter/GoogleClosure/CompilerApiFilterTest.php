@@ -17,7 +17,7 @@ use Assetic\Filter\GoogleClosure\CompilerApiFilter;
 class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @group functional
+     * @group integration
      */
     public function testRoundTrip()
     {

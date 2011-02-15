@@ -16,6 +16,9 @@ use Assetic\Filter\Sass\SassFilter;
 
 class SassFilterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group integration
+     */
     public function testSass()
     {
         if (!isset($_SERVER['SASS_PATH'])) {

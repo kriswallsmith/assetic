@@ -30,7 +30,6 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group functional
      * @dataProvider provideUrls
      */
     public function testUrls($format, $sourceUrl, $targetUrl, $inputUrl, $expectedUrl)

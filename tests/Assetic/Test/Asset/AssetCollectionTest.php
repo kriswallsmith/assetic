@@ -23,9 +23,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $coll, 'AssetCollection implements AssetInterface');
     }
 
-    /**
-     * @group functional
-     */
     public function testLoadFilter()
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
@@ -35,9 +32,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll->load();
     }
 
-    /**
-     * @group functional
-     */
     public function testDumpFilter()
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
@@ -47,9 +41,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll->dump();
     }
 
-    /**
-     * @group functional
-     */
     public function testNestedCollectionLoad()
     {
         $content = 'foobar';
@@ -72,9 +63,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $count, '->load() applies filters to leaves only');
     }
 
-    /**
-     * @group functional
-     */
     public function testMixedIteration()
     {
         $asset = new StringAsset('asset');
@@ -93,9 +81,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('asset', 'nested'), $contents, '->load() iterates over multiple levels');
     }
 
-    /**
-     * @group functional
-     */
     public function testLoadDuplicates()
     {
         $asset = new StringAsset('asset', array(), 'foo.bar');
@@ -105,9 +90,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('asset', $coll->getContent(), '->load() detects duplicate assets');
     }
 
-    /**
-     * @group functional
-     */
     public function testDumpDuplicates()
     {
         $asset = new StringAsset('asset', array(), 'foo.bar');

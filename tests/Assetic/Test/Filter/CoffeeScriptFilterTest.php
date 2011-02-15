@@ -16,6 +16,9 @@ use Assetic\Filter\CoffeeScriptFilter;
 
 class CoffeeScriptFilterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group integration
+     */
     public function testFilterLoad()
     {
         if (!isset($_SERVER['COFFEE_PATH'])) {
