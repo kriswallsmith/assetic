@@ -19,19 +19,18 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @group integration
      */
-    public function testLessc()
+    public function testFilterLoad()
     {
-        if (!isset($_SERVER['LESSC_PATH'])) {
-            $this->markTestSkipped('There is no LESSC_PATH environment variable.');
+        if (!isset($_SERVER['NODE_BIN']) || !isset($_SERVER['NODE_PATH'])) {
+            $this->markTestSkipped('No node.js configuration.');
         }
 
-        $asset = new StringAsset('body{color:red;}');
+        $asset = new StringAsset('.foo{.bar{width:1+1;}}');
         $asset->load();
 
-        $filter = new LessFilter($_SERVER['LESSC_PATH']);
+        $filter = new LessFilter(__DIR__, $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
         $filter->filterLoad($asset);
-        $filter->filterDump($asset);
 
-        $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the content');
+        $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
     }
 }
