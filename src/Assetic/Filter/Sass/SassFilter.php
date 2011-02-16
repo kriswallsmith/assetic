@@ -11,8 +11,9 @@
 
 namespace Assetic\Filter\Sass;
 
-use Assetic\Filter\FilterInterface;
 use Assetic\Asset\AssetInterface;
+use Assetic\Filter\FilterInterface;
+use Assetic\Filter\Process;
 
 /**
  * Loads SASS files.
@@ -137,12 +138,16 @@ class SassFilter implements FilterInterface
 
         $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
 
-        // todo: check for a valid return code
-        shell_exec(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $code = $proc->run();
+
+        if (0 < $code) {
+            unlink($input);
+            throw new \RuntimeException($proc->getErrorOutput());
+        }
 
         $asset->setContent(file_get_contents($output));
 
-        // cleanup
         unlink($input);
         unlink($output);
     }

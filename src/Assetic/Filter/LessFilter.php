@@ -88,31 +88,22 @@ JAVASCRIPT;
 
         $options = array($this->nodeBin);
 
-        $options[] = $script = tempnam(sys_get_temp_dir(), 'assetic_less');
-        file_put_contents($script, sprintf($format,
+        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_less');
+        file_put_contents($input, sprintf($format,
             json_encode($parserOptions),
             json_encode($asset->getContent()),
             json_encode($treeOptions)
         ));
 
-        $proc = new Process(
-            implode(' ', array_map('escapeshellarg', $options)),
-            null, // cwd doesn't matter
-            $env
-        );
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, $env);
+        $code = $proc->run();
+        unlink($input);
 
-        switch ($proc->run()) {
-            case 0:
-                $asset->setContent($proc->getOutput());
-                break;
-            case 1:
-                throw new \RuntimeException('Node.js threw an error: '.$proc->getErrorOutput());
-            case 2:
-            case 3:
-                throw new \RuntimeException('LESS threw an error: '.$proc->getErrorOutput());
-            default:
-                throw new \RuntimeException($proc->getErrorOutput());
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
         }
+
+        $asset->setContent($proc->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

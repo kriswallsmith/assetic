@@ -13,6 +13,7 @@ namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
+use Assetic\Filter\Process;
 
 /**
  * Base YUI compressor filter.
@@ -79,12 +80,14 @@ abstract class BaseCompressorFilter implements FilterInterface
         $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic');
         file_put_contents($input, $content);
 
-        // todo: check for a valid return code
-        $output = shell_exec(implode(' ', array_map('escapeshellarg', $options)));
-
-        // cleanup
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $code = $proc->run();
         unlink($input);
 
-        return $output;
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
+        }
+
+        return $proc->getOutput();
     }
 }

@@ -22,21 +22,26 @@ use Assetic\Asset\AssetInterface;
 class CoffeeScriptFilter implements FilterInterface
 {
     private $coffeePath;
+    private $nodePath;
 
-    public function __construct($coffeePath = '/usr/bin/coffee')
+    public function __construct($coffeePath = '/usr/bin/coffee', $nodePath = '/usr/bin/node')
     {
         $this->coffeePath = $coffeePath;
+        $this->nodePath = $nodePath;
     }
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = tempnam(sys_get_temp_dir(), 'assetic_coffee');
-        file_put_contents($input, $asset->getContent());
+        $options = array($this->nodePath, $this->coffeePath, '-sc');
 
-        $output = shell_exec(sprintf('cat %s | coffee -sc', escapeshellarg($input)));
-        unlink($input);
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, array(), $asset->getContent());
+        $code = $proc->run();
 
-        $asset->setContent($output);
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
+        }
+
+        $asset->setContent($proc->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

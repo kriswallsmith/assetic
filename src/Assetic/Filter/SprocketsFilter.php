@@ -67,11 +67,15 @@ class SprocketsFilter implements FilterInterface
         file_put_contents($tmp, $asset->getContent());
         rename($tmp, $input);
 
-        // todo: check for a valid return code
-        $output = shell_exec(implode(' ', array_map('escapeshellarg', $options)));
-        $asset->setContent($output);
-
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $code = $proc->run();
         unlink($input);
+
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
+        }
+
+        $asset->setContent($proc->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)
