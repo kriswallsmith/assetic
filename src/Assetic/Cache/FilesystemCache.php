@@ -37,6 +37,10 @@ class FilesystemCache implements CacheInterface
 
     public function set($key, $value)
     {
+        if (!is_dir($this->dir)) {
+            mkdir($this->dir, 0777, true);
+        }
+
         file_put_contents($this->dir.'/'.$key, $value);
     }
 

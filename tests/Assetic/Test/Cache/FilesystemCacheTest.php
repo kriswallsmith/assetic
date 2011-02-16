@@ -29,4 +29,24 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
         $cache->remove('foo');
         $this->assertFalse($cache->has('foo'));
     }
+
+    public function testSetCreatesDir()
+    {
+        $dir = sys_get_temp_dir().'/assetic/fscachetest';
+
+        $tearDown = function() use($dir)
+        {
+            array_map('unlink', glob($dir.'/*'));
+            @rmdir($dir);
+        };
+
+        $tearDown();
+
+        $cache = new FilesystemCache($dir);
+        $cache->set('foo', 'bar');
+
+        $this->assertFileExists($dir.'/foo');
+
+        $tearDown();
+    }
 }
