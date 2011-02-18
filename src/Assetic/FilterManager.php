@@ -43,9 +43,9 @@ class FilterManager
         return isset($this->filters[$alias]);
     }
 
-    public function all()
+    public function getNames()
     {
-        return $this->filters;
+        return array_keys($this->filters);
     }
 
     /**

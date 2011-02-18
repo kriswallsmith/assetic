@@ -50,11 +50,6 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->fm->has('foo'), '->has() returns false if the filter is not set');
     }
 
-    public function testAll()
-    {
-        $this->assertInternalType('array', $this->fm->all(), '->all() returns an array');
-    }
-
     public function testInvalidAlias()
     {
         $this->setExpectedException('InvalidArgumentException');

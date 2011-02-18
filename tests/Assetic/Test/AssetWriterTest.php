@@ -34,8 +34,12 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         $am = $this->getMock('Assetic\\AssetManager');
 
         $am->expects($this->once())
-            ->method('all')
-            ->will($this->returnValue(array($asset)));
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
+        $am->expects($this->once())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue($asset));
         $asset->expects($this->once())
             ->method('getTargetUrl')
             ->will($this->returnValue('target_url'));

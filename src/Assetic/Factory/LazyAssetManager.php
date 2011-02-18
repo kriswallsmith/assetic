@@ -14,77 +14,42 @@ namespace Assetic\Factory;
 use Assetic\AssetManager;
 
 /**
- * An asset manager that also knows how to create assets.
+ * The lazy asset manager is a composition of a formula collection and factory.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class LazyAssetManager extends AssetManager
 {
+    private $formulae;
     private $factory;
-    private $formulae = array();
 
-    public function __construct(AssetFactory $factory)
+    public function __construct(FormulaCollection $formulae, AssetFactory $factory)
     {
+        $this->formulae = $formulae;
         $this->factory = $factory;
-        $factory->setAssetManager($this);
     }
 
-    public function addFormulae(array $formulae)
+    public function get($alias)
     {
-        array_map(array($this, 'checkName'), array_keys($formulae));
-
-        $this->formulae = $formulae + $this->formulae;
-    }
-
-    public function setFormula($name, array $formula)
-    {
-        $this->checkName($name);
-
-        $this->formulae[$name] = $formula;
-    }
-
-    public function getFormulae()
-    {
-        return $this->formulae;
-    }
-
-    public function get($name)
-    {
-        if (!parent::has($name) && isset($this->formulae[$name])) {
-            $this->flush($name);
+        if (!parent::has($alias) && $this->formulae->has($alias)) {
+            parent::set($alias, call_user_func_array(array($this->factory, 'createAsset'), $this->formulae->get($alias)));
         }
 
-        return parent::get($name);
+        return parent::get($alias);
     }
 
-    public function has($name)
+    public function has($alias)
     {
-        return isset($this->formulae[$name]) || parent::has($name);
-    }
-
-    public function all()
-    {
-        foreach (array_keys($this->formulae) as $name) {
-            if (!parent::has($name)) {
-                $this->flush($name);
-            }
-        }
-
-        return parent::all();
+        return parent::has($alias) || $this->formulae->has($alias);
     }
 
     /**
-     * Flushes an asset formula to the parent.
+     * Returns an array of asset names.
      *
-     * @param string $name The formula name
+     * @return array An array of asset names
      */
-    private function flush($name)
+    public function getNames()
     {
-        static $defaults = array(array(), array(), array());
-
-        $formula = $this->formulae[$name] + $defaults;
-        $formula[2]['name'] = $name;
-
-        $this->set($name, call_user_func_array(array($this->factory, 'createAsset'), $formula));
+        return array_unique(array_merge(parent::getNames(), $this->formulae->getNames()));
     }
 }

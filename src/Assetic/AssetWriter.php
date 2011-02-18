@@ -34,8 +34,8 @@ class AssetWriter
 
     public function writeManagerAssets(AssetManager $am)
     {
-        foreach ($am->all() as $asset) {
-            $this->writeAsset($asset);
+        foreach ($am->getNames() as $name) {
+            $this->writeAsset($am->get($name));
         }
     }
 

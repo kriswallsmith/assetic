@@ -66,13 +66,13 @@ class AssetManager
     }
 
     /**
-     * Returns all assets.
+     * Returns an array of asset names.
      *
-     * @return array An array of assets
+     * @return array An array of asset names
      */
-    public function all()
+    public function getNames()
     {
-        return $this->assets;
+        return array_keys($this->assets);
     }
 
     /**

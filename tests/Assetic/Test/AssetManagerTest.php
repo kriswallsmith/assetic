@@ -44,20 +44,6 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->am->has('bar'), '->has() returns false if the asset is not set');
     }
 
-    public function testAllReturnType()
-    {
-        $this->assertInternalType('array', $this->am->all(), '->all() returns an array');
-    }
-
-    public function testAllContents()
-    {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $this->am->set('foo', $asset);
-
-        $assets = $this->am->all();
-        $this->assertContains($asset, $assets, '->all() includes assets');
-    }
-
     public function testInvalidName()
     {
         $this->setExpectedException('InvalidArgumentException');
