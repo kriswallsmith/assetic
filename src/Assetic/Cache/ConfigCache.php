@@ -38,59 +38,83 @@ class ConfigCache
     /**
      * Checks of the cache has a file.
      *
-     * @param string $cacheKey A cache key
+     * @param string $key A cache key
      *
      * @return Boolean True if a file exists
      */
-    public function has($cacheKey)
+    public function has($key)
     {
-        return file_exists($this->getPath($cacheKey));
+        return file_exists($this->getPath($key));
     }
 
     /**
      * Writes a value to a file.
      *
-     * @param string $cacheKey A cache key
+     * @param string $key A cache key
      * @param mixed  $value    A value to cache
      */
-    public function set($cacheKey, $value)
+    public function set($key, $value)
     {
-        file_put_contents($this->getPath($cacheKey), sprintf("<?php\n\nreturn %s;\n", var_export($value, true)));
+        if (!is_dir($this->dir) && false === @mkdir($this->dir, 0777, true)) {
+            throw new \RuntimeException('Unable to create directory '.$this->dir);
+        }
+
+        $path = $this->getPath($key);
+
+        if (false === @file_put_contents($path, sprintf("<?php\n\nreturn %s;\n", var_export($value, true)))) {
+            throw new \RuntimeException('Unable to write file '.$path);
+        }
     }
 
     /**
      * Loads and returns the value for the supplied cache key.
      *
-     * @param string $cacheKey A cache key
+     * @param string $key A cache key
      *
      * @return mixed The cached value
      */
-    public function get($cacheKey)
+    public function get($key)
     {
-        return include $this->getPath($cacheKey);
+        $path = $this->getPath($key);
+
+        if (!file_exists($path)) {
+            throw new \RuntimeException('There is no cached value for '.$key);
+        }
+
+        return include $path;
     }
 
     /**
      * Returns a timestamp for when the cache was created.
      *
-     * @param string $cacheKey A cache key
+     * @param string $key A cache key
      *
      * @return integer A UNIX timestamp
      */
-    public function getTimestamp($cacheKey)
+    public function getTimestamp($key)
     {
-        return filemtime($this->getPath($cacheKey));
+        $path = $this->getPath($key);
+
+        if (!file_exists($path)) {
+            throw new \RuntimeException('There is no cached value for '.$key);
+        }
+
+        if (false === $mtime = @filemtime($path)) {
+            throw new \RuntimeException('Unable to determine file mtime for '.$path);
+        }
+
+        return $mtime;
     }
 
     /**
      * Returns the path where the file corresponding to the supplied cache key can be included from.
      *
-     * @param string $cacheKey A cache key
+     * @param string $key A cache key
      *
      * @return string A file path
      */
-    private function getPath($cacheKey)
+    private function getPath($key)
     {
-        return $this->dir.'/'.$cacheKey.'.php';
+        return $this->dir.'/'.$key.'.php';
     }
 }

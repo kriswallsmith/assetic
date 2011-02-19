@@ -32,20 +32,34 @@ class FilesystemCache implements CacheInterface
 
     public function get($key)
     {
-        return file_get_contents($this->dir.'/'.$key);
+        $path = $this->dir.'/'.$key;
+
+        if (!file_exists($path)) {
+            throw new \RuntimeException('There is no cached value for '.$key);
+        }
+
+        return file_get_contents($path);
     }
 
     public function set($key, $value)
     {
-        if (!is_dir($this->dir)) {
-            mkdir($this->dir, 0777, true);
+        if (!is_dir($this->dir) && false === @mkdir($this->dir, 0777, true)) {
+            throw new \RuntimeException('Unable to create directory '.$this->dir);
         }
 
-        file_put_contents($this->dir.'/'.$key, $value);
+        $path = $this->dir.'/'.$key;
+
+        if (false === @file_put_contents($path, $value)) {
+            throw new \RuntimeException('Unable to write file '.$path);
+        }
     }
 
     public function remove($key)
     {
-        unlink($this->dir.'/'.$key);
+        $path = $this->dir.'/'.$key;
+
+        if (file_exists($path) && false === @unlink($path)) {
+            throw new \RuntimeException('Unable to remove file '.$path);
+        }
     }
 }
