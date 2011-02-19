@@ -11,14 +11,15 @@
 
 namespace Assetic\Extension\Twig;
 
+use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\ResourceInterface;
+
 /**
  * Loads asset formulae from Twig templates.
  *
- * A formula is an array of arguments for {@link AssetFactory::createAsset()}.
- *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FormulaLoader
+class TwigFormulaLoader implements FormulaLoaderInterface
 {
     private $twig;
 
@@ -27,17 +28,14 @@ class FormulaLoader
         $this->twig = $twig;
     }
 
-    /**
-     * Extracts asset formulae from a template.
-     *
-     * @param string $template The name of the template to load
-     *
-     * @return array An array of asset formulae indexed by name
-     */
-    public function load($template)
+    public function supports(ResourceInterface $resource)
     {
-        $source = $this->twig->getLoader()->getSource($template);
-        $tokens = $this->twig->tokenize($source);
+        return $resource instanceof TwigResource;
+    }
+
+    public function load(ResourceInterface $resource)
+    {
+        $tokens = $this->twig->tokenize($resource->getContent());
         $nodes  = $this->twig->parse($tokens);
 
         return $this->loadNode($nodes);
@@ -52,7 +50,7 @@ class FormulaLoader
     {
         $assets = array();
 
-        if ($node instanceof Node) {
+        if ($node instanceof AsseticNode) {
             $assets[$node->getAttribute('asset_name')] = array(
                 $node->getAttribute('source_urls'),
                 $node->getAttribute('filter_names'),
