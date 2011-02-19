@@ -36,18 +36,6 @@ class ConfigCache
     }
 
     /**
-     * Returns the path where the file corresponding to the supplied cache key can be included from.
-     *
-     * @param string $cacheKey A cache key
-     *
-     * @return string A file path
-     */
-    public function getPath($cacheKey)
-    {
-        return $this->dir.'/'.$cacheKey.'.php';
-    }
-
-    /**
      * Checks of the cache has a file.
      *
      * @param string $cacheKey A cache key
@@ -65,9 +53,21 @@ class ConfigCache
      * @param string $cacheKey A cache key
      * @param mixed  $value    A value to cache
      */
-    public function write($cacheKey, $value)
+    public function set($cacheKey, $value)
     {
         file_put_contents($this->getPath($cacheKey), sprintf("<?php\n\nreturn %s;\n", var_export($value, true)));
+    }
+
+    /**
+     * Loads and returns the value for the supplied cache key.
+     *
+     * @param string $cacheKey A cache key
+     *
+     * @return mixed The cached value
+     */
+    public function get($cacheKey)
+    {
+        return include $this->getPath($cacheKey);
     }
 
     /**
@@ -80,5 +80,17 @@ class ConfigCache
     public function getTimestamp($cacheKey)
     {
         return filemtime($this->getPath($cacheKey));
+    }
+
+    /**
+     * Returns the path where the file corresponding to the supplied cache key can be included from.
+     *
+     * @param string $cacheKey A cache key
+     *
+     * @return string A file path
+     */
+    private function getPath($cacheKey)
+    {
+        return $this->dir.'/'.$cacheKey.'.php';
     }
 }
