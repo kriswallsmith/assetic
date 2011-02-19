@@ -31,9 +31,9 @@ class AsseticExtension extends \Twig_Extension
     public function getTokenParsers()
     {
         return array(
-            new TokenParser($this->factory, $this->debug),
-            new TokenParser($this->factory, $this->debug, $this->defaultJavascriptsOutput, 'javascripts'),
-            new TokenParser($this->factory, $this->debug, $this->defaultStylesheetsOutput, 'stylesheets'),
+            new AsseticTokenParser($this->factory, $this->debug),
+            new AsseticTokenParser($this->factory, $this->debug, $this->defaultJavascriptsOutput, 'javascripts'),
+            new AsseticTokenParser($this->factory, $this->debug, $this->defaultStylesheetsOutput, 'stylesheets'),
         );
     }
 

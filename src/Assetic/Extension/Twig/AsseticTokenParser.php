@@ -13,7 +13,7 @@ namespace Assetic\Extension\Twig;
 
 use Assetic\Factory\AssetFactory;
 
-class TokenParser extends \Twig_TokenParser
+class AsseticTokenParser extends \Twig_TokenParser
 {
     private $factory;
     private $debug;
