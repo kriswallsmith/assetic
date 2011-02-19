@@ -13,9 +13,9 @@ namespace Assetic\Test\Extension\Twig;
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Extension\Twig\AsseticExtension;
-use Assetic\Extension\Twig\FormulaLoader;
+use Assetic\Extension\Twig\TwigFormulaLoader;
 
-class FormulaLoaderTest extends \PHPUnit_Framework_TestCase
+class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 {
     private $am;
     private $fm;
@@ -35,10 +35,9 @@ class FormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $factory->setFilterManager($this->fm);
 
         $twig = new \Twig_Environment();
-        $twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
         $twig->addExtension(new AsseticExtension($factory));
 
-        $this->loader = new FormulaLoader($twig);
+        $this->loader = new TwigFormulaLoader($twig);
     }
 
     public function testMixture()
@@ -54,8 +53,16 @@ class FormulaLoaderTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
         );
-        
-        $formulae = $this->loader->load('mixture.twig');
+
+        $resource = $this->getMockBuilder('Assetic\\Extension\\Twig\\TwigResource')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $resource->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue(file_get_contents(__DIR__.'/templates/mixture.twig')));
+
+        $formulae = $this->loader->load($resource);
         $this->assertEquals($expected, $formulae);
     }
 }
