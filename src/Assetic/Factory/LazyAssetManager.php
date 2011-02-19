@@ -12,44 +12,86 @@
 namespace Assetic\Factory;
 
 use Assetic\AssetManager;
+use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\ResourceInterface;
 
 /**
- * The lazy asset manager is a composition of a formula collection and factory.
+ * A lazy asset manager is a composition of a formula loader and factory.
+ *
+ * It lazily loads asset formulae from resources.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class LazyAssetManager extends AssetManager
 {
-    private $formulae;
     private $factory;
+    private $loader;
+    private $resources;
+    private $formulae;
+    private $loaded;
 
-    public function __construct(FormulaCollection $formulae, AssetFactory $factory)
+    public function __construct(AssetFactory $factory, FormulaLoaderInterface $loader)
     {
-        $this->formulae = $formulae;
         $this->factory = $factory;
-    }
-
-    public function get($alias)
-    {
-        if (!parent::has($alias) && $this->formulae->has($alias)) {
-            parent::set($alias, call_user_func_array(array($this->factory, 'createAsset'), $this->formulae->get($alias)));
-        }
-
-        return parent::get($alias);
-    }
-
-    public function has($alias)
-    {
-        return parent::has($alias) || $this->formulae->has($alias);
+        $this->loader = $loader;
+        $this->resources = array();
+        $this->formulae = array();
+        $this->loaded = true;
     }
 
     /**
-     * Returns an array of asset names.
+     * Adds a resource to the current asset manager.
      *
-     * @return array An array of asset names
+     * @param ResourceInterface $resource A resource
      */
+    public function addResource(ResourceInterface $resource)
+    {
+        $this->resources[] = $resource;
+        $this->loaded = false;
+    }
+
+    /**
+     * Loads formulae from resources.
+     */
+    public function load()
+    {
+        foreach ($this->resources as $resource) {
+            $this->formulae += $this->loader->load($resource);
+        }
+
+        $this->loaded = true;
+    }
+
+    public function get($name)
+    {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
+        if (!parent::has($name) && isset($this->formulae[$name])) {
+            list($inputs, $filters, $options) = $this->formulae[$name];
+            $options['name'] = $name;
+            parent::set($name, $this->factory->createAsset($inputs, $filters, $options));
+        }
+
+        return parent::get($name);
+    }
+
+    public function has($name)
+    {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
+        return isset($this->formulae[$name]) || parent::has($name);
+    }
+
     public function getNames()
     {
-        return array_unique(array_merge(parent::getNames(), $this->formulae->getNames()));
+        if (!$this->loaded) {
+            $this->load();
+        }
+
+        return array_unique(array_merge(parent::getNames(), array_keys($this->formulae)));
     }
 }
