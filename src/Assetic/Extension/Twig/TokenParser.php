@@ -112,6 +112,6 @@ class TokenParser extends \Twig_TokenParser
 
     static protected function createNode(\Twig_NodeInterface $body, array $inputs, $targetUrl, array $filters, $name, $debug = false, $lineno = 0, $tag = null)
     {
-        return new Node($body, $inputs, $targetUrl, $filters, $name, $debug, $lineno, $tag);
+        return new AsseticNode($body, $inputs, $targetUrl, $filters, $name, $debug, $lineno, $tag);
     }
 }

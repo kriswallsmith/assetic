@@ -11,7 +11,7 @@
 
 namespace Assetic\Extension\Twig;
 
-class Node extends \Twig_Node
+class AsseticNode extends \Twig_Node
 {
     public function __construct(\Twig_NodeInterface $body, array $sourceUrls, $targetUrl, array $filterNames, $assetName, $debug = false, $lineno = 0, $tag = null)
     {
