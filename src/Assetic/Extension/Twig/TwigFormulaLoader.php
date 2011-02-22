@@ -12,6 +12,7 @@
 namespace Assetic\Extension\Twig;
 
 use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\ResourceInterface;
 
 /**
  * Loads asset formulae from Twig templates.
@@ -21,23 +22,15 @@ use Assetic\Factory\Loader\FormulaLoaderInterface;
 class TwigFormulaLoader implements FormulaLoaderInterface
 {
     private $twig;
-    private $templateName;
 
-    public function __construct(\Twig_Environment $twig, $templateName)
+    public function __construct(\Twig_Environment $twig)
     {
         $this->twig = $twig;
-        $this->templateName = $templateName;
     }
 
-    public function isFresh($timestamp)
+    public function load(ResourceInterface $resource)
     {
-        return $this->twig->getLoader()->isFresh($this->templateName, $timestamp);
-    }
-
-    public function load()
-    {
-        $source = $this->twig->getLoader()->getSource($this->templateName);
-        $tokens = $this->twig->tokenize($source);
+        $tokens = $this->twig->tokenize($resource->getContent());
         $nodes  = $this->twig->parse($tokens);
 
         return $this->loadNode($nodes);

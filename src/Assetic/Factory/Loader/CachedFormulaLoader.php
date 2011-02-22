@@ -12,6 +12,7 @@
 namespace Assetic\Factory\Loader;
 
 use Assetic\Cache\ConfigCache;
+use Assetic\Factory\Resource\ResourceInterface;
 
 /**
  * Adds a caching layer to a loader.
@@ -43,20 +44,21 @@ class CachedFormulaLoader implements FormulaLoaderInterface
         $this->debug = $debug;
     }
 
-    public function isFresh($timestamp)
+    public function load(ResourceInterface $resource)
     {
-        return $this->loader->isFresh($timestamp);
-    }
+        if (!$resource instanceof \Traversable) {
+            $resource = array($resource);
+        }
 
-    public function load()
-    {
-        $cacheKey = md5(serialize($this->loader));
+        foreach ($resource as $r) {
+            $cacheKey = md5(serialize($r));
 
-        if (!$this->configCache->has($cacheKey) || ($this->debug && !$this->loader->isFresh($this->configCache->getTimestamp($cacheKey)))) {
-            $formulae = $this->loader->load();
-            $this->configCache->set($cacheKey, $formulae);
-        } else {
-            $formulae = $this->configCache->get($cacheKey);
+            if (!$this->configCache->has($cacheKey) || ($this->debug && !$r->isFresh($this->configCache->getTimestamp($cacheKey)))) {
+                $formulae = $this->loader->load($r);
+                $this->configCache->set($cacheKey, $formulae);
+            } else {
+                $formulae = $this->configCache->get($cacheKey);
+            }
         }
 
         return $formulae;

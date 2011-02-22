@@ -34,8 +34,10 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $factory->setAssetManager($this->am);
         $factory->setFilterManager($this->fm);
 
-        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new AsseticExtension($factory));
+        $twig = new \Twig_Environment();
+        $twig->addExtension(new AsseticExtension($factory));
+
+        $this->loader = new TwigFormulaLoader($twig);
     }
 
     public function testMixture()
@@ -52,9 +54,12 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $loader = new TwigFormulaLoader($this->twig, 'mixture.twig');
-        $formulae = $loader->load();
+        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue(file_get_contents(__DIR__.'/templates/mixture.twig')));
 
+        $formulae = $this->loader->load($resource);
         $this->assertEquals($expected, $formulae);
     }
 }

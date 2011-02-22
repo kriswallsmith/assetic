@@ -13,11 +13,10 @@ namespace Assetic\Factory;
 
 use Assetic\AssetManager;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\ResourceInterface;
 
 /**
- * A lazy asset manager is a composition of a formula loader and factory.
- *
- * It lazily loads asset formulae from resources.
+ * A lazy asset manager is a composition of a factory and many formula loaders.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
@@ -25,36 +24,72 @@ class LazyAssetManager extends AssetManager
 {
     private $factory;
     private $loaders;
+    private $resources;
     private $formulae;
     private $loaded;
 
-    public function __construct(AssetFactory $factory, array $loaders = array())
+    /**
+     * Constructor.
+     *
+     * @param AssetFactory $factory The asset factory
+     * @param array        $loaders An array of loaders indexed by alias
+     */
+    public function __construct(AssetFactory $factory, $loaders = array())
     {
         $this->factory = $factory;
         $this->loaders = array();
+        $this->resources = array();
         $this->formulae = array();
         $this->loaded = false;
 
-        foreach ($loaders as $loader) {
-            $this->addLoader($loader);
+        foreach ($loaders as $alias => $loader) {
+            $this->addLoader($alias, $loader);
         }
     }
 
-    public function addLoader(FormulaLoaderInterface $loader)
+    /**
+     * Adds a loader to the asset manager.
+     *
+     * @param string                 $alias  An alias for the loader
+     * @param FormulaLoaderInterface $loader A loader
+     */
+    public function addLoader($alias, FormulaLoaderInterface $loader)
     {
-        $this->loaders[] = $loader;
+        $this->loaders[$alias] = $loader;
+        $this->loaded = false;
+    }
+
+    /**
+     * Adds a resource to the asset manager.
+     *
+     * @param string            $loader   The loader alias for this resource
+     * @param ResourceInterface $resource A resource
+     */
+    public function addResource($loader, ResourceInterface $resource)
+    {
+        $this->resources[$loader][] = $resource;
         $this->loaded = false;
     }
 
     /**
      * Loads formulae from resources.
+     *
+     * @throws LogicException If a resource has been added to an invalid loader
      */
     public function load()
     {
-        foreach ($this->loaders as $loader) {
-            $this->formulae += $loader->load();
+        if ($diff = array_diff(array_keys($this->resources), array_keys($this->loaders))) {
+            throw new \LogicException('The following loader(s) are not registered: '.implode(', ', $diff));
         }
 
+        $formulae = array();
+        foreach ($this->resources as $loader => $resources) {
+            foreach ($resources as $resource) {
+                $formulae += $this->loaders[$loader]->load($resource);
+            }
+        }
+
+        $this->formulae = $formulae;
         $this->loaded = true;
     }
 

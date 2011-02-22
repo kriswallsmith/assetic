@@ -16,20 +16,20 @@ use Assetic\Factory\LazyAssetManager;
 class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $factory;
-    private $loader;
 
     protected function setUp()
     {
         $this->factory = $this->getMockBuilder('Assetic\\Factory\\AssetFactory')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->loader = $this->getMock('Assetic\\Factory\\Loader\\FormulaLoaderInterface');
 
-        $this->am = new LazyAssetManager($this->factory, array($this->loader));
+        $this->am = new LazyAssetManager($this->factory);
     }
 
     public function testGetFromLoader()
     {
+        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $loader = $this->getMock('Assetic\\Factory\\Loader\\FormulaLoaderInterface');
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
 
         $formula = array(
@@ -38,13 +38,17 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             array('output' => 'js/all.js')
         );
 
-        $this->loader->expects($this->once())
+        $loader->expects($this->once())
             ->method('load')
+            ->with($resource)
             ->will($this->returnValue(array('foo' => $formula)));
         $this->factory->expects($this->once())
             ->method('createAsset')
             ->with($formula[0], $formula[1], $formula[2] + array('name' => 'foo'))
             ->will($this->returnValue($asset));
+
+        $this->am->addLoader('foo', $loader);
+        $this->am->addResource('foo', $resource);
 
         $this->assertSame($asset, $this->am->get('foo'), '->get() returns an asset from the loader');
 
