@@ -17,7 +17,6 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 {
     protected $loader;
     protected $configCache;
-    protected $resource;
 
     protected function setUp()
     {
@@ -25,7 +24,6 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $this->configCache = $this->getMockBuilder('Assetic\\Cache\\ConfigCache')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
     }
 
     public function testNotDebug()
@@ -40,14 +38,13 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
         $this->loader->expects($this->once())
             ->method('load')
-            ->with($this->resource)
             ->will($this->returnValue($expected));
         $this->configCache->expects($this->once())
             ->method('set')
             ->with($this->isType('string'), $expected);
 
         $loader = new CachedFormulaLoader($this->loader, $this->configCache);
-        $this->assertEquals($expected, $loader->load($this->resource), '->load() returns formulae');
+        $this->assertEquals($expected, $loader->load(), '->load() returns formulae');
     }
 
     public function testNotDebugCached()
@@ -60,18 +57,19 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $this->configCache->expects($this->once())
             ->method('has')
             ->will($this->returnValue(true));
-        $this->resource->expects($this->never())
+        $this->loader->expects($this->never())
             ->method('isFresh');
         $this->configCache->expects($this->once())
             ->method('get')
             ->will($this->returnValue($expected));
 
         $loader = new CachedFormulaLoader($this->loader, $this->configCache);
-        $this->assertEquals($expected, $loader->load($this->resource), '->load() returns formulae');
+        $this->assertEquals($expected, $loader->load(), '->load() returns formulae');
     }
 
     public function testDebugCached()
     {
+        $timestamp = 123;
         $expected = array(
             'foo' => array(array(), array(), array()),
             'bar' => array(array(), array(), array()),
@@ -80,8 +78,13 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $this->configCache->expects($this->once())
             ->method('has')
             ->will($this->returnValue(true));
-        $this->resource->expects($this->once())
+        $this->configCache->expects($this->once())
+            ->method('getTimestamp')
+            ->with($this->isType('string'))
+            ->will($this->returnValue($timestamp));
+        $this->loader->expects($this->once())
             ->method('isFresh')
+            ->with($timestamp)
             ->will($this->returnValue(true));
         $this->loader->expects($this->never())
             ->method('load');
@@ -90,11 +93,12 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($expected));
 
         $loader = new CachedFormulaLoader($this->loader, $this->configCache, true);
-        $this->assertEquals($expected, $loader->load($this->resource), '->load() returns formulae');
+        $this->assertEquals($expected, $loader->load(), '->load() returns formulae');
     }
 
     public function testDebugCachedStale()
     {
+        $timestamp = 123;
         $expected = array(
             'foo' => array(array(), array(), array()),
             'bar' => array(array(), array(), array()),
@@ -103,8 +107,13 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $this->configCache->expects($this->once())
             ->method('has')
             ->will($this->returnValue(true));
-        $this->resource->expects($this->once())
+        $this->configCache->expects($this->once())
+            ->method('getTimestamp')
+            ->with($this->isType('string'))
+            ->will($this->returnValue($timestamp));
+        $this->loader->expects($this->once())
             ->method('isFresh')
+            ->with($timestamp)
             ->will($this->returnValue(false));
         $this->loader->expects($this->once())
             ->method('load')
@@ -114,6 +123,6 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ->with($this->isType('string'), $expected);
 
         $loader = new CachedFormulaLoader($this->loader, $this->configCache, true);
-        $this->assertEquals($expected, $loader->load($this->resource), '->load() returns formulae');
+        $this->assertEquals($expected, $loader->load(), '->load() returns formulae');
     }
 }

@@ -12,15 +12,11 @@
 namespace Assetic\Factory\Loader;
 
 use Assetic\Cache\ConfigCache;
-use Assetic\Factory\Resource\ResourceInterface;
 
 /**
- * Adds a caching layer between a loader and its resources.
+ * Adds a caching layer to a loader.
  *
  * A cached formula loader is a composition of a formula loader and a cache.
- *
- * The loader will check if the resource needs to be reloaded when the debug
- * mode is on.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
@@ -30,6 +26,16 @@ class CachedFormulaLoader implements FormulaLoaderInterface
     private $configCache;
     private $debug;
 
+    /**
+     * Constructor.
+     *
+     * When the loader is in debug mode it will ensure the cached formulae
+     * are fresh before returning them.
+     *
+     * @param FormulaLoaderInterface $loader      A formula loader
+     * @param ConfigCache            $configCache A config cache
+     * @param Boolean                $debug       The debug mode
+     */
     public function __construct(FormulaLoaderInterface $loader, ConfigCache $configCache, $debug = false)
     {
         $this->loader = $loader;
@@ -37,17 +43,17 @@ class CachedFormulaLoader implements FormulaLoaderInterface
         $this->debug = $debug;
     }
 
-    public function supports(ResourceInterface $resource)
+    public function isFresh($timestamp)
     {
-        return $this->loader->supports($resource);
+        return $this->loader->isFresh($timestamp);
     }
 
-    public function load(ResourceInterface $resource)
+    public function load()
     {
-        $cacheKey = md5(serialize($resource));
+        $cacheKey = md5(serialize($this->loader));
 
-        if (!$this->configCache->has($cacheKey) || ($this->debug && !$resource->isFresh($this->configCache->getTimestamp($cacheKey)))) {
-            $formulae = $this->loader->load($resource);
+        if (!$this->configCache->has($cacheKey) || ($this->debug && !$this->loader->isFresh($this->configCache->getTimestamp($cacheKey)))) {
+            $formulae = $this->loader->load();
             $this->configCache->set($cacheKey, $formulae);
         } else {
             $formulae = $this->configCache->get($cacheKey);

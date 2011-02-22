@@ -13,7 +13,6 @@ namespace Assetic\Factory;
 
 use Assetic\AssetManager;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
-use Assetic\Factory\Resource\ResourceInterface;
 
 /**
  * A lazy asset manager is a composition of a formula loader and factory.
@@ -25,28 +24,25 @@ use Assetic\Factory\Resource\ResourceInterface;
 class LazyAssetManager extends AssetManager
 {
     private $factory;
-    private $loader;
-    private $resources;
+    private $loaders;
     private $formulae;
     private $loaded;
 
-    public function __construct(AssetFactory $factory, FormulaLoaderInterface $loader)
+    public function __construct(AssetFactory $factory, array $loaders = array())
     {
         $this->factory = $factory;
-        $this->loader = $loader;
-        $this->resources = array();
+        $this->loaders = array();
         $this->formulae = array();
-        $this->loaded = true;
+        $this->loaded = false;
+
+        foreach ($loaders as $loader) {
+            $this->addLoader($loader);
+        }
     }
 
-    /**
-     * Adds a resource to the current asset manager.
-     *
-     * @param ResourceInterface $resource A resource
-     */
-    public function addResource(ResourceInterface $resource)
+    public function addLoader(FormulaLoaderInterface $loader)
     {
-        $this->resources[] = $resource;
+        $this->loaders[] = $loader;
         $this->loaded = false;
     }
 
@@ -55,8 +51,8 @@ class LazyAssetManager extends AssetManager
      */
     public function load()
     {
-        foreach ($this->resources as $resource) {
-            $this->formulae += $this->loader->load($resource);
+        foreach ($this->loaders as $loader) {
+            $this->formulae += $loader->load();
         }
 
         $this->loaded = true;

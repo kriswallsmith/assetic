@@ -11,30 +11,28 @@
 
 namespace Assetic\Factory\Loader;
 
-use Assetic\Factory\Resource\ResourceInterface;
-
 /**
- * Loads formulae from resources.
+ * Loads formulae.
+ *
+ * Each concrete loader is responsible for its own configuration interface.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 interface FormulaLoaderInterface
 {
     /**
-     * Checks if the current loader supports the supplied resource.
+     * Checks if the current loader's formulae are fresher than a timestamp.
      *
-     * @param ResourceInterface $resource A resource
+     * @param integer $timestamp A UNIX timestamp
      *
-     * @return Boolean True if the loader knows how to load from the supplied resource
+     * @return Boolean True if the timestamp is fresh
      */
-    function supports(ResourceInterface $resource);
+    function isFresh($timestamp);
 
     /**
-     * Loads formulae from a resource.
-     *
-     * @param ResourceInterface $resource A resource
+     * Loads formulae.
      *
      * @return array An array of formulae
      */
-    function load(ResourceInterface $resource);
+    function load();
 }
