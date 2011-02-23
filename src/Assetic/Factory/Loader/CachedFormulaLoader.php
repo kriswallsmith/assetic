@@ -50,14 +50,16 @@ class CachedFormulaLoader implements FormulaLoaderInterface
             $resource = array($resource);
         }
 
+        $formulae = array();
+
         foreach ($resource as $r) {
             $cacheKey = md5(serialize($r));
 
             if (!$this->configCache->has($cacheKey) || ($this->debug && !$r->isFresh($this->configCache->getTimestamp($cacheKey)))) {
-                $formulae = $this->loader->load($r);
+                $formulae += $this->loader->load($r);
                 $this->configCache->set($cacheKey, $formulae);
             } else {
-                $formulae = $this->configCache->get($cacheKey);
+                $formulae += $this->configCache->get($cacheKey);
             }
         }
 
