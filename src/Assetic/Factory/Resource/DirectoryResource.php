@@ -16,7 +16,7 @@ namespace Assetic\Factory\Resource;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class DirectoryResource extends \RecursiveFilterIterator implements ResourceInterface
+class DirectoryResource implements ResourceInterface, \IteratorAggregate
 {
     private $path;
     private $pattern;
@@ -31,25 +31,6 @@ class DirectoryResource extends \RecursiveFilterIterator implements ResourceInte
     {
         $this->path = $path;
         $this->pattern = $pattern;
-
-        parent::__construct(new \RecursiveDirectoryIterator($path));
-    }
-
-    public function accept()
-    {
-        return null === $this->pattern || 0 < preg_match($this->pattern, parent::current()->getBasename());
-    }
-
-    /**
-     * Returns the current resource.
-     *
-     * @return ResourceInterface A resource
-     */
-    public function current()
-    {
-        $file = parent::current();
-
-        return $this->createResource($file->getPathname());
     }
 
     public function isFresh($timestamp)
@@ -76,15 +57,63 @@ class DirectoryResource extends \RecursiveFilterIterator implements ResourceInte
         return implode("\n", $content);
     }
 
-    /**
-     * Creates a new resource from a filesystem path.
-     *
-     * @param string $path A filesystem path
-     *
-     * @return ResourceInterface A resource
-     */
-    protected function createResource($path)
+    public function getIterator()
     {
-        return new FileResource($path);
+        return new RecursiveIteratorIterator($this->getInnerIterator());
+    }
+
+    protected function getInnerIterator()
+    {
+        $iterator = new \RecursiveDirectoryIterator($this->path);
+
+        if (null !== $this->pattern) {
+            $iterator = new RecursiveFilterIterator($iterator, $this->pattern);
+        }
+
+        return $iterator;
+    }
+}
+
+/**
+ * An iterator that converts file objects into file resources.
+ *
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @access private
+ */
+class RecursiveIteratorIterator extends \RecursiveIteratorIterator
+{
+    public function current()
+    {
+        return new FileResource(parent::current()->getPathname());
+    }
+}
+
+/**
+ * Filters files by a basename pattern.
+ *
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @access private
+ */
+class RecursiveFilterIterator extends \RecursiveFilterIterator
+{
+    protected $pattern;
+
+    public function __construct(\RecursiveDirectoryIterator $iterator, $pattern)
+    {
+        $this->pattern = $pattern;
+
+        parent::__construct($iterator);
+    }
+
+    public function accept()
+    {
+        $file = $this->current();
+
+        return $file->isDir() || 0 < preg_match($this->pattern, $file->getBasename());
+    }
+
+    public function getChildren()
+    {
+        return new self(new \RecursiveDirectoryIterator($this->current()->getPathname()), $this->pattern);
     }
 }

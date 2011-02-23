@@ -70,4 +70,16 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
             array('/\.foo$/', true),
         );
     }
+
+    public function testRecursiveIteration()
+    {
+        $resource = new DirectoryResource(realpath(__DIR__.'/..'), '/^'.preg_quote(basename(__FILE__)).'$/');
+
+        $count = 0;
+        foreach ($resource as $r) {
+            ++$count;
+        }
+
+        $this->assertEquals(1, $count);
+    }
 }
