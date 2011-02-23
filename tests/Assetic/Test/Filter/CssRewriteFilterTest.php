@@ -16,19 +16,6 @@ use Assetic\Filter\CssRewriteFilter;
 
 class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('PHP_CodeSniffer_Tokenizers_CSS')) {
-            $this->markTestSkipped('CodeSniffer is not installed.');
-        }
-    }
-
-    public function testInterface()
-    {
-        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CssRewriteFilter implements FilterInterface');
-    }
-
     /**
      * @dataProvider provideUrls
      */
@@ -38,7 +25,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $asset->setTargetUrl($targetUrl);
         $asset->load();
 
-        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
+        $filter = new CssRewriteFilter();
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
@@ -76,7 +63,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset($content);
         $asset->load();
 
-        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
+        $filter = new CssRewriteFilter();
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
