@@ -12,12 +12,7 @@
 namespace Assetic\Cache;
 
 /**
- * A config cache maintains PHP files that can be included.
- *
- * Usage looks like this:
- *
- *     $configCache->write('letters', array('a', 'b', 'c'));
- *     $letters = include $configCache->getPath('letters');
+ * A config cache stores values using var_export() and include.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
