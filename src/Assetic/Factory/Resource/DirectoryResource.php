@@ -59,18 +59,12 @@ class DirectoryResource implements ResourceInterface, \IteratorAggregate
 
     public function getIterator()
     {
-        return new RecursiveIteratorIterator($this->getInnerIterator());
+        return new DirectoryResourceIterator($this->getInnerIterator());
     }
 
     protected function getInnerIterator()
     {
-        $iterator = new \RecursiveDirectoryIterator($this->path);
-
-        if (null !== $this->pattern) {
-            $iterator = new RecursiveFilterIterator($iterator, $this->pattern);
-        }
-
-        return $iterator;
+        return new DirectoryResourceFilterIterator(new \RecursiveDirectoryIterator($this->path), $this->pattern);
     }
 }
 
@@ -80,7 +74,7 @@ class DirectoryResource implements ResourceInterface, \IteratorAggregate
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  * @access private
  */
-class RecursiveIteratorIterator extends \RecursiveIteratorIterator
+class DirectoryResourceIterator extends \RecursiveIteratorIterator
 {
     public function current()
     {
@@ -94,22 +88,27 @@ class RecursiveIteratorIterator extends \RecursiveIteratorIterator
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  * @access private
  */
-class RecursiveFilterIterator extends \RecursiveFilterIterator
+class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
 {
     protected $pattern;
 
-    public function __construct(\RecursiveDirectoryIterator $iterator, $pattern)
+    public function __construct(\RecursiveDirectoryIterator $iterator, $pattern = null)
     {
-        $this->pattern = $pattern;
-
         parent::__construct($iterator);
+
+        $this->pattern = $pattern;
     }
 
     public function accept()
     {
         $file = $this->current();
+        $name = $file->getBasename();
 
-        return $file->isDir() || 0 < preg_match($this->pattern, $file->getBasename());
+        if ($file->isDir()) {
+            return '.' != $name[0];
+        } else {
+            return null === $this->pattern || 0 < preg_match($this->pattern, $name);
+        }
     }
 
     public function getChildren()
