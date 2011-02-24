@@ -46,6 +46,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
  * `LessFilter`: parses LESS into CSS
+ * `StylusFilter`: parses STYL into CSS
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
  * `SprocketsFilter`: Sprockets Javascript dependency management
