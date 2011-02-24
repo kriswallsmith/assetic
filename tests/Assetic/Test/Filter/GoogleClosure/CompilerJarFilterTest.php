@@ -21,8 +21,8 @@ class CompilerJarFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testCompile()
     {
-        if (!isset($_SERVER['GOOGLE_CLOSURE_COMPILER_PATH'])) {
-            $this->markTestSkipped('There is no GOOGLE_CLOSURE_COMPILER_PATH environment variable.');
+        if (!isset($_SERVER['CLOSURE_JAR'])) {
+            $this->markTestSkipped('There is no CLOSURE_JAR environment variable.');
         }
 
         $input = <<<EOF
@@ -44,7 +44,7 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new CompilerJarFilter($_SERVER['GOOGLE_CLOSURE_COMPILER_PATH']);
+        $filter = new CompilerJarFilter($_SERVER['CLOSURE_JAR']);
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 

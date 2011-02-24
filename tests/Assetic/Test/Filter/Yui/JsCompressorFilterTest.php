@@ -27,8 +27,8 @@ class JsCompressorFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilterDump()
     {
-        if (!isset($_SERVER['YUI_COMPRESSOR_PATH'])) {
-            $this->markTestSkipped('There is no YUI_COMPRESSOR_PATH environment variable.');
+        if (!isset($_SERVER['YUI_COMPRESSOR_JAR'])) {
+            $this->markTestSkipped('There is no YUI_COMPRESSOR_JAR environment variable.');
         }
 
         $source = <<<JAVASCRIPT
@@ -54,7 +54,7 @@ JAVASCRIPT;
         $asset = new StringAsset($source);
         $asset->load();
 
-        $filter = new JsCompressorFilter($_SERVER['YUI_COMPRESSOR_PATH']);
+        $filter = new JsCompressorFilter($_SERVER['YUI_COMPRESSOR_JAR']);
         $filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterDump()');

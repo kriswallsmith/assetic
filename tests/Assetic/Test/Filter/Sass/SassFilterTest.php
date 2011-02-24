@@ -21,8 +21,8 @@ class SassFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSass()
     {
-        if (!isset($_SERVER['SASS_PATH'])) {
-            $this->markTestSkipped('There is no SASS_PATH environment variable.');
+        if (!isset($_SERVER['SASS_BIN'])) {
+            $this->markTestSkipped('There is no SASS_BIN environment variable.');
         }
 
         $input = <<<EOF
@@ -33,7 +33,7 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new SassFilter($_SERVER['SASS_PATH']);
+        $filter = new SassFilter($_SERVER['SASS_BIN']);
         $filter->setStyle(SassFilter::STYLE_COMPACT);
         $filter->filterLoad($asset);
         $filter->filterDump($asset);

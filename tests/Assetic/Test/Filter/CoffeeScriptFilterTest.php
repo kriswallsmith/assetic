@@ -21,8 +21,8 @@ class CoffeeScriptFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilterLoad()
     {
-        if (!isset($_SERVER['COFFEE_PATH']) || !isset($_SERVER['NODE_BIN'])) {
-            $this->markTestSkipped('There is no COFFEE_PATH or NODE_BIN environment variable.');
+        if (!isset($_SERVER['COFFEE_BIN']) || !isset($_SERVER['NODE_BIN'])) {
+            $this->markTestSkipped('There is no COFFEE_BIN or NODE_BIN environment variable.');
         }
 
         $expected = <<<JAVASCRIPT
@@ -38,7 +38,7 @@ JAVASCRIPT;
         $asset = new StringAsset('square = (x) -> x * x');
         $asset->load();
 
-        $filter = new CoffeeScriptFilter($_SERVER['COFFEE_PATH'], $_SERVER['NODE_BIN']);
+        $filter = new CoffeeScriptFilter($_SERVER['COFFEE_BIN'], $_SERVER['NODE_BIN']);
         $filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent());

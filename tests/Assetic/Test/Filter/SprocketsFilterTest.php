@@ -38,14 +38,14 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilterLoad()
     {
-        if (!isset($_SERVER['SPROCKETIZE_PATH'])) {
-            $this->markTestSkipped('There is no SPROCKETIZE_PATH environment variable.');
+        if (!isset($_SERVER['SPROCKETIZE_BIN'])) {
+            $this->markTestSkipped('There is no SPROCKETIZE_BIN environment variable.');
         }
 
         $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js', array(), 'main.js');
         $asset->load();
 
-        $filter = new SprocketsFilter(__DIR__.'/fixtures/sprockets', $_SERVER['SPROCKETIZE_PATH']);
+        $filter = new SprocketsFilter(__DIR__.'/fixtures/sprockets', $_SERVER['SPROCKETIZE_BIN']);
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib1');
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib2');
         $filter->setAssetRoot($this->assetRoot);
