@@ -50,11 +50,11 @@ class ConfigCache
      */
     public function set($key, $value)
     {
-        if (!is_dir($this->dir) && false === @mkdir($this->dir, 0777, true)) {
-            throw new \RuntimeException('Unable to create directory '.$this->dir);
-        }
-
         $path = $this->getPath($key);
+
+        if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
+            throw new \RuntimeException('Unable to create directory '.$dir);
+        }
 
         if (false === @file_put_contents($path, sprintf("<?php\n\nreturn %s;\n", var_export($value, true)))) {
             throw new \RuntimeException('Unable to write file '.$path);
@@ -110,6 +110,6 @@ class ConfigCache
      */
     private function getPath($key)
     {
-        return $this->dir.'/'.$key.'.php';
+        return $this->dir.'/'.substr($key, 0, 2).'/'.substr($key, 2, 2).'/'.substr($key, 4).'.php';
     }
 }
