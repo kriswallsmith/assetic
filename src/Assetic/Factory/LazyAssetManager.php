@@ -82,6 +82,28 @@ class LazyAssetManager extends AssetManager
     }
 
     /**
+     * Returns an asset's formula.
+     *
+     * @param string $name An asset name
+     *
+     * @return array The formula
+     *
+     * @throws InvalidArgumentException If there is no formula by that name
+     */
+    public function getFormula($name)
+    {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
+        if (!isset($this->formulae[$name])) {
+            throw new \InvalidArgumentException(sprintf('There is no "%s" formula.', $name));
+        }
+
+        return $this->formulae[$name];
+    }
+
+    /**
      * Loads formulae from resources.
      *
      * @throws LogicException If a resource has been added to an invalid loader
