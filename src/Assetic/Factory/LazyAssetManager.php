@@ -82,6 +82,22 @@ class LazyAssetManager extends AssetManager
     }
 
     /**
+     * Checks for an asset formula.
+     *
+     * @param string $name An asset name
+     *
+     * @return Boolean If there is a formula
+     */
+    public function hasFormula($name)
+    {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
+        return isset($this->formulae[$name]);
+    }
+
+    /**
      * Returns an asset's formula.
      *
      * @param string $name An asset name
