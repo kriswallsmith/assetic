@@ -46,10 +46,12 @@ class AssetWriter
 
     static protected function write($path, $contents)
     {
-        if (!is_dir($dir = dirname($path))) {
-            mkdir($dir, 0777, true);
+        if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
+            throw new \RuntimeException('Unable to create directory '.$dir);
         }
 
-        file_put_contents($path, $contents);
+        if (false === @file_put_contents($path, $contents)) {
+            throw new \RuntimeException('Unable to write file '.$path);
+        }
     }
 }
