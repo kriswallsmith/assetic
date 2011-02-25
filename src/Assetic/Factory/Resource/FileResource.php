@@ -16,7 +16,7 @@ namespace Assetic\Factory\Resource;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FileResource implements ResourceInterface
+class FileResource implements FileResourceInterface
 {
     private $path;
 
