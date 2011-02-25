@@ -53,7 +53,7 @@ class AsseticTokenParser extends \Twig_TokenParser
                 // filter='yui_js'
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
-                $filters = array_merge($filters, array_map('trim', explode(',', $stream->expect(\Twig_Token::STRING_TYPE)->getValue())));
+                $filters = array_merge($filters, array_filter(array_map('trim', explode(',', $stream->expect(\Twig_Token::STRING_TYPE)->getValue()))));
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'output')) {
                 // output='js' OR output='js/packed/*.js' OR output='js/core.js'
                 $stream->next();

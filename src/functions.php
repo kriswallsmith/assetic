@@ -33,11 +33,11 @@ function assetic_assets($inputs = array(), $filters = array(), array $options = 
     global $assetic;
 
     if (!is_array($inputs)) {
-        $inputs = array_map('trim', explode(',', $inputs));
+        $inputs = array_filter(array_map('trim', explode(',', $inputs)));
     }
 
     if (!is_array($filters)) {
-        $filters = array_map('trim', explode(',', $filters));
+        $filters = array_filter(array_map('trim', explode(',', $filters)));
     }
 
     if (!isset($options['debug'])) {
