@@ -72,6 +72,16 @@ class LazyAssetManager extends AssetManager
     }
 
     /**
+     * Returns an array of resources.
+     *
+     * @return array An array of resources
+     */
+    public function getResources()
+    {
+        return call_user_func_array('array_merge', array_values($this->resources));
+    }
+
+    /**
      * Loads formulae from resources.
      *
      * @throws LogicException If a resource has been added to an invalid loader

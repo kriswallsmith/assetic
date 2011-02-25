@@ -55,4 +55,21 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         // test the "once" expectations
         $this->am->get('foo');
     }
+
+    public function testGetResources()
+    {
+        $resources = array(
+            $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface'),
+            $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface'),
+        );
+
+        $this->am->addResource('foo', $resources[0]);
+        $this->am->addResource('bar', $resources[1]);
+
+        $ret = $this->am->getResources();
+
+        foreach ($resources as $resource) {
+            $this->assertTrue(in_array($resource, $ret, true));
+        }
+    }
 }
