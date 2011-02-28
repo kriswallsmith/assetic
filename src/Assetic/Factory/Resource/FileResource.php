@@ -16,7 +16,7 @@ namespace Assetic\Factory\Resource;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FileResource implements FileResourceInterface
+class FileResource implements ResourceInterface
 {
     private $path;
 
@@ -41,11 +41,6 @@ class FileResource implements FileResourceInterface
     }
 
     public function __toString()
-    {
-        return $this->path;
-    }
-
-    public function getPath()
     {
         return $this->path;
     }
