@@ -110,6 +110,6 @@ class ConfigCache
      */
     private function getPath($key)
     {
-        return $this->dir.'/'.substr($key, 0, 2).'/'.substr($key, 2, 2).'/'.substr($key, 4).'.php';
+        return $this->dir.'/'.$key[0].'/'.$key.'.php';
     }
 }
