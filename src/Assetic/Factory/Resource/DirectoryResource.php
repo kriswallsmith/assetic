@@ -57,6 +57,11 @@ class DirectoryResource implements ResourceInterface, \IteratorAggregate
         return implode("\n", $content);
     }
 
+    public function __toString()
+    {
+        return $this->path;
+    }
+
     public function getIterator()
     {
         return new DirectoryResourceIterator($this->getInnerIterator());

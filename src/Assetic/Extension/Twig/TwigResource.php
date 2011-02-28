@@ -39,13 +39,8 @@ class TwigResource implements ResourceInterface
         return $this->loader->isFresh($this->name, $timestamp);
     }
 
-    public function __sleep()
+    public function __toString()
     {
-        return array('name');
-    }
-
-    public function __wakeup()
-    {
-        throw new \Exception(__CLASS__.' cannot be unserialized.');
+        return $this->name;
     }
 }

@@ -33,4 +33,11 @@ interface ResourceInterface
      * @return string The content
      */
     function getContent();
+
+    /**
+     * Returns a unique string for the current resource.
+     *
+     * @return string A unique string to identity the current resource
+     */
+    function __toString();
 }

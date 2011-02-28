@@ -40,6 +40,11 @@ class FileResource implements FileResourceInterface
         return file_get_contents($this->path);
     }
 
+    public function __toString()
+    {
+        return $this->path;
+    }
+
     public function getPath()
     {
         return $this->path;
