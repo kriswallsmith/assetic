@@ -33,30 +33,30 @@ class ConfigCache
     /**
      * Checks of the cache has a file.
      *
-     * @param string $key A cache key
+     * @param string $resource A cache key
      *
      * @return Boolean True if a file exists
      */
-    public function has($key)
+    public function has($resource)
     {
-        return file_exists($this->getPath($key));
+        return file_exists($this->getPath($resource));
     }
 
     /**
      * Writes a value to a file.
      *
-     * @param string $key A cache key
+     * @param string $resource A cache key
      * @param mixed  $value    A value to cache
      */
-    public function set($key, $value)
+    public function set($resource, $value)
     {
-        $path = $this->getPath($key);
+        $path = $this->getPath($resource);
 
         if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
             throw new \RuntimeException('Unable to create directory '.$dir);
         }
 
-        if (false === @file_put_contents($path, sprintf("<?php\n\nreturn %s;\n", var_export($value, true)))) {
+        if (false === @file_put_contents($path, sprintf("<?php\n\n// $resource\nreturn %s;\n", var_export($value, true)))) {
             throw new \RuntimeException('Unable to write file '.$path);
         }
     }
@@ -64,16 +64,16 @@ class ConfigCache
     /**
      * Loads and returns the value for the supplied cache key.
      *
-     * @param string $key A cache key
+     * @param string $resource A cache key
      *
      * @return mixed The cached value
      */
-    public function get($key)
+    public function get($resource)
     {
-        $path = $this->getPath($key);
+        $path = $this->getPath($resource);
 
         if (!file_exists($path)) {
-            throw new \RuntimeException('There is no cached value for '.$key);
+            throw new \RuntimeException('There is no cached value for '.$resource);
         }
 
         return include $path;
@@ -82,16 +82,16 @@ class ConfigCache
     /**
      * Returns a timestamp for when the cache was created.
      *
-     * @param string $key A cache key
+     * @param string $resource A cache key
      *
      * @return integer A UNIX timestamp
      */
-    public function getTimestamp($key)
+    public function getTimestamp($resource)
     {
-        $path = $this->getPath($key);
+        $path = $this->getPath($resource);
 
         if (!file_exists($path)) {
-            throw new \RuntimeException('There is no cached value for '.$key);
+            throw new \RuntimeException('There is no cached value for '.$resource);
         }
 
         if (false === $mtime = @filemtime($path)) {
@@ -104,12 +104,14 @@ class ConfigCache
     /**
      * Returns the path where the file corresponding to the supplied cache key can be included from.
      *
-     * @param string $key A cache key
+     * @param string $resource A cache key
      *
      * @return string A file path
      */
-    private function getPath($key)
+    private function getPath($resource)
     {
+        $key = md5($resource);
+
         return $this->dir.'/'.$key[0].'/'.$key.'.php';
     }
 }

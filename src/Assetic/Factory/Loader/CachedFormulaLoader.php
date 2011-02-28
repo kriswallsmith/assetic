@@ -44,22 +44,21 @@ class CachedFormulaLoader implements FormulaLoaderInterface
         $this->debug = $debug;
     }
 
-    public function load(ResourceInterface $resource)
+    public function load(ResourceInterface $resources)
     {
-        if (!$resource instanceof \Traversable) {
-            $resource = array($resource);
+        if (!$resources instanceof \Traversable) {
+            $resources = array($resources);
         }
 
         $formulae = array();
 
-        foreach ($resource as $r) {
-            $cacheKey = md5(serialize($r));
-
-            if (!$this->configCache->has($cacheKey) || ($this->debug && !$r->isFresh($this->configCache->getTimestamp($cacheKey)))) {
-                $formulae += $this->loader->load($r);
-                $this->configCache->set($cacheKey, $formulae);
+        foreach ($resources as $resource) {
+            $id = (string) $resource;
+            if (!$this->configCache->has($id) || ($this->debug && !$resource->isFresh($this->configCache->getTimestamp($id)))) {
+                $formulae += $this->loader->load($resource);
+                $this->configCache->set($id, $formulae);
             } else {
-                $formulae += $this->configCache->get($cacheKey);
+                $formulae += $this->configCache->get($id);
             }
         }
 
