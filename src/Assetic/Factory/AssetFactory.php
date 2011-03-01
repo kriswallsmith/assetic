@@ -36,14 +36,15 @@ class AssetFactory
     /**
      * Constructor.
      *
-     * @param string  $baseDir Path to the base directory for relative URLs
-     * @param Boolean $debug   Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $baseDir       Path to the base directory for relative URLs
+     * @param Boolean $debug         Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $defaultOutput The default output string
      */
-    public function __construct($baseDir, $debug = false)
+    public function __construct($baseDir, $debug = false, $defaultOutput = 'assets/*')
     {
         $this->baseDir = rtrim($baseDir, '/').'/';
         $this->debug = $debug;
-        $this->defaultOutput = 'assets/*';
+        $this->defaultOutput = $defaultOutput;
         $this->workers = array();
     }
 
@@ -58,13 +59,13 @@ class AssetFactory
     }
 
     /**
-     * Sets the default output value.
+     * Checks if the factory is in debug mode.
      *
-     * @param string $output An output string
+     * @return Boolean Debug mode
      */
-    public function setDefaultOutput($output)
+    public function isDebug()
     {
-        $this->defaultOutput = $output;
+        return $this->debug;
     }
 
     /**

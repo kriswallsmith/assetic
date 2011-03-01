@@ -12,19 +12,22 @@
 use Assetic\Factory\AssetFactory;
 
 /**
- * Initializes the global assetic object.
+ * Initializes the global Assetic object.
+ *
+ * Available options:
+ *
+ *  * default_css_output: Default output option for assetic_stylesheets()
+ *  * default_js_output:  Default output option for assetic_javascripts()
  *
  * @param AssetFactory $factory The asset factory
- * @param Boolean      $debug   Debug mode
  * @param array        $options An array of options
  */
-function assetic_init(AssetFactory $factory, $debug = false, array $options = array())
+function assetic_init(AssetFactory $factory, array $options = array())
 {
     global $_assetic;
 
     $_assetic = new stdClass();
     $_assetic->factory = $factory;
-    $_assetic->debug = $debug;
     $_assetic->options = $options;
 }
 
@@ -49,12 +52,8 @@ function assetic_assets($inputs = array(), $filters = array(), array $options = 
         $filters = array_filter(array_map('trim', explode(',', $filters)));
     }
 
-    if (!isset($options['debug'])) {
-        $options['debug'] = $_assetic->debug;
-    }
-
     $coll = $_assetic->factory->createAsset($inputs, $filters, $options);
-    if (!$options['debug']) {
+    if (!$_assetic->factory->isDebug()) {
         return array($coll->getTargetUrl());
     }
 
