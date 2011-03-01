@@ -24,31 +24,22 @@ class EnsureFilterWorker implements WorkerInterface
 {
     private $pattern;
     private $filter;
-    private $debug;
 
     /**
      * Constructor.
      *
      * @param string          $pattern A regex for checking the asset's target URL
      * @param FilterInterface $filter  A filter to apply if the regex matches
-     * @param Boolean         $debug   The debug mode to check for
      */
-    public function __construct($pattern, FilterInterface $filter, $debug = null)
+    public function __construct($pattern, FilterInterface $filter)
     {
         $this->pattern = $pattern;
         $this->filter = $filter;
-        $this->debug = $debug;
     }
 
-    /**
-     * Processes an asset.
-     *
-     * @param AssetInterface $asset An asset
-     * @param Boolean        $debug Debug mode
-     */
-    public function process(AssetInterface $asset, $debug = false)
+    public function process(AssetInterface $asset)
     {
-        if ((null === $this->debug || $this->debug === $debug) && preg_match($this->pattern, $asset->getTargetUrl())) {
+        if (0 < preg_match($this->pattern, $asset->getTargetUrl())) {
             $asset->ensureFilter($this->filter);
         }
     }
