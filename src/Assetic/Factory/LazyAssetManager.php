@@ -120,6 +120,17 @@ class LazyAssetManager extends AssetManager
     }
 
     /**
+     * Sets a formula on the asset manager.
+     *
+     * @param string $name    An asset name
+     * @param array  $formula A formula
+     */
+    public function setFormula($name, array $formula)
+    {
+        $this->formulae[$name] = $formula;
+    }
+
+    /**
      * Loads formulae from resources.
      *
      * @throws LogicException If a resource has been added to an invalid loader
@@ -137,7 +148,7 @@ class LazyAssetManager extends AssetManager
             }
         }
 
-        $this->formulae = $formulae;
+        $this->formulae = $formulae + $this->formulae;
         $this->loaded = true;
     }
 

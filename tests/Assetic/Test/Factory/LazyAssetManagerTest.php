@@ -72,4 +72,11 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue(in_array($resource, $ret, true));
         }
     }
+
+    public function testSetFormula()
+    {
+        $this->am->setFormula('foo', array());
+        $this->am->load();
+        $this->assertTrue($this->am->hasFormula('foo'), '->load() does not remove manually added formulae');
+    }
 }
