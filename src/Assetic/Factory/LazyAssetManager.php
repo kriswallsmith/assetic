@@ -43,7 +43,7 @@ class LazyAssetManager extends AssetManager
         $this->loaded = false;
 
         foreach ($loaders as $alias => $loader) {
-            $this->addLoader($alias, $loader);
+            $this->setLoader($alias, $loader);
         }
     }
 
@@ -53,7 +53,7 @@ class LazyAssetManager extends AssetManager
      * @param string                 $alias  An alias for the loader
      * @param FormulaLoaderInterface $loader A loader
      */
-    public function addLoader($alias, FormulaLoaderInterface $loader)
+    public function setLoader($alias, FormulaLoaderInterface $loader)
     {
         $this->loaders[$alias] = $loader;
         $this->loaded = false;

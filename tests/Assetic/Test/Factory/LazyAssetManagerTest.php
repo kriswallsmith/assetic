@@ -47,7 +47,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             ->with($formula[0], $formula[1], $formula[2] + array('name' => 'foo'))
             ->will($this->returnValue($asset));
 
-        $this->am->addLoader('foo', $loader);
+        $this->am->setLoader('foo', $loader);
         $this->am->addResource($resource, 'foo');
 
         $this->assertSame($asset, $this->am->get('foo'), '->get() returns an asset from the loader');
