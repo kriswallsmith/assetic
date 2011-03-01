@@ -62,10 +62,10 @@ class LazyAssetManager extends AssetManager
     /**
      * Adds a resource to the asset manager.
      *
-     * @param string            $loader   The loader alias for this resource
      * @param ResourceInterface $resource A resource
+     * @param string            $loader   The loader alias for this resource
      */
-    public function addResource($loader, ResourceInterface $resource)
+    public function addResource(ResourceInterface $resource, $loader)
     {
         $this->resources[$loader][] = $resource;
         $this->loaded = false;

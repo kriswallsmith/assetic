@@ -48,7 +48,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($asset));
 
         $this->am->addLoader('foo', $loader);
-        $this->am->addResource('foo', $resource);
+        $this->am->addResource($resource, 'foo');
 
         $this->assertSame($asset, $this->am->get('foo'), '->get() returns an asset from the loader');
 
@@ -63,8 +63,8 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface'),
         );
 
-        $this->am->addResource('foo', $resources[0]);
-        $this->am->addResource('bar', $resources[1]);
+        $this->am->addResource($resources[0], 'foo');
+        $this->am->addResource($resources[1], 'bar');
 
         $ret = $this->am->getResources();
 
