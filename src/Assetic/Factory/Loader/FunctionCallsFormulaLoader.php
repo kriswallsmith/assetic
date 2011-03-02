@@ -112,7 +112,7 @@ class FunctionCallsFormulaLoader implements FormulaLoaderInterface
                 array($asset->getSourceUrl()),
                 $filters,
                 array(
-                    'output' => '*',
+                    'output' => $asset->getTargetUrl(),
                     'name'   => $name.'_'.count($formulae),
                     'debug'  => $debug,
                 )
