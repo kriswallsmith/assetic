@@ -73,6 +73,11 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testGetResourcesEmpty()
+    {
+        $this->am->getResources();
+    }
+
     public function testSetFormula()
     {
         $this->am->setFormula('foo', array());

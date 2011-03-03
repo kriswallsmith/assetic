@@ -85,7 +85,12 @@ class LazyAssetManager extends AssetManager
      */
     public function getResources()
     {
-        return call_user_func_array('array_merge', array_values($this->resources));
+        $resources = array();
+        foreach ($this->resources as $r) {
+            $resources = array_merge($resources, $r);
+        }
+
+        return $resources;
     }
 
     /**
