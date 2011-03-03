@@ -65,8 +65,15 @@ class LazyAssetManager extends AssetManager
      * @param ResourceInterface $resource A resource
      * @param string            $loader   The loader alias for this resource
      */
-    public function addResource(ResourceInterface $resource, $loader)
+    public function addResource($resource, $loader)
     {
+        // backward compatibility fix until {@link https://github.com/symfony/symfony/pull/141} is merged
+        if ($loader instanceof ResourceInterface) {
+            $vars = get_defined_vars();
+            $resource = $vars['loader'];
+            $loader = $vars['resource'];
+        }
+
         $this->resources[$loader][] = $resource;
         $this->loaded = false;
     }
