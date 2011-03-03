@@ -87,7 +87,7 @@ class AssetCache implements AssetInterface
 
     public function setTargetUrl($targetUrl)
     {
-        $this->asset->setTargetUrl();
+        $this->asset->setTargetUrl($targetUrl);
     }
 
     public function getLastModified()
