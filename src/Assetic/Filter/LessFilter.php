@@ -70,7 +70,7 @@ JAVASCRIPT;
         // parser options
         $parserOptions = array();
         if ($sourceUrl = $asset->getSourceUrl()) {
-            $parserOptions['paths'] = array($this->baseDir.'/'.dirname($sourceUrl));
+            $parserOptions['paths'] = array($this->baseDir, dirname($sourceUrl));
             $parserOptions['filename'] = basename($sourceUrl);
         }
 
