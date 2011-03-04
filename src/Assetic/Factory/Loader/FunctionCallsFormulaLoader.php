@@ -22,61 +22,84 @@ use Assetic\Factory\Resource\ResourceInterface;
 class FunctionCallsFormulaLoader implements FormulaLoaderInterface
 {
     protected $factory;
+    protected $prototypes;
 
-    public function __construct(AssetFactory $factory)
+    public function __construct(AssetFactory $factory, array $prototypes = array())
     {
         $this->factory = $factory;
+        $this->prototypes = array();
+
+        foreach ($prototypes as $prototype => $options) {
+            $this->addPrototype($prototype, $options);
+        }
+    }
+
+    public function addPrototype($prototype, array $options = array())
+    {
+        $tokens = token_get_all('<?php '.$prototype);
+        array_shift($tokens);
+
+        $this->prototypes[$prototype] = array($tokens, $options);
     }
 
     public function load(ResourceInterface $resource)
     {
-        // tokenize the prototype and remove the leading php tag
-        $prototype = token_get_all('<?php assetic_assets(*)');
-        array_shift($prototype);
+        if (!$nbProtos = count($this->prototypes)) {
+            throw new \LogicException('There are no prototypes registered.');
+        }
 
-        $inWildcard = false;
-        $buffer = '';
-        $level = 0;
-        $calls = array();
+        $buffers = array_fill(0, $nbProtos, '');
+        $bufferLevels = array_fill(0, $nbProtos, 0);
+        $buffersInWildcard = array();
 
         $tokens = token_get_all($resource->getContent());
+        $calls = array();
+
         while ($token = array_shift($tokens)) {
             $current = self::tokenToString($token);
-            if ($inWildcard) {
-                switch ($current) {
-                    case '(': ++$level; break;
-                    case ')': --$level; break;
-                }
+            // loop through each prototype (by reference)
+            foreach (array_keys($this->prototypes) as $i) {
+                $prototype =& $this->prototypes[$i][0];
+                $options = $this->prototypes[$i][1];
+                $buffer =& $buffers[$i];
+                $level =& $bufferLevels[$i];
 
-                $buffer .= $current;
+                if (isset($buffersInWildcard[$i])) {
+                    switch ($current) {
+                        case '(': ++$level; break;
+                        case ')': --$level; break;
+                    }
 
-                if (!$level) {
-                    $calls[] = $buffer.';';
+                    $buffer .= $current;
+
+                    if (!$level) {
+                        $calls[] = array($buffer.';', $options);
+                        $buffer = '';
+                        unset($buffersInWildcard[$i]);
+                    }
+                } elseif ($current == self::tokenToString(current($prototype))) {
+                    $buffer .= $current;
+                    if ('*' == self::tokenToString(next($prototype))) {
+                        $buffersInWildcard[$i] = true;
+                        ++$level;
+                    }
+                } else {
+                    reset($prototype);
+                    unset($buffersInWildcard[$i]);
                     $buffer = '';
-                    $inWildcard = false;
                 }
-            } elseif ($current == self::tokenToString(current($prototype))) {
-                $buffer .= $current;
-                if ('*' == self::tokenToString(next($prototype))) {
-                    $inWildcard = true;
-                    ++$level;
-                }
-            } else {
-                reset($prototype);
-                $buffer = '';
-                $inWildcard = false;
             }
         }
 
         $formulae = array();
         foreach ($calls as $call) {
-            $formulae += $this->processCall($call);
+            $formulae += call_user_func_array(array($this, 'processCall'), $call);
         }
 
         return $formulae;
     }
 
-    private function processCall($call)
+    private function processCall($call, array $protoOptions = array())
     {
         $code = implode("\n", array(
             '$call = array();',
@@ -92,7 +115,7 @@ class FunctionCallsFormulaLoader implements FormulaLoaderInterface
         $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
         $options = isset($args[2]) ? $args[2] : array();
 
-        $output = isset($options['output']) ? $options['output'] : null;
+        $output = isset($options['output']) ? $options['output'] : (isset($protoOptions['output']) ? $protoOptions['output'] : null);
         $name   = isset($options['name']) ? $options['name'] : $this->factory->generateAssetName($inputs, $filters);
         $debug  = isset($options['debug']) ? $options['debug'] : false;
 

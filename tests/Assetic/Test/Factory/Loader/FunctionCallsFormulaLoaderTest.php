@@ -32,7 +32,11 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ->method('generateAssetName')
             ->will($this->returnValue($name));
 
-        $loader = new FunctionCallsFormulaLoader($factory);
+        $loader = new FunctionCallsFormulaLoader($factory, array(
+            'assetic_assets(*)'      => array(),
+            'assetic_javascripts(*)' => array('output' => 'js/*.js'),
+            'assetic_stylesheets(*)' => array('output' => 'css/*.css'),
+        ));
         $formulae = $loader->load($resource);
 
         $this->assertEquals($expected, $formulae);
