@@ -11,26 +11,57 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\LessFilter;
 
 class LessFilterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group integration
-     */
-    public function testFilterLoad()
+    private $filter;
+
+    protected function setUp()
     {
         if (!isset($_SERVER['NODE_BIN']) || !isset($_SERVER['NODE_PATH'])) {
             $this->markTestSkipped('No node.js configuration.');
         }
 
+        $this->filter = new LessFilter(__DIR__, $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
+    }
+
+    /**
+     * @group integration
+     */
+    public function testFilterLoad()
+    {
         $asset = new StringAsset('.foo{.bar{width:1+1;}}');
         $asset->load();
 
-        $filter = new LessFilter(__DIR__, $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
-        $filter->filterLoad($asset);
+        $this->filter->filterLoad($asset);
 
         $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+    }
+
+    /**
+     * @group integration
+     */
+    public function testImport()
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue;
+}
+.foo {
+  color: red;
+}
+
+EOF;
+
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less', array(), 'fixtures/less/main.less');
+        $asset->load();
+
+        // sanity
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
 }
