@@ -67,10 +67,15 @@ new(less.Parser)(%s).parse(%s, function(e, tree) {
 
 JAVASCRIPT;
 
+        $sourceUrl = $asset->getSourceUrl();
+
         // parser options
         $parserOptions = array();
-        if ($sourceUrl = $asset->getSourceUrl()) {
-            $parserOptions['paths'] = array($this->baseDir.'/'.dirname($sourceUrl));
+        if ($sourceUrl && false === strpos($sourceUrl, '://')) {
+            // todo: a better isAbsolutePath()
+            $baseDir = '/' == $sourceUrl[0] ? '' : $this->baseDir;
+
+            $parserOptions['paths'] = array($baseDir.'/'.dirname($sourceUrl));
             $parserOptions['filename'] = basename($sourceUrl);
         }
 

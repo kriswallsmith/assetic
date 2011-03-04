@@ -43,8 +43,9 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @group integration
+     * @dataProvider getSourceUrls
      */
-    public function testImport()
+    public function testImportSourceUrl($sourceUrl)
     {
         $expected = <<<EOF
 .foo {
@@ -56,12 +57,19 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less', array(), 'fixtures/less/main.less');
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less', array(), $sourceUrl);
         $asset->load();
 
-        // sanity
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
+    }
+
+    public function getSourceUrls()
+    {
+        return array(
+            array('fixtures/less/main.less'),
+            array(__DIR__.'/fixtures/less/main.less'),
+        );
     }
 }
