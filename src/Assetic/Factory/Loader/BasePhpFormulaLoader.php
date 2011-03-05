@@ -104,7 +104,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         $code = implode("\n", array(
             $this->registerSetupCode(),
             $call,
-            'var_export($_call);'
+            'var_export($_call);',
         ));
 
         $args = shell_exec(implode(' ', array_map('escapeshellarg', array('php', '-r', $code))));
