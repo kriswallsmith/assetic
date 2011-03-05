@@ -35,20 +35,20 @@ class FunctionCallsFormulaLoader extends BasePhpFormulaLoader
         return <<<'EOF'
 function assetic_assets()
 {
-    global $call;
-    $call = func_get_args();
+    global $_call;
+    $_call = func_get_args();
 }
 
 function assetic_javascripts()
 {
-    global $call;
-    $call = func_get_args();
+    global $_call;
+    $_call = func_get_args();
 }
 
 function assetic_stylesheets()
 {
-    global $call;
-    $call = func_get_args();
+    global $_call;
+    $_call = func_get_args();
 }
 
 EOF;

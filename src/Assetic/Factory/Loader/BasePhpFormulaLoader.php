@@ -102,10 +102,9 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
     private function processCall($call, array $protoOptions = array())
     {
         $code = implode("\n", array(
-            '$call = array();',
             $this->registerSetupCode(),
             $call,
-            'var_export($call);'
+            'var_export($_call);'
         ));
 
         $args = shell_exec(implode(' ', array_map('escapeshellarg', array('php', '-r', $code))));
