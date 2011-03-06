@@ -53,11 +53,15 @@ class ConfigCache
         $path = $this->getPath($resource);
 
         if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
+            // @codeCoverageIgnoreStart
             throw new \RuntimeException('Unable to create directory '.$dir);
+            // @codeCoverageIgnoreEnd
         }
 
         if (false === @file_put_contents($path, sprintf("<?php\n\n// $resource\nreturn %s;\n", var_export($value, true)))) {
+            // @codeCoverageIgnoreStart
             throw new \RuntimeException('Unable to write file '.$path);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -95,7 +99,9 @@ class ConfigCache
         }
 
         if (false === $mtime = @filemtime($path)) {
+            // @codeCoverageIgnoreStart
             throw new \RuntimeException('Unable to determine file mtime for '.$path);
+            // @codeCoverageIgnoreEnd
         }
 
         return $mtime;
