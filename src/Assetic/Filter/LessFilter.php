@@ -72,8 +72,7 @@ JAVASCRIPT;
         // parser options
         $parserOptions = array();
         if ($sourceUrl && false === strpos($sourceUrl, '://')) {
-            // todo: a better isAbsolutePath()
-            $baseDir = '/' == $sourceUrl[0] ? '' : $this->baseDir;
+            $baseDir = self::isAbsolutePath($sourceUrl) ? '' : $this->baseDir;
 
             $parserOptions['paths'] = array($baseDir.'/'.dirname($sourceUrl));
             $parserOptions['filename'] = basename($sourceUrl);
@@ -113,5 +112,10 @@ JAVASCRIPT;
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    static private function isAbsolutePath($path)
+    {
+        return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
 }

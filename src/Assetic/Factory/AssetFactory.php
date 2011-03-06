@@ -195,8 +195,7 @@ class AssetFactory
             return $this->createFileAsset($input, $input);
         }
 
-        // todo: a better isAbsolutePath()
-        $baseDir = '/' == $input[0] ? '' : $this->baseDir;
+        $baseDir = self::isAbsolutePath($input) ? '' : $this->baseDir;
 
         if (false !== strpos($input, '*')) {
             return $this->createGlobAsset($baseDir . $input, $this->baseDir);
@@ -236,5 +235,10 @@ class AssetFactory
         }
 
         return $this->fm->get($name);
+    }
+
+    static private function isAbsolutePath($path)
+    {
+        return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
 }
