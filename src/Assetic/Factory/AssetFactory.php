@@ -174,7 +174,7 @@ class AssetFactory
      *
      * The input string can be one of the following:
      *
-     *  * A reference:     If the string starts with a "@" it will be interpreted as a reference to an asset in the asset manager
+     *  * A reference:     If the string starts with an "at" sign it will be interpreted as a reference to an asset in the asset manager
      *  * An absolute URL: If the string contains "://" it will be interpreted as a remote asset
      *  * A glob:          If the string contains a "*" it will be interpreted as a glob
      *  * A path:          Otherwise the string is interpreted as a path
