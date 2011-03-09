@@ -98,6 +98,15 @@ class GlobAsset extends AssetCollection
         return parent::getLastModified();
     }
 
+    public function getPaths()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::getPaths();
+    }
+
     public function getIterator()
     {
         if (!$this->initialized) {

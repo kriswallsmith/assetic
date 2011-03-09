@@ -111,4 +111,11 @@ interface AssetInterface
      * @return integer|null A UNIX timestamp
      */
     function getLastModified();
+
+    /**
+     * Returns a set of paths that contain content influencing this asset.
+     *
+     * @return array An array of paths.
+     */
+    function getPaths();
 }

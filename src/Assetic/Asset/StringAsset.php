@@ -51,4 +51,9 @@ class StringAsset extends BaseAsset
     {
         return $this->lastModified;
     }
+
+    public function getPaths()
+    {
+        return array();
+    }
 }

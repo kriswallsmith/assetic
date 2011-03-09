@@ -133,6 +133,21 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
     }
 
     /**
+     * Returns an array containing all paths of all contained assets
+     *
+     * @return array The paths
+     */
+    public function getPaths()
+    {
+        $paths = array();
+        foreach ($this as $asset) {
+            $paths = array_merge($paths, $asset->getPaths());
+        }
+
+        return $paths;
+    }
+
+    /**
      * Returns an iterator for looping recursively over unique leaves.
      */
     public function getIterator()

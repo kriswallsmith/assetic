@@ -95,6 +95,11 @@ class AssetCache implements AssetInterface
         return $this->asset->getLastModified();
     }
 
+    public function getPaths()
+    {
+        return $this->asset->getPaths();
+    }
+
     /**
      * Returns a cache key for the current asset.
      *
