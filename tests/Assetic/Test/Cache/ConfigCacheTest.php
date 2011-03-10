@@ -26,7 +26,7 @@ class ConfigCacheTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->dir)) as $file) {
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->dir, \FilesystemIterator::SKIP_DOTS)) as $file) {
             unlink($file->getPathname());
         }
     }
