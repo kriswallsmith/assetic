@@ -54,9 +54,9 @@ class StylusFilter implements FilterInterface
      */
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<JAVASCRIPT
-var stylus = require('stylus'),
-       sys = require('sys');
+        static $format = <<<'EOF'
+var stylus = require('stylus');
+var sys    = require('sys');
 
 stylus(%s, %s).render(function(e, css){
     if (e) {
@@ -67,7 +67,7 @@ stylus(%s, %s).render(function(e, css){
     process.exit(0);
 });
 
-JAVASCRIPT;
+EOF;
 
         // parser options
         $parserOptions = array();
