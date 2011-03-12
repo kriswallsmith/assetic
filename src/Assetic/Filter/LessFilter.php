@@ -72,9 +72,9 @@ JAVASCRIPT;
         // parser options
         $parserOptions = array();
         if ($sourceUrl && false === strpos($sourceUrl, '://')) {
-            $baseDir = self::isAbsolutePath($sourceUrl) ? '' : $this->baseDir;
+            $baseDir = self::isAbsolutePath($sourceUrl) ? '' : $this->baseDir.'/';
 
-            $parserOptions['paths'] = array($baseDir.'/'.dirname($sourceUrl));
+            $parserOptions['paths'] = array($baseDir.dirname($sourceUrl));
             $parserOptions['filename'] = basename($sourceUrl);
         }
 
