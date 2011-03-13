@@ -34,9 +34,9 @@ class AsseticNode extends \Twig_Node
         $compiler
             ->addDebugInfo($this)
             ->write("\$context['asset_url'] = ")
-            ->subcompile($this->getAssetUrlNode($this->getNode('body')))
+            ->subcompile($this->getAssetUrlNode($body))
             ->raw(";\n")
-            ->subcompile($this->getNode('body'))
+            ->subcompile($body)
             ->write("unset(\$context['asset_url']);\n")
         ;
     }
