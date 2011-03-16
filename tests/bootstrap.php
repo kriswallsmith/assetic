@@ -25,3 +25,7 @@ spl_autoload_register(function($class)
         }
     }
 });
+
+//try to fetch lessphp
+@include_once(__DIR__.'/../../lessphp/lessc.inc.php');
+
