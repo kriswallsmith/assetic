@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,8 @@ class FilterManager
 
     public function set($alias, FilterInterface $filter)
     {
+        $this->checkName($alias);
+
         $this->filters[$alias] = $filter;
     }
 
@@ -41,8 +43,22 @@ class FilterManager
         return isset($this->filters[$alias]);
     }
 
-    public function all()
+    public function getNames()
     {
-        return $this->filters;
+        return array_keys($this->filters);
+    }
+
+    /**
+     * Checks that a name is valid.
+     *
+     * @param string $name An asset name candidate
+     *
+     * @throws InvalidArgumentException If the asset name is invalid
+     */
+    protected function checkName($name)
+    {
+        if (!ctype_alnum(str_replace('_', '', $name))) {
+            throw new \InvalidArgumentException(sprintf('The name "%s" is invalid.', $name));
+        }
     }
 }

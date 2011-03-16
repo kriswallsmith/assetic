@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -44,17 +44,10 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->am->has('bar'), '->has() returns false if the asset is not set');
     }
 
-    public function testAllReturnType()
+    public function testInvalidName()
     {
-        $this->assertInternalType('array', $this->am->all(), '->all() returns an array');
-    }
+        $this->setExpectedException('InvalidArgumentException');
 
-    public function testAllContents()
-    {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $this->am->set('foo', $asset);
-
-        $assets = $this->am->all();
-        $this->assertContains($asset, $assets, '->all() includes assets');
+        $this->am->set('@foo', $this->getMock('Assetic\\Asset\\AssetInterface'));
     }
 }

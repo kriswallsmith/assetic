@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -50,8 +50,9 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->fm->has('foo'), '->has() returns false if the filter is not set');
     }
 
-    public function testAll()
+    public function testInvalidAlias()
     {
-        $this->assertInternalType('array', $this->fm->all(), '->all() returns an array');
+        $this->setExpectedException('InvalidArgumentException');
+        $this->fm->set('@foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
     }
 }

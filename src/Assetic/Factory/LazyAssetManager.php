@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,37 +12,161 @@
 namespace Assetic\Factory;
 
 use Assetic\AssetManager;
+use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\ResourceInterface;
 
 /**
- * An asset manager that also knows how to create assets.
+ * A lazy asset manager is a composition of a factory and many formula loaders.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class LazyAssetManager extends AssetManager
 {
     private $factory;
-    private $formulae = array();
+    private $loaders;
+    private $resources;
+    private $formulae;
+    private $loaded;
 
-    public function __construct(AssetFactory $factory)
+    /**
+     * Constructor.
+     *
+     * @param AssetFactory $factory The asset factory
+     * @param array        $loaders An array of loaders indexed by alias
+     */
+    public function __construct(AssetFactory $factory, $loaders = array())
     {
         $this->factory = $factory;
-        $factory->setAssetManager($this);
+        $this->loaders = array();
+        $this->resources = array();
+        $this->formulae = array();
+        $this->loaded = false;
+
+        foreach ($loaders as $alias => $loader) {
+            $this->setLoader($alias, $loader);
+        }
     }
 
-    public function addFormulae(array $formulae)
+    /**
+     * Adds a loader to the asset manager.
+     *
+     * @param string                 $alias  An alias for the loader
+     * @param FormulaLoaderInterface $loader A loader
+     */
+    public function setLoader($alias, FormulaLoaderInterface $loader)
     {
+        $this->loaders[$alias] = $loader;
+        $this->loaded = false;
+    }
+
+    /**
+     * Adds a resource to the asset manager.
+     *
+     * @param ResourceInterface $resource A resource
+     * @param string            $loader   The loader alias for this resource
+     */
+    public function addResource(ResourceInterface $resource, $loader)
+    {
+        $this->resources[$loader][] = $resource;
+        $this->loaded = false;
+    }
+
+    /**
+     * Returns an array of resources.
+     *
+     * @return array An array of resources
+     */
+    public function getResources()
+    {
+        $resources = array();
+        foreach ($this->resources as $r) {
+            $resources = array_merge($resources, $r);
+        }
+
+        return $resources;
+    }
+
+    /**
+     * Checks for an asset formula.
+     *
+     * @param string $name An asset name
+     *
+     * @return Boolean If there is a formula
+     */
+    public function hasFormula($name)
+    {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
+        return isset($this->formulae[$name]);
+    }
+
+    /**
+     * Returns an asset's formula.
+     *
+     * @param string $name An asset name
+     *
+     * @return array The formula
+     *
+     * @throws InvalidArgumentException If there is no formula by that name
+     */
+    public function getFormula($name)
+    {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
+        if (!isset($this->formulae[$name])) {
+            throw new \InvalidArgumentException(sprintf('There is no "%s" formula.', $name));
+        }
+
+        return $this->formulae[$name];
+    }
+
+    /**
+     * Sets a formula on the asset manager.
+     *
+     * @param string $name    An asset name
+     * @param array  $formula A formula
+     */
+    public function setFormula($name, array $formula)
+    {
+        $this->formulae[$name] = $formula;
+    }
+
+    /**
+     * Loads formulae from resources.
+     *
+     * @throws LogicException If a resource has been added to an invalid loader
+     */
+    public function load()
+    {
+        if ($diff = array_diff(array_keys($this->resources), array_keys($this->loaders))) {
+            throw new \LogicException('The following loader(s) are not registered: '.implode(', ', $diff));
+        }
+
+        $formulae = array();
+        foreach ($this->resources as $loader => $resources) {
+            foreach ($resources as $resource) {
+                $formulae += $this->loaders[$loader]->load($resource);
+            }
+        }
+
         $this->formulae = $formulae + $this->formulae;
-    }
-
-    public function getFormulae()
-    {
-        return $this->formulae;
+        $this->loaded = true;
     }
 
     public function get($name)
     {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
         if (!parent::has($name) && isset($this->formulae[$name])) {
-            $this->flush($name);
+            list($inputs, $filters, $options) = $this->formulae[$name];
+            $options['name'] = $name;
+            parent::set($name, $this->factory->createAsset($inputs, $filters, $options));
         }
 
         return parent::get($name);
@@ -50,32 +174,19 @@ class LazyAssetManager extends AssetManager
 
     public function has($name)
     {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
         return isset($this->formulae[$name]) || parent::has($name);
     }
 
-    public function all()
+    public function getNames()
     {
-        foreach (array_keys($this->formulae) as $name) {
-            if (!parent::has($name)) {
-                $this->flush($name);
-            }
+        if (!$this->loaded) {
+            $this->load();
         }
 
-        return parent::all();
-    }
-
-    /**
-     * Flushes an asset formula to the parent.
-     *
-     * @param string $name The formula name
-     */
-    private function flush($name)
-    {
-        static $defaults = array(array(), array(), null, null, null);
-
-        $formula = $this->formulae[$name] + $defaults;
-        $formula[3] = $name;
-
-        $this->set($name, call_user_func_array(array($this->factory, 'createAsset'), $formula));
+        return array_unique(array_merge(parent::getNames(), array_keys($this->formulae)));
     }
 }

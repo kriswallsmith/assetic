@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -60,7 +60,12 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateAssetReference()
     {
         $referenced = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $this->am->expects($this->once())->method('get')->with('jquery')->will($this->returnValue($referenced));
+
+        $this->am->expects($this->any())
+            ->method('get')
+            ->with('jquery')
+            ->will($this->returnValue($referenced));
+
         $assets = $this->factory->createAsset(array('@jquery'));
         $arr = iterator_to_array($assets);
         $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $arr[0], '->createAsset() creates a reference');

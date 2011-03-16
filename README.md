@@ -22,7 +22,7 @@ Filters
 Filters can be applied to manipulate assets.
 
     $css = new AssetCollection(array(
-        new FileAsset('/path/to/src/styles.less', 'css/compiled.css', array(new LessFilter()),
+        new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
         new GlobAsset('/path/to/css/*'),
     ), array(
         new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'),
@@ -46,6 +46,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
  * `LessFilter`: parses LESS into CSS
+ * `StylusFilter`: parses STYL into CSS
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
  * `SprocketsFilter`: Sprockets Javascript dependency management
@@ -85,7 +86,7 @@ factory, which will do most of the work for you.
     ), array(
         'scss',           // filter through the filter manager's "scss" filter
         '?yui_css',       // don't use this filter in debug mode
-    ), 'css');
+    ));
 
     echo $css->dump();
 
@@ -99,7 +100,7 @@ A simple caching mechanism is provided to avoid unnecessary work.
 
     $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
     $js = new AssetCache(
-        new FileAsset('/path/to/some.js', 'js/some.js', array($yui)),
+        new FileAsset('/path/to/some.js', array($yui)),
         new FilesystemCache('/path/to/cache')
     );
 
@@ -128,9 +129,9 @@ environment:
 Once in place, the extension exposes an `assetic` tag with a syntax similar
 to what the asset factory uses:
 
-    {% assetic 'css/src/*.sass', filter='sass,?yui_css', url='css/main.css' %}
+    {% assets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
-    {% endassetic %}
+    {% endassets %}
 
 This example will render one `link` element on the page that includes a URL
 where the filtered asset can be found.
@@ -142,7 +143,7 @@ using the `?` prefix.
 
 This behavior can also be triggered by setting a `debug` attribute on the tag:
 
-    {% assetic 'css/*', debug=true %} ... {% endassetic %}
+    {% assets 'css/*' debug=true %} ... {% endassets %}
 
 These assets need to be written to the web directory so these URLs don't
 return 404 errors.

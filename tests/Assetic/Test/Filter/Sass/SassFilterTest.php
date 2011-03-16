@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,10 +16,13 @@ use Assetic\Filter\Sass\SassFilter;
 
 class SassFilterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group integration
+     */
     public function testSass()
     {
-        if (!isset($_SERVER['SASS_PATH'])) {
-            $this->markTestSkipped('There is no SASS_PATH environment variable.');
+        if (!isset($_SERVER['SASS_BIN'])) {
+            $this->markTestSkipped('There is no SASS_BIN environment variable.');
         }
 
         $input = <<<EOF
@@ -30,7 +33,7 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new SassFilter($_SERVER['SASS_PATH']);
+        $filter = new SassFilter($_SERVER['SASS_BIN']);
         $filter->setStyle(SassFilter::STYLE_COMPACT);
         $filter->filterLoad($asset);
         $filter->filterDump($asset);

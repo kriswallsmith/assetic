@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,13 +13,13 @@ namespace Assetic\Test\Extension\Twig;
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Extension\Twig\AsseticExtension;
-use Assetic\Extension\Twig\FormulaLoader;
+use Assetic\Extension\Twig\TwigFormulaLoader;
 
-class FormulaLoaderTest extends \PHPUnit_Framework_TestCase
+class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 {
     private $am;
     private $fm;
-    private $loader;
+    private $twig;
 
     protected function setUp()
     {
@@ -35,10 +35,9 @@ class FormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $factory->setFilterManager($this->fm);
 
         $twig = new \Twig_Environment();
-        $twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
         $twig->addExtension(new AsseticExtension($factory));
 
-        $this->loader = new FormulaLoader($twig);
+        $this->loader = new TwigFormulaLoader($twig);
     }
 
     public function testMixture()
@@ -47,13 +46,20 @@ class FormulaLoaderTest extends \PHPUnit_Framework_TestCase
             'mixture' => array(
                 array('foo', 'foo/*', '@foo'),
                 array(),
-                'packed/mixture',
-                'mixture',
-                false,
+                array(
+                    'output' => 'packed/mixture',
+                    'name'   => 'mixture',
+                    'debug'  => false,
+                ),
             ),
         );
-        
-        $formulae = $this->loader->load('mixture.twig');
+
+        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue(file_get_contents(__DIR__.'/templates/mixture.twig')));
+
+        $formulae = $this->loader->load($resource);
         $this->assertEquals($expected, $formulae);
     }
 }

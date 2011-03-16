@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +16,6 @@ use Assetic\Factory\LazyAssetManager;
 class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $factory;
-    private $am;
 
     protected function setUp()
     {
@@ -27,74 +26,62 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->am = new LazyAssetManager($this->factory);
     }
 
-    public function testFormula()
+    public function testGetFromLoader()
     {
+        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $loader = $this->getMock('Assetic\\Factory\\Loader\\FormulaLoaderInterface');
+        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+
         $formula = array(
-            $sourceUrls  = array('@jquery', 'js/jquery.plugin.js'),
-            $filterNames = array('?yui_css'),
-            $targetUrl   = 'js/packed.js',
+            array('js/core.js', 'js/more.js'),
+            array('?yui_js'),
+            array('output' => 'js/all.js')
         );
 
-        $expected = $this->getMock('Assetic\\Asset\\AssetInterface');
-
+        $loader->expects($this->once())
+            ->method('load')
+            ->with($resource)
+            ->will($this->returnValue(array('foo' => $formula)));
         $this->factory->expects($this->once())
             ->method('createAsset')
-            ->with($sourceUrls, $filterNames, $targetUrl, 'core')
-            ->will($this->returnValue($expected));
+            ->with($formula[0], $formula[1], $formula[2] + array('name' => 'foo'))
+            ->will($this->returnValue($asset));
 
-        $this->am->addFormulae(array('core' => $formula));
-        $asset = $this->am->get('core');
+        $this->am->setLoader('foo', $loader);
+        $this->am->addResource($resource, 'foo');
 
-        $this->assertSame($expected, $asset);
+        $this->assertSame($asset, $this->am->get('foo'), '->get() returns an asset from the loader');
 
-        // the factory is only called ->once()
-        $this->am->get('core');
+        // test the "once" expectations
+        $this->am->get('foo');
     }
 
-    public function testAll()
+    public function testGetResources()
     {
-        $formula = array(
-            $sourceUrls  = array('@jquery', 'js/jquery.plugin.js'),
-            $filterNames = array('?yui_css'),
-            $targetUrl   = 'js/packed.js',
+        $resources = array(
+            $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface'),
+            $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface'),
         );
 
-        $expected = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $this->am->addResource($resources[0], 'foo');
+        $this->am->addResource($resources[1], 'bar');
 
-        $this->factory->expects($this->once())
-            ->method('createAsset')
-            ->with($sourceUrls, $filterNames, $targetUrl, 'core')
-            ->will($this->returnValue($expected));
+        $ret = $this->am->getResources();
 
-        $this->am->addFormulae(array('core' => $formula));
-
-        $all = $this->am->all();
-        $this->assertArrayHasKey('core', $all);
-        $this->assertSame($expected, $all['core']);
+        foreach ($resources as $resource) {
+            $this->assertTrue(in_array($resource, $ret, true));
+        }
     }
 
-    public function testHas()
+    public function testGetResourcesEmpty()
     {
-        $formula = array(
-            array('@jquery', 'js/jquery.plugin.js'),
-            array('?yui_css'),
-            'js/packed.js',
-        );
-
-        $this->am->addFormulae(array('core' => $formula));
-
-        $this->assertTrue($this->am->has('core'));
+        $this->am->getResources();
     }
 
-    public function testGetFormulae()
+    public function testSetFormula()
     {
-        $formulae = array('core' => array(
-            array('@jquery', 'js/jquery.plugin.js'),
-            array('?yui_css'),
-            'js/packed.js',
-        ));
-
-        $this->am->addFormulae($formulae);
-        $this->assertEquals($formulae, $this->am->getFormulae());
+        $this->am->setFormula('foo', array());
+        $this->am->load();
+        $this->assertTrue($this->am->hasFormula('foo'), '->load() does not remove manually added formulae');
     }
 }

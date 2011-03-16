@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,8 +34,12 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         $am = $this->getMock('Assetic\\AssetManager');
 
         $am->expects($this->once())
-            ->method('all')
-            ->will($this->returnValue(array($asset)));
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
+        $am->expects($this->once())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue($asset));
         $asset->expects($this->once())
             ->method('getTargetUrl')
             ->will($this->returnValue('target_url'));

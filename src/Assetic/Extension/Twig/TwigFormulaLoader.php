@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,14 +11,15 @@
 
 namespace Assetic\Extension\Twig;
 
+use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\ResourceInterface;
+
 /**
  * Loads asset formulae from Twig templates.
  *
- * A formula is an array of arguments for {@link AssetFactory::createAsset()}.
- *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FormulaLoader
+class TwigFormulaLoader implements FormulaLoaderInterface
 {
     private $twig;
 
@@ -27,17 +28,9 @@ class FormulaLoader
         $this->twig = $twig;
     }
 
-    /**
-     * Extracts asset formulae from a template.
-     *
-     * @param string $template The name of the template to load
-     *
-     * @return array An array of asset formulae indexed by name
-     */
-    public function load($template)
+    public function load(ResourceInterface $resource)
     {
-        $source = $this->twig->getLoader()->getSource($template);
-        $tokens = $this->twig->tokenize($source);
+        $tokens = $this->twig->tokenize($resource->getContent());
         $nodes  = $this->twig->parse($tokens);
 
         return $this->loadNode($nodes);
@@ -52,13 +45,15 @@ class FormulaLoader
     {
         $assets = array();
 
-        if ($node instanceof Node) {
+        if ($node instanceof AsseticNode) {
             $assets[$node->getAttribute('asset_name')] = array(
                 $node->getAttribute('source_urls'),
                 $node->getAttribute('filter_names'),
-                $node->getAttribute('target_url'),
-                $node->getAttribute('asset_name'),
-                $node->getAttribute('debug'),
+                array(
+                    'output' => $node->getAttribute('target_url'),
+                    'name'   => $node->getAttribute('asset_name'),
+                    'debug'  => $node->getAttribute('debug'),
+                ),
             );
         }
 

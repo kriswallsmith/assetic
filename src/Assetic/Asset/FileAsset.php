@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,14 +26,14 @@ class FileAsset extends BaseAsset
      * Constructor.
      *
      * @param string $path      The absolute path to the asset
-     * @param string $sourceUrl The source URL
      * @param array  $filters   Filters for the asset
+     * @param string $sourceUrl The source URL
      */
-    public function __construct($path, $sourceUrl = null, $filters = array())
+    public function __construct($path, $filters = array(), $sourceUrl = null)
     {
         $this->path = $path;
 
-        parent::__construct($sourceUrl, $filters);
+        parent::__construct($filters, $sourceUrl);
     }
 
     public function load(FilterInterface $additionalFilter = null)
