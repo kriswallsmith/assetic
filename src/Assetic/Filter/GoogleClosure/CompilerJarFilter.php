@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,6 +12,7 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Filter\Process;
 
 /**
  * Filter for the Google Closure Compiler JAR.
@@ -80,12 +81,14 @@ class CompilerJarFilter extends BaseCompilerFilter
         $options[] = $cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
         file_put_contents($input, $asset->getContent());
 
-        // todo: check for a valid return code
-        $output = shell_exec(implode(' ', array_map('escapeshellarg', $options)));
-
-        // cleanup temp files
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $code = $proc->run();
         array_map('unlink', $cleanup);
 
-        $asset->setContent($output);
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
+        }
+
+        $asset->setContent($proc->getOutput());
     }
 }

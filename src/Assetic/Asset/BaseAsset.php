@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -33,12 +33,13 @@ abstract class BaseAsset implements AssetInterface
     /**
      * Constructor.
      *
-     * @param array $filters Filters for the asset
+     * @param array  $filters   Filters for the asset
+     * @param string $sourceUrl The source URL
      */
-    public function __construct($sourceUrl = null, $filters = array())
+    public function __construct($filters = array(), $sourceUrl = null)
     {
-        $this->sourceUrl = $sourceUrl;
         $this->filters = new FilterCollection($filters);
+        $this->sourceUrl = $sourceUrl;
     }
 
     public function ensureFilter(FilterInterface $filter)

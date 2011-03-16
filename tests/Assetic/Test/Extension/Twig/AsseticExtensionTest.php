@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -91,25 +91,17 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('assets/', (string) $xml->asset['url']);
     }
 
-    public function testUrlPattern()
+    public function testOutputPattern()
     {
-        $xml = $this->renderXml('url_pattern.twig');
+        $xml = $this->renderXml('output_pattern.twig');
         $this->assertEquals(1, count($xml->asset));
         $this->assertStringStartsWith('css/packed/', (string) $xml->asset['url']);
         $this->assertStringEndsWith('.css', (string) $xml->asset['url']);
     }
 
-    public function testUrlExtension()
+    public function testOutput()
     {
-        $xml = $this->renderXml('url_extension.twig');
-        $this->assertEquals(1, count($xml->asset));
-        $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
-        $this->assertStringEndsWith('.css', (string) $xml->asset['url']);
-    }
-
-    public function testUrl()
-    {
-        $xml = $this->renderXml('url.twig');
+        $xml = $this->renderXml('output_url.twig');
         $this->assertEquals(1, count($xml->asset));
         $this->assertEquals('explicit_url.css', (string) $xml->asset['url']);
     }
@@ -125,7 +117,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
 
-        $this->fm->expects($this->exactly(3))
+        $this->fm->expects($this->once())
             ->method('get')
             ->with('bar')
             ->will($this->returnValue($filter));

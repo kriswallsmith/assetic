@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,5 +28,25 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
 
         $cache->remove('foo');
         $this->assertFalse($cache->has('foo'));
+    }
+
+    public function testSetCreatesDir()
+    {
+        $dir = sys_get_temp_dir().'/assetic/fscachetest';
+
+        $tearDown = function() use($dir)
+        {
+            array_map('unlink', glob($dir.'/*'));
+            @rmdir($dir);
+        };
+
+        $tearDown();
+
+        $cache = new FilesystemCache($dir);
+        $cache->set('foo', 'bar');
+
+        $this->assertFileExists($dir.'/foo');
+
+        $tearDown();
     }
 }

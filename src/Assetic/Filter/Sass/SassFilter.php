@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,8 +11,9 @@
 
 namespace Assetic\Filter\Sass;
 
-use Assetic\Filter\FilterInterface;
 use Assetic\Asset\AssetInterface;
+use Assetic\Filter\FilterInterface;
+use Assetic\Filter\Process;
 
 /**
  * Loads SASS files.
@@ -137,12 +138,16 @@ class SassFilter implements FilterInterface
 
         $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
 
-        // todo: check for a valid return code
-        shell_exec(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $code = $proc->run();
+
+        if (0 < $code) {
+            unlink($input);
+            throw new \RuntimeException($proc->getErrorOutput());
+        }
 
         $asset->setContent(file_get_contents($output));
 
-        // cleanup
         unlink($input);
         unlink($output);
     }

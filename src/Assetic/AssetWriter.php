@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,8 +34,8 @@ class AssetWriter
 
     public function writeManagerAssets(AssetManager $am)
     {
-        foreach ($am->all() as $asset) {
-            $this->writeAsset($asset);
+        foreach ($am->getNames() as $name) {
+            $this->writeAsset($am->get($name));
         }
     }
 
@@ -46,10 +46,12 @@ class AssetWriter
 
     static protected function write($path, $contents)
     {
-        if (!is_dir($dir = dirname($path))) {
-            mkdir($dir, 0777, true);
+        if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
+            throw new \RuntimeException('Unable to create directory '.$dir);
         }
 
-        file_put_contents($path, $contents);
+        if (false === @file_put_contents($path, $contents)) {
+            throw new \RuntimeException('Unable to write file '.$path);
+        }
     }
 }

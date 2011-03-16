@@ -8,14 +8,17 @@
     </testsuites>
 
     <php>
-        <!-- <server name="TWIG_PATH" value="/path/to/twig/lib" /> -->
-        <!-- <server name="YUI_COMPRESSOR_PATH" value="/path/to/yuicompressor-2.4.2.jar" /> -->
-        <!-- <server name="GOOGLE_CLOSURE_COMPILER_PATH" value="/path/to/google-closure/compiler.jar" /> -->
-        <!-- <server name="LESSC_PATH" value="/path/to/lessc" /> -->
-        <!-- <server name="SASS_PATH" value="/path/to/sass" /> -->
+        <!-- <server name="CLOSURE_JAR" value="/path/to/google-closure/compiler.jar" /> -->
+        <!-- <server name="COFFEE_BIN" value="/path/to/coffee" /> -->
+        <!-- <server name="NODE_BIN" value="/path/to/node" /> -->
+        <!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
         <!-- <server name="COMPASS_PATH" value="/path/to/compass" /> -->
-        <!-- <server name="SPROCKETIZE_PATH" value="/path/to/sprocketize" /> -->
-        <!-- <server name="COFFEE_PATH" value="/path/to/coffee" /> -->
+        <!-- <server name="SASS_BIN" value="/path/to/sass" /> -->
+        <!-- <server name="RUBY_BIN" value="/path/to/ruby" /> -->
+        <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
+        <!-- <server name="TWIG_LIB" value="/path/to/twig/lib" /> -->
+        <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+        <!-- <server name="OPTIPNG_BIN" value="/path/to/optipng" /> -->
     </php>
 
     <filter>

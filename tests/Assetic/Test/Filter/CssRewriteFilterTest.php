@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,30 +16,16 @@ use Assetic\Filter\CssRewriteFilter;
 
 class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('PHP_CodeSniffer_Tokenizers_CSS')) {
-            $this->markTestSkipped('CodeSniffer is not installed.');
-        }
-    }
-
-    public function testInterface()
-    {
-        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CssRewriteFilter implements FilterInterface');
-    }
-
     /**
-     * @group functional
      * @dataProvider provideUrls
      */
     public function testUrls($format, $sourceUrl, $targetUrl, $inputUrl, $expectedUrl)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl), $sourceUrl);
+        $asset = new StringAsset(sprintf($format, $inputUrl), array(), $sourceUrl);
         $asset->setTargetUrl($targetUrl);
         $asset->load();
 
-        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
+        $filter = new CssRewriteFilter();
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
@@ -67,6 +53,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             // url diffs
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/bar.gif', 'http://foo.com/bar.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '/images/foo.gif', '/images/foo.gif'),
+            array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/images/foo.gif', 'http://foo.com/images/foo.gif'),
         );
     }
 
@@ -77,7 +64,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset($content);
         $asset->load();
 
-        $filter = new CssRewriteFilter(new \PHP_CodeSniffer_Tokenizers_CSS());
+        $filter = new CssRewriteFilter();
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 

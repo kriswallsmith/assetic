@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,24 +11,65 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\LessFilter;
 
 class LessFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLessc()
+    private $filter;
+
+    protected function setUp()
     {
-        if (!isset($_SERVER['LESSC_PATH'])) {
-            $this->markTestSkipped('There is no LESSC_PATH environment variable.');
+        if (!isset($_SERVER['NODE_BIN']) || !isset($_SERVER['NODE_PATH'])) {
+            $this->markTestSkipped('No node.js configuration.');
         }
 
-        $asset = new StringAsset('body{color:red;}');
+        $this->filter = new LessFilter(__DIR__, $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
+    }
+
+    /**
+     * @group integration
+     */
+    public function testFilterLoad()
+    {
+        $asset = new StringAsset('.foo{.bar{width:1+1;}}');
         $asset->load();
 
-        $filter = new LessFilter($_SERVER['LESSC_PATH']);
-        $filter->filterLoad($asset);
-        $filter->filterDump($asset);
+        $this->filter->filterLoad($asset);
 
-        $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the content');
+        $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+    }
+
+    /**
+     * @group integration
+     * @dataProvider getSourceUrls
+     */
+    public function testImportSourceUrl($sourceUrl)
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue;
+}
+.foo {
+  color: red;
+}
+
+EOF;
+
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less', array(), $sourceUrl);
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
+    }
+
+    public function getSourceUrls()
+    {
+        return array(
+            array('fixtures/less/main.less'),
+            array(__DIR__.'/fixtures/less/main.less'),
+        );
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -33,17 +33,19 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
         shell_exec('rm -rf '.escapeshellarg($this->assetRoot).'/*');
     }
 
+    /**
+     * @group integration
+     */
     public function testFilterLoad()
     {
-        if (!isset($_SERVER['SPROCKETIZE_PATH'])) {
-            $this->markTestSkipped('There is no SPROCKETIZE_PATH environment variable.');
+        if (!isset($_SERVER['SPROCKETS_LIB']) || !isset($_SERVER['RUBY_BIN'])) {
+            $this->markTestSkipped('There is no sprockets configuration.');
         }
 
-        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js', 'main.js');
+        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js', array(), 'main.js');
         $asset->load();
 
-        $filter = new SprocketsFilter(__DIR__.'/fixtures/sprockets', $_SERVER['SPROCKETIZE_PATH']);
-        $filter->setDirectory(__DIR__.'/fixtures/sprockets');
+        $filter = new SprocketsFilter(__DIR__.'/fixtures/sprockets', $_SERVER['SPROCKETS_LIB'], $_SERVER['RUBY_BIN']);
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib1');
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib2');
         $filter->setAssetRoot($this->assetRoot);

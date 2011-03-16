@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -60,16 +60,20 @@ class AssetManager
      */
     public function set($name, AssetInterface $asset)
     {
+        if (!ctype_alnum(str_replace('_', '', $name))) {
+            throw new \InvalidArgumentException(sprintf('The name "%s" is invalid.', $name));
+        }
+
         $this->assets[$name] = $asset;
     }
 
     /**
-     * Returns all assets.
+     * Returns an array of asset names.
      *
-     * @return array An array of assets
+     * @return array An array of asset names
      */
-    public function all()
+    public function getNames()
     {
-        return $this->assets;
+        return array_keys($this->assets);
     }
 }

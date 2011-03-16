@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,20 +28,24 @@ class AssetFactory
 {
     private $baseDir;
     private $debug;
+    private $defaultOutput;
+    private $workers;
     private $am;
     private $fm;
-    private $workers = array();
 
     /**
      * Constructor.
      *
-     * @param string  $baseDir Path to the base directory for relative URLs
-     * @param Boolean $debug   Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $baseDir       Path to the base directory for relative URLs
+     * @param Boolean $debug         Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $defaultOutput The default output string
      */
-    public function __construct($baseDir, $debug = false)
+    public function __construct($baseDir, $debug = false, $defaultOutput = 'assets/*')
     {
         $this->baseDir = rtrim($baseDir, '/').'/';
         $this->debug = $debug;
+        $this->defaultOutput = $defaultOutput;
+        $this->workers = array();
     }
 
     /**
@@ -52,6 +56,26 @@ class AssetFactory
     public function setDebug($debug)
     {
         $this->debug = $debug;
+    }
+
+    /**
+     * Checks if the factory is in debug mode.
+     *
+     * @return Boolean Debug mode
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * Adds a factory worker.
+     *
+     * @param WorkerInterface $worker A worker
+     */
+    public function addWorker(WorkerInterface $worker)
+    {
+        $this->workers[] = $worker;
     }
 
     /**
@@ -75,96 +99,63 @@ class AssetFactory
     }
 
     /**
-     * Adds a factory worker.
-     *
-     * @param WorkerInterface $worker A worker
-     */
-    public function addWorker(WorkerInterface $worker)
-    {
-        $this->workers[] = $worker;
-    }
-
-    /**
      * Creates a new asset.
-     *
-     * Each source URL can take one of the following forms:
-     *
-     *  * @jquery:         A reference to the asset manager's "jquery" asset
-     *  * js/core/*:       A glob relative to the base directory
-     *  * js/jquery.js:    A file path relative to the base directory
-     *  * /path/to/foo.js: An absolute filesytem path
-     *  * http://etc...:   An absolute URL
      *
      * Prefixing a filter name with a question mark will cause it to be
      * omitted when the factory is in debug mode.
      *
-     * For example, the following asset will always go through the SASS filter
-     * but only be compressed by YUI when not in debug mode:
+     * Available options:
      *
-     *     $factory->createAsset(
-     *         array('css/main.sass'),
-     *         array('sass', '?yui_css')
-     *     );
+     *  * output: An output string
+     *  * name:   An asset name for interpolation in output patterns
+     *  * debug:  Forces debug mode on or off for this asset
      *
-     * @param array   $sourceUrls  An array of URLs relative to the base directory
-     * @param array   $filterNames An array of filter names
-     * @param string  $targetUrl   A target URL for the asset
-     * @param string  $assetName   The asset name, for interpolation only
-     * @param Boolean $debug       Debug mode for the asset
+     * @param array|string $inputs  An array of input strings
+     * @param array|string $filters An array of filter names
+     * @param array        $options An array of options
      *
-     * @return AssetInterface An asset
+     * @return AssetCollection An asset collection
      */
-    public function createAsset(array $sourceUrls = array(), array $filterNames = array(), $targetUrl = null, $assetName = null, $debug = null)
+    public function createAsset($inputs = array(), $filters = array(), array $options = array())
     {
-        if (null === $debug) {
-            $debug = $this->debug;
+        if (!is_array($inputs)) {
+            $inputs = array($inputs);
+        }
+
+        if (!is_array($filters)) {
+            $filters = array($filters);
+        }
+
+        if (!isset($options['output'])) {
+            $options['output'] = $this->defaultOutput;
+        }
+
+        if (!isset($options['name'])) {
+            $options['name'] = $this->generateAssetName($inputs, $filters);
+        }
+
+        if (!isset($options['debug'])) {
+            $options['debug'] = $this->debug;
         }
 
         $asset = $this->createAssetCollection();
 
         // inner assets
-        foreach ($sourceUrls as $sourceUrl) {
-            if ('@' == $sourceUrl[0]) {
-                $asset->add($this->createAssetReference(substr($sourceUrl, 1)));
-                continue;
-            }
-
-            if (false !== strpos($sourceUrl, '://')) {
-                $asset->add($this->createFileAsset($sourceUrl, $sourceUrl));
-                continue;
-            }
-
-            $baseDir = '/' == $sourceUrl[0] ? '' : $this->baseDir;
-            if (false !== strpos($sourceUrl, '*')) {
-                $asset->add($this->createGlobAsset($baseDir . $sourceUrl, $this->baseDir));
-            } else {
-                $asset->add($this->createFileAsset($baseDir . $sourceUrl, $sourceUrl));
-            }
+        foreach ($inputs as $input) {
+            $asset->add($this->parseInput($input));
         }
 
         // filters
-        foreach ($filterNames as $filterName) {
-            if ('?' != $filterName[0]) {
-                $asset->ensureFilter($this->getFilter($filterName));
-            } elseif (!$debug) {
-                $asset->ensureFilter($this->getFilter(substr($filterName, 1)));
+        foreach ($filters as $filter) {
+            if ('?' != $filter[0]) {
+                $asset->ensureFilter($this->getFilter($filter));
+            } elseif (!$options['debug']) {
+                $asset->ensureFilter($this->getFilter(substr($filter, 1)));
             }
         }
 
-        // target url
-        if (false !== strpos($targetUrl, '*')) {
-            // pattern
-            $asset->setTargetUrl(str_replace('*', $assetName ?: $this->generateAssetName($sourceUrls, $filterNames), $targetUrl));
-        } elseif (ctype_alpha($targetUrl)) {
-            // extension
-            $asset->setTargetUrl(sprintf('%s/%s.%1$s', $targetUrl, $assetName ?: $this->generateAssetName($sourceUrls, $filterNames)));
-        } elseif ($targetUrl) {
-            // simple
-            $asset->setTargetUrl($targetUrl);
-        } elseif (!$asset->getTargetUrl()) {
-            // generate
-            $asset->setTargetUrl('assets/'.$assetName ?: $this->generateAssetName($sourceUrls, $filterNames));
-        }
+        // output --> target url
+        $asset->setTargetUrl(str_replace('*', $options['name'], $options['output']));
 
         foreach ($this->workers as $worker) {
             $worker->process($asset);
@@ -173,9 +164,44 @@ class AssetFactory
         return $asset;
     }
 
-    public function generateAssetName($sourceUrls, $filterNames)
+    public function generateAssetName($inputs, $filters)
     {
-        return substr(sha1(serialize(array_merge($sourceUrls, $filterNames))), 0, 7);
+        return substr(sha1(serialize(array_merge($inputs, $filters))), 0, 7);
+    }
+
+    /**
+     * Parses an input string string into an asset.
+     *
+     * The input string can be one of the following:
+     *
+     *  * A reference:     If the string starts with an "at" sign it will be interpreted as a reference to an asset in the asset manager
+     *  * An absolute URL: If the string contains "://" it will be interpreted as a remote asset
+     *  * A glob:          If the string contains a "*" it will be interpreted as a glob
+     *  * A path:          Otherwise the string is interpreted as a path
+     *
+     * Both globs and paths will be absolutized using the current base directory.
+     *
+     * @param string $input An input string
+     *
+     * @return AssetInterface An asset
+     */
+    protected function parseInput($input)
+    {
+        if ('@' == $input[0]) {
+            return $this->createAssetReference(substr($input, 1));
+        }
+
+        if (false !== strpos($input, '://')) {
+            return $this->createFileAsset($input, $input);
+        }
+
+        $baseDir = self::isAbsolutePath($input) ? '' : $this->baseDir;
+
+        if (false !== strpos($input, '*')) {
+            return $this->createGlobAsset($baseDir . $input, $this->baseDir);
+        } else {
+            return $this->createFileAsset($baseDir . $input, $input);
+        }
     }
 
     protected function createAssetCollection()
@@ -194,12 +220,12 @@ class AssetFactory
 
     protected function createGlobAsset($glob, $baseDir = null)
     {
-        return new GlobAsset($glob, $baseDir);
+        return new GlobAsset($glob, array(), $baseDir);
     }
 
     protected function createFileAsset($path, $sourceUrl = null)
     {
-        return new FileAsset($path, $sourceUrl);
+        return new FileAsset($path, array(), $sourceUrl);
     }
 
     protected function getFilter($name)
@@ -209,5 +235,10 @@ class AssetFactory
         }
 
         return $this->fm->get($name);
+    }
+
+    static private function isAbsolutePath($path)
+    {
+        return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
 }

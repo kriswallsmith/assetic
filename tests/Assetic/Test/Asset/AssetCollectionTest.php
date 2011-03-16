@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,9 +23,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $coll, 'AssetCollection implements AssetInterface');
     }
 
-    /**
-     * @group functional
-     */
     public function testLoadFilter()
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
@@ -35,9 +32,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll->load();
     }
 
-    /**
-     * @group functional
-     */
     public function testDumpFilter()
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
@@ -47,9 +41,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll->dump();
     }
 
-    /**
-     * @group functional
-     */
     public function testNestedCollectionLoad()
     {
         $content = 'foobar';
@@ -72,9 +63,6 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $count, '->load() applies filters to leaves only');
     }
 
-    /**
-     * @group functional
-     */
     public function testMixedIteration()
     {
         $asset = new StringAsset('asset');
@@ -93,28 +81,46 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('asset', 'nested'), $contents, '->load() iterates over multiple levels');
     }
 
-    /**
-     * @group functional
-     */
-    public function testLoadDuplicates()
+    public function testLoadDedupBySourceUrl()
     {
-        $asset = new StringAsset('asset', 'foo.bar');
-        $coll = new AssetCollection(array($asset, $asset));
+        $asset1 = new StringAsset('asset', array(), 'foo.bar');
+        $asset2 = new StringAsset('asset', array(), 'foo.bar');
+
+        $coll = new AssetCollection(array($asset1, $asset2));
         $coll->load();
 
-        $this->assertEquals('asset', $coll->getContent(), '->load() detects duplicate assets');
+        $this->assertEquals('asset', $coll->getContent(), '->load() detects duplicate assets based on source URL');
     }
 
-    /**
-     * @group functional
-     */
-    public function testDumpDuplicates()
+    public function testLoadDedupByStrictEquality()
     {
-        $asset = new StringAsset('asset', 'foo.bar');
+        $asset = new StringAsset('foo');
+
         $coll = new AssetCollection(array($asset, $asset));
         $coll->load();
 
-        $this->assertEquals('asset', $coll->dump(), '->dump() detects duplicate assets');
+        $this->assertEquals('foo', $coll->getContent(), '->load() detects duplicate assets based on strict equality');
+    }
+
+    public function testDumpDedupBySourceUrl()
+    {
+        $asset1 = new StringAsset('asset', array(), 'foo.bar');
+        $asset2 = new StringAsset('asset', array(), 'foo.bar');
+
+        $coll = new AssetCollection(array($asset1, $asset2));
+        $coll->load();
+
+        $this->assertEquals('asset', $coll->dump(), '->dump() detects duplicate assets based on source URL');
+    }
+
+    public function testDumpDedupByStrictEquality()
+    {
+        $asset = new StringAsset('foo');
+
+        $coll = new AssetCollection(array($asset, $asset));
+        $coll->load();
+
+        $this->assertEquals('foo', $coll->dump(), '->dump() detects duplicate assets based on strict equality');
     }
 
     public function testIterationFilters()
@@ -171,6 +177,25 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testRecursiveIteration()
     {
+        $asset1 = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset2 = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset3 = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset4 = $this->getMock('Assetic\\Asset\\AssetInterface');
+
+        $coll3 = new AssetCollection(array($asset1, $asset2));
+        $coll2 = new AssetCollection(array($asset3, $coll3));
+        $coll1 = new AssetCollection(array($asset4, $coll2));
+
+        $i = 0;
+        foreach ($coll1 as $a) {
+            $i++;
+        }
+
+        $this->assertEquals(4, $i, 'iteration with a recursive iterator is recursive');
+    }
+
+    public function testRecursiveDeduplication()
+    {
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
 
         $coll3 = new AssetCollection(array($asset, $asset));
@@ -182,14 +207,14 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
             $i++;
         }
 
-        $this->assertEquals(4, $i, 'iteration with a recursive iterator is recursive');
+        $this->assertEquals(1, $i, 'deduplication is performed recursively');
     }
 
     public function testIteration()
     {
-        $asset1 = new StringAsset('asset1', 'foo.css');
-        $asset2 = new StringAsset('asset2', 'foo.css');
-        $asset3 = new StringAsset('asset3', 'bar.css');
+        $asset1 = new StringAsset('asset1', array(), 'foo.css');
+        $asset2 = new StringAsset('asset2', array(), 'foo.css');
+        $asset3 = new StringAsset('asset3', array(), 'bar.css');
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
 

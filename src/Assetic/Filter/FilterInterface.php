@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,8 +24,6 @@ interface FilterInterface
      * Filters an asset after it has been loaded.
      *
      * @param AssetInterface $asset An asset
-     *
-     * @return string|null The filter asset content, or null for no effect
      */
     function filterLoad(AssetInterface $asset);
 
@@ -33,8 +31,6 @@ interface FilterInterface
      * Filters an asset just before it's dumped.
      *
      * @param AssetInterface $asset An asset
-     *
-     * @return string|null The filter asset content, or null for no effect
      */
     function filterDump(AssetInterface $asset);
 }

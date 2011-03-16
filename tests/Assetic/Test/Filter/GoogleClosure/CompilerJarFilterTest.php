@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,12 +17,12 @@ use Assetic\Filter\GoogleClosure\CompilerJarFilter;
 class CompilerJarFilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @group functional
+     * @group integration
      */
     public function testCompile()
     {
-        if (!isset($_SERVER['GOOGLE_CLOSURE_COMPILER_PATH'])) {
-            $this->markTestSkipped('There is no GOOGLE_CLOSURE_COMPILER_PATH environment variable.');
+        if (!isset($_SERVER['CLOSURE_JAR'])) {
+            $this->markTestSkipped('There is no CLOSURE_JAR environment variable.');
         }
 
         $input = <<<EOF
@@ -44,7 +44,7 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new CompilerJarFilter($_SERVER['GOOGLE_CLOSURE_COMPILER_PATH']);
+        $filter = new CompilerJarFilter($_SERVER['CLOSURE_JAR']);
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
