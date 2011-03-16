@@ -18,7 +18,9 @@ use Assetic\Asset\AssetInterface;
  * See http://leafo.net/lessphp/
  * Less files are mostly compatible, but there are slight differences.
  *
- * To use this, you need to clone https://github.com/leafo/lessphp
+ * To use this, you need to clone https://github.com/leafo/lessphp and make
+ * sure to either include lessphp.inc.php or have your autoload handle
+ * new \lessc properly
  *
  * @author David Buchmann <david@liip.ch>
  */
@@ -30,12 +32,10 @@ class LessphpFilter implements FilterInterface
      * Constructor.
      *
      * @param string $baseDir   The base web directory
-     * @param string $lessc_inc The path to the lessc.inc.php file containing the less compiler (no autoload as its not namespaced)
      * @param array  $nodePaths An array of node paths
      */
-    public function __construct($baseDir, $lessc_inc)
+    public function __construct($baseDir)
     {
-        require_once($lessc_inc);
         $this->baseDir = $baseDir;
     }
 
@@ -53,7 +53,7 @@ class LessphpFilter implements FilterInterface
 
         $lc = new \lessc($sourceUrl);
 
-        $asset->setContent($lc->parse());
+        $asset->setContent($lc->parse($asset->getContent()));
     }
 
     public function filterDump(AssetInterface $asset)
