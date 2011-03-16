@@ -26,6 +26,9 @@ spl_autoload_register(function($class)
     }
 });
 
-//try to fetch lessphp
-@include_once(__DIR__.'/../../lessphp/lessc.inc.php');
+if (isset($_SERVER['LESSPHP']))
+{
+    //try to fetch lessphp
+    require_once($_SERVER['LESSPHP']);
+}
 

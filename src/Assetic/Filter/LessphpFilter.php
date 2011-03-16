@@ -53,6 +53,7 @@ class LessphpFilter implements FilterInterface
 
         $lc = new \lessc($sourceUrl);
 
+        //the way lessc::parse is implemented, the content wins if both url and content are defined
         $asset->setContent($lc->parse($asset->getContent()));
     }
 
