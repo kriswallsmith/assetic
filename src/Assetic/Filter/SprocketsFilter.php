@@ -54,19 +54,19 @@ class SprocketsFilter implements FilterInterface
 
 require File.join(%s, 'sprockets')
 
-module Sprocksetic
-  class Secretary < Sprockets::Secretary
+module Sprockets
+  class Secretary
     def reset!(options = @options)
       @options = DEFAULT_OPTIONS.merge(options)
       @environment  = Sprockets::Environment.new(@options[:root])
-      @preprocessor = Sprocksetic::Preprocessor.new(@environment, :strip_comments => @options[:strip_comments])
+      @preprocessor = Sprockets::Preprocessor.new(@environment, :strip_comments => @options[:strip_comments])
 
       add_load_locations(@options[:load_path])
       add_source_files(@options[:source_files])
     end
   end
 
-  class Preprocessor < Sprockets::Preprocessor
+  class Preprocessor
     protected
 
     def pathname_for_relative_require_from(source_line)
@@ -79,7 +79,7 @@ options = { :load_path    => [],
             :source_files => [%s],
             :expand_paths => false }
 
-%ssecretary = Sprocksetic::Secretary.new(options)
+%ssecretary = Sprockets::Secretary.new(options)
 secretary.install_assets if options[:asset_root]
 print secretary.concatenation
 
