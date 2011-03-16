@@ -45,7 +45,8 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
- * `LessFilter`: parses LESS into CSS
+ * `LessFilter`: parses LESS into CSS (using less.js with node.js)
+ * `LessphpFilter`: parses LESS into CSS (using lessphp)
  * `StylusFilter`: parses STYL into CSS
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
@@ -126,12 +127,12 @@ environment:
 
     $twig->addExtension(new AsseticExtension($factory, $debug));
 
-Once in place, the extension exposes an `assetic` tag with a syntax similar
+Once in place, the extension exposes a stylesheets and a javascripts tag with a syntax similar
 to what the asset factory uses:
 
-    {% assets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
+    {% stylesheets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
-    {% endassets %}
+    {% endstylesheets %}
 
 This example will render one `link` element on the page that includes a URL
 where the filtered asset can be found.
@@ -143,7 +144,7 @@ using the `?` prefix.
 
 This behavior can also be triggered by setting a `debug` attribute on the tag:
 
-    {% assets 'css/*' debug=true %} ... {% endassets %}
+    {% stylesheets 'css/*' debug=true %} ... {% stylesheets %}
 
 These assets need to be written to the web directory so these URLs don't
 return 404 errors.
