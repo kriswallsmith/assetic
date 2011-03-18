@@ -23,49 +23,12 @@ use Assetic\Filter\Sass\SassFilter;
  */
 class CompassFilter implements FilterInterface
 {
-    /*
-    $ compass compile -h
-    Options:
-        --time                       Display compilation times.
-    -r, --require LIBRARY            Require the given ruby LIBRARY before running commands.
-                                       This is used to access compass plugins without having a
-                                       project configuration file.
-    -l, --load FRAMEWORK_DIR         Load the framework or extensions found in the FRAMEWORK directory.
-    -L, --load-all FRAMEWORKS_DIR    Load all the frameworks or extensions found in the FRAMEWORKS_DIR directory.
-    -q, --quiet                      Quiet mode.
-        --trace                      Show a full stacktrace on error
-        --force                      Allows some failing commands to succeed instead.
-        --dry-run                    Dry Run. Tells you what it plans to do.
-        --boring                     Turn off colorized output.
-    -c, --config CONFIG_FILE         Specify the location of the configuration file explicitly.
-        --app APP                    Tell compass what kind of application it is integrating with. E.g. rails
-        --sass-dir SRC_DIR           The source directory where you keep your sass stylesheets.
-        --css-dir CSS_DIR            The target directory where you keep your css stylesheets.
-        --images-dir IMAGES_DIR      The directory where you keep your images.
-        --javascripts-dir JS_DIR     The directory where you keep your javascripts.
-    -e, --environment ENV            Use sensible defaults for your current environment.
-                                       One of: development, production (default)
-    -s, --output-style STYLE         Select a CSS output mode.
-                                       One of: nested, expanded, compact, compressed
-        --relative-assets            Make compass asset helpers generate relative urls to assets.
-        --no-line-comments           Disable line comments.
-    */
-    // dont need : quiet, trace, boring
     private $compassPath;
-    private $time;
-    private $require;
     private $loadPath;
     private $loadAllPath;
-    private $force;
-    private $dryRun;
-    private $configFile;
     private $sassDir;
     private $imagesDir;
-    private $javascriptsDir;
-    private $environment;
     private $outputStyle = SassFilter::STYLE_EXPANDED;
-    private $relativeAsset;
-    private $noLineComments;
 
     public function __construct($compassPath = '/usr/bin/compass')
     {
@@ -78,14 +41,6 @@ class CompassFilter implements FilterInterface
     public function setCompassPath ($compassPath)
     {
         $this->compassPath = $compassPath;
-    }
-
-    /**
-     * @param boolean $time
-     */
-    public function setTime ($time)
-    {
-        $this->time = $time;
     }
 
     /**
@@ -113,30 +68,6 @@ class CompassFilter implements FilterInterface
     }
 
     /**
-     * @param boolean $force
-     */
-    public function setForce ($force)
-    {
-        $this->force = $force;
-    }
-
-    /**
-     * @param boolean $dryRun
-     */
-    public function setDryRun ($dryRun)
-    {
-        $this->dryRun = $dryRun;
-    }
-
-    /**
-     * @param string $configFile
-     */
-    public function setConfigFile ($configFile)
-    {
-        $this->configFile = $configFile;
-    }
-
-    /**
      * @param string $sassDir
      */
     public function setSassDir ($sassDir)
@@ -153,56 +84,15 @@ class CompassFilter implements FilterInterface
     }
 
     /**
-     * @param string $javascriptDir
-     */
-    public function setJavascriptDir ($javascriptDir)
-    {
-        $this->javascriptDir = $javascriptDir;
-    }
-
-    /**
-     * @param string $environment
-     */
-    public function setEnvironment ($environment)
-    {
-        $this->environment = $environment;
-    }
-
-    /**
-     * @param string $outputStyle
-     */
-    public function setOutputStyle ($outputStyle)
-    {
-        $this->outputStyle = $outputStyle;
-    }
-
-    /**
-     * @param boolean $relativeAsset
-     */
-    public function setRelativeAsset ($relativeAsset)
-    {
-        $this->relativeAsset = $relativeAsset;
-    }
-
-    /**
-     * @param boolean $noLineComments
-     */
-    public function setNoLineComments ($noLineComments)
-    {
-        $this->noLineComments = $noLineComments;
-    }
-
-    /**
      * Filters an asset after it has been loaded.
      */
     public function filterLoad(AssetInterface $asset)
     {
-        $options = array($this->compassPath, 'compile'); // we only compile with this tool
-
-        if ($this->require) {
-            $options[] = '--require';
-            $options[] = $this->require;
-        }
+        $options = array(
+            $this->compassPath, 'compile', // we only compile with this tool
+            '--quiet',
+            '--boring'
+        );
 
         if ($this->loadPath) {
             $options[] = '--load';
@@ -214,45 +104,14 @@ class CompassFilter implements FilterInterface
             $options[] = $this->loadAllPath;
         }
 
-        if ($this->force) {
-            $options[] = '--force';
-        }
-
-        if ($this->dryRun) {
-            $options[] = '--dry-run';
-        }
-
-        if ($this->configFile) {
-            $options[] = '--config';
-            $options[] = $this->configFile;
-        }
-
         if ($this->imagesDir) {
             $options[] = '--images-dir';
             $options[] = $this->imagesDir;
         }
 
-        if ($this->javascriptsDir) {
-            $options[] = '--javascripts-dir';
-            $options[] = $this->javascriptsDir;
-        }
-
-        if ($this->environment) {
-            $options[] = '--environment';
-            $options[] = $this->environment;
-        }
-
         if ($this->outputStyle) {
             $options[] = '--output-style';
             $options[] = $this->outputStyle;
-        }
-
-        if ($this->relativeAsset) {
-            $options[] = '--relative-asset';
-        }
-
-        if ($this->noLineComments) {
-            $options[] = '--no-line-comments';
         }
 
         /*
@@ -327,7 +186,7 @@ class CompassFilter implements FilterInterface
         $options[] = $input;
 
         $cmd = implode(' ', array_map('escapeshellarg', $options));
-        // todo: check for a valid return code
+        // @todo: check for a valid return code ?
         $commandOutput = shell_exec($cmd);
 
         //if(!is_readable($output)) {
