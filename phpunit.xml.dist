@@ -8,6 +8,19 @@
     </testsuites>
 
     <php>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        <!-- <server name="TWIG_PATH" value="/path/to/twig/lib" /> -->
+        <!-- <server name="YUI_COMPRESSOR_PATH" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+        <!-- <server name="GOOGLE_CLOSURE_COMPILER_PATH" value="/path/to/google-closure/compiler.jar" /> -->
+        <!-- <server name="LESSC_PATH" value="/path/to/lessc" /> -->
+        <!-- <server name="SASS_PATH" value="/path/to/sass" /> -->
+        <!-- <server name="COMPASS_PATH" value="/path/to/compass" /> -->
+        <!-- <server name="SPROCKETIZE_PATH" value="/path/to/sprocketize" /> -->
+        <!-- <server name="COFFEE_PATH" value="/path/to/coffee" /> -->
+=======
+>>>>>>> 5c2288da89b861f273b67c868e72b07eb1a83243
         <!-- <server name="CLOSURE_JAR" value="/path/to/google-closure/compiler.jar" /> -->
         <!-- <server name="COFFEE_BIN" value="/path/to/coffee" /> -->
         <!-- <server name="NODE_BIN" value="/path/to/node" /> -->
@@ -19,6 +32,10 @@
         <!-- <server name="TWIG_LIB" value="/path/to/twig/lib" /> -->
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
         <!-- <server name="OPTIPNG_BIN" value="/path/to/optipng" /> -->
+<<<<<<< HEAD
+=======
+>>>>>>> 545f541ff724e4f26c1034125b52bd855bc8fa09
+>>>>>>> 5c2288da89b861f273b67c868e72b07eb1a83243
     </php>
 
     <filter>
