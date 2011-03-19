@@ -47,7 +47,7 @@ class CompassFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new CompassFilter();
         $filter->addLoadPath(dirname($filePath));
 
-        // there is just a trick for selecting sass or scss (sass does not select the write syntax automatically)
+        // there is just a trick for selecting sass or scss (sass does not select the right syntax automatically)
         if (preg_match('#\.scss$#', $filePath))
         {
             $filter->setScss(true);

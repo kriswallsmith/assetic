@@ -108,6 +108,8 @@ class SassFilter implements FilterInterface
         }
 
         if ($this->compass) {
+            // @todo add a legacy way to be compatible with old sass
+            // using "-r compass `compass imports`" option ?
             $options[] = '--compass';
         }
 
