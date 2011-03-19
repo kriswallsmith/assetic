@@ -12,7 +12,6 @@
         <!-- <server name="COFFEE_BIN" value="/path/to/coffee" /> -->
         <!-- <server name="NODE_BIN" value="/path/to/node" /> -->
         <!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
-        <!-- <server name="COMPASS_PATH" value="/path/to/compass" /> -->
         <!-- <server name="SASS_BIN" value="/path/to/sass" /> -->
         <!-- <server name="RUBY_BIN" value="/path/to/ruby" /> -->
         <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
