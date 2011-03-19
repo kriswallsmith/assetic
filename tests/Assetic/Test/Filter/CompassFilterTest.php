@@ -21,35 +21,38 @@ use Assetic\Filter\CompassFilter;
  */
 class CompassFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFilterLoad()
+    public function testFilterLoadWithScss()
     {
-        if (!isset($_SERVER['COMPASS_PATH'])) {
-            $this->markTestSkipped('There is no COMPASS_PATH environment variable.');
+        if (!isset($_SERVER['SASS_BIN'])) {
+            $this->markTestSkipped('There is no SASS_BIN environment variable.');
+        }
+
+        $this->_testAsset(__DIR__ . '/fixtures/compass/stylesheet.scss');
+    }
+
+    public function testFilterLoadWithSass()
+    {
+        if (!isset($_SERVER['SASS_BIN'])) {
+            $this->markTestSkipped('There is no SASS_BIN environment variable.');
         }
         
-        $asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.scss');
-        
-        $this->_testAsset($asset);
+        $this->_testAsset(__DIR__ . '/fixtures/compass/stylesheet.sass');
     }
     
-    public function testFilterLoadWithLongPath()
+    private function _testAsset($filePath)
     {
-        if (!isset($_SERVER['COMPASS_PATH'])) {
-            $this->markTestSkipped('There is no COMPASS_PATH environment variable.');
-        }
-        
-        $pathLongerThanSysTempDir = 'very-long-path--long-enough-to-be-longer-than-a-normal-temporary-temp-dir-in-any--filesystem--i-think-it-is-okay--one-more-time-now-that-is-ok';
-        
-        $asset = new FileAsset(__DIR__.'/fixtures/compass/' . $pathLongerThanSysTempDir . '/stylesheet.scss');
-        
-        $this->_testAsset($asset);
-    }
-    
-    private function _testAsset($asset)
-    {
+        $asset = new FileAsset($filePath);
         $asset->load();
 
         $filter = new CompassFilter();
+        $filter->addLoadPath(dirname($filePath));
+
+        // there is just a trick for selecting sass or scss (sass does not select the write syntax automatically)
+        if (preg_match('#\.scss$#', $filePath))
+        {
+            $filter->setScss(true);
+        }
+
         $filter->filterLoad($asset);
 
         $this->assertContains('.test-class', $asset->getContent());
