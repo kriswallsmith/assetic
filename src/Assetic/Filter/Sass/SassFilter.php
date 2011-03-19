@@ -30,6 +30,7 @@ class SassFilter implements FilterInterface
     private $sassPath;
     private $unixNewlines;
     private $scss;
+    private $compass;
     private $style;
     private $quiet;
     private $debugInfo;
@@ -52,6 +53,11 @@ class SassFilter implements FilterInterface
     public function setScss($scss)
     {
         $this->scss = $scss;
+    }
+
+    public function setCompass($compass)
+    {
+        $this->compass = $compass;
     }
 
     public function setStyle($style)
@@ -99,6 +105,10 @@ class SassFilter implements FilterInterface
 
         if ($this->scss) {
             $options[] = '--scss';
+        }
+
+        if ($this->compass) {
+            $options[] = '--compass';
         }
 
         if ($this->style) {
