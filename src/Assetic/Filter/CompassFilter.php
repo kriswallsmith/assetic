@@ -28,7 +28,7 @@ class CompassFilter extends SassFilter
         parent::__construct($sassPath);
 
         // Compass does not allow us to add import path in command line
-        // but we can this with sass, with the new option --compass
+        // but we can do this with sass, with the new option --compass
         // @see http://groups.google.com/group/compass-users/browse_thread/thread/a476dfcd2b47653e
         $this->setCompass(true);
     }
