@@ -25,3 +25,10 @@ spl_autoload_register(function($class)
         }
     }
 });
+
+if (isset($_SERVER['LESSPHP']))
+{
+    //try to fetch lessphp
+    require_once($_SERVER['LESSPHP']);
+}
+
