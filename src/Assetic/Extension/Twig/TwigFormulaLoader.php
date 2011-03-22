@@ -30,8 +30,12 @@ class TwigFormulaLoader implements FormulaLoaderInterface
 
     public function load(ResourceInterface $resource)
     {
-        $tokens = $this->twig->tokenize($resource->getContent());
-        $nodes  = $this->twig->parse($tokens);
+        try {
+            $tokens = $this->twig->tokenize($resource->getContent());
+            $nodes  = $this->twig->parse($tokens);
+        } catch (\Exception $e) {
+            return array();
+        }
 
         return $this->loadNode($nodes);
     }
