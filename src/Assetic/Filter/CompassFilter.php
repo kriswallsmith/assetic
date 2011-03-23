@@ -23,9 +23,9 @@ use Assetic\Filter\Sass\SassFilter;
  */
 class CompassFilter extends SassFilter
 {
-    public function __construct($sassPath = '/usr/bin/sass')
+    public function __construct($compassPath = '/usr/bin/compass', $sassPath = '/usr/bin/sass')
     {
-        parent::__construct($sassPath);
+        parent::__construct($sassPath, $compassPath);
 
         // Compass does not allow us to add import path in command line
         // but we can do this with sass, with the new option --compass

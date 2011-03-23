@@ -28,6 +28,7 @@ class SassFilter implements FilterInterface
     const STYLE_COMPRESSED = 'compressed';
 
     private $sassPath;
+    private $compassPath;
     private $unixNewlines;
     private $scss;
     private $compass;
@@ -39,9 +40,10 @@ class SassFilter implements FilterInterface
     private $cacheLocation;
     private $noCache;
 
-    public function __construct($sassPath = '/usr/bin/sass')
+    public function __construct($sassPath = '/usr/bin/sass', $compassPath = null)
     {
         $this->sassPath = $sassPath;
+        $this->compassPath = $compassPath;
         $this->cacheLocation = sys_get_temp_dir();
     }
 
@@ -108,9 +110,25 @@ class SassFilter implements FilterInterface
         }
 
         if ($this->compass) {
-            // @todo add a legacy way to be compatible with old sass
-            // using "-r compass `compass imports`" option ?
-            $options[] = '--compass';
+            //$options[] = '--compass'; // for sass > 3
+
+            // basically, we just need to run sass with options '-r compass `compass imports`'
+            // but because we use escapeshellarg, we have to preprocess the 'compass imports',
+            // and explode as options, because it create options for sass
+            $options[] = '-r';
+            $options[] = 'compass';
+
+            // we generate the appropriate -I paths to allow sass to parse files using compass
+            // see "compass help imports"
+            $proc = new Process($this->compassPath . ' imports');
+            $code = $proc->run();
+
+            if (0 < $code) {
+                throw new \RuntimeException($proc->getErrorOutput());
+            }
+
+            // here is the trick because the ouput given by 'compass imports' is like "-I /path -I /path2"
+            $options = array_merge($options, explode(' ', $proc->getOutput()));
         }
 
         if ($this->style) {

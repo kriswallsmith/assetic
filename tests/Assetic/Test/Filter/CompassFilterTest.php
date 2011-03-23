@@ -21,21 +21,20 @@ use Assetic\Filter\CompassFilter;
  */
 class CompassFilterTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        if (!isset($_SERVER['COMPASS_BIN']) or !isset($_SERVER['SASS_BIN'])) {
+            $this->markTestSkipped('There is no COMPASS_BIN or SASS_BIN environment variable.');
+        }
+    }
+
     public function testFilterLoadWithScss()
     {
-        if (!isset($_SERVER['SASS_BIN'])) {
-            $this->markTestSkipped('There is no SASS_BIN environment variable.');
-        }
-
         $this->_testAsset(__DIR__ . '/fixtures/compass/stylesheet.scss');
     }
 
     public function testFilterLoadWithSass()
     {
-        if (!isset($_SERVER['SASS_BIN'])) {
-            $this->markTestSkipped('There is no SASS_BIN environment variable.');
-        }
-        
         $this->_testAsset(__DIR__ . '/fixtures/compass/stylesheet.sass');
     }
     
