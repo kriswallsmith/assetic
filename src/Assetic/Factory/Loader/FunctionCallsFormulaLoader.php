@@ -21,7 +21,6 @@ class FunctionCallsFormulaLoader extends BasePhpFormulaLoader
     protected function registerPrototypes()
     {
         return array(
-            'assetic_assets(*)'      => array(),
             'assetic_javascripts(*)' => array('output' => 'js/*.js'),
             'assetic_stylesheets(*)' => array('output' => 'css/*.css'),
         );
@@ -30,12 +29,6 @@ class FunctionCallsFormulaLoader extends BasePhpFormulaLoader
     protected function registerSetupCode()
     {
         return <<<'EOF'
-function assetic_assets()
-{
-    global $_call;
-    $_call = func_get_args();
-}
-
 function assetic_javascripts()
 {
     global $_call;

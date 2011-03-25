@@ -27,16 +27,12 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
         $resource->expects($this->once())
             ->method('getContent')
-            ->will($this->returnValue('<?php assetic_assets('.$inputs.') ?>'));
+            ->will($this->returnValue('<?php assetic_javascripts('.$inputs.') ?>'));
         $factory->expects($this->once())
             ->method('generateAssetName')
             ->will($this->returnValue($name));
 
-        $loader = new FunctionCallsFormulaLoader($factory, array(
-            'assetic_assets(*)'      => array(),
-            'assetic_javascripts(*)' => array('output' => 'js/*.js'),
-            'assetic_stylesheets(*)' => array('output' => 'css/*.css'),
-        ));
+        $loader = new FunctionCallsFormulaLoader($factory);
         $formulae = $loader->load($resource);
 
         $this->assertEquals($expected, $formulae);
