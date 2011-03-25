@@ -23,7 +23,7 @@ use Assetic\Filter\Sass\SassFilter;
  */
 class CompassFilter extends SassFilter
 {
-    public function __construct($compassPath = '/usr/bin/compass', $sassPath = '/usr/bin/sass')
+    public function __construct($sassPath = '/usr/bin/sass', $compassPath = '/usr/bin/compass')
     {
         parent::__construct($sassPath, $compassPath);
 
