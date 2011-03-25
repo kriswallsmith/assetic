@@ -42,21 +42,21 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $xml = $this->renderXml('reference.twig');
         $this->assertEquals(1, count($xml->asset));
-        $this->assertStringStartsWith('assets/', (string) $xml->asset['url']);
+        $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
     }
 
     public function testGlob()
     {
         $xml = $this->renderXml('glob.twig');
         $this->assertEquals(1, count($xml->asset));
-        $this->assertStringStartsWith('assets/', (string) $xml->asset['url']);
+        $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
     }
 
     public function testAbsolutePath()
     {
         $xml = $this->renderXml('absolute_path.twig');
         $this->assertEquals(1, count($xml->asset));
-        $this->assertStringStartsWith('assets/', (string) $xml->asset['url']);
+        $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
     }
 
     public function testFilters()
@@ -74,7 +74,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
         $xml = $this->renderXml('filters.twig');
         $this->assertEquals(1, count($xml->asset));
-        $this->assertStringStartsWith('assets/', (string) $xml->asset['url']);
+        $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
     }
 
     public function testOptionalFilter()
@@ -88,7 +88,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
         $xml = $this->renderXml('optional_filter.twig');
         $this->assertEquals(1, count($xml->asset));
-        $this->assertStringStartsWith('assets/', (string) $xml->asset['url']);
+        $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
     }
 
     public function testOutputPattern()
@@ -126,6 +126,13 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($xml->asset));
         $this->assertStringStartsWith('css/packed_', (string) $xml->asset[0]['url']);
         $this->assertStringEndsWith('.css', (string) $xml->asset[0]['url']);
+    }
+
+    public function testImage()
+    {
+        $xml = $this->renderXml('image.twig');
+        $this->assertEquals(1, count($xml->image));
+        $this->assertStringEndsWith('.png', (string) $xml->image[0]['url']);
     }
 
     private function renderXml($name, $context = array())

@@ -17,23 +17,19 @@ class AsseticExtension extends \Twig_Extension
 {
     protected $factory;
     protected $debug;
-    protected $defaultJavascriptsOutput;
-    protected $defaultStylesheetsOutput;
 
-    public function __construct(AssetFactory $factory, $debug = false, $defaultJavascriptsOutput = 'js/*.js', $defaultStylesheetsOutput = 'css/*.css')
+    public function __construct(AssetFactory $factory, $debug = false)
     {
         $this->factory = $factory;
         $this->debug = $debug;
-        $this->defaultJavascriptsOutput = $defaultJavascriptsOutput;
-        $this->defaultStylesheetsOutput = $defaultStylesheetsOutput;
     }
 
     public function getTokenParsers()
     {
         return array(
-            new AsseticTokenParser($this->factory, $this->debug),
-            new AsseticTokenParser($this->factory, $this->debug, $this->defaultJavascriptsOutput, 'javascripts'),
-            new AsseticTokenParser($this->factory, $this->debug, $this->defaultStylesheetsOutput, 'stylesheets'),
+            new AsseticTokenParser($this->factory, 'javascripts', 'js/*.js', $this->debug),
+            new AsseticTokenParser($this->factory, 'stylesheets', 'css/*.css', $this->debug),
+            new AsseticTokenParser($this->factory, 'image', 'images/*', $this->debug, true),
         );
     }
 

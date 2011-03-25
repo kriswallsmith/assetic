@@ -16,30 +16,33 @@ use Assetic\Factory\AssetFactory;
 class AsseticTokenParser extends \Twig_TokenParser
 {
     private $factory;
-    private $debug;
-    private $defaultOutput;
     private $tag;
+    private $output;
+    private $debug;
+    private $single;
 
     /**
      * Constructor.
      *
-     * @param AssetFactory $factory       The asset factory
-     * @param Boolean      $debug         The debug mode
-     * @param string       $defaultOutput The default output string
-     * @param string       $tag           The tag name
+     * @param AssetFactory $factory The asset factory
+     * @param string       $tag     The tag name
+     * @param string       $output  The default output string
+     * @param Boolean      $debug   The debug mode
+     * @param Boolean      $single  Whether to force a single asset
      */
-    public function __construct(AssetFactory $factory, $debug = false, $defaultOutput = null, $tag = 'assets')
+    public function __construct(AssetFactory $factory, $tag, $output = 'assetic/*', $debug = false, $single = false)
     {
         $this->factory = $factory;
-        $this->debug = $debug;
-        $this->defaultOutput = $defaultOutput;
-        $this->tag = $tag;
+        $this->tag     = $tag;
+        $this->output  = $output;
+        $this->debug   = $debug;
+        $this->single  = $single;
     }
 
     public function parse(\Twig_Token $token)
     {
         $inputs  = array();
-        $output  = $this->defaultOutput;
+        $output  = $this->output;
         $filters = array();
         $name    = null;
         $debug   = $this->debug;
@@ -55,7 +58,7 @@ class AsseticTokenParser extends \Twig_TokenParser
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $filters = array_merge($filters, array_filter(array_map('trim', explode(',', $stream->expect(\Twig_Token::STRING_TYPE)->getValue()))));
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'output')) {
-                // output='js' OR output='js/packed/*.js' OR output='js/core.js'
+                // output='js/packed/*.js' OR output='js/core.js'
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $output = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
@@ -82,6 +85,10 @@ class AsseticTokenParser extends \Twig_TokenParser
         $body = $this->parser->subparse($test, true);
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+
+        if ($this->single && 1 < count($inputs)) {
+            $inputs = array_slice($inputs, -1);
+        }
 
         if (null === $name) {
             $name = $this->factory->generateAssetName($inputs, $filters);
