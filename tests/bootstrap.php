@@ -12,7 +12,7 @@
 spl_autoload_register(function($class)
 {
     if (0 === strpos($class, 'Assetic\\Test\\')) {
-        $file = __DIR__ . '/../test/' . str_replace('\\', '/', $class) . '.php';
+        $file = __DIR__ . '/../tests/' . str_replace('\\', '/', $class) . '.php';
         if (file_exists($file)) {
             require_once $file;
             return true;
