@@ -52,6 +52,10 @@ class OptiPngFilter implements FilterInterface
             $options[] = $this->level;
         }
 
+        $options[] = '-out';
+        $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_optipng');
+        unlink($output);
+
         $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_optipng');
         file_put_contents($input, $asset->getContent());
 
@@ -59,11 +63,13 @@ class OptiPngFilter implements FilterInterface
         $code = $proc->run();
 
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            unlink($input);
+            throw new \RuntimeException($proc->getOutput());
         }
 
-        $asset->setContent(file_get_contents($input));
+        $asset->setContent(file_get_contents($output));
 
         unlink($input);
+        unlink($output);
     }
 }

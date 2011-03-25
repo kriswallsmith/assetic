@@ -17,7 +17,7 @@ use Assetic\Filter\OptiPngFilter;
 /**
  * @group integration
  */
-class OptiPngFilterTest extends \PHPUnit_Framework_TestCase
+class OptiPngFilterTest extends BaseImageFilterTest
 {
     private $filter;
 
@@ -30,11 +30,27 @@ class OptiPngFilterTest extends \PHPUnit_Framework_TestCase
         $this->filter = new OptiPngFilter($_SERVER['OPTIPNG_BIN']);
     }
 
-    public function testFilter()
+    /**
+     * @dataProvider getImages
+     */
+    public function testFilter($image)
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/home.png');
+        $asset = new FileAsset($image);
         $asset->load();
 
+        $before = $asset->getContent();
         $this->filter->filterDump($asset);
+
+        $this->assertNotEmpty($asset->getContent(), '->filterDump() sets content');
+        $this->assertNotEquals($before, $asset->getContent(), '->filterDump() changes the content');
+        $this->assertMimeType('image/png', $asset->getContent(), '->filterDump() creates PNG data');
+    }
+
+    public function getImages()
+    {
+        return array(
+            array(__DIR__.'/fixtures/home.gif'),
+            array(__DIR__.'/fixtures/home.png'),
+        );
     }
 }
