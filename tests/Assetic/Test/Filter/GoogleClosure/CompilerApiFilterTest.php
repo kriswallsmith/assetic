@@ -36,6 +36,7 @@ EOF;
 (function() {
   alert("foobar")
 })();
+
 EOF;
 
         $asset = new StringAsset($input);
