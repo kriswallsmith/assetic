@@ -20,6 +20,7 @@
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
         <!-- <server name="OPTIPNG_BIN" value="/path/to/optipng" /> -->
         <!-- <server name="JPEGOPTIM_BIN" value="/path/to/jpegoptim" /> -->
+        <!-- <server name="JPEGTRAN_BIN" value="/path/to/jpegtran" /> -->
     </php>
 
     <filter>
