@@ -16,9 +16,7 @@ use Assetic\Asset\StringAsset;
 use Assetic\Filter\LessphpFilter;
 
 /**
- * extending LessFilterTest to do the same tests
- *
- * Only setUp is different, as the skip check
+ * @group integration
  */
 class LessphpFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,9 +29,6 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
         $this->filter = new LessphpFilter(__DIR__);
     }
 
-    /**
-     * @group integration
-     */
     public function testFilterLoad()
     {
         $asset = new StringAsset('.foo{.bar{width:1+ 1;}}');
@@ -45,9 +40,6 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Contrary to less, lessphp merges the entries
-     *
-     * @group integration
      * @dataProvider getSourceUrls
      */
     public function testImportSourceUrl($sourceUrl)

@@ -14,11 +14,11 @@ namespace Assetic\Test\Filter\Sass;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\Sass\SassFilter;
 
+/**
+ * @group integration
+ */
 class SassFilterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group integration
-     */
     public function testSass()
     {
         if (!isset($_SERVER['SASS_BIN'])) {

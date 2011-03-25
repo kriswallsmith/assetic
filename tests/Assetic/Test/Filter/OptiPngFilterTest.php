@@ -14,6 +14,9 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\OptiPngFilter;
 
+/**
+ * @group integration
+ */
 class OptiPngFilterTest extends \PHPUnit_Framework_TestCase
 {
     private $filter;

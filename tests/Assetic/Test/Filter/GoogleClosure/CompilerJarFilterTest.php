@@ -14,11 +14,11 @@ namespace Assetic\Test\Filter\GoogleClosure;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerJarFilter;
 
+/**
+ * @group integration
+ */
 class CompilerJarFilterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group integration
-     */
     public function testCompile()
     {
         if (!isset($_SERVER['CLOSURE_JAR'])) {

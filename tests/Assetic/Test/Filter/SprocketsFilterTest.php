@@ -14,15 +14,22 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\SprocketsFilter;
 
+/**
+ * @group integration
+ */
 class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
 {
     private $assetRoot;
 
     protected function setUp()
     {
+        if (!isset($_SERVER['SPROCKETS_LIB']) || !isset($_SERVER['RUBY_BIN'])) {
+            $this->markTestSkipped('There is no sprockets configuration.');
+        }
+
         $this->assetRoot = sys_get_temp_dir().'/assetic_sprockets';
         if (is_dir($this->assetRoot)) {
-            shell_exec('rm -rf '.escapeshellarg($this->assetRoot).'/*');
+            $this->cleanup();
         } else {
             mkdir($this->assetRoot);
         }
@@ -30,18 +37,21 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        shell_exec('rm -rf '.escapeshellarg($this->assetRoot).'/*');
+        $this->cleanup();
     }
 
-    /**
-     * @group integration
-     */
+    private function cleanup()
+    {
+        $it = new \RecursiveDirectoryIterator($this->assetRoot);
+        foreach (new \RecursiveIteratorIterator($it) as $path => $file) {
+            if (is_file($path)) {
+                unlink($path);
+            }
+        }
+    }
+
     public function testFilterLoad()
     {
-        if (!isset($_SERVER['SPROCKETS_LIB']) || !isset($_SERVER['RUBY_BIN'])) {
-            $this->markTestSkipped('There is no sprockets configuration.');
-        }
-
         $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js', array(), 'main.js');
         $asset->load();
 

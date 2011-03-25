@@ -15,6 +15,9 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\LessFilter;
 
+/**
+ * @group integration
+ */
 class LessFilterTest extends \PHPUnit_Framework_TestCase
 {
     private $filter;
@@ -28,9 +31,6 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
         $this->filter = new LessFilter(__DIR__, $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
     }
 
-    /**
-     * @group integration
-     */
     public function testFilterLoad()
     {
         $asset = new StringAsset('.foo{.bar{width:1+1;}}');
@@ -42,7 +42,6 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group integration
      * @dataProvider getSourceUrls
      */
     public function testImportSourceUrl($sourceUrl)

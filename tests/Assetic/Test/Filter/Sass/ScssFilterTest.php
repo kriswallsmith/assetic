@@ -15,9 +15,6 @@ use Assetic\Filter\Sass\ScssFilter;
 
 class ScssFilterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group integration
-     */
     public function testInterface()
     {
         $filter = new ScssFilter('/path/to/sass');

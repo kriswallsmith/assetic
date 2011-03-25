@@ -14,11 +14,11 @@ namespace Assetic\Test\Filter\GoogleClosure;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerApiFilter;
 
+/**
+ * @group integration
+ */
 class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group integration
-     */
     public function testRoundTrip()
     {
         $input = <<<EOF

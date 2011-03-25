@@ -14,11 +14,11 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CoffeeScriptFilter;
 
+/**
+ * @group integration
+ */
 class CoffeeScriptFilterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group integration
-     */
     public function testFilterLoad()
     {
         if (!isset($_SERVER['COFFEE_BIN']) || !isset($_SERVER['NODE_BIN'])) {
