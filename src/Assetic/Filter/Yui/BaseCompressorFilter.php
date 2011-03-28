@@ -77,12 +77,8 @@ abstract class BaseCompressorFilter implements FilterInterface
             $options[] = $this->lineBreak;
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic');
-        file_put_contents($input, $content);
-
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, array(), $content);
         $code = $proc->run();
-        unlink($input);
 
         if (0 < $code) {
             throw new \RuntimeException($proc->getErrorOutput());
