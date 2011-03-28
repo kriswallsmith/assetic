@@ -65,6 +65,28 @@ function assetic_stylesheets($inputs = array(), $filters = array(), array $optio
 }
 
 /**
+ * Returns an image URL.
+ *
+ * @param string       $input   An input
+ * @param array|string $filters Filter names
+ * @param array        $options An array of options
+ *
+ * @return string An image URL
+ */
+function assetic_image($input, $filters = array(), array $options)
+{
+    global $_assetic;
+
+    if (!isset($options['output'])) {
+        $options['output'] = 'images/*';
+    }
+
+    $urls = _assetic_assets($input, $filters, $options);
+
+    return current($urls);
+}
+
+/**
  * Returns an array of asset urls.
  *
  * @param array|string $inputs  Input strings
