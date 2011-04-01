@@ -33,7 +33,7 @@ class AsseticNode extends \Twig_Node
      * @param integer            $lineno     The line number
      * @param string             $tag        The tag name
      */
-    public function __construct(\Twig_NodeInterface $body, array $inputs, array $filters, array $attributes = array(), $lineno = 0, $tag = null)
+    public function __construct(\Twig_NodeInterface $body, array $inputs, array $filters, array $attributes, $lineno = 0, $tag = null)
     {
         $nodes = array('body' => $body);
 
