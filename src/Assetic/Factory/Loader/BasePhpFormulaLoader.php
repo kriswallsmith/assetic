@@ -101,14 +101,15 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
 
     private function processCall($call, array $protoOptions = array())
     {
-        $code = implode("\n", array(
+        $tmp = tempnam(sys_get_temp_dir(), 'assetic');
+        file_put_contents($tmp, implode("\n", array(
+            '<?php',
             $this->registerSetupCode(),
             $call,
             'echo serialize($_call);',
-        ));
-
-        $args = shell_exec(implode(' ', array_map('escapeshellarg', array('php', '-r', $code))));
-        $args = unserialize($args);
+        )));
+        $args = unserialize(shell_exec('php '.escapeshellarg($tmp)));
+        unlink($tmp);
 
         $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : array();
         $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
