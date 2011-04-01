@@ -12,6 +12,7 @@
 namespace Assetic\Factory\Loader;
 
 use Assetic\Cache\ConfigCache;
+use Assetic\Factory\Resource\IteratorResourceInterface;
 use Assetic\Factory\Resource\ResourceInterface;
 
 /**
@@ -46,7 +47,7 @@ class CachedFormulaLoader implements FormulaLoaderInterface
 
     public function load(ResourceInterface $resources)
     {
-        if (!$resources instanceof \Traversable) {
+        if (!$resources instanceof IteratorResourceInterface) {
             $resources = array($resources);
         }
 

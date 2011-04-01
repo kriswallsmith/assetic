@@ -16,7 +16,7 @@ namespace Assetic\Factory\Resource;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class DirectoryResource implements ResourceInterface, \IteratorAggregate
+class DirectoryResource implements IteratorResourceInterface
 {
     private $path;
     private $pattern;
