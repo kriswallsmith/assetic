@@ -104,11 +104,11 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         $code = implode("\n", array(
             $this->registerSetupCode(),
             $call,
-            'var_export($_call);',
+            'echo serialize($_call);',
         ));
 
         $args = shell_exec(implode(' ', array_map('escapeshellarg', array('php', '-r', $code))));
-        $args = eval('return '.$args.';');
+        $args = unserialize($args);
 
         $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : array();
         $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
