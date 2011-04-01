@@ -53,6 +53,7 @@ class AsseticTokenParser extends \Twig_TokenParser
         $name    = null;
         $debug   = $this->debug;
         $options = array();
+        $varName = 'asset_url';
 
         $stream = $this->parser->getStream();
         while (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
@@ -74,6 +75,11 @@ class AsseticTokenParser extends \Twig_TokenParser
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $name = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
+            } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'as')) {
+                // as='the_url'
+                $stream->next();
+                $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+                $varName = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'debug')) {
                 // debug=true
                 $stream->next();
@@ -108,9 +114,10 @@ class AsseticTokenParser extends \Twig_TokenParser
 
         // add core options
         $options = array_replace($options, array(
-            'output' => $output,
-            'name'   => $name,
-            'debug'  => $debug,
+            'output'   => $output,
+            'name'     => $name,
+            'debug'    => $debug,
+            'var_name' => $varName,
         ));
 
         $coll = $this->factory->createAsset($inputs, $filters, $options);

@@ -21,6 +21,11 @@ class AsseticNode extends \Twig_Node
      *  * output: The asset output string
      *  * name:   A name of the asset
      *
+     * The following attributes are optional:
+     *
+     *  * debug:    The debug mode
+     *  * var_name: The name of the variable to expose to the body node
+     *
      * @param Twig_NodeInterface $body       The body node
      * @param array              $inputs     An array of input strings
      * @param array              $filters    An array of filter strings
@@ -33,7 +38,7 @@ class AsseticNode extends \Twig_Node
         $nodes = array('body' => $body);
 
         $attributes = array_replace(
-            array('debug' => false),
+            array('debug' => false, 'var_name' => 'asset_url'),
             $attributes,
             array('inputs' => $inputs, 'filters' => $filters)
         );
@@ -51,11 +56,11 @@ class AsseticNode extends \Twig_Node
 
         $compiler
             ->addDebugInfo($this)
-            ->write("\$context['asset_url'] = ")
+            ->write('$context['.var_export($this->getAttribute('var_name'), true).'] = ')
             ->subcompile($this->getAssetUrlNode($body))
             ->raw(";\n")
             ->subcompile($body)
-            ->write("unset(\$context['asset_url']);\n")
+            ->write("unset(\$context[".var_export($this->getAttribute('var_name'), true)."]);\n")
         ;
     }
 
