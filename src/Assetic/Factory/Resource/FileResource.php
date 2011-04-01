@@ -32,12 +32,12 @@ class FileResource implements ResourceInterface
 
     public function isFresh($timestamp)
     {
-        return filemtime($this->path) <= $timestamp;
+        return file_exists($this->path) && filemtime($this->path) <= $timestamp;
     }
 
     public function getContent()
     {
-        return file_get_contents($this->path);
+        return file_exists($this->path) ? file_get_contents($this->path) : '';
     }
 
     public function __toString()

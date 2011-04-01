@@ -99,4 +99,10 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
             array(__DIR__.DIRECTORY_SEPARATOR),
         );
     }
+
+    public function testInvalidDirectory()
+    {
+        $resource = new DirectoryResource(__DIR__.'foo');
+        $this->assertEquals(0, iterator_count($resource), 'works for non-existent directory');
+    }
 }

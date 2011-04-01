@@ -39,6 +39,10 @@ class DirectoryResource implements IteratorResourceInterface
 
     public function isFresh($timestamp)
     {
+        if (!is_dir($this->path) || filemtime($this->path) > $timestamp) {
+            return false;
+        }
+
         foreach ($this as $resource) {
             if (!$resource->isFresh($timestamp)) {
                 return false;
@@ -68,7 +72,9 @@ class DirectoryResource implements IteratorResourceInterface
 
     public function getIterator()
     {
-        return new DirectoryResourceIterator($this->getInnerIterator());
+        return is_dir($this->path)
+            ? new DirectoryResourceIterator($this->getInnerIterator())
+            : new \EmptyIterator();
     }
 
     protected function getInnerIterator()
