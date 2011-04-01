@@ -20,23 +20,29 @@ class AsseticTokenParser extends \Twig_TokenParser
     private $output;
     private $debug;
     private $single;
+    private $options;
 
     /**
      * Constructor.
+     *
+     * Attributes can be added to the tag by passing names as the options
+     * array. These values, if found, will be passed to the factory and node.
      *
      * @param AssetFactory $factory The asset factory
      * @param string       $tag     The tag name
      * @param string       $output  The default output string
      * @param Boolean      $debug   The debug mode
      * @param Boolean      $single  Whether to force a single asset
+     * @param array        $options Additional attribute names to look for
      */
-    public function __construct(AssetFactory $factory, $tag, $output = 'assetic/*', $debug = false, $single = false)
+    public function __construct(AssetFactory $factory, $tag, $output = 'assetic/*', $debug = false, $single = false, array $options = array())
     {
         $this->factory = $factory;
         $this->tag     = $tag;
         $this->output  = $output;
         $this->debug   = $debug;
         $this->single  = $single;
+        $this->options = $options;
     }
 
     public function parse(\Twig_Token $token)
@@ -46,6 +52,7 @@ class AsseticTokenParser extends \Twig_TokenParser
         $filters = array();
         $name    = null;
         $debug   = $this->debug;
+        $options = array();
 
         $stream = $this->parser->getStream();
         while (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
@@ -72,6 +79,11 @@ class AsseticTokenParser extends \Twig_TokenParser
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $debug = 'true' == $stream->expect(\Twig_Token::NAME_TYPE, array('true', 'false'))->getValue();
+            } elseif ($stream->test(\Twig_Token::NAME_TYPE, $this->options)) {
+                // an arbitrary configured option
+                $key = $stream->next()->getValue();
+                $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+                $options[$key] = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
             } else {
                 $token = $stream->getCurrent();
                 throw new \Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', \Twig_Token::typeToEnglish($token->getType(), $token->getLine()), $token->getValue()), $token->getLine());
@@ -94,19 +106,28 @@ class AsseticTokenParser extends \Twig_TokenParser
             $name = $this->factory->generateAssetName($inputs, $filters);
         }
 
-        $coll = $this->factory->createAsset($inputs, $filters, array(
+        // add core options
+        $options = array_replace($options, array(
             'output' => $output,
             'name'   => $name,
             'debug'  => $debug,
         ));
 
+        $coll = $this->factory->createAsset($inputs, $filters, $options);
+
         if (!$debug) {
-            return static::createNode($body, $inputs, $coll->getTargetUrl(), $filters, $name, $debug, $token->getLine(), $this->getTag());
+            $attributes = array_replace($options, array('output' => $coll->getTargetUrl()));
+            return static::createNode($body, $inputs, $filters, $attributes, $token->getLine(), $this->getTag());
         }
 
         $nodes = array();
         foreach ($coll as $asset) {
-            $nodes[] = static::createNode($body, array($asset->getSourceUrl()), $asset->getTargetUrl(), $filters, $name.'_'.count($nodes), $debug, $token->getLine(), $this->getTag());
+            $attributes = array_replace($options, array(
+                'output' => $asset->getTargetUrl(),
+                'name'   => $name.'_'.count($nodes),
+            ));
+
+            $nodes[] = static::createNode($body, array($asset->getSourceUrl()), $filters, $attributes, $token->getLine(), $this->getTag());
         }
 
         return new \Twig_Node($nodes, array(), $token->getLine(), $this->getTag());

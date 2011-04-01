@@ -50,12 +50,12 @@ class TwigFormulaLoader implements FormulaLoaderInterface
         $assets = array();
 
         if ($node instanceof AsseticNode) {
-            $assets[$node->getAttribute('asset_name')] = array(
-                $node->getAttribute('source_urls'),
-                $node->getAttribute('filter_names'),
+            $assets[$node->getAttribute('name')] = array(
+                $node->getAttribute('inputs'),
+                $node->getAttribute('filters'),
                 array(
-                    'output' => $node->getAttribute('target_url'),
-                    'name'   => $node->getAttribute('asset_name'),
+                    'output' => $node->getAttribute('output'),
+                    'name'   => $node->getAttribute('name'),
                     'debug'  => $node->getAttribute('debug'),
                 ),
             );
