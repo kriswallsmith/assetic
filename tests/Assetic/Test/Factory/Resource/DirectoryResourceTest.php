@@ -82,4 +82,21 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $count);
     }
+
+    /**
+     * @dataProvider getPaths
+     */
+    public function testTrailingSlash($path)
+    {
+        $resource = new DirectoryResource($path);
+        $this->assertStringEndsWith(DIRECTORY_SEPARATOR, (string) $resource, 'path ends with a slash');
+    }
+
+    public function getPaths()
+    {
+        return array(
+            array(__DIR__),
+            array(__DIR__.DIRECTORY_SEPARATOR),
+        );
+    }
 }

@@ -29,6 +29,10 @@ class DirectoryResource implements IteratorResourceInterface
      */
     public function __construct($path, $pattern = null)
     {
+        if (DIRECTORY_SEPARATOR != substr($path, -1)) {
+            $path .= DIRECTORY_SEPARATOR;
+        }
+
         $this->path = $path;
         $this->pattern = $pattern;
     }
