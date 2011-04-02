@@ -27,8 +27,8 @@ use Assetic\FilterManager;
 class AssetFactory
 {
     private $baseDir;
-    private $output;
     private $debug;
+    private $output;
     private $workers;
     private $am;
     private $fm;
@@ -40,11 +40,11 @@ class AssetFactory
      * @param string  $output  The default output string
      * @param Boolean $debug   Filters prefixed with a "?" will be omitted in debug mode
      */
-    public function __construct($baseDir, $output = 'assetic/*', $debug = false)
+    public function __construct($baseDir, $debug = false)
     {
         $this->baseDir = rtrim($baseDir, '/').'/';
-        $this->output = $output;
-        $this->debug = $debug;
+        $this->debug   = $debug;
+        $this->output  = 'assetic/*';
         $this->workers = array();
     }
 
@@ -66,6 +66,16 @@ class AssetFactory
     public function isDebug()
     {
         return $this->debug;
+    }
+
+    /**
+     * Sets the default output string.
+     *
+     * @param string $output The default output string
+     */
+    public function setDefaultOutput($output)
+    {
+        $this->output = $output;
     }
 
     /**
