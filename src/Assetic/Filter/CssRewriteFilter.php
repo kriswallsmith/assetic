@@ -45,17 +45,20 @@ class CssRewriteFilter implements FilterInterface
             $host = '';
 
             // pop entries off the target until it fits in the source
-            $path = '';
-            $targetDir = dirname($targetUrl);
-            while (0 !== strpos($sourceUrl, $targetDir)) {
-                if (false !== $pos = strrpos($targetDir, '/')) {
-                    $targetDir = substr($targetDir, 0, $pos);
-                    $path .= '../';
-                } else {
-                    throw new \RuntimeException(sprintf('Unable to calculate relative path from "%s" to "%s"', $targetUrl, $sourceUrl));
+            if ('.' == $targetDir = dirname($targetUrl)) {
+                $path = dirname($sourceUrl).'/';
+            } else {
+                $path = '';
+                while (0 !== strpos($sourceUrl, $targetDir)) {
+                    if (false !== $pos = strrpos($targetDir, '/')) {
+                        $targetDir = substr($targetDir, 0, $pos);
+                        $path .= '../';
+                    } else {
+                        throw new \RuntimeException(sprintf('Unable to calculate relative path from "%s" to "%s"', $targetUrl, $sourceUrl));
+                    }
                 }
+                $path .= substr(dirname($sourceUrl).'/', strlen($targetDir) + 1);
             }
-            $path .= substr(dirname($sourceUrl).'/', strlen($targetDir) + 1);
         }
 
         $callback = function($matches) use($host, $path)
