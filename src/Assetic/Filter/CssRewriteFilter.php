@@ -45,7 +45,9 @@ class CssRewriteFilter implements FilterInterface
             $host = '';
 
             // pop entries off the target until it fits in the source
-            if ('.' == $targetDir = dirname($targetUrl)) {
+            if ('.' == dirname($sourceUrl)) {
+                $path = str_repeat('../', substr_count($targetUrl, '/'));
+            } elseif ('.' == $targetDir = dirname($targetUrl)) {
                 $path = dirname($sourceUrl).'/';
             } else {
                 $path = '';
