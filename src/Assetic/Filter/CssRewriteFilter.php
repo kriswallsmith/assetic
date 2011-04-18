@@ -56,7 +56,9 @@ class CssRewriteFilter implements FilterInterface
                         $targetDir = substr($targetDir, 0, $pos);
                         $path .= '../';
                     } else {
-                        throw new \RuntimeException(sprintf('Unable to calculate relative path from "%s" to "%s"', $targetUrl, $sourceUrl));
+                        $targetDir = '';
+                        $path .= '../';
+                        break;
                     }
                 }
                 $path .= substr(dirname($sourceUrl).'/', strlen($targetDir) + 1);
