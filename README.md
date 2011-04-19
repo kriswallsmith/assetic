@@ -42,6 +42,7 @@ iterate over it.
 The core provides the following filters in the `Assetic\Filter` namespace:
 
  * `CoffeeScriptFilter`: compiles CoffeeScript into Javascript
+ * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR

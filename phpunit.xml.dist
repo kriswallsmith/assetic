@@ -22,6 +22,7 @@
         <!-- <server name="JPEGOPTIM_BIN" value="/path/to/jpegoptim" /> -->
         <!-- <server name="JPEGTRAN_BIN" value="/path/to/jpegtran" /> -->
         <!-- <server name="PNGOUT_BIN" value="/path/to/pngout" /> -->
+        <!-- <server name="CSSMIN" value="/path/to/cssmin/source/CssMin.php" /> -->
     </php>
 
     <filter>
