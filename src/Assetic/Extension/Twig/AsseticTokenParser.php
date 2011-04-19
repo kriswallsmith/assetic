@@ -11,6 +11,7 @@
 
 namespace Assetic\Extension\Twig;
 
+use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 
 class AsseticTokenParser extends \Twig_TokenParser
@@ -18,7 +19,6 @@ class AsseticTokenParser extends \Twig_TokenParser
     private $factory;
     private $tag;
     private $output;
-    private $debug;
     private $single;
     private $extensions;
 
@@ -31,16 +31,14 @@ class AsseticTokenParser extends \Twig_TokenParser
      * @param AssetFactory $factory    The asset factory
      * @param string       $tag        The tag name
      * @param string       $output     The default output string
-     * @param Boolean      $debug      The debug mode
      * @param Boolean      $single     Whether to force a single asset
      * @param array        $extensions Additional attribute names to look for
      */
-    public function __construct(AssetFactory $factory, $tag, $output, $debug = false, $single = false, array $extensions = array())
+    public function __construct(AssetFactory $factory, $tag, $output, $single = false, array $extensions = array())
     {
         $this->factory    = $factory;
         $this->tag        = $tag;
         $this->output     = $output;
-        $this->debug      = $debug;
         $this->single     = $single;
         $this->extensions = $extensions;
     }
@@ -49,10 +47,9 @@ class AsseticTokenParser extends \Twig_TokenParser
     {
         $inputs = array();
         $filters = array();
+        $name = null;
         $attributes = array(
-            'name'     => null,
             'output'   => $this->output,
-            'debug'    => $this->debug,
             'var_name' => 'asset_url',
         );
 
@@ -75,7 +72,7 @@ class AsseticTokenParser extends \Twig_TokenParser
                 // name='core_js'
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
-                $attributes['name'] = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
+                $name = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'as')) {
                 // as='the_url'
                 $stream->next();
@@ -109,22 +106,13 @@ class AsseticTokenParser extends \Twig_TokenParser
             $inputs = array_slice($inputs, -1);
         }
 
-        if (!isset($attributes['name'])) {
-            $attributes['name'] = $this->factory->generateAssetName($inputs, $filters);
+        if (!$name) {
+            $name = $this->factory->generateAssetName($inputs, $filters);
         }
 
-        $coll = $this->factory->createAsset($inputs, $filters, $attributes);
+        $asset = $this->factory->createAsset($inputs, $filters, $attributes + array('name' => $name));
 
-        if (!$attributes['debug']) {
-            return static::createNode($body, $inputs, $filters, array_replace($attributes, array('output' => $coll->getTargetUrl())), $token->getLine(), $this->getTag());
-        }
-
-        $nodes = array();
-        foreach ($coll as $leaf) {
-            $nodes[] = static::createNode($body, array($leaf->getSourceUrl()), $filters, array_replace($attributes, array('output' => $leaf->getTargetUrl(), 'name' => $attributes['name'].'_'.count($nodes))), $token->getLine(), $this->getTag());
-        }
-
-        return new \Twig_Node($nodes, array(), $token->getLine(), $this->getTag());
+        return $this->createNode($asset, $body, $inputs, $filters, $name, $attributes, $token->getLine(), $this->getTag());
     }
 
     public function getTag()
@@ -132,8 +120,8 @@ class AsseticTokenParser extends \Twig_TokenParser
         return $this->tag;
     }
 
-    static protected function createNode(\Twig_NodeInterface $body, array $inputs, array $filters, array $attributes, $lineno = 0, $tag = null)
+    protected function createNode(AssetInterface $asset, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
     {
-        return new AsseticNode($body, $inputs, $filters, $attributes, $lineno, $tag);
+        return new AsseticNode($asset, $body, $inputs, $filters, $name, $attributes, $lineno, $tag);
     }
 }
