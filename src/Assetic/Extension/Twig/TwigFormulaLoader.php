@@ -50,33 +50,15 @@ class TwigFormulaLoader implements FormulaLoaderInterface
         $assets = array();
 
         if ($node instanceof AsseticNode) {
-            $asset = $node->getAttribute('asset');
-            $debug = $node->getAttribute('debug');
-
-            if ($debug) {
-                foreach ($asset as $leaf) {
-                    $leafName = $node->getAttribute('name').'_'.count($assets);
-                    $assets[$leafName] = array(
-                        array($leaf->getSourceUrl()),
-                        $node->getAttribute('filters'),
-                        array(
-                            'output' => $leaf->getTargetUrl(),
-                            'name'   => $leafName,
-                            'debug'  => $debug,
-                        )
-                    );
-                }
-            } else {
-                $assets[$node->getAttribute('name')] = array(
-                    $node->getAttribute('inputs'),
-                    $node->getAttribute('filters'),
-                    array(
-                        'output' => $asset->getTargetUrl(),
-                        'name'   => $node->getAttribute('name'),
-                        'debug'  => $debug,
-                    ),
-                );
-            }
+            $assets[$node->getAttribute('name')] = array(
+                $node->getAttribute('inputs'),
+                $node->getAttribute('filters'),
+                array(
+                    'output' => $node->getAttribute('asset')->getTargetUrl(),
+                    'name'   => $node->getAttribute('name'),
+                    'debug'  => $node->getAttribute('debug'),
+                ),
+            );
         }
 
         foreach ($node as $child) {
