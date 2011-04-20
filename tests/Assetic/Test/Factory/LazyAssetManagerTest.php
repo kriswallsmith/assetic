@@ -84,4 +84,13 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->am->load();
         $this->assertTrue($this->am->hasFormula('foo'), '->load() does not remove manually added formulae');
     }
+
+    public function testIsDebug()
+    {
+        $this->factory->expects($this->once())
+            ->method('isDebug')
+            ->will($this->returnValue(false));
+
+        $this->assertSame(false, $this->am->isDebug(), '->isDebug() proxies the factory');
+    }
 }

@@ -189,4 +189,9 @@ class LazyAssetManager extends AssetManager
 
         return array_unique(array_merge(parent::getNames(), array_keys($this->formulae)));
     }
+
+    public function isDebug()
+    {
+        return $this->factory->isDebug();
+    }
 }
