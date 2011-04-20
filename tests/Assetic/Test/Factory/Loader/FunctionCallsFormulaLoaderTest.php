@@ -11,7 +11,9 @@
 
 namespace Assetic\Test\Factory\Loader;
 
+use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
+use Assetic\Factory\Resource\FileResource;
 
 class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,5 +48,21 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             array("array('js/core.js')", 'asdf', array('asdf' => array(array('js/core.js'), array(), array('name' => 'asdf', 'output' => 'js/*.js')))),
             array('array("js/core.js")', 'asdf', array('asdf' => array(array('js/core.js'), array(), array('name' => 'asdf', 'output' => 'js/*.js')))),
         );
+    }
+
+    public function testComplexFormula()
+    {
+        $factory  = new AssetFactory(__DIR__.'/templates', true);
+        $loader   = new FunctionCallsFormulaLoader($factory);
+        $resource = new FileResource(__DIR__.'/templates/debug.php');
+        $formulae = $loader->load($resource);
+
+        $this->assertEquals(array(
+            'test123' => array(
+                array('foo.css', 'bar.css'),
+                array('?foo', 'bar'),
+                array('name' => 'test123', 'output' => 'css/packed.css', 'debug' => true),
+            ),
+        ), $formulae);
     }
 }
