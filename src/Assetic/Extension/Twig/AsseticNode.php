@@ -56,11 +56,23 @@ class AsseticNode extends \Twig_Node
             ;
 
             $this->compileDebug($compiler);
-            $compiler->outdent()->write("} else {\n")->indent();
-            $this->compileCombined($compiler);
-            $compiler->outdent()->write("}\n");
+
+            $compiler
+                ->outdent()
+                ->write("} else {\n")
+                ->indent()
+            ;
+
+            $this->compileAsset($compiler, $this->getAttribute('asset'), $this->getAttribute('name'));
+
+            $compiler
+                ->outdent()
+                ->write("}\n")
+            ;
+        } elseif ($debug) {
+            $this->compileDebug($compiler);
         } else {
-            $debug ? $this->compileDebug($compiler) : $this->compileCombined($compiler);
+            $this->compileAsset($compiler, $this->getAttribute('asset'), $this->getAttribute('name'));
         }
 
         $compiler
@@ -70,40 +82,34 @@ class AsseticNode extends \Twig_Node
         ;
     }
 
-    protected function getAssetUrlNode(AssetInterface $asset, $name)
-    {
-        return new \Twig_Node_Expression_Constant($asset->getTargetUrl(), $this->getLine());
-    }
-
-    private function compileDebug(\Twig_Compiler $compiler)
+    protected function compileDebug(\Twig_Compiler $compiler)
     {
         $i = 0;
         foreach ($this->getAttribute('asset') as $leaf) {
             $leafName = $this->getAttribute('name').'_'.$i++;
-            $compiler
-                ->write("// asset \"$leafName\"\n")
-                ->write('$context[')
-                ->repr($this->getAttribute('var_name'))
-                ->raw('] = ')
-                ->subcompile($this->getAssetUrlNode($leaf, $leafName))
-                ->raw(";\n")
-                ->subcompile($this->getNode('body'))
-            ;
+            $this->compileAsset($compiler, $leaf, $leafName);
         }
     }
 
-    private function compileCombined(\Twig_Compiler $compiler)
+    protected function compileAsset(\Twig_Compiler $compiler, AssetInterface $asset, $name)
     {
-        $name = $this->getAttribute('name');
-
         $compiler
             ->write("// asset \"$name\"\n")
             ->write('$context[')
             ->repr($this->getAttribute('var_name'))
             ->raw('] = ')
-            ->subcompile($this->getAssetUrlNode($this->getAttribute('asset'), $name))
+        ;
+
+        $this->compileAssetUrl($compiler, $asset, $name);
+
+        $compiler
             ->raw(";\n")
             ->subcompile($this->getNode('body'))
         ;
+    }
+
+    protected function compileAssetUrl(\Twig_Compiler $compiler, AssetInterface $asset, $name)
+    {
+        $compiler->repr($asset->getTargetUrl());
     }
 }
