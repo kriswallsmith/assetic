@@ -47,10 +47,10 @@ class TwigFormulaLoader implements FormulaLoaderInterface
      */
     private function loadNode(\Twig_Node $node)
     {
-        $assets = array();
+        $formulae = array();
 
         if ($node instanceof AsseticNode) {
-            $assets[$node->getAttribute('name')] = array(
+            $formulae[$node->getAttribute('name')] = array(
                 $node->getAttribute('inputs'),
                 $node->getAttribute('filters'),
                 array(
@@ -63,10 +63,10 @@ class TwigFormulaLoader implements FormulaLoaderInterface
 
         foreach ($node as $child) {
             if ($child instanceof \Twig_Node) {
-                $assets += $this->loadNode($child);
+                $formulae += $this->loadNode($child);
             }
         }
 
-        return $assets;
+        return $formulae;
     }
 }
