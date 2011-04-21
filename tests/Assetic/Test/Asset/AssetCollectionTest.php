@@ -225,4 +225,19 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $count, 'iterator filters duplicates based on url');
     }
+
+    public function testBasenameCollision()
+    {
+        $asset1 = new StringAsset('asset1', array(), 'foo/foo.css');
+        $asset2 = new StringAsset('asset2', array(), 'bar/foo.css');
+
+        $coll = new AssetCollection(array($asset1, $asset2));
+
+        $targetUrls = array();
+        foreach ($coll as $leaf) {
+            $targetUrls[] = $leaf->getTargetUrl();
+        }
+
+        $this->assertEquals(2, count(array_unique($targetUrls)), 'iterator prevents basename collisions');
+    }
 }

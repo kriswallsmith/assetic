@@ -256,9 +256,8 @@ class AssetCollectionIterator implements \RecursiveIterator
         $clone = clone $asset;
 
         // generate a target url based on asset name
-        if (!$name = pathinfo($asset->getSourceUrl(), PATHINFO_FILENAME)) {
-            $name = 'part'.($this->key() + 1);
-        }
+        $name = pathinfo($asset->getSourceUrl(), PATHINFO_FILENAME) ?: 'part';
+        $name .= ($this->key() + 1);
         $clone->setTargetUrl(str_replace('*', $name, $this->output));
 
         foreach ($this->filters as $filter) {
