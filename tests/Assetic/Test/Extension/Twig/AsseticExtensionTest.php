@@ -40,6 +40,12 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testReference()
     {
+        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $this->am->expects($this->any())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue($asset));
+
         $xml = $this->renderXml('reference.twig');
         $this->assertEquals(1, count($xml->asset));
         $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
@@ -108,6 +114,12 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testMixture()
     {
+        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $this->am->expects($this->any())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue($asset));
+
         $xml = $this->renderXml('mixture.twig');
         $this->assertEquals(1, count($xml->asset));
         $this->assertEquals('packed/mixture', (string) $xml->asset['url']);

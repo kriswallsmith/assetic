@@ -27,9 +27,16 @@ class AsseticExtension extends \Twig_Extension
     public function getTokenParsers()
     {
         return array(
-            new AsseticTokenParser($this->factory, 'javascripts', 'js/*.js', $this->debug),
-            new AsseticTokenParser($this->factory, 'stylesheets', 'css/*.css', $this->debug),
-            new AsseticTokenParser($this->factory, 'image', 'images/*', $this->debug, true),
+            new AsseticTokenParser($this->factory, 'javascripts', 'js/*.js'),
+            new AsseticTokenParser($this->factory, 'stylesheets', 'css/*.css'),
+            new AsseticTokenParser($this->factory, 'image', 'images/*', true),
+        );
+    }
+
+    public function getGlobals()
+    {
+        return array(
+            'assetic' => array('debug' => $this->debug),
         );
     }
 

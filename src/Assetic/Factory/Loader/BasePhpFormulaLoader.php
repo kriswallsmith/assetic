@@ -115,34 +115,18 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
         $options = isset($args[2]) ? $args[2] : array();
 
-        $output = isset($options['output']) ? $options['output'] : (isset($protoOptions['output']) ? $protoOptions['output'] : null);
-        $name   = isset($options['name']) ? $options['name'] : $this->factory->generateAssetName($inputs, $filters);
-        $debug  = isset($options['debug']) ? $options['debug'] : false;
-
-        $coll = $this->factory->createAsset($inputs, $filters, array(
-            'output' => $output,
-            'name'   => $name,
-            'debug'  => $debug,
-        ));
-
-        if (!$this->factory->isDebug()) {
-            return array($name => array($inputs, $filters, $options));
+        if (!is_array($options)) {
+            throw new \RuntimeException('The third argument must be omitted, null or an array.');
         }
 
-        $formulae = array();
-        foreach ($coll as $asset) {
-            $formulae[$name.'_'.count($formulae)] = array(
-                array($asset->getSourceUrl()),
-                $filters,
-                array(
-                    'output' => $asset->getTargetUrl(),
-                    'name'   => $name.'_'.count($formulae),
-                    'debug'  => $debug,
-                )
-            );
+        if (!isset($options['name'])) {
+            $options['name'] = $this->factory->generateAssetName($inputs, $filters);
         }
 
-        return $formulae;
+        // apply the prototype options
+        $options += $protoOptions;
+
+        return array($options['name'] => array($inputs, $filters, $options));
     }
 
     /**
