@@ -24,6 +24,8 @@ interface WorkerInterface
      * Processes an asset.
      *
      * @param AssetInterface $asset An asset
+     *
+     * @return AssetInterface The processed asset
      */
     function process(AssetInterface $asset);
 }

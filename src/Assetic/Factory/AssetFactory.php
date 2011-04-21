@@ -175,7 +175,7 @@ class AssetFactory
         $asset->setTargetUrl(str_replace('*', $options['name'], $options['output']));
 
         foreach ($this->workers as $worker) {
-            $worker->process($asset);
+            $asset = $worker->process($asset);
         }
 
         return $asset;
