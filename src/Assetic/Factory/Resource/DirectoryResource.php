@@ -93,7 +93,7 @@ class DirectoryResourceIterator extends \RecursiveIteratorIterator
 {
     public function current()
     {
-        return new FileResource(parent::current()->getPathname());
+        return new FileResource($this->getPathname());
     }
 }
 
@@ -109,6 +109,7 @@ class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
 
     public function __construct(\RecursiveDirectoryIterator $iterator, $pattern = null)
     {
+        $iterator->setFlags($iterator->getFlags() | \RecursiveDirectoryIterator::SKIP_DOTS);
         parent::__construct($iterator);
 
         $this->pattern = $pattern;
@@ -116,18 +117,11 @@ class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
 
     public function accept()
     {
-        $file = $this->current();
-        $name = $file->getBasename();
-
-        if ($file->isDir()) {
-            return '.' != $name[0];
-        } else {
-            return null === $this->pattern || 0 < preg_match($this->pattern, $name);
-        }
+        return $this->isDir() || null === $this->pattern || 1 === preg_match($this->pattern, $this->getBasename());
     }
 
     public function getChildren()
     {
-        return new self(new \RecursiveDirectoryIterator($this->current()->getPathname()), $this->pattern);
+        return new self(new \RecursiveDirectoryIterator($this->getPathname()), $this->pattern);
     }
 }
