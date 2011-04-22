@@ -53,7 +53,6 @@ interface AssetInterface
      * If the current asset has not been loaded yet, it should be
      * automatically loaded at this time.
      *
-     * @param string          $targetUrl        The URL where the dumped asset will be served
      * @param FilterInterface $additionalFilter An additional filter
      *
      * @return string The filtered content of the current asset
