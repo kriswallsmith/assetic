@@ -73,7 +73,7 @@ function assetic_stylesheets($inputs = array(), $filters = array(), array $optio
  *
  * @return string An image URL
  */
-function assetic_image($input, $filters = array(), array $options)
+function assetic_image($input, $filters = array(), array $options = array())
 {
     global $_assetic;
 
