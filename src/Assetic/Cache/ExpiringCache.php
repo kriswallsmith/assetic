@@ -29,13 +29,12 @@ class ExpiringCache implements CacheInterface
 
     public function has($key)
     {
-        if ($this->cache->has($key)) {
+        if ($this->cache->has($key.'.expires')) {
             if (time() < $this->cache->get($key.'.expires')) {
                 return true;
             }
 
-            $this->cache->remove($key.'.expires');
-            $this->cache->remove($key);
+            $this->remove($key);
         }
 
         return false;
@@ -43,7 +42,7 @@ class ExpiringCache implements CacheInterface
 
     public function get($key)
     {
-        return $this->cache->get($key);
+        return $this->has($key) ? $this->cache->get($key) : null;
     }
 
     public function set($key, $value)
