@@ -154,12 +154,12 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->fm->expects($this->once())
             ->method('get')
-            ->with('bar')
+            ->with('some_filter')
             ->will($this->returnValue($filter));
 
         $this->twig->addExtension(new AsseticExtension($this->factory, array(
-            'foo' => array(
-                'filter'  => 'bar',
+            'some_func' => array(
+                'filter' => 'some_filter',
                 'options' => array('output' => 'css/*.css'),
             ),
         )));

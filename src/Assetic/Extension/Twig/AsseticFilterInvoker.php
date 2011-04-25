@@ -37,6 +37,21 @@ class AsseticFilterInvoker
         }
     }
 
+    public function getFactory()
+    {
+        return $this->factory;
+    }
+
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
     public function invoke($input, array $options = array())
     {
         $asset = $this->factory->createAsset($input, $this->filters, $options + $this->options);

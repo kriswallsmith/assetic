@@ -35,7 +35,12 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $factory->setFilterManager($this->fm);
 
         $twig = new \Twig_Environment();
-        $twig->addExtension(new AsseticExtension($factory));
+        $twig->addExtension(new AsseticExtension($factory, array(
+            'some_func' => array(
+                'filter' => 'some_filter',
+                'options' => array('output' => 'css/*.css'),
+            ),
+        )));
 
         $this->loader = new TwigFormulaLoader($twig);
     }
@@ -58,6 +63,25 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/mixture.twig')));
+
+        $formulae = $this->loader->load($resource);
+        $this->assertEquals($expected, $formulae);
+    }
+
+    public function testFunction()
+    {
+        $expected = array(
+            'my_asset' => array(
+                'path/to/asset',
+                'some_filter',
+                array('output' => 'css/*.css', 'name' => 'my_asset'),
+            ),
+        );
+
+        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue(file_get_contents(__DIR__.'/templates/function.twig')));
 
         $formulae = $this->loader->load($resource);
         $this->assertEquals($expected, $formulae);

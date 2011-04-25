@@ -59,6 +59,26 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                     'debug'  => $node->getAttribute('debug'),
                 ),
             );
+        } elseif ($node instanceof \Twig_Node_Expression_Function) {
+            $name = $node->getNode('name')->getAttribute('name');
+            if ($this->twig->getFunction($name) instanceof AsseticFilterFunction) {
+                $arguments = array();
+                foreach ($node->getNode('arguments') as $argument) {
+                    $arguments[] = eval('return '.$this->twig->compile($argument).';');
+                }
+
+                $invoker = $this->twig->getExtension('assetic')->getFilterInvoker($name);
+
+                $inputs  = isset($arguments[0]) ? $arguments[0] : array();
+                $filters = $invoker->getFilters();
+                $options = array_replace($invoker->getOptions(), isset($arguments[1]) ? $arguments[1] : array());
+
+                if (!isset($options['name'])) {
+                    $options['name'] = $invoker->getFactory()->generateAssetName($inputs, $filters);
+                }
+
+                $formulae[$options['name']] = array($inputs, $filters, $options);
+            }
         }
 
         foreach ($node as $child) {
