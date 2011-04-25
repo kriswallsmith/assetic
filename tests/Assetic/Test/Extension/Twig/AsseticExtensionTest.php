@@ -18,6 +18,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 {
     private $am;
     private $fm;
+    private $factory;
     private $twig;
 
     protected function setUp()
@@ -29,13 +30,13 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->am = $this->getMock('Assetic\\AssetManager');
         $this->fm = $this->getMock('Assetic\\FilterManager');
 
-        $factory = new AssetFactory(__DIR__.'/templates');
-        $factory->setAssetManager($this->am);
-        $factory->setFilterManager($this->fm);
+        $this->factory = new AssetFactory(__DIR__.'/templates');
+        $this->factory->setAssetManager($this->am);
+        $this->factory->setFilterManager($this->fm);
 
         $this->twig = new \Twig_Environment();
         $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new AsseticExtension($factory));
+        $this->twig->addExtension(new AsseticExtension($this->factory));
     }
 
     public function testReference()
@@ -145,6 +146,27 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $xml = $this->renderXml('image.twig');
         $this->assertEquals(1, count($xml->image));
         $this->assertStringEndsWith('.png', (string) $xml->image[0]['url']);
+    }
+
+    public function testFilterFunction()
+    {
+        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+
+        $this->fm->expects($this->once())
+            ->method('get')
+            ->with('some_filter')
+            ->will($this->returnValue($filter));
+
+        $this->twig->addExtension(new AsseticExtension($this->factory, array(
+            'some_func' => array(
+                'filter' => 'some_filter',
+                'options' => array('output' => 'css/*.css'),
+            ),
+        )));
+
+        $xml = $this->renderXml('function.twig');
+        $this->assertEquals(1, count($xml->asset));
+        $this->assertStringEndsWith('.css', (string) $xml->asset[0]['url']);
     }
 
     private function renderXml($name, $context = array())
