@@ -14,6 +14,7 @@
         <!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
         <!-- <server name="LESSPHP" value="/path/to/lessphp/lessc.inc.php" /> -->
         <!-- <server name="SASS_BIN" value="/path/to/sass" /> -->
+        <!-- <server name="COMPASS_BIN" value="/path/to/compass" /> -->
         <!-- <server name="RUBY_BIN" value="/path/to/ruby" /> -->
         <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
         <!-- <server name="TWIG_LIB" value="/path/to/twig/lib" /> -->
