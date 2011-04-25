@@ -1,35 +1,31 @@
 <?php
 
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
-use Assetic\Filter\Sass\SassFilter;
-
 /*
- * This file is part of the Assetic package.
+ * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) Kris Wallsmith <kris.wallsmith@gmail.com>
+ * (c) 2010-2011 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
+namespace Assetic\Filter;
+
+use Assetic\Asset\AssetInterface;
+use Assetic\Filter\Sass\SassFilter;
+
 /**
  * Loads Compass files.
  *
- * @see http://beta.compass-style.org/help/tutorials/command-line/
- * @see https://github.com/miracle2k/webassets/blob/master/src/webassets/filter/compass.py
+ * The Compass filter requires SASS >= 3.1.0.
+ *
  * @author Maxime Thirouin <dev@moox.fr>
  */
 class CompassFilter extends SassFilter
 {
-    public function __construct($sassPath = '/usr/bin/sass', $compassPath = '/usr/bin/compass')
+    public function __construct($sassPath = '/usr/bin/sass')
     {
-        parent::__construct($sassPath, $compassPath);
-
-        // Compass does not allow us to add import path in command line
-        // but we can do this with sass, with the new option --compass
-        // @see http://groups.google.com/group/compass-users/browse_thread/thread/a476dfcd2b47653e
+        parent::__construct($sassPath);
         $this->setCompass(true);
     }
 }
