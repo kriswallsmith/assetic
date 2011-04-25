@@ -16,12 +16,20 @@ use Assetic\Factory\AssetFactory;
 class AsseticExtension extends \Twig_Extension
 {
     protected $factory;
-    protected $debug;
+    protected $functions;
 
-    public function __construct(AssetFactory $factory, $debug = false)
+    public function __construct(AssetFactory $factory, $functions = array())
     {
         $this->factory = $factory;
-        $this->debug = $debug;
+        $this->functions = array();
+
+        foreach ($functions as $function => $options) {
+            if (is_integer($function) && is_string($options)) {
+                $this->functions[$options] = $options;
+            } else {
+                $this->functions[$function] = $options;
+            }
+        }
     }
 
     public function getTokenParsers()
@@ -33,11 +41,26 @@ class AsseticExtension extends \Twig_Extension
         );
     }
 
+    public function getFunctions()
+    {
+        $functions = array();
+        foreach ($this->functions as $function => $filter) {
+            $functions[$function] = new AsseticFilterFunction($function);
+        }
+
+        return $functions;
+    }
+
     public function getGlobals()
     {
         return array(
-            'assetic' => array('debug' => $this->debug),
+            'assetic' => array('debug' => $this->factory->isDebug()),
         );
+    }
+
+    public function getFilterInvoker($function)
+    {
+        return new AsseticFilterInvoker($this->factory, $this->functions[$function]);
     }
 
     public function getName()
