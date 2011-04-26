@@ -23,11 +23,13 @@ class AsseticExtension extends \Twig_Extension
         $this->factory = $factory;
         $this->functions = array();
 
-        foreach ($functions as $function => $options) {
-            if (is_integer($function) && is_string($options)) {
-                $this->functions[$options] = $options;
-            } else {
-                $this->functions[$function] = $options;
+        if(!empty($functions)) {
+            foreach ($functions as $function => $options) {
+                if (is_integer($function) && is_string($options)) {
+                    $this->functions[$options] = $options;
+                } else {
+                    $this->functions[$function] = $options;
+                }
             }
         }
     }
