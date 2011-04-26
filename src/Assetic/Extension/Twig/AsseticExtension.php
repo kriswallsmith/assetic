@@ -25,9 +25,9 @@ class AsseticExtension extends \Twig_Extension
 
         foreach ($functions as $function => $options) {
             if (is_integer($function) && is_string($options)) {
-                $this->functions[$options] = $options;
+                $this->functions[$options] = array('filter' => $options);
             } else {
-                $this->functions[$function] = $options;
+                $this->functions[$function] = $options + array('filter' => $function);
             }
         }
     }

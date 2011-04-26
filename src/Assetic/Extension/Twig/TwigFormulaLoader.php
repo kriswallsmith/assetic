@@ -69,7 +69,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
 
                 $invoker = $this->twig->getExtension('assetic')->getFilterInvoker($name);
 
-                $inputs  = isset($arguments[0]) ? $arguments[0] : array();
+                $inputs  = isset($arguments[0]) ? (array) $arguments[0] : array();
                 $filters = $invoker->getFilters();
                 $options = array_replace($invoker->getOptions(), isset($arguments[1]) ? $arguments[1] : array());
 
