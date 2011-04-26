@@ -72,8 +72,8 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array(
             'my_asset' => array(
-                'path/to/asset',
-                'some_filter',
+                array('path/to/asset'),
+                array('some_filter'),
                 array('output' => 'css/*.css', 'name' => 'my_asset'),
             ),
         );
