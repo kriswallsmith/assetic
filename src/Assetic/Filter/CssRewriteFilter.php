@@ -61,7 +61,7 @@ class CssRewriteFilter implements FilterInterface
                         break;
                     }
                 }
-                $path .= substr(dirname($sourceUrl).'/', strlen($targetDir) + 1);
+                $path .= ltrim(substr(dirname($sourceUrl).'/', strlen($targetDir)), '/');
             }
         }
 

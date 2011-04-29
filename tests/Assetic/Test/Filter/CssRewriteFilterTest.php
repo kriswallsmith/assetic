@@ -41,6 +41,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
             array('body { background: url(\'%s\'); }', 'css/body.css', 'main.css', '../images/bg.gif', 'css/../images/bg.gif'), // fixme
             array('body { background: url(\'%s\'); }', 'body.css', 'css/main.css', 'images/bg.gif', '../images/bg.gif'),
+            array('body { background: url(\'%s\'); }', 'source/css/body.css', 'output/build/main.css', '../images/bg.gif', '../../source/images/bg.gif'),
 
             // @import variants
             array('@import "%s";', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
