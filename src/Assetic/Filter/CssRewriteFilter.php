@@ -67,8 +67,8 @@ class CssRewriteFilter implements FilterInterface
 
         $callback = function($matches) use($host, $path)
         {
-            if (false !== strpos($matches['url'], '://')) {
-                // absolute
+            if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//')) {
+                // absolute or protocol-relative
                 return $matches[0];
             }
 

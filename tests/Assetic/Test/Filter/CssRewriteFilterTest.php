@@ -39,9 +39,6 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
             array('body { background: url("%s"); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
             array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
-            array('body { background: url(\'%s\'); }', 'css/body.css', 'main.css', '../images/bg.gif', 'css/../images/bg.gif'), // fixme
-            array('body { background: url(\'%s\'); }', 'body.css', 'css/main.css', 'images/bg.gif', '../images/bg.gif'),
-            array('body { background: url(\'%s\'); }', 'source/css/body.css', 'output/build/main.css', '../images/bg.gif', '../../source/images/bg.gif'),
 
             // @import variants
             array('@import "%s";', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
@@ -52,6 +49,10 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             // path diffs
             array('body { background: url(%s); }', 'css/body/bg.css', 'css/build/main.css', '../../images/bg.gif', '../../images/bg.gif'),
             array('body { background: url(%s); }', 'http://foo.com/css/body/bg.css', 'http://bar.com/css/build/main.css', '../../images/bg.gif', 'http://foo.com/images/bg.gif'),
+            array('body { background: url(%s); }', 'css/body.css', 'main.css', '../images/bg.gif', 'css/../images/bg.gif'), // fixme
+            array('body { background: url(%s); }', 'body.css', 'css/main.css', 'images/bg.gif', '../images/bg.gif'),
+            array('body { background: url(%s); }', 'source/css/body.css', 'output/build/main.css', '../images/bg.gif', '../../source/images/bg.gif'),
+            array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '//example.com/images/bg.gif', '//example.com/images/bg.gif'),
 
             // url diffs
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/bar.gif', 'http://foo.com/bar.gif'),
