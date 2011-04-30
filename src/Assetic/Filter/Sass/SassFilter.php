@@ -27,6 +27,7 @@ class SassFilter implements FilterInterface
     const STYLE_COMPACT    = 'compact';
     const STYLE_COMPRESSED = 'compressed';
 
+    private $baseDir;
     private $sassPath;
     private $unixNewlines;
     private $scss;
@@ -39,8 +40,9 @@ class SassFilter implements FilterInterface
     private $noCache;
     private $compass;
 
-    public function __construct($sassPath = '/usr/bin/sass')
+    public function __construct($baseDir, $sassPath = '/usr/bin/sass')
     {
+        $this->baseDir = $baseDir;
         $this->sassPath = $sassPath;
         $this->cacheLocation = sys_get_temp_dir();
     }
@@ -98,6 +100,14 @@ class SassFilter implements FilterInterface
     public function filterLoad(AssetInterface $asset)
     {
         $options = array($this->sassPath);
+
+        $sourceUrl = $asset->getSourceUrl();
+        if ($sourceUrl && false === strpos($sourceUrl, '://')) {
+            $baseDir = self::isAbsolutePath($sourceUrl) ? '' : $this->baseDir.'/';
+
+            $options[] = '--load-path';
+            $options[] = $baseDir.dirname($sourceUrl);
+        }
 
         if ($this->unixNewlines) {
             $options[] = '--unix-newlines';
@@ -165,5 +175,10 @@ class SassFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    static private function isAbsolutePath($path)
+    {
+        return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
 }

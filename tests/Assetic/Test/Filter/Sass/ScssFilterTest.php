@@ -11,13 +11,31 @@
 
 namespace Assetic\Test\Filter\Sass;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Filter\Sass\ScssFilter;
 
 class ScssFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterface()
+    public function testImport()
     {
-        $filter = new ScssFilter('/path/to/sass');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'ScssFilter implements FilterInterface');
+        if (!isset($_SERVER['SASS_BIN'])) {
+            $this->markTestSkipped('There is no SASS_BIN environment variable.');
+        }
+
+        $asset = new FileAsset(__DIR__.'/../fixtures/sass/main.scss', array(), 'main.css');
+        $asset->load();
+
+        $filter = new ScssFilter(__DIR__.'/../fixtures/sass', $_SERVER['SASS_BIN']);
+        $filter->setStyle(ScssFilter::STYLE_COMPACT);
+        $filter->filterLoad($asset);
+
+        $expected = <<<EOF
+.foo { color: blue; }
+
+.foo { color: red; }
+
+EOF;
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() loads imports');
     }
 }

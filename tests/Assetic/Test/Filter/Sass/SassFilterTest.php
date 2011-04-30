@@ -19,12 +19,19 @@ use Assetic\Filter\Sass\SassFilter;
  */
 class SassFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSass()
+    private $filter;
+
+    protected function setUp()
     {
         if (!isset($_SERVER['SASS_BIN'])) {
             $this->markTestSkipped('There is no SASS_BIN environment variable.');
         }
 
+        $this->filter = new SassFilter($_SERVER['SASS_BIN']);
+    }
+
+    public function testSass()
+    {
         $input = <<<EOF
 body
   color: #F00
@@ -33,10 +40,8 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new SassFilter($_SERVER['SASS_BIN']);
-        $filter->setStyle(SassFilter::STYLE_COMPACT);
-        $filter->filterLoad($asset);
-        $filter->filterDump($asset);
+        $this->filter->setStyle(SassFilter::STYLE_COMPACT);
+        $this->filter->filterLoad($asset);
 
         $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the sass');
     }
