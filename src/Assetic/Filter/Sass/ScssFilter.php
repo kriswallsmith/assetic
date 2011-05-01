@@ -11,8 +11,6 @@
 
 namespace Assetic\Filter\Sass;
 
-use Assetic\Filter\FilterInterface;
-
 /**
  * Loads SCSS files.
  *
@@ -20,9 +18,10 @@ use Assetic\Filter\FilterInterface;
  */
 class ScssFilter extends SassFilter
 {
-    public function __construct($sassPath = '/usr/bin/sass')
+    public function __construct($baseDir, $sassPath = '/usr/bin/sass')
     {
-        parent::__construct($sassPath);
+        parent::__construct($baseDir, $sassPath);
+
         $this->setScss(true);
     }
 }

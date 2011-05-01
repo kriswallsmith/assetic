@@ -9,10 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
-use Assetic\Filter\Sass\SassFilter;
+namespace Assetic\Filter\Sass;
 
 /**
  * Loads Compass files.
@@ -23,9 +20,10 @@ use Assetic\Filter\Sass\SassFilter;
  */
 class CompassFilter extends SassFilter
 {
-    public function __construct($sassPath = '/usr/bin/sass')
+    public function __construct($baseDir, $sassPath = '/usr/bin/sass')
     {
-        parent::__construct($sassPath);
+        parent::__construct($baseDir, $sassPath);
+
         $this->setCompass(true);
     }
 }
