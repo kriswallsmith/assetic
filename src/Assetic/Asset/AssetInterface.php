@@ -76,17 +76,9 @@ interface AssetInterface
     function setContent($content);
 
     /**
-     * Returns the URL for the source asset.
+     * Returns the absolute URL for the source asset.
      *
-     * This is a web URL and can be either document-relative, root-relative,
-     * or absolute.
-     *
-     * Some possible source paths:
-     *
-     *  * js/main.js
-     *  * https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js
-     *
-     * @return string|null A web URL for the source asset, if there is one
+     * @return string|null Where the source asset can be found
      */
     function getSourceUrl();
 
