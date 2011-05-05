@@ -34,7 +34,7 @@ class StringAsset extends BaseAsset
     {
         $this->originalContent = $content;
 
-        parent::__construct($filters, $sourceUrl);
+        parent::__construct($sourceUrl, $filters);
     }
 
     public function load(FilterInterface $additionalFilter = null)

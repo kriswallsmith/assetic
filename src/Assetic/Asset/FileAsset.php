@@ -20,29 +20,13 @@ use Assetic\Filter\FilterInterface;
  */
 class FileAsset extends BaseAsset
 {
-    private $path;
-
-    /**
-     * Constructor.
-     *
-     * @param string $path      The absolute path to the asset
-     * @param array  $filters   Filters for the asset
-     * @param string $sourceUrl The source URL
-     */
-    public function __construct($path, $filters = array(), $sourceUrl = null)
-    {
-        $this->path = $path;
-
-        parent::__construct($filters, $sourceUrl);
-    }
-
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad(file_get_contents($this->path), $additionalFilter);
+        $this->doLoad(file_get_contents($this->getSourceUrl()), $additionalFilter);
     }
 
     public function getLastModified()
     {
-        return filemtime($this->path);
+        return filemtime($this->getSourceUrl());
     }
 }

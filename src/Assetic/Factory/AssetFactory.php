@@ -237,15 +237,15 @@ class AssetFactory
         }
 
         if (false !== strpos($input, '://')) {
-            return $this->createFileAsset($input, $input);
+            return $this->createFileAsset($input);
         }
 
         $baseDir = self::isAbsolutePath($input) ? '' : $this->baseDir;
 
         if (false !== strpos($input, '*')) {
-            return $this->createGlobAsset($baseDir . $input, $this->baseDir);
+            return $this->createGlobAsset($baseDir.$input);
         } else {
-            return $this->createFileAsset($baseDir . $input, $input);
+            return $this->createFileAsset($baseDir.$input);
         }
     }
 
@@ -263,14 +263,14 @@ class AssetFactory
         return new AssetReference($this->am, $name);
     }
 
-    protected function createGlobAsset($glob, $baseDir = null)
+    protected function createGlobAsset($glob)
     {
-        return new GlobAsset($glob, array(), $baseDir);
+        return new GlobAsset($glob);
     }
 
-    protected function createFileAsset($path, $sourceUrl = null)
+    protected function createFileAsset($path)
     {
-        return new FileAsset($path, array(), $sourceUrl);
+        return new FileAsset($path);
     }
 
     protected function getFilter($name)
