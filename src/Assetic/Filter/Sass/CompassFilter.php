@@ -20,9 +20,9 @@ namespace Assetic\Filter\Sass;
  */
 class CompassFilter extends SassFilter
 {
-    public function __construct($baseDir, $sassPath = '/usr/bin/sass')
+    public function __construct($sassPath = '/usr/bin/sass')
     {
-        parent::__construct($baseDir, $sassPath);
+        parent::__construct($sassPath);
 
         $this->setCompass(true);
     }

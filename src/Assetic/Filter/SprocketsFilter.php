@@ -16,22 +16,31 @@ use Assetic\Asset\AssetInterface;
 /**
  * Runs assets through Sprockets.
  *
- * @link   http://getsprockets.org/
+ * Requires Sprockets 1.0.x.
+ *
+ * @link http://getsprockets.org/
+ * @link http://github.com/sstephenson/sprockets/tree/1.0.x
+ *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class SprocketsFilter implements FilterInterface
 {
-    private $baseDir;
     private $sprocketsLib;
     private $rubyBin;
-    private $includeDirs = array();
+    private $includeDirs;
     private $assetRoot;
 
-    public function __construct($baseDir, $sprocketsLib, $rubyBin = '/usr/bin/ruby')
+    /**
+     * Constructor.
+     *
+     * @param string $sprocketsLib Path to the Sprockets lib/ directory
+     * @param string $rubyBin      Path to the ruby binary
+     */
+    public function __construct($sprocketsLib = null, $rubyBin = '/usr/bin/ruby')
     {
-        $this->baseDir = $baseDir;
         $this->sprocketsLib = $sprocketsLib;
         $this->rubyBin = $rubyBin;
+        $this->includeDirs = array();
     }
 
     public function addIncludeDir($directory)
@@ -52,29 +61,8 @@ class SprocketsFilter implements FilterInterface
         static $format = <<<'EOF'
 #!/usr/bin/env ruby
 
-require File.join(%s, 'sprockets')
-
-module Sprockets
-  class Secretary
-    def reset!(options = @options)
-      @options = DEFAULT_OPTIONS.merge(options)
-      @environment  = Sprockets::Environment.new(@options[:root])
-      @preprocessor = Sprockets::Preprocessor.new(@environment, :strip_comments => @options[:strip_comments])
-
-      add_load_locations(@options[:load_path])
-      add_source_files(@options[:source_files])
-    end
-  end
-
-  class Preprocessor
-    protected
-
-    def pathname_for_relative_require_from(source_line)
-      Sprockets::Pathname.new(@environment, File.join(%s, location_from(source_line)))
-    end
-  end
-end
-
+require %s
+%s
 options = { :load_path    => [],
             :source_files => [%s],
             :expand_paths => false }
@@ -84,11 +72,6 @@ secretary.install_assets if options[:asset_root]
 print secretary.concatenation
 
 EOF;
-
-        $sourceUrl = $asset->getSourceUrl();
-        if (!$sourceUrl || false !== strpos($sourceUrl, '://')) {
-            return;
-        }
 
         $more = '';
 
@@ -108,9 +91,16 @@ EOF;
         file_put_contents($tmpAsset, $asset->getContent());
 
         $input = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
-        file_put_contents($input, sprintf($format, var_export($this->sprocketsLib, true), var_export($this->baseDir, true), var_export($tmpAsset, true), $more));
+        file_put_contents($input, sprintf($format,
+            $this->sprocketsLib
+                ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))
+                : '\'sprockets\'',
+            $this->getHack($asset),
+            var_export($tmpAsset, true),
+            $more
+        ));
 
-        $proc = new Process($cmd = implode(' ', array_map('escapeshellarg', array($this->rubyBin, $input))));
+        $proc = new Process(implode(' ', array_map('escapeshellarg', array($this->rubyBin, $input))));
         $code = $proc->run();
         unlink($tmpAsset);
         unlink($input);
@@ -124,5 +114,25 @@ EOF;
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    private function getHack(AssetInterface $asset)
+    {
+        static $format = <<<'EOF'
+
+module Sprockets
+  class Preprocessor
+    protected
+    def pathname_for_relative_require_from(source_line)
+      Sprockets::Pathname.new(@environment, File.join(%s, location_from(source_line)))
+    end
+  end
+end
+
+EOF;
+
+        $sourceDir = dirname($asset->getSourceUrl());
+
+        return $sourceDir ? sprintf($format, var_export($sourceDir, true)) : '';
     }
 }

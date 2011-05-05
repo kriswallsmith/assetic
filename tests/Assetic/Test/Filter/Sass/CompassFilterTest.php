@@ -34,7 +34,6 @@ class CompassFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CompassFilter($_SERVER['SASS_BIN']);
-        $filter->addLoadPath(__DIR__.'/../fixtures/compass');
         $filter->setScss(true);
         $filter->filterLoad($asset);
 
@@ -48,7 +47,6 @@ class CompassFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CompassFilter($_SERVER['SASS_BIN']);
-        $filter->addLoadPath(__DIR__.'/../fixtures/compass');
         $filter->filterLoad($asset);
 
         $this->assertContains('.test-class', $asset->getContent());

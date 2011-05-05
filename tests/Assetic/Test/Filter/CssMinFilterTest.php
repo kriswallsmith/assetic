@@ -25,7 +25,7 @@ class CssMinFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testRelativeSourceUrlImportImports()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/cssmin/main.css', array(), 'main.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssmin/main.css');
         $asset->load();
 
         $filter = new CssMinFilter(__DIR__.'/fixtures/cssmin');

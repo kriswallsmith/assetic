@@ -52,10 +52,10 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterLoad()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js', array(), 'main.js');
+        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js');
         $asset->load();
 
-        $filter = new SprocketsFilter(__DIR__.'/fixtures/sprockets', $_SERVER['SPROCKETS_LIB'], $_SERVER['RUBY_BIN']);
+        $filter = new SprocketsFilter($_SERVER['SPROCKETS_LIB'], $_SERVER['RUBY_BIN']);
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib1');
         $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib2');
         $filter->setAssetRoot($this->assetRoot);

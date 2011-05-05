@@ -26,7 +26,7 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No lessphp configuration.');
         }
 
-        $this->filter = new LessphpFilter(__DIR__);
+        $this->filter = new LessphpFilter();
     }
 
     public function testFilterLoad()
@@ -39,10 +39,7 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(".foo .bar { width:2; }\n", $asset->getContent(), '->filterLoad() parses the content');
     }
 
-    /**
-     * @dataProvider getSourceUrls
-     */
-    public function testImportSourceUrl($sourceUrl)
+    public function testImport()
     {
         $expected = <<<EOF
 .foo { color:blue; }
@@ -50,19 +47,11 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less', array(), $sourceUrl);
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
         $asset->load();
 
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
-    }
-
-    public function getSourceUrls()
-    {
-        return array(
-            array('fixtures/less/main.less'),
-            array(__DIR__.'/fixtures/less/main.less'),
-        );
     }
 }

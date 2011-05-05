@@ -27,7 +27,7 @@ class StylusFilterTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No node.js configuration.');
         }
 
-        $this->filter = new StylusFilter(__DIR__, $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
+        $this->filter = new StylusFilter($_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
     }
 
     public function testFilterLoad()

@@ -20,7 +20,6 @@ use Assetic\Asset\AssetInterface;
  */
 class LessFilter implements FilterInterface
 {
-    private $baseDir;
     private $nodeBin;
     private $nodePaths;
     private $compress;
@@ -28,13 +27,11 @@ class LessFilter implements FilterInterface
     /**
      * Constructor.
      *
-     * @param string $baseDir   The base web directory
      * @param string $nodeBin   The path to the node binary
      * @param array  $nodePaths An array of node paths
      */
-    public function __construct($baseDir, $nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
     {
-        $this->baseDir = $baseDir;
         $this->nodeBin = $nodeBin;
         $this->nodePaths = $nodePaths;
     }
@@ -67,14 +64,10 @@ new(less.Parser)(%s).parse(%s, function(e, tree) {
 
 EOF;
 
-        $sourceUrl = $asset->getSourceUrl();
-
         // parser options
         $parserOptions = array();
-        if ($sourceUrl && false === strpos($sourceUrl, '://')) {
-            $baseDir = self::isAbsolutePath($sourceUrl) ? '' : $this->baseDir.'/';
-
-            $parserOptions['paths'] = array($baseDir.dirname($sourceUrl));
+        if ($sourceUrl = $asset->getSourceUrl()) {
+            $parserOptions['paths'] = array(dirname($sourceUrl));
             $parserOptions['filename'] = basename($sourceUrl);
         }
 
@@ -112,10 +105,5 @@ EOF;
 
     public function filterDump(AssetInterface $asset)
     {
-    }
-
-    static private function isAbsolutePath($path)
-    {
-        return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
 }

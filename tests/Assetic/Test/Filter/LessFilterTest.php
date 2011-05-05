@@ -28,7 +28,7 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('No node.js configuration.');
         }
 
-        $this->filter = new LessFilter(__DIR__, $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
+        $this->filter = new LessFilter($_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
     }
 
     public function testFilterLoad()
@@ -41,10 +41,7 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
     }
 
-    /**
-     * @dataProvider getSourceUrls
-     */
-    public function testImportSourceUrl($sourceUrl)
+    public function testImport()
     {
         $expected = <<<EOF
 .foo {
@@ -56,19 +53,11 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less', array(), $sourceUrl);
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
         $asset->load();
 
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
-    }
-
-    public function getSourceUrls()
-    {
-        return array(
-            array('fixtures/less/main.less'),
-            array(__DIR__.'/fixtures/less/main.less'),
-        );
     }
 }
