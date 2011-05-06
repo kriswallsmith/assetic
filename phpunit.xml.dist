@@ -23,6 +23,7 @@
         <!-- <server name="JPEGTRAN_BIN" value="/path/to/jpegtran" /> -->
         <!-- <server name="PNGOUT_BIN" value="/path/to/pngout" /> -->
         <!-- <server name="CSSMIN" value="/path/to/cssmin/source/CssMin.php" /> -->
+        <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
     </php>
 
     <filter>
