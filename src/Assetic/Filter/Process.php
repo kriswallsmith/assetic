@@ -69,7 +69,7 @@ class Process
 
         $this->commandline = $commandline;
         $this->cwd = null === $cwd ? getcwd() : $cwd;
-        if (!is_null($env)) {
+        if (null !== $env) {
             $this->env = array();
             foreach ($env as $key => $value) {
                 $this->env[(binary) $key] = (binary) $value;
