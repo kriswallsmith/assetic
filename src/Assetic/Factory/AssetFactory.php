@@ -173,8 +173,13 @@ class AssetFactory
 
         // inner assets
         foreach ($inputs as $input) {
-            $asset->add($this->parseInput($input));
-            $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+            if (is_array($input)) {
+                // nested formula
+                $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
+            } else {
+                $asset->add($this->parseInput($input));
+                $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+            }
         }
 
         // filters

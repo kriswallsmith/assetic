@@ -143,4 +143,30 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory->addWorker($worker);
         $this->factory->createAsset();
     }
+
+    public function testNestedFormula()
+    {
+        $this->fm->expects($this->once())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue($this->getMock('Assetic\\Filter\\FilterInterface')));
+
+        $inputs = array(
+            'css/main.css',
+            array(
+                // nested formula
+                array('css/more.sass'),
+                array('foo'),
+            ),
+        );
+
+        $asset = $this->factory->createAsset($inputs, array(), array('output' => 'css/*.css'));
+
+        $i = 0;
+        foreach ($asset as $leaf) {
+            $i++;
+        }
+
+        $this->assertEquals(2, $i);
+    }
 }
