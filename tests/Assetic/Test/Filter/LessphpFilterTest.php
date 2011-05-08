@@ -45,10 +45,8 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
     public function testImportSourceUrl($sourceUrl)
     {
         $expected = <<<EOF
-.foo {
-  color:blue;
-  color:red;
-}
+.foo { color:blue; }
+.foo { color:red; }
 
 EOF;
 
