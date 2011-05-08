@@ -120,7 +120,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         }
 
         if (!isset($options['name'])) {
-            $options['name'] = $this->factory->generateAssetName($inputs, $filters);
+            $options['name'] = $this->factory->generateAssetName($inputs, $filters, $options);
         }
 
         // apply the prototype options

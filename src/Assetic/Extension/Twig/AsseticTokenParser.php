@@ -107,7 +107,7 @@ class AsseticTokenParser extends \Twig_TokenParser
         }
 
         if (!$name) {
-            $name = $this->factory->generateAssetName($inputs, $filters);
+            $name = $this->factory->generateAssetName($inputs, $filters, $attributes);
         }
 
         $asset = $this->factory->createAsset($inputs, $filters, $attributes + array('name' => $name));

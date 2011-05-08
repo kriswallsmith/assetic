@@ -74,7 +74,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $options = array_replace($invoker->getOptions(), isset($arguments[1]) ? $arguments[1] : array());
 
                 if (!isset($options['name'])) {
-                    $options['name'] = $invoker->getFactory()->generateAssetName($inputs, $filters);
+                    $options['name'] = $invoker->getFactory()->generateAssetName($inputs, $filters, $options);
                 }
 
                 $formulae[$options['name']] = array($inputs, $filters, $options);

@@ -161,7 +161,7 @@ class AssetFactory
         }
 
         if (!isset($options['name'])) {
-            $options['name'] = $this->generateAssetName($inputs, $filters);
+            $options['name'] = $this->generateAssetName($inputs, $filters, $options);
         }
 
         if (!isset($options['debug'])) {
@@ -206,9 +206,12 @@ class AssetFactory
         return $asset;
     }
 
-    public function generateAssetName($inputs, $filters)
+    public function generateAssetName($inputs, $filters, $options = array())
     {
-        return substr(sha1(serialize(array_merge($inputs, $filters))), 0, 7);
+        // ignore name
+        unset($options['name']);
+
+        return substr(sha1(serialize($inputs).serialize($filters).serialize($options)), 0, 7);
     }
 
     /**
