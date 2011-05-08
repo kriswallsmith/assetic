@@ -89,6 +89,16 @@ class AssetFactory
     }
 
     /**
+     * Returns the current asset manager.
+     *
+     * @return AssetManager|null The asset manager
+     */
+    public function getAssetManager()
+    {
+        return $this->am;
+    }
+
+    /**
      * Sets the asset manager to use when creating asset references.
      *
      * @param AssetManager $am The asset manager
@@ -96,6 +106,16 @@ class AssetFactory
     public function setAssetManager(AssetManager $am)
     {
         $this->am = $am;
+    }
+
+    /**
+     * Returns the current filter manager.
+     *
+     * @return FilterManager|null The filter manager
+     */
+    public function getFilterManager()
+    {
+        return $this->fm;
     }
 
     /**
