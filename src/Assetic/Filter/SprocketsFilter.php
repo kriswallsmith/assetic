@@ -131,8 +131,11 @@ end
 
 EOF;
 
-        $sourceDir = dirname($asset->getSourceUrl());
+        $base = $asset->getBase();
+        $path = $asset->getPath();
 
-        return $sourceDir ? sprintf($format, var_export($sourceDir, true)) : '';
+        if ($base && $path) {
+            return sprintf($format, var_export(dirname($base.'/'.$path), true));
+        }
     }
 }

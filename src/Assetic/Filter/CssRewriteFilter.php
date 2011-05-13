@@ -26,17 +26,18 @@ class CssRewriteFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $sourceUrl = $asset->getSourceUrl();
-        $targetUrl = $asset->getTargetUrl();
+        $sourceBase = $asset->getBase();
+        $sourcePath = $asset->getPath();
+        $targetUrl = $asset->getUrl();
 
-        if (null === $sourceUrl || null === $targetUrl || $sourceUrl == $targetUrl) {
+        if (null === $sourceBase || null === $sourcePath || null === $targetUrl || $sourcePath == $targetUrl) {
             return;
         }
 
         // learn how to get from the target back to the source
-        if (false !== strpos($sourceUrl, '://')) {
+        if (false !== strpos($sourceBase, '://')) {
             // the source is absolute, this should be easy
-            $parts = parse_url($sourceUrl);
+            $parts = parse_url($sourceBase.'/'.$sourcePath);
 
             $host = $parts['scheme'].'://'.$parts['host'];
             $path = dirname($parts['path']).'/';
@@ -45,13 +46,13 @@ class CssRewriteFilter implements FilterInterface
             $host = '';
 
             // pop entries off the target until it fits in the source
-            if ('.' == dirname($sourceUrl)) {
+            if ('.' == dirname($sourcePath)) {
                 $path = str_repeat('../', substr_count($targetUrl, '/'));
             } elseif ('.' == $targetDir = dirname($targetUrl)) {
-                $path = dirname($sourceUrl).'/';
+                $path = dirname($sourcePath).'/';
             } else {
                 $path = '';
-                while (0 !== strpos($sourceUrl, $targetDir)) {
+                while (0 !== strpos($sourcePath, $targetDir)) {
                     if (false !== $pos = strrpos($targetDir, '/')) {
                         $targetDir = substr($targetDir, 0, $pos);
                         $path .= '../';
@@ -61,7 +62,7 @@ class CssRewriteFilter implements FilterInterface
                         break;
                     }
                 }
-                $path .= ltrim(substr(dirname($sourceUrl).'/', strlen($targetDir)), '/');
+                $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
             }
         }
 
