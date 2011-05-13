@@ -32,7 +32,7 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
 
         $asset->expects($this->once())
-            ->method('getTargetUrl')
+            ->method('getUrl')
             ->will($this->returnValue('css/main.css'));
         $asset->expects($this->once())
             ->method('ensureFilter')
@@ -48,7 +48,7 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
 
         $asset->expects($this->once())
-            ->method('getTargetUrl')
+            ->method('getUrl')
             ->will($this->returnValue('js/all.js'));
         $asset->expects($this->never())->method('ensureFilter');
 

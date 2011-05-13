@@ -110,6 +110,6 @@ class AsseticNode extends \Twig_Node
 
     protected function compileAssetUrl(\Twig_Compiler $compiler, AssetInterface $asset, $name)
     {
-        $compiler->repr($asset->getTargetUrl());
+        $compiler->repr($asset->getUrl());
     }
 }

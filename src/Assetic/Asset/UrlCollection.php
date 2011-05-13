@@ -40,13 +40,13 @@ class UrlCollection implements \IteratorAggregate, \Countable
         if ($debug) {
             $manyUrls = array();
             foreach ($coll as $leaf) {
-                $manyUrls[] = $leaf->getTargetUrl();
+                $manyUrls[] = $leaf->getUrl();
             }
         } else {
-            $manyUrls = array($coll->getTargetUrl());
+            $manyUrls = array($coll->getUrl());
         }
 
-        return new static($coll->getTargetUrl(), $manyUrls);
+        return new static($coll->getUrl(), $manyUrls);
     }
 
     public function __construct($oneUrl, array $manyUrls)
