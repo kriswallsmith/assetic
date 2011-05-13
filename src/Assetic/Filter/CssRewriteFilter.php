@@ -89,8 +89,8 @@ class CssRewriteFilter implements FilterInterface
 
         $content = $asset->getContent();
 
-        $content = preg_replace_callback('/url\((["\']?)(?<url>[^\\\\n\\\\r\)]*)(\\1)\)/', $callback, $content);
-        $content = preg_replace_callback('/import (["\'])(?<url>[^\\\\n\\\\r]*)(\\1)/', $callback, $content);
+        $content = preg_replace_callback('/url\((["\']?)(?<url>[^\n\r\)]*)(\\1)\)/', $callback, $content);
+        $content = preg_replace_callback('/import (["\'])(?<url>[^\n\r]*)(\\1)/', $callback, $content);
 
         $asset->setContent($content);
     }
