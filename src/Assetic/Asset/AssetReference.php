@@ -68,19 +68,24 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($content));
     }
 
-    public function getSourceUrl()
+    public function getBase()
     {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function getTargetUrl()
+    public function getPath()
     {
         return $this->callAsset(__FUNCTION__);
     }
 
-    public function setTargetUrl($targetUrl)
+    public function getUrl()
     {
-        $this->callAsset(__FUNCTION__, array($targetUrl));
+        return $this->callAsset(__FUNCTION__);
+    }
+
+    public function setUrl($url)
+    {
+        $this->callAsset(__FUNCTION__, array($url));
     }
 
     public function getLastModified()

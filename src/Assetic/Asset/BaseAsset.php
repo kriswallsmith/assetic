@@ -24,22 +24,24 @@ use Assetic\Filter\FilterInterface;
  */
 abstract class BaseAsset implements AssetInterface
 {
-    private $sourceUrl;
     private $filters;
-    private $targetUrl;
+    private $base;
+    private $path;
+    private $url;
     private $content;
     private $loaded;
 
     /**
      * Constructor.
      *
-     * @param string $sourceUrl The source URL
-     * @param array  $filters   Filters for the asset
+     * @param array $filters Filters for the asset
      */
-    public function __construct($sourceUrl = null, $filters = array())
+    public function __construct($filters = array(), $base = null, $path = null)
     {
-        $this->sourceUrl = $sourceUrl;
         $this->filters = new FilterCollection($filters);
+        $this->base = $base;
+        $this->path = $path;
+        $this->loaded = false;
     }
 
     public function ensureFilter(FilterInterface $filter)
@@ -101,18 +103,23 @@ abstract class BaseAsset implements AssetInterface
         $this->content = $content;
     }
 
-    public function getSourceUrl()
+    public function getBase()
     {
-        return $this->sourceUrl;
+        return $this->base;
     }
 
-    public function getTargetUrl()
+    public function getPath()
     {
-        return $this->targetUrl;
+        return $this->path;
     }
 
-    public function setTargetUrl($targetUrl)
+    public function getUrl()
     {
-        $this->targetUrl = $targetUrl;
+        return $this->url;
+    }
+
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 }

@@ -20,13 +20,45 @@ use Assetic\Filter\FilterInterface;
  */
 class FileAsset extends BaseAsset
 {
+    private $source;
+
+    /**
+     * Constructor.
+     *
+     * @param string $source  An absolute path
+     * @param array  $filters An array of filters
+     * @param string $base    The base directory
+     * @param string $path    The source path
+     *
+     * @throws InvalidArgumentException If the supplied base doesn't match the source when guessing the path
+     */
+    public function __construct($source, $filters = array(), $base = null, $path = null)
+    {
+        if (null === $base) {
+            $base = dirname($source);
+            if (null === $path) {
+                $path = basename($source);
+            }
+        } elseif (null === $path) {
+            if (0 !== strpos($source, $base)) {
+                throw new \InvalidArgumentException(sprintf('The source "%s" is not in the base directory "%s"', $source, $base));
+            }
+
+            $path = substr($source, strlen($base) + 1);
+        }
+
+        $this->source = $source;
+
+        parent::__construct($filters, $base, $path);
+    }
+
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad(file_get_contents($this->getSourceUrl()), $additionalFilter);
+        $this->doLoad(file_get_contents($this->source), $additionalFilter);
     }
 
     public function getLastModified()
     {
-        return filemtime($this->getSourceUrl());
+        return filemtime($this->source);
     }
 }

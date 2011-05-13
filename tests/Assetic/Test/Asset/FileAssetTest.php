@@ -41,4 +41,24 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__FILE__);
         $this->assertLessThan(time(), $asset->getLastModified(), '->getLastModified() returns the mtime');
     }
+
+    public function testDefaultBaseAndPath()
+    {
+        $asset = new FileAsset(__FILE__);
+        $this->assertEquals(__DIR__, $asset->getBase(), '->__construct() defaults base to the asset directory');
+        $this->assertEquals(basename(__FILE__), $asset->getPath(), '->__construct() defaults path to the asset basename');
+    }
+
+    public function testPathGuessing()
+    {
+        $asset = new FileAsset(__FILE__, array(), __DIR__);
+        $this->assertEquals(basename(__FILE__), $asset->getPath(), '->__construct() guesses the asset path');
+    }
+
+    public function testInvalidBase()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $asset = new FileAsset(__FILE__, array(), __DIR__.'/foo');
+    }
 }

@@ -146,13 +146,22 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
         $this->asset->setContent('asdf');
     }
 
-    public function testGetSourceUrl()
+    public function testGetBase()
     {
         $this->inner->expects($this->once())
-            ->method('getSourceUrl')
+            ->method('getBase')
             ->will($this->returnValue('asdf'));
 
-        $this->assertEquals('asdf', $this->asset->getSourceUrl(), '->getSourceUrl() returns the inner asset source URL');
+        $this->assertEquals('asdf', $this->asset->getBase(), '->getBase() returns the inner asset base');
+    }
+
+    public function testGetPath()
+    {
+        $this->inner->expects($this->once())
+            ->method('getPath')
+            ->will($this->returnValue('asdf'));
+
+        $this->assertEquals('asdf', $this->asset->getPath(), '->getPath() returns the inner asset path');
     }
 
     public function testGetLastModified()

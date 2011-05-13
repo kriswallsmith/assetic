@@ -83,8 +83,8 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadDedupBySourceUrl()
     {
-        $asset1 = new StringAsset('asset', array(), 'foo.bar');
-        $asset2 = new StringAsset('asset', array(), 'foo.bar');
+        $asset1 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
+        $asset2 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
 
         $coll = new AssetCollection(array($asset1, $asset2));
         $coll->load();
@@ -104,8 +104,8 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testDumpDedupBySourceUrl()
     {
-        $asset1 = new StringAsset('asset', array(), 'foo.bar');
-        $asset2 = new StringAsset('asset', array(), 'foo.bar');
+        $asset1 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
+        $asset2 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
 
         $coll = new AssetCollection(array($asset1, $asset2));
         $coll->load();
@@ -212,9 +212,9 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testIteration()
     {
-        $asset1 = new StringAsset('asset1', array(), 'foo.css');
-        $asset2 = new StringAsset('asset2', array(), 'foo.css');
-        $asset3 = new StringAsset('asset3', array(), 'bar.css');
+        $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo.css');
+        $asset2 = new StringAsset('asset2', array(), '/some/dir', 'foo.css');
+        $asset3 = new StringAsset('asset3', array(), '/some/dir', 'bar.css');
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
 
@@ -228,16 +228,16 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testBasenameCollision()
     {
-        $asset1 = new StringAsset('asset1', array(), 'foo/foo.css');
-        $asset2 = new StringAsset('asset2', array(), 'bar/foo.css');
+        $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo/foo.css');
+        $asset2 = new StringAsset('asset2', array(), '/some/dir', 'bar/foo.css');
 
         $coll = new AssetCollection(array($asset1, $asset2));
 
-        $targetUrls = array();
+        $urls = array();
         foreach ($coll as $leaf) {
-            $targetUrls[] = $leaf->getTargetUrl();
+            $urls[] = $leaf->getUrl();
         }
 
-        $this->assertEquals(2, count(array_unique($targetUrls)), 'iterator prevents basename collisions');
+        $this->assertEquals(2, count(array_unique($urls)), 'iterator prevents basename collisions');
     }
 }
