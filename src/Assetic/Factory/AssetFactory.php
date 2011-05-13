@@ -26,7 +26,7 @@ use Assetic\FilterManager;
  */
 class AssetFactory
 {
-    private $baseDir;
+    private $base;
     private $debug;
     private $output;
     private $workers;
@@ -36,13 +36,13 @@ class AssetFactory
     /**
      * Constructor.
      *
-     * @param string  $baseDir Path to the base directory for relative URLs
-     * @param string  $output  The default output string
-     * @param Boolean $debug   Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $base   The default base directory
+     * @param string  $output The default output string
+     * @param Boolean $debug  Filters prefixed with a "?" will be omitted in debug mode
      */
-    public function __construct($baseDir, $debug = false)
+    public function __construct($base, $debug = false)
     {
-        $this->baseDir = rtrim($baseDir, '/').'/';
+        $this->base    = rtrim($base, '/');
         $this->debug   = $debug;
         $this->output  = 'assetic/*';
         $this->workers = array();
@@ -139,6 +139,7 @@ class AssetFactory
      *  * output: An output string
      *  * name:   An asset name for interpolation in output patterns
      *  * debug:  Forces debug mode on or off for this asset
+     *  * base:   An array or string of more base directories
      *
      * @param array|string $inputs  An array of input strings
      * @param array|string $filters An array of filter names
@@ -168,6 +169,16 @@ class AssetFactory
             $options['debug'] = $this->debug;
         }
 
+        if (!isset($options['base'])) {
+            $options['base'] = array($this->base);
+        } else {
+            if (!is_array($options['base'])) {
+                $options['base'] = array($options['base']);
+            }
+
+            $options['base'][] = $this->base;
+        }
+
         $asset = $this->createAssetCollection();
         $extensions = array();
 
@@ -177,7 +188,7 @@ class AssetFactory
                 // nested formula
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
-                $asset->add($this->parseInput($input));
+                $asset->add($this->parseInput($input, $options));
                 $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
             }
         }
@@ -197,7 +208,7 @@ class AssetFactory
         }
 
         // output --> target url
-        $asset->setTargetUrl(str_replace('*', $options['name'], $options['output']));
+        $asset->setUrl(str_replace('*', $options['name'], $options['output']));
 
         foreach ($this->workers as $worker) {
             $asset = $worker->process($asset);
@@ -226,26 +237,40 @@ class AssetFactory
      *
      * Both globs and paths will be absolutized using the current base directory.
      *
-     * @param string $input An input string
+     * @param string $input   An input string
+     * @param array  $options An array of options
      *
      * @return AssetInterface An asset
      */
-    protected function parseInput($input)
+    protected function parseInput($input, array $options = array())
     {
         if ('@' == $input[0]) {
             return $this->createAssetReference(substr($input, 1));
         }
 
         if (false !== strpos($input, '://')) {
-            return $this->createFileAsset($input);
+            list($scheme, $url) = explode('://', $input, 2);
+            list($host, $path) = explode('/', $url, 2);
+
+            return $this->createFileAsset($input, $scheme.'://'.$host, $path);
         }
 
-        $baseDir = self::isAbsolutePath($input) ? '' : $this->baseDir;
+        if (self::isAbsolutePath($input)) {
+            if ($base = self::findBaseDir($input, $options['base'])) {
+                $path = ltrim(substr($input, strlen($base)), '/');
+            } else {
+                $path = null;
+            }
+        } else {
+            $base  = $this->base;
+            $path  = $input;
+            $input = $this->base.'/'.$path;
+        }
 
         if (false !== strpos($input, '*')) {
-            return $this->createGlobAsset($baseDir.$input);
+            return $this->createGlobAsset($input, $base);
         } else {
-            return $this->createFileAsset($baseDir.$input);
+            return $this->createFileAsset($input, $base, $path);
         }
     }
 
@@ -263,14 +288,14 @@ class AssetFactory
         return new AssetReference($this->am, $name);
     }
 
-    protected function createGlobAsset($glob)
+    protected function createGlobAsset($glob, $base = null)
     {
-        return new GlobAsset($glob);
+        return new GlobAsset($glob, array(), $base);
     }
 
-    protected function createFileAsset($path)
+    protected function createFileAsset($path, $base = null, $path = null)
     {
-        return new FileAsset($path);
+        return new FileAsset($path, array(), $base, $path);
     }
 
     protected function getFilter($name)
@@ -285,5 +310,22 @@ class AssetFactory
     static private function isAbsolutePath($path)
     {
         return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
+    }
+
+    /**
+     * Loops through the base directories and returns the first match.
+     *
+     * @param string $path  An absolute path
+     * @param array  $bases An array of base directories
+     *
+     * @return string|null The matching base directory, if found
+     */
+    static private function findBaseDir($path, array $bases)
+    {
+        foreach ($bases as $base) {
+            if (0 === strpos($path, $base)) {
+                return $base;
+            }
+        }
     }
 }
