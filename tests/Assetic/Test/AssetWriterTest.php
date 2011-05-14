@@ -41,7 +41,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
             ->with('foo')
             ->will($this->returnValue($asset));
         $asset->expects($this->once())
-            ->method('getUrl')
+            ->method('getTargetPath')
             ->will($this->returnValue('target_url'));
         $asset->expects($this->once())
             ->method('dump')

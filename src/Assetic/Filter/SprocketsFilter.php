@@ -131,11 +131,11 @@ end
 
 EOF;
 
-        $base = $asset->getBase();
-        $path = $asset->getPath();
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
 
-        if ($base && $path) {
-            return sprintf($format, var_export(dirname($base.'/'.$path), true));
+        if ($root && $path) {
+            return sprintf($format, var_export(dirname($root.'/'.$path), true));
         }
     }
 }

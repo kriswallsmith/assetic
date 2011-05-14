@@ -26,7 +26,7 @@ use Assetic\FilterManager;
  */
 class AssetFactory
 {
-    private $base;
+    private $root;
     private $debug;
     private $output;
     private $workers;
@@ -36,13 +36,13 @@ class AssetFactory
     /**
      * Constructor.
      *
-     * @param string  $base   The default base directory
+     * @param string  $root   The default root directory
      * @param string  $output The default output string
      * @param Boolean $debug  Filters prefixed with a "?" will be omitted in debug mode
      */
-    public function __construct($base, $debug = false)
+    public function __construct($root, $debug = false)
     {
-        $this->base    = rtrim($base, '/');
+        $this->root    = rtrim($root, '/');
         $this->debug   = $debug;
         $this->output  = 'assetic/*';
         $this->workers = array();
@@ -139,7 +139,7 @@ class AssetFactory
      *  * output: An output string
      *  * name:   An asset name for interpolation in output patterns
      *  * debug:  Forces debug mode on or off for this asset
-     *  * base:   An array or string of more base directories
+     *  * root:   An array or string of more root directories
      *
      * @param array|string $inputs  An array of input strings
      * @param array|string $filters An array of filter names
@@ -169,14 +169,14 @@ class AssetFactory
             $options['debug'] = $this->debug;
         }
 
-        if (!isset($options['base'])) {
-            $options['base'] = array($this->base);
+        if (!isset($options['root'])) {
+            $options['root'] = array($this->root);
         } else {
-            if (!is_array($options['base'])) {
-                $options['base'] = array($options['base']);
+            if (!is_array($options['root'])) {
+                $options['root'] = array($options['root']);
             }
 
-            $options['base'][] = $this->base;
+            $options['root'][] = $this->root;
         }
 
         $asset = $this->createAssetCollection();
@@ -208,7 +208,7 @@ class AssetFactory
         }
 
         // output --> target url
-        $asset->setUrl(str_replace('*', $options['name'], $options['output']));
+        $asset->setTargetPath(str_replace('*', $options['name'], $options['output']));
 
         foreach ($this->workers as $worker) {
             $asset = $worker->process($asset);
@@ -235,7 +235,7 @@ class AssetFactory
      *  * A glob:          If the string contains a "*" it will be interpreted as a glob
      *  * A path:          Otherwise the string is interpreted as a path
      *
-     * Both globs and paths will be absolutized using the current base directory.
+     * Both globs and paths will be absolutized using the current root directory.
      *
      * @param string $input   An input string
      * @param array  $options An array of options
@@ -256,21 +256,21 @@ class AssetFactory
         }
 
         if (self::isAbsolutePath($input)) {
-            if ($base = self::findBaseDir($input, $options['base'])) {
-                $path = ltrim(substr($input, strlen($base)), '/');
+            if ($root = self::findRootDir($input, $options['root'])) {
+                $path = ltrim(substr($input, strlen($root)), '/');
             } else {
                 $path = null;
             }
         } else {
-            $base  = $this->base;
+            $root  = $this->root;
             $path  = $input;
-            $input = $this->base.'/'.$path;
+            $input = $this->root.'/'.$path;
         }
 
         if (false !== strpos($input, '*')) {
-            return $this->createGlobAsset($input, $base);
+            return $this->createGlobAsset($input, $root);
         } else {
-            return $this->createFileAsset($input, $base, $path);
+            return $this->createFileAsset($input, $root, $path);
         }
     }
 
@@ -288,14 +288,14 @@ class AssetFactory
         return new AssetReference($this->am, $name);
     }
 
-    protected function createGlobAsset($glob, $base = null)
+    protected function createGlobAsset($glob, $root = null)
     {
-        return new GlobAsset($glob, array(), $base);
+        return new GlobAsset($glob, array(), $root);
     }
 
-    protected function createFileAsset($path, $base = null, $path = null)
+    protected function createFileAsset($path, $root = null, $path = null)
     {
-        return new FileAsset($path, array(), $base, $path);
+        return new FileAsset($path, array(), $root, $path);
     }
 
     protected function getFilter($name)
@@ -313,18 +313,18 @@ class AssetFactory
     }
 
     /**
-     * Loops through the base directories and returns the first match.
+     * Loops through the root directories and returns the first match.
      *
      * @param string $path  An absolute path
-     * @param array  $bases An array of base directories
+     * @param array  $roots An array of root directories
      *
-     * @return string|null The matching base directory, if found
+     * @return string|null The matching root directory, if found
      */
-    static private function findBaseDir($path, array $bases)
+    static private function findRootDir($path, array $roots)
     {
-        foreach ($bases as $base) {
-            if (0 === strpos($path, $base)) {
-                return $base;
+        foreach ($roots as $root) {
+            if (0 === strpos($path, $root)) {
+                return $root;
             }
         }
     }

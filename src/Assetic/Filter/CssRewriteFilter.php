@@ -26,11 +26,11 @@ class CssRewriteFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $sourceBase = $asset->getBase();
-        $sourcePath = $asset->getPath();
-        $targetUrl = $asset->getUrl();
+        $sourceBase = $asset->getSourceRoot();
+        $sourcePath = $asset->getSourcePath();
+        $targetPath = $asset->getTargetPath();
 
-        if (null === $sourceBase || null === $sourcePath || null === $targetUrl || $sourcePath == $targetUrl) {
+        if (null === $sourceBase || null === $sourcePath || null === $targetPath || $sourcePath == $targetPath) {
             return;
         }
 
@@ -47,8 +47,8 @@ class CssRewriteFilter implements FilterInterface
 
             // pop entries off the target until it fits in the source
             if ('.' == dirname($sourcePath)) {
-                $path = str_repeat('../', substr_count($targetUrl, '/'));
-            } elseif ('.' == $targetDir = dirname($targetUrl)) {
+                $path = str_repeat('../', substr_count($targetPath, '/'));
+            } elseif ('.' == $targetDir = dirname($targetPath)) {
                 $path = dirname($sourcePath).'/';
             } else {
                 $path = '';

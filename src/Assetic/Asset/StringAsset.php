@@ -26,15 +26,16 @@ class StringAsset extends BaseAsset
     /**
      * Constructor.
      *
-     * @param string $content   The content of the asset
-     * @param array  $filters   Filters for the asset
-     * @param string $sourceUrl The source URL
+     * @param string $content    The content of the asset
+     * @param array  $filters    Filters for the asset
+     * @param string $sourceRoot The source asset root directory
+     * @param string $sourcePath The source asset path
      */
-    public function __construct($content, $filters = array(), $base = null, $path = null)
+    public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null)
     {
         $this->content = $content;
 
-        parent::__construct($filters, $base, $path);
+        parent::__construct($filters, $sourceRoot, $sourcePath);
     }
 
     public function load(FilterInterface $additionalFilter = null)

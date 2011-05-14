@@ -45,14 +45,14 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
     public function testDefaultBaseAndPath()
     {
         $asset = new FileAsset(__FILE__);
-        $this->assertEquals(__DIR__, $asset->getBase(), '->__construct() defaults base to the asset directory');
-        $this->assertEquals(basename(__FILE__), $asset->getPath(), '->__construct() defaults path to the asset basename');
+        $this->assertEquals(__DIR__, $asset->getSourceRoot(), '->__construct() defaults base to the asset directory');
+        $this->assertEquals(basename(__FILE__), $asset->getSourcePath(), '->__construct() defaults path to the asset basename');
     }
 
     public function testPathGuessing()
     {
         $asset = new FileAsset(__FILE__, array(), __DIR__);
-        $this->assertEquals(basename(__FILE__), $asset->getPath(), '->__construct() guesses the asset path');
+        $this->assertEquals(basename(__FILE__), $asset->getSourcePath(), '->__construct() guesses the asset path');
     }
 
     public function testInvalidBase()

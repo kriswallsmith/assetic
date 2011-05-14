@@ -31,12 +31,12 @@ class LessphpFilter implements FilterInterface
 {
     public function filterLoad(AssetInterface $asset)
     {
-        $base = $asset->getBase();
-        $path = $asset->getPath();
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
 
         $lc = new \lessc();
-        if ($base && $path) {
-            $lc->importDir = dirname($base.'/'.$path);
+        if ($root && $path) {
+            $lc->importDir = dirname($root.'/'.$path);
         }
 
         $asset->setContent($lc->parse($asset->getContent()));

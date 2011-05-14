@@ -25,31 +25,31 @@ class FileAsset extends BaseAsset
     /**
      * Constructor.
      *
-     * @param string $source  An absolute path
-     * @param array  $filters An array of filters
-     * @param string $base    The base directory
-     * @param string $path    The source path
+     * @param string $source     An absolute path
+     * @param array  $filters    An array of filters
+     * @param string $sourceRoot The source asset root directory
+     * @param string $sourcePath The source asset path
      *
-     * @throws InvalidArgumentException If the supplied base doesn't match the source when guessing the path
+     * @throws InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
-    public function __construct($source, $filters = array(), $base = null, $path = null)
+    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null)
     {
-        if (null === $base) {
-            $base = dirname($source);
-            if (null === $path) {
-                $path = basename($source);
+        if (null === $sourceRoot) {
+            $sourceRoot = dirname($source);
+            if (null === $sourcePath) {
+                $sourcePath = basename($source);
             }
-        } elseif (null === $path) {
-            if (0 !== strpos($source, $base)) {
-                throw new \InvalidArgumentException(sprintf('The source "%s" is not in the base directory "%s"', $source, $base));
+        } elseif (null === $sourcePath) {
+            if (0 !== strpos($source, $sourceRoot)) {
+                throw new \InvalidArgumentException(sprintf('The source "%s" is not in the root directory "%s"', $source, $sourceRoot));
             }
 
-            $path = substr($source, strlen($base) + 1);
+            $sourcePath = substr($source, strlen($sourceRoot) + 1);
         }
 
         $this->source = $source;
 
-        parent::__construct($filters, $base, $path);
+        parent::__construct($filters, $sourceRoot, $sourcePath);
     }
 
     public function load(FilterInterface $additionalFilter = null)

@@ -18,16 +18,16 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        $this->markTestIncomplete('needs to be updated');
+        $this->markTestIncomplete();
     }
 
     /**
      * @dataProvider provideUrls
      */
-    public function testUrls($format, $sourceUrl, $targetUrl, $inputUrl, $expectedUrl)
+    public function testUrls($format, $sourceUrl, $targetPath, $inputUrl, $expectedUrl)
     {
         $asset = new StringAsset(sprintf($format, $inputUrl), array(), $sourceUrl);
-        $asset->setUrl($targetUrl);
+        $asset->setTargetPath($targetPath);
         $asset->load();
 
         $filter = new CssRewriteFilter();
@@ -66,7 +66,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testNoTargetUrl()
+    public function testNoTargetPath()
     {
         $content = 'body{url(foo.gif)}';
 

@@ -76,7 +76,7 @@ interface AssetInterface
     function setContent($content);
 
     /**
-     * Returns an absolute path or URL to the asset's base directory.
+     * Returns an absolute path or URL to the source asset's root directory.
      *
      * This value should be an absolute path to a directory in the filesystem,
      * an absolute URL with no path, or null.
@@ -87,38 +87,39 @@ interface AssetInterface
      *  * 'http://example.com'
      *  * null
      *
-     * @return string|null The asset's base directory
+     * @return string|null The asset's root
      */
-    function getBase();
+    function getSourceRoot();
 
     /**
      * Returns the relative path for the source asset.
      *
-     * This value can be appended to the asset's base value (if both are
+     * This value can be combined with the asset's source root (if both are
      * non-null) to get something compatible with file_get_contents().
      *
      * For example:
      *
      *  * 'js/main.js'
+     *  * 'main.js'
      *  * null
      *
      * @return string|null The source asset path
      */
-    function getPath();
+    function getSourcePath();
 
     /**
      * Returns the URL for the current asset.
      *
      * @return string|null A web URL where the asset will be dumped
      */
-    function getUrl();
+    function getTargetPath();
 
     /**
      * Sets the URL for the current asset.
      *
-     * @param string $url A web URL where the asset will be dumped
+     * @param string $targetPath A web URL where the asset will be dumped
      */
-    function setUrl($url);
+    function setTargetPath($targetPath);
 
     /**
      * Returns the time the current asset was last modified.

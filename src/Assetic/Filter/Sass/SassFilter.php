@@ -99,12 +99,12 @@ class SassFilter implements FilterInterface
     {
         $options = array($this->sassPath);
 
-        $base = $asset->getBase();
-        $path = $asset->getPath();
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
 
-        if ($base && $path) {
+        if ($root && $path) {
             $options[] = '--load-path';
-            $options[] = dirname($base.'/'.$path);
+            $options[] = dirname($root.'/'.$path);
         }
 
         if ($this->unixNewlines) {

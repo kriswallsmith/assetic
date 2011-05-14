@@ -54,7 +54,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $node->getAttribute('inputs'),
                 $node->getAttribute('filters'),
                 array(
-                    'output' => $node->getAttribute('asset')->getUrl(),
+                    'output' => $node->getAttribute('asset')->getTargetPath(),
                     'name'   => $node->getAttribute('name'),
                     'debug'  => $node->getAttribute('debug'),
                 ),

@@ -66,13 +66,13 @@ stylus(%s, %s).render(function(e, css){
 
 EOF;
 
-        $base = $asset->getBase();
-        $path = $asset->getPath();
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
 
         // parser options
         $parserOptions = array();
-        if ($base && $path) {
-            $parserOptions['paths'] = array(dirname($base.'/'.$path));
+        if ($root && $path) {
+            $parserOptions['paths'] = array(dirname($root.'/'.$path));
             $parserOptions['filename'] = basename($path);
         }
 

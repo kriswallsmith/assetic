@@ -59,10 +59,10 @@ class CssMinFilter implements FilterInterface
         $plugins = $this->plugins;
 
         if (isset($filters['ImportImports']) && true === $filters['ImportImports']) {
-            $base = $asset->getBase();
-            $path = $asset->getPath();
-            if ($base && $path) {
-                $filters['ImportImports'] = array('BasePath' => dirname($base.'/'.$path));
+            $root = $asset->getSourceRoot();
+            $path = $asset->getSourcePath();
+            if ($root && $path) {
+                $filters['ImportImports'] = array('BasePath' => dirname($root.'/'.$path));
             } else {
                 unset($filters['ImportImports']);
             }

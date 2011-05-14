@@ -56,6 +56,6 @@ class AsseticFilterInvoker
     {
         $asset = $this->factory->createAsset($input, $this->filters, $options + $this->options);
 
-        return $asset->getUrl();
+        return $asset->getTargetPath();
     }
 }

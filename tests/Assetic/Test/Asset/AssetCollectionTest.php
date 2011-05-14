@@ -235,7 +235,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $urls = array();
         foreach ($coll as $leaf) {
-            $urls[] = $leaf->getUrl();
+            $urls[] = $leaf->getTargetPath();
         }
 
         $this->assertEquals(2, count(array_unique($urls)), 'iterator prevents basename collisions');

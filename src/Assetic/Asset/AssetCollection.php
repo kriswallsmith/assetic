@@ -23,18 +23,18 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
 {
     private $assets;
     private $filters;
-    private $base;
-    private $url;
+    private $sourceRoot;
+    private $targetPath;
     private $content;
 
     /**
      * Constructor.
      *
-     * @param array  $assets  Assets for the current collection
-     * @param array  $filters Filters for the current collection
-     * @param string $base    The base directory
+     * @param array  $assets     Assets for the current collection
+     * @param array  $filters    Filters for the current collection
+     * @param string $sourceRoot The root directory
      */
-    public function __construct($assets = array(), $filters = array(), $base = null)
+    public function __construct($assets = array(), $filters = array(), $sourceRoot = null)
     {
         $this->assets = array();
         foreach ($assets as $asset) {
@@ -42,7 +42,7 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
         }
 
         $this->filters = new FilterCollection($filters);
-        $this->base = $base;
+        $this->sourceRoot = $sourceRoot;
     }
 
     /**
@@ -103,23 +103,23 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
         $this->content = $content;
     }
 
-    public function getBase()
+    public function getSourceRoot()
     {
-        return $this->base;
+        return $this->sourceRoot;
     }
 
-    public function getPath()
+    public function getSourcePath()
     {
     }
 
-    public function getUrl()
+    public function getTargetPath()
     {
-        return $this->url;
+        return $this->targetPath;
     }
 
-    public function setUrl($url)
+    public function setTargetPath($targetPath)
     {
-        $this->url = $url;
+        $this->targetPath = $targetPath;
     }
 
     /**
@@ -196,10 +196,10 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
         }
 
         // check source
-        $base = $asset->getBase();
-        $path = $asset->getPath();
-        if ($base && $path) {
-            $source = $base.'/'.$path;
+        $sourceRoot = $asset->getSourceRoot();
+        $sourcePath = $asset->getSourcePath();
+        if ($sourceRoot && $sourcePath) {
+            $source = $sourceRoot.'/'.$sourcePath;
             if (in_array($source, $this->sources)) {
                 $duplicate = true;
             } else {
@@ -238,7 +238,7 @@ class AssetCollectionIterator implements \RecursiveIterator
     {
         $this->assets  = $coll->all();
         $this->filters = $coll->getFilters();
-        $this->output  = $coll->getUrl();
+        $this->output  = $coll->getTargetPath();
 
         if (false === $pos = strpos($this->output, '.')) {
             $this->output .= '_*';
@@ -264,8 +264,8 @@ class AssetCollectionIterator implements \RecursiveIterator
         $clone = clone $asset;
 
         // generate an url based on asset name
-        $name = sprintf('%s_%d', pathinfo($asset->getPath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
-        $clone->setUrl(str_replace('*', $name, $this->output));
+        $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
+        $clone->setTargetPath(str_replace('*', $name, $this->output));
 
         foreach ($this->filters as $filter) {
             $clone->ensureFilter($filter);
