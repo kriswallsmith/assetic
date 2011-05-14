@@ -30,17 +30,18 @@ class CssRewriteFilter implements FilterInterface
         $sourcePath = $asset->getSourcePath();
         $targetPath = $asset->getTargetPath();
 
-        if (null === $sourceBase || null === $sourcePath || null === $targetPath || $sourcePath == $targetPath) {
+        if (null === $sourcePath || null === $targetPath || $sourcePath == $targetPath) {
             return;
         }
 
         // learn how to get from the target back to the source
         if (false !== strpos($sourceBase, '://')) {
-            // the source is absolute, this should be easy
-            $parts = parse_url($sourceBase.'/'.$sourcePath);
+            list($scheme, $url) = explode('://', $sourceBase.'/'.$sourcePath, 2);
+            list($host, $path) = explode('/', $url, 2);
 
-            $host = $parts['scheme'].'://'.$parts['host'];
-            $path = dirname($parts['path']).'/';
+            $host = $scheme.'://'.$host;
+            $path = false === strpos($path, '/') ? '' : dirname($path);
+            $path .= '/';
         } else {
             // assume source and target are on the same host
             $host = '';
