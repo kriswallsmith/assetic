@@ -18,6 +18,7 @@ use Assetic\Filter\Sass\CompassFilter;
  * Compass filter test case.
  *
  * @author Maxime Thirouin <dev@moox.fr>
+ * @group integration
  */
 class CompassFilterTest extends \PHPUnit_Framework_TestCase
 {
