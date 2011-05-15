@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Assetic\Asset\UrlCollection;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\TraversableString;
 
 /**
  * Initializes the global Assetic object.
@@ -111,5 +111,15 @@ function _assetic_assets($inputs = array(), $filters = array(), array $options =
     $coll = $_assetic->factory->createAsset($inputs, $filters, $options);
     $debug = isset($options['debug']) ? $options['debug'] : $_assetic->factory->isDebug();
 
-    return UrlCollection::createFromAssetCollection($coll, $debug);
+    $one = $coll->getTargetPath();
+    if ($debug) {
+        $many = array();
+        foreach ($coll as $leaf) {
+            $many[] = $leaf->getTargetPath();
+        }
+    } else {
+        $many = array($one);
+    }
+
+    return new TraversableString($one, $many);
 }
