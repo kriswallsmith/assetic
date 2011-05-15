@@ -26,32 +26,34 @@ class CssRewriteFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $sourceUrl = $asset->getSourceUrl();
-        $targetUrl = $asset->getTargetUrl();
+        $sourceBase = $asset->getSourceRoot();
+        $sourcePath = $asset->getSourcePath();
+        $targetPath = $asset->getTargetPath();
 
-        if (null === $sourceUrl || null === $targetUrl || $sourceUrl == $targetUrl) {
+        if (null === $sourcePath || null === $targetPath || $sourcePath == $targetPath) {
             return;
         }
 
         // learn how to get from the target back to the source
-        if (false !== strpos($sourceUrl, '://')) {
-            // the source is absolute, this should be easy
-            $parts = parse_url($sourceUrl);
+        if (false !== strpos($sourceBase, '://')) {
+            list($scheme, $url) = explode('://', $sourceBase.'/'.$sourcePath, 2);
+            list($host, $path) = explode('/', $url, 2);
 
-            $host = $parts['scheme'].'://'.$parts['host'];
-            $path = dirname($parts['path']).'/';
+            $host = $scheme.'://'.$host;
+            $path = false === strpos($path, '/') ? '' : dirname($path);
+            $path .= '/';
         } else {
             // assume source and target are on the same host
             $host = '';
 
             // pop entries off the target until it fits in the source
-            if ('.' == dirname($sourceUrl)) {
-                $path = str_repeat('../', substr_count($targetUrl, '/'));
-            } elseif ('.' == $targetDir = dirname($targetUrl)) {
-                $path = dirname($sourceUrl).'/';
+            if ('.' == dirname($sourcePath)) {
+                $path = str_repeat('../', substr_count($targetPath, '/'));
+            } elseif ('.' == $targetDir = dirname($targetPath)) {
+                $path = dirname($sourcePath).'/';
             } else {
                 $path = '';
-                while (0 !== strpos($sourceUrl, $targetDir)) {
+                while (0 !== strpos($sourcePath, $targetDir)) {
                     if (false !== $pos = strrpos($targetDir, '/')) {
                         $targetDir = substr($targetDir, 0, $pos);
                         $path .= '../';
@@ -61,7 +63,7 @@ class CssRewriteFilter implements FilterInterface
                         break;
                     }
                 }
-                $path .= ltrim(substr(dirname($sourceUrl).'/', strlen($targetDir)), '/');
+                $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
             }
         }
 

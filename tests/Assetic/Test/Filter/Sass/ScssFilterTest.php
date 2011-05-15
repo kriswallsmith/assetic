@@ -22,10 +22,10 @@ class ScssFilterTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('There is no SASS_BIN environment variable.');
         }
 
-        $asset = new FileAsset(__DIR__.'/../fixtures/sass/main.scss', array(), 'main.css');
+        $asset = new FileAsset(__DIR__.'/../fixtures/sass/main.scss');
         $asset->load();
 
-        $filter = new ScssFilter(__DIR__.'/../fixtures/sass', $_SERVER['SASS_BIN']);
+        $filter = new ScssFilter($_SERVER['SASS_BIN']);
         $filter->setStyle(ScssFilter::STYLE_COMPACT);
         $filter->filterLoad($asset);
 

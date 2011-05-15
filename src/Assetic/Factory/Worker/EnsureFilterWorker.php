@@ -39,7 +39,7 @@ class EnsureFilterWorker implements WorkerInterface
 
     public function process(AssetInterface $asset)
     {
-        if (0 < preg_match($this->pattern, $asset->getTargetUrl())) {
+        if (0 < preg_match($this->pattern, $asset->getTargetPath())) {
             $asset->ensureFilter($this->filter);
         }
 

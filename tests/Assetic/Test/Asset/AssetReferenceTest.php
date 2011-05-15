@@ -46,7 +46,9 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('getContent', 'asdf'),
-            array('getSourceUrl', 'asdf'),
+            array('getSourceRoot', 'asdf'),
+            array('getSourcePath', 'asdf'),
+            array('getTargetPath', 'asdf'),
             array('getLastModified', 123),
         );
     }

@@ -19,10 +19,10 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideUrls
      */
-    public function testUrls($format, $sourceUrl, $targetUrl, $inputUrl, $expectedUrl)
+    public function testUrls($format, $sourcePath, $targetPath, $inputUrl, $expectedUrl)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl), array(), $sourceUrl);
-        $asset->setTargetUrl($targetUrl);
+        $asset = new StringAsset(sprintf($format, $inputUrl), array(), null, $sourcePath);
+        $asset->setTargetPath($targetPath);
         $asset->load();
 
         $filter = new CssRewriteFilter();
@@ -48,7 +48,6 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 
             // path diffs
             array('body { background: url(%s); }', 'css/body/bg.css', 'css/build/main.css', '../../images/bg.gif', '../../images/bg.gif'),
-            array('body { background: url(%s); }', 'http://foo.com/css/body/bg.css', 'http://bar.com/css/build/main.css', '../../images/bg.gif', 'http://foo.com/images/bg.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'main.css', '../images/bg.gif', 'css/../images/bg.gif'), // fixme
             array('body { background: url(%s); }', 'body.css', 'css/main.css', 'images/bg.gif', '../images/bg.gif'),
             array('body { background: url(%s); }', 'source/css/body.css', 'output/build/main.css', '../images/bg.gif', '../../source/images/bg.gif'),
@@ -61,7 +60,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testNoTargetUrl()
+    public function testNoTargetPath()
     {
         $content = 'body{url(foo.gif)}';
 
@@ -69,7 +68,6 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CssRewriteFilter();
-        $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
         $this->assertEquals($content, $asset->getContent(), '->filterDump() urls are not changed without urls');

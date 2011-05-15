@@ -20,29 +20,45 @@ use Assetic\Filter\FilterInterface;
  */
 class FileAsset extends BaseAsset
 {
-    private $path;
+    private $source;
 
     /**
      * Constructor.
      *
-     * @param string $path      The absolute path to the asset
-     * @param array  $filters   Filters for the asset
-     * @param string $sourceUrl The source URL
+     * @param string $source     An absolute path
+     * @param array  $filters    An array of filters
+     * @param string $sourceRoot The source asset root directory
+     * @param string $sourcePath The source asset path
+     *
+     * @throws InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
-    public function __construct($path, $filters = array(), $sourceUrl = null)
+    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null)
     {
-        $this->path = $path;
+        if (null === $sourceRoot) {
+            $sourceRoot = dirname($source);
+            if (null === $sourcePath) {
+                $sourcePath = basename($source);
+            }
+        } elseif (null === $sourcePath) {
+            if (0 !== strpos($source, $sourceRoot)) {
+                throw new \InvalidArgumentException(sprintf('The source "%s" is not in the root directory "%s"', $source, $sourceRoot));
+            }
 
-        parent::__construct($filters, $sourceUrl);
+            $sourcePath = substr($source, strlen($sourceRoot) + 1);
+        }
+
+        $this->source = $source;
+
+        parent::__construct($filters, $sourceRoot, $sourcePath);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad(file_get_contents($this->path), $additionalFilter);
+        $this->doLoad(file_get_contents($this->source), $additionalFilter);
     }
 
     public function getLastModified()
     {
-        return filemtime($this->path);
+        return filemtime($this->source);
     }
 }

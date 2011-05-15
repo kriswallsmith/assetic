@@ -41,7 +41,7 @@ class AssetWriter
 
     public function writeAsset(AssetInterface $asset)
     {
-        static::write($this->dir . '/' . $asset->getTargetUrl(), $asset->dump());
+        static::write($this->dir . '/' . $asset->getTargetPath(), $asset->dump());
     }
 
     static protected function write($path, $contents)

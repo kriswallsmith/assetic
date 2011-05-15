@@ -75,19 +75,24 @@ class AssetCache implements AssetInterface
         $this->asset->setContent($content);
     }
 
-    public function getSourceUrl()
+    public function getSourceRoot()
     {
-        return $this->asset->getSourceUrl();
+        return $this->asset->getSourceRoot();
     }
 
-    public function getTargetUrl()
+    public function getSourcePath()
     {
-        return $this->asset->getTargetUrl();
+        return $this->asset->getSourcePath();
     }
 
-    public function setTargetUrl($targetUrl)
+    public function getTargetPath()
     {
-        $this->asset->setTargetUrl($targetUrl);
+        return $this->asset->getTargetPath();
+    }
+
+    public function setTargetPath($targetPath)
+    {
+        $this->asset->setTargetPath($targetPath);
     }
 
     public function getLastModified()
@@ -100,7 +105,9 @@ class AssetCache implements AssetInterface
      *
      * The key is composed of everything but an asset's content:
      *
-     *  * source url
+     *  * source root
+     *  * source path
+     *  * target url
      *  * last modified
      *  * filters
      *
@@ -117,8 +124,9 @@ class AssetCache implements AssetInterface
             $asset->ensureFilter($additionalFilter);
         }
 
-        $cacheKey  = $asset->getSourceUrl();
-        $cacheKey .= $asset->getTargetUrl();
+        $cacheKey  = $asset->getSourceRoot();
+        $cacheKey .= $asset->getSourcePath();
+        $cacheKey .= $asset->getTargetPath();
         $cacheKey .= $asset->getLastModified();
 
         foreach ($asset->getFilters() as $filter) {

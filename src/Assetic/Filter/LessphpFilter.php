@@ -23,42 +23,26 @@ use Assetic\Asset\AssetInterface;
  * lessc is located.
  *
  * @link http://leafo.net/lessphp/
+ *
  * @author David Buchmann <david@liip.ch>
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class LessphpFilter implements FilterInterface
 {
-    private $baseDir;
-
-    /**
-     * Constructor.
-     *
-     * @param string $baseDir The base web directory
-     */
-    public function __construct($baseDir)
-    {
-        $this->baseDir = $baseDir;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
-        $sourceUrl = $asset->getSourceUrl();
-        if ($sourceUrl && false === strpos($sourceUrl, '://')) {
-            $baseDir = self::isAbsolutePath($sourceUrl) ? '' : $this->baseDir.'/';
-            $sourceUrl = $baseDir.$sourceUrl;
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
+
+        $lc = new \lessc();
+        if ($root && $path) {
+            $lc->importDir = dirname($root.'/'.$path);
         }
 
-        $lc = new \lessc($sourceUrl);
-
-        // the way lessc::parse is implemented, the content wins if both url and content are defined
         $asset->setContent($lc->parse($asset->getContent()));
     }
 
     public function filterDump(AssetInterface $asset)
     {
-    }
-
-    static private function isAbsolutePath($path)
-    {
-        return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
 }

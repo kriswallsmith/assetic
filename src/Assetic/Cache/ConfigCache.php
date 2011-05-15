@@ -39,7 +39,7 @@ class ConfigCache
      */
     public function has($resource)
     {
-        return file_exists($this->getPath($resource));
+        return file_exists($this->getSourcePath($resource));
     }
 
     /**
@@ -50,7 +50,7 @@ class ConfigCache
      */
     public function set($resource, $value)
     {
-        $path = $this->getPath($resource);
+        $path = $this->getSourcePath($resource);
 
         if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
             // @codeCoverageIgnoreStart
@@ -74,7 +74,7 @@ class ConfigCache
      */
     public function get($resource)
     {
-        $path = $this->getPath($resource);
+        $path = $this->getSourcePath($resource);
 
         if (!file_exists($path)) {
             throw new \RuntimeException('There is no cached value for '.$resource);
@@ -92,7 +92,7 @@ class ConfigCache
      */
     public function getTimestamp($resource)
     {
-        $path = $this->getPath($resource);
+        $path = $this->getSourcePath($resource);
 
         if (!file_exists($path)) {
             throw new \RuntimeException('There is no cached value for '.$resource);
@@ -114,7 +114,7 @@ class ConfigCache
      *
      * @return string A file path
      */
-    private function getPath($resource)
+    private function getSourcePath($resource)
     {
         $key = md5($resource);
 

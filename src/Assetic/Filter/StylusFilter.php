@@ -20,7 +20,6 @@ use Assetic\Asset\AssetInterface;
  */
 class StylusFilter implements FilterInterface
 {
-    private $baseDir;
     private $nodeBin;
     private $nodePaths;
     private $compress;
@@ -28,13 +27,11 @@ class StylusFilter implements FilterInterface
     /**
      * Constructs filter.
      *
-     * @param string $baseDir   The base web directory
      * @param string $nodeBin   The path to the node binary
      * @param array  $nodePaths An array of node paths
      */
-    public function __construct($baseDir, $nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
     {
-        $this->baseDir = $baseDir;
         $this->nodeBin = $nodeBin;
         $this->nodePaths = $nodePaths;
     }
@@ -69,11 +66,14 @@ stylus(%s, %s).render(function(e, css){
 
 EOF;
 
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
+
         // parser options
         $parserOptions = array();
-        if ($sourceUrl = $asset->getSourceUrl()) {
-            $parserOptions['filename']  = basename($sourceUrl);
-            $parserOptions['paths']     = array($this->baseDir . DIRECTORY_SEPARATOR . dirname($sourceUrl));
+        if ($root && $path) {
+            $parserOptions['paths'] = array(dirname($root.'/'.$path));
+            $parserOptions['filename'] = basename($path);
         }
 
         if (null !== $this->compress) {

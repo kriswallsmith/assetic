@@ -21,7 +21,6 @@ use Assetic\Filter\FilterInterface;
 class GlobAsset extends AssetCollection
 {
     private $globs;
-    private $baseDir;
     private $initialized;
 
     /**
@@ -29,37 +28,14 @@ class GlobAsset extends AssetCollection
      *
      * @param string|array $globs   A single glob path or array of paths
      * @param array        $filters An array of filters
-     * @param string       $baseDir A base directory to use for determining each source URL
-     *
-     * @throws InvalidArgumentException If the base directory doesn't exist
+     * @param string       $root    The root directory
      */
-    public function __construct($globs, $filters = array(), $baseDir = null)
+    public function __construct($globs, $filters = array(), $root = null)
     {
         $this->globs = (array) $globs;
-
-        if (null !== $baseDir && $this->baseDir = realpath($baseDir)) {
-            $this->baseDir .= DIRECTORY_SEPARATOR;
-        }
-
         $this->initialized = false;
 
-        parent::__construct(array(), $filters);
-    }
-
-    /**
-     * Initializes the collection based on the glob(s) passed in.
-     */
-    private function initialize()
-    {
-        foreach ($this->globs as $glob) {
-            if (false !== $paths = glob($glob)) {
-                foreach (array_map('realpath', $paths) as $path) {
-                    $this->add(new FileAsset($path, array(), 0 === strpos($path, $this->baseDir) ? substr($path, strlen($this->baseDir)) : null));
-                }
-            }
-        }
-
-        $this->initialized = true;
+        parent::__construct(array(), $filters, $root);
     }
 
     public function all()
@@ -105,5 +81,21 @@ class GlobAsset extends AssetCollection
         }
 
         return parent::getIterator();
+    }
+
+    /**
+     * Initializes the collection based on the glob(s) passed in.
+     */
+    private function initialize()
+    {
+        foreach ($this->globs as $glob) {
+            if (false !== $paths = glob($glob)) {
+                foreach ($paths as $path) {
+                    $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
+                }
+            }
+        }
+
+        $this->initialized = true;
     }
 }

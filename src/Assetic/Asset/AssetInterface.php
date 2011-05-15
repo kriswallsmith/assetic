@@ -14,7 +14,7 @@ namespace Assetic\Asset;
 use Assetic\Filter\FilterInterface;
 
 /**
- * An asset has a mutable path and content and can be loaded and dumped.
+ * An asset has a mutable URL and content and can be loaded and dumped.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
@@ -76,33 +76,50 @@ interface AssetInterface
     function setContent($content);
 
     /**
-     * Returns the URL for the source asset.
+     * Returns an absolute path or URL to the source asset's root directory.
      *
-     * This is a web URL and can be either document-relative, root-relative,
-     * or absolute.
+     * This value should be an absolute path to a directory in the filesystem,
+     * an absolute URL with no path, or null.
      *
-     * Some possible source paths:
+     * For example:
      *
-     *  * js/main.js
-     *  * https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js
+     *  * '/path/to/web'
+     *  * 'http://example.com'
+     *  * null
      *
-     * @return string|null A web URL for the source asset, if there is one
+     * @return string|null The asset's root
      */
-    function getSourceUrl();
+    function getSourceRoot();
 
     /**
-     * Returns the target URL for the current asset.
+     * Returns the relative path for the source asset.
+     *
+     * This value can be combined with the asset's source root (if both are
+     * non-null) to get something compatible with file_get_contents().
+     *
+     * For example:
+     *
+     *  * 'js/main.js'
+     *  * 'main.js'
+     *  * null
+     *
+     * @return string|null The source asset path
+     */
+    function getSourcePath();
+
+    /**
+     * Returns the URL for the current asset.
      *
      * @return string|null A web URL where the asset will be dumped
      */
-    function getTargetUrl();
+    function getTargetPath();
 
     /**
-     * Sets the target URL for the current asset.
+     * Sets the URL for the current asset.
      *
-     * @param string $targetUrl A web URL where the asset will be dumped
+     * @param string $targetPath A web URL where the asset will be dumped
      */
-    function setTargetUrl($targetUrl);
+    function setTargetPath($targetPath);
 
     /**
      * Returns the time the current asset was last modified.
