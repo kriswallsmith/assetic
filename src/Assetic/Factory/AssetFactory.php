@@ -12,6 +12,7 @@
 namespace Assetic\Factory;
 
 use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetInterface;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
@@ -188,7 +189,7 @@ class AssetFactory
                 // nested formula
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
-                $asset->add($this->parseInput($input, $options));
+                $asset->add($this->processAsset($this->parseInput($input, $options)));
                 $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
             }
         }
@@ -210,11 +211,7 @@ class AssetFactory
         // output --> target url
         $asset->setTargetPath(str_replace('*', $options['name'], $options['output']));
 
-        foreach ($this->workers as $worker) {
-            $asset = $worker->process($asset);
-        }
-
-        return $asset;
+        return $this->processAsset($asset);
     }
 
     public function generateAssetName($inputs, $filters, $options = array())
@@ -304,6 +301,22 @@ class AssetFactory
         }
 
         return $this->fm->get($name);
+    }
+
+    /**
+     * Filters an asset through the factory workers.
+     *
+     * @param AssetInterface $asset An asset
+     *
+     * @return AssetInterface The processed asset
+     */
+    private function processAsset(AssetInterface $asset)
+    {
+        foreach ($this->workers as $worker) {
+            $asset = $worker->process($asset) ?: $asset;
+        }
+
+        return $asset;
     }
 
     static private function isAbsolutePath($path)
