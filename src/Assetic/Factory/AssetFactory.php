@@ -266,7 +266,6 @@ class AssetFactory
             $path  = $input;
             $input = $this->root.'/'.$path;
         }
-
         if (false !== strpos($input, '*')) {
             return $this->createGlobAsset($input, $root);
         } else {
@@ -293,9 +292,9 @@ class AssetFactory
         return new GlobAsset($glob, array(), $root);
     }
 
-    protected function createFileAsset($path, $root = null, $path = null)
+    protected function createFileAsset($source, $root = null, $path = null)
     {
-        return new FileAsset($path, array(), $root, $path);
+        return new FileAsset($source, array(), $root, $path);
     }
 
     protected function getFilter($name)
