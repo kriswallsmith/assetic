@@ -189,7 +189,7 @@ class AssetFactory
                 // nested formula
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
-                $asset->add($this->processAsset($this->parseInput($input, $options)));
+                $asset->add($this->parseInput($input, $options));
                 $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
             }
         }
@@ -211,7 +211,10 @@ class AssetFactory
         // output --> target url
         $asset->setTargetPath(str_replace('*', $options['name'], $options['output']));
 
-        return $this->processAsset($asset);
+        // apply workers
+        $this->processAsset($asset);
+
+        return $asset;
     }
 
     public function generateAssetName($inputs, $filters, $options = array())
@@ -307,16 +310,18 @@ class AssetFactory
      * Filters an asset through the factory workers.
      *
      * @param AssetInterface $asset An asset
-     *
-     * @return AssetInterface The processed asset
      */
     private function processAsset(AssetInterface $asset)
     {
-        foreach ($this->workers as $worker) {
-            $asset = $worker->process($asset) ?: $asset;
+        if (!$asset instanceof \Traversable) {
+            $asset = array($asset);
         }
 
-        return $asset;
+        foreach ($asset as $leaf) {
+            foreach ($this->workers as $worker) {
+                $worker->process($leaf);
+            }
+        }
     }
 
     static private function isAbsolutePath($path)

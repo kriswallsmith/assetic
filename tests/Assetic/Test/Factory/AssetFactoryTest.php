@@ -141,7 +141,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
             ->with($this->isInstanceOf('Assetic\\Asset\\AssetInterface'));
 
         $this->factory->addWorker($worker);
-        $this->factory->createAsset();
+        $this->factory->createAsset('foo.js');
     }
 
     public function testNestedFormula()
