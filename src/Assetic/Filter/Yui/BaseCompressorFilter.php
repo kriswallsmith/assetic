@@ -13,7 +13,7 @@ namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Filter\Process;
+use Assetic\Util\Process;
 
 /**
  * Base YUI compressor filter.

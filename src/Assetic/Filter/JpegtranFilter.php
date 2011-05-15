@@ -12,6 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Util\Process;
 
 /**
  * Runs assets through jpegtran.

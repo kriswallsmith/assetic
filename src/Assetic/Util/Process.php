@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Assetic\Filter;
+namespace Assetic\Util;
 
 /**
  * Process is a thin wrapper around proc_* functions to ease

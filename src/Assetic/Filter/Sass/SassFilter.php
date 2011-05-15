@@ -13,7 +13,7 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Filter\Process;
+use Assetic\Util\Process;
 
 /**
  * Loads SASS files.

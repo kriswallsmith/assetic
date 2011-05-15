@@ -12,7 +12,7 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\Process;
+use Assetic\Util\Process;
 
 /**
  * Filter for the Google Closure Compiler JAR.
