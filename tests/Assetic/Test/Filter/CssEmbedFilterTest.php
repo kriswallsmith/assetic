@@ -25,13 +25,15 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testCssEmbedDataUri()
     {
+        $data = base64_encode(file_get_contents(__DIR__.'/fixtures/home.png'));
+
         $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
         $asset->load();
 
         $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
         $filter->filterDump($asset);
 
-        $this->assertContains("url(data:image/png;base64,", $asset->getContent());
+        $this->assertContains('url(data:image/png;base64,'.$data, $asset->getContent());
     }
 
     public function testCssEmbedMhtml()
@@ -44,6 +46,6 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $filter->setMhtmlRoot('/test');
         $filter->filterDump($asset);
 
-        $this->assertContains("url(mhtml:/test/!", $asset->getContent());
+        $this->assertContains('url(mhtml:/test/!', $asset->getContent());
     }
 }
