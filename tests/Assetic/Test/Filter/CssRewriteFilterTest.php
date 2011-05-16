@@ -63,10 +63,10 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideMultipleUrls
      */
-    public function testMultipleUrls($format, $sourceUrl, $targetUrl, $inputUrl1, $inputUrl2, $expectedUrl1, $expectedUrl2)
+    public function testMultipleUrls($format, $sourcePath, $targetPath, $inputUrl1, $inputUrl2, $expectedUrl1, $expectedUrl2)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2), array(), $sourceUrl);
-        $asset->setTargetUrl($targetUrl);
+        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2), array(), null, $sourcePath);
+        $asset->setTargetPath($targetPath);
         $asset->load();
 
         $filter = new CssRewriteFilter();
