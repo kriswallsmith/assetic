@@ -14,6 +14,9 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\CssEmbedFilter;
 
+/**
+ * @group integration
+ */
 class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
