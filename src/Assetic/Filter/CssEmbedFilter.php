@@ -25,12 +25,12 @@ class CssEmbedFilter implements FilterInterface
     private $jarPath;
     private $javaPath;
     private $charset = 'utf-8';
-    private $mhtml = false; // Enable MHTML mode.
+    private $mhtml; // Enable MHTML mode.
     private $mhtmlRoot; // Use <root> as the MHTML root for the file.
     private $root; // Prepends <root> to all relative URLs.
-    private $skipMissing;
-    private $maxUriLength;
-    private $maxImageSize;
+    private $skipMissing; // Don't throw an error for missing image files.
+    private $maxUriLength; // Maximum length for a data URI. Defaults to 32768.
+    private $maxImageSize; // Maximum image size (in bytes) to convert.
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
