@@ -61,16 +61,6 @@ class CssEmbedFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        // automatically define root if not already defined
-        if (null == $this->root) {
-            $root = $asset->getSourceRoot();
-            $path = $asset->getSourcePath();
-
-            if ($root && $path) {
-                $this->root = dirname($root.'/'.$path);
-            }
-        }
-
         $options = array(
             $this->javaPath,
             '-jar',
@@ -91,7 +81,16 @@ class CssEmbedFilter implements FilterInterface
             $options[] = $this->mhtmlRoot;
         }
 
-        if (null !== $this->root) {
+        // automatically define root if not already defined
+        if (null === $this->root) {
+            $root = $asset->getSourceRoot();
+            $path = $asset->getSourcePath();
+
+            if ($root && $path) {
+                $options[] = '--root';
+                $options[] = dirname($root.'/'.$path);
+            }
+        } else {
             $options[] = '--root';
             $options[] = $this->root;
         }
