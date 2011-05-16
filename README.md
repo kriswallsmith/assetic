@@ -8,13 +8,20 @@ Assetic is an asset management framework for PHP.
     // the code is merged when the asset is dumped
     echo $js->dump();
 
-Alternatively, you can iterate over the collection and work with each asset
-individually.
+Assets
+------
 
-    // each asset "leaf" is dumped
-    foreach ($js as $leaf) {
-        echo $leaf->dump();
-    }
+An Assetic asset is something with filterable content that can be loaded and
+dumped. An asset also includes metadata, some of which can be manipulated and
+some of which is immutable.
+
+| **Property** | **Accessor**    | **Mutator**   |
+|--------------|-----------------|---------------|
+| content      | getContent      | setContent    |
+| mtime        | getLastModified | n/a           |
+| source root  | getSourceRoot   | n/a           |
+| source path  | getSourcePath   | n/a           |
+| target path  | getTargetPath   | setTargetPath |
 
 Filters
 -------
