@@ -111,7 +111,7 @@ class SassFilter implements FilterInterface
             $options[] = '--unix-newlines';
         }
 
-        if ($this->scss) {
+        if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($path, PATHINFO_EXTENSION))) {
             $options[] = '--scss';
         }
 
