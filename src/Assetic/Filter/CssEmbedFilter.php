@@ -133,13 +133,12 @@ class CssEmbedFilter implements FilterInterface
 
         $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
         $code = $proc->run();
+        unlink($input);
 
         if (0 < $code) {
             throw new \RuntimeException($proc->getErrorOutput());
         }
 
         $asset->setContent($proc->getOutput());
-
-        unlink($input);
     }
 }
