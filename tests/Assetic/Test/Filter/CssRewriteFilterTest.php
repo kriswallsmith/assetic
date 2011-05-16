@@ -82,11 +82,11 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             // multiple url
             array('body { background: url(%s); background: url(%s) }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
             array("body { background: url(%s);\nbackground: url(%s) }", 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
-            
+
             // multiple import
             array('@import "%s"; @import "%s"', 'css/imports.css', 'css/build/main.css', 'import.css', 'import2.css', '../import.css', '../import2.css'),
             array("@import \"%s\";\n@import \"%s\"", 'css/imports.css', 'css/build/main.css', 'import.css', 'import2.css', '../import.css', '../import2.css'),
-            
+
             // mixed urls and imports
             array('@import "%s"; body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'import.css', '../images/bg2.gif', '../import.css', '../../images/bg2.gif'),
             array("@import \"%s\";\nbody { background: url(%s); }", 'css/body.css', 'css/build/main.css', 'import.css', '../images/bg2.gif', '../import.css', '../../images/bg2.gif'),
