@@ -28,6 +28,9 @@ class CssEmbedFilter implements FilterInterface
     private $mhtml = false; // Enable MHTML mode.
     private $mhtmlRoot; // Use <root> as the MHTML root for the file.
     private $root; // Prepends <root> to all relative URLs.
+    private $skipMissing;
+    private $maxUriLength;
+    private $maxImageSize;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -53,6 +56,21 @@ class CssEmbedFilter implements FilterInterface
     public function setRoot($root)
     {
         $this->root = $root;
+    }
+
+    public function setSkipMissing($skipMissing)
+    {
+        $this->skipMissing = $skipMissing;
+    }
+
+    public function setMaxUriLength($maxUriLength)
+    {
+        $this->maxUriLength = $maxUriLength;
+    }
+
+    public function setMaxImageSize($maxImageSize)
+    {
+        $this->maxImageSize = $maxImageSize;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -93,6 +111,20 @@ class CssEmbedFilter implements FilterInterface
         } else {
             $options[] = '--root';
             $options[] = $this->root;
+        }
+
+        if ($this->skipMissing) {
+            $options[] = '--skip-missing';
+        }
+
+        if (null !== $this->maxUriLength) {
+            $options[] = '--max-uri-length';
+            $options[] = $this->maxUriLength;
+        }
+
+        if (null !== $this->maxImageSize) {
+            $options[] = '--max-image-size';
+            $options[] = $this->maxImageSize;
         }
 
         // input
