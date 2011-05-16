@@ -40,7 +40,7 @@ class CssEmbedFilter implements FilterInterface
         $this->charset = $charset;
     }
 
-    public function setMhtml($mhtml = true)
+    public function setMhtml($mhtml)
     {
         $this->mhtml = $mhtml;
     }

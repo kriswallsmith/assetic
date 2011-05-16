@@ -41,7 +41,7 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
-        $filter->setMhtml();
+        $filter->setMhtml(true);
         $filter->setMhtmlRoot('/test');
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
