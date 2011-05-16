@@ -29,7 +29,6 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
-        $filter->setRoot(__DIR__ . '/fixtures/cssembed/');
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
@@ -42,7 +41,6 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
-        $filter->setRoot(__DIR__ . '/fixtures/cssembed/');
         $filter->setMhtml();
         $filter->setMhtmlRoot('/test');
         $filter->filterLoad($asset);

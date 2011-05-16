@@ -13,7 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Filter\Process;
+use Assetic\Util\Process;
 
 /**
  * CSSEmbed filter
@@ -61,6 +61,16 @@ class CssEmbedFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
+        // automatically define root if not already defined
+        if (null == $this->root) {
+            $root = $asset->getSourceRoot();
+            $path = $asset->getSourcePath();
+
+            if ($root && $path) {
+                $this->root = dirname($root.'/'.$path);
+            }
+        }
+
         $options = array(
             $this->javaPath,
             '-jar',
