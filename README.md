@@ -42,16 +42,22 @@ iterate over it.
 The core provides the following filters in the `Assetic\Filter` namespace:
 
  * `CoffeeScriptFilter`: compiles CoffeeScript into Javascript
+ * `CssEmbedFilter`: embeds image data in your stylesheets
  * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
+ * `JpegoptimFilter`: optimize your JPEGs
+ * `JpegtranFilter`: optimize your JPEGs
  * `LessFilter`: parses LESS into CSS (using less.js with node.js)
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
- * `StylusFilter`: parses STYL into CSS
+ * `OptiPngFilter`: optimize your PNGs
+ * `PngoutFilter`: optimize your PNGs
+ * `Sass\CompassFilter`: Compass CSS authoring framework
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
  * `SprocketsFilter`: Sprockets Javascript dependency management
+ * `StylusFilter`: parses STYL into CSS
  * `Yui\CssCompressorFilter`: compresses CSS using the YUI compressor
  * `Yui\JsCompressorFilter`: compresses Javascript using the YUI compressor
 
