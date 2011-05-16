@@ -29,7 +29,6 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
-        $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
         $this->assertContains("url(data:image/png;base64,", $asset->getContent());
@@ -43,7 +42,6 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
         $filter->setMhtml(true);
         $filter->setMhtmlRoot('/test');
-        $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
         $this->assertContains("url(mhtml:/test/!", $asset->getContent());
