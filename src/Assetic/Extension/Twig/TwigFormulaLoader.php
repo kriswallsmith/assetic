@@ -54,9 +54,10 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $node->getAttribute('inputs'),
                 $node->getAttribute('filters'),
                 array(
-                    'output' => $node->getAttribute('asset')->getTargetPath(),
-                    'name'   => $node->getAttribute('name'),
-                    'debug'  => $node->getAttribute('debug'),
+                    'output'  => $node->getAttribute('asset')->getTargetPath(),
+                    'name'    => $node->getAttribute('name'),
+                    'debug'   => $node->getAttribute('debug'),
+                    'combine' => $node->getAttribute('combine'),
                 ),
             );
         } elseif ($node instanceof \Twig_Node_Expression_Function) {

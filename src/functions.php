@@ -109,10 +109,12 @@ function _assetic_assets($inputs = array(), $filters = array(), array $options =
     }
 
     $coll = $_assetic->factory->createAsset($inputs, $filters, $options);
+
     $debug = isset($options['debug']) ? $options['debug'] : $_assetic->factory->isDebug();
+    $combine = isset($options['combine']) ? $options['combine'] : !$debug;
 
     $one = $coll->getTargetPath();
-    if ($debug) {
+    if ($combine) {
         $many = array();
         foreach ($coll as $leaf) {
             $many[] = $leaf->getTargetPath();
