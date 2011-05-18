@@ -26,10 +26,10 @@ abstract class BaseCssFilter implements FilterInterface
      *
      * @return string The filtered CSS
      */
-    protected function filterReferences($content, $callback)
+    protected function filterReferences($content, $callback, $limit = -1, & $count = 0)
     {
-        $content = $this->filterUrls($content, $callback);
-        $content = $this->filterImports($content, $callback, false);
+        $content = $this->filterUrls($content, $callback, $limit, $count);
+        $content = $this->filterImports($content, $callback, $limit, $count, false);
 
         return $content;
     }
@@ -42,9 +42,9 @@ abstract class BaseCssFilter implements FilterInterface
      *
      * @return string The filtered CSS
      */
-    protected function filterUrls($content, $callback)
+    protected function filterUrls($content, $callback, $limit = -1, & $count = 0)
     {
-        return preg_replace_callback('/url\((["\']?)(?<url>.*?)(\\1)\)/', $callback, $content);
+        return preg_replace_callback('/url\((["\']?)(?<url>.*?)(\\1)\)/', $callback, $content, $limit, $count);
     }
 
     /**
@@ -56,12 +56,12 @@ abstract class BaseCssFilter implements FilterInterface
      *
      * @return string The filtered CSS
      */
-    protected function filterImports($content, $callback, $includeUrl = true)
+    protected function filterImports($content, $callback, $limit = -1, & $count = 0, $includeUrl = true)
     {
         $pattern = $includeUrl
             ? '/@import +(?:url)? *\(? *([\'"])?(?<url>.*?)\1 *\)? *;?/'
             : '/@import +([\'"])(?<url>.*?)\1 *;?/';
 
-        return preg_replace_callback($pattern, $callback, $content);
+        return preg_replace_callback($pattern, $callback, $content, $limit, $count);
     }
 }
