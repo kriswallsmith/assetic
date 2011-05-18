@@ -12,6 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Asset\FileAsset;
 
 /**
  * Inlines imported stylesheets.
@@ -20,42 +21,66 @@ use Assetic\Asset\AssetInterface;
  */
 class CssImportFilter extends BaseCssFilter
 {
+    private $debug;
+    private $rewriteFilter;
+
+    public function __construct($debug = false, FilterInterface $rewriteFilter = null)
+    {
+        $this->debug = $debug;
+        $this->rewriteFilter = $rewriteFilter ?: new CssRewriteFilter();
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
-        $filter = $this;
-        $callback = function($matches) use($asset, $filter, &$callback)
-        {
-            if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//')) {
-                // absolute or protocol-relative
-                return $matches[0];
-            }
+        $debug = $this->debug;
+        $rewriteFilter = $this->rewriteFilter;
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
+        $target = $asset->getTargetPath();
 
-            $root = $asset->getSourceRoot();
-            $path = $asset->getSourcePath();
+        $callback = function($matches) use($debug, $rewriteFilter, $root, $path, $target)
+        {
+            if (!$matches['url']) {
+                // empty (wtf)
+                return $debug ? "/* unable to import -- empty url */\n{$matches[0]}" : $matches[0];
+            }
 
             if (null === $root) {
                 // not enough information
-                return $matches[0];
+                return $debug ? "/* unable to import -- asset has no source root */\n{$matches[0]}" : $matches[0];
             }
 
             if ('/' == $matches['url'][0]) {
-                $file = $root.$matches['url'];
+                $importPath = substr($matches['url'], 1);
             } elseif (null !== $path) {
-                $file = $root.'/'.dirname($path).'/'.$matches['url'];
+                $importPath = dirname($path).'/'.$matches['url'];
             } else {
                 // not enough information
-                return $matches[0];
+                return $debug ? "/* unable to import -- asset has no source path */\n{$matches[0]}" : $matches[0];
             }
 
-            if (!file_exists($file) || false === $import = @file_get_contents($file)) {
+            if (!file_exists($file = $root.'/'.$importPath)) {
                 // not found
-                return $matches[0];
+                return $debug ? "/* unable to import -- file not found */\n{$matches[0]}" : $matches[0];
             }
 
-            return $import;
+            $import = new FileAsset($file, array($rewriteFilter), $root, $importPath);
+            $import->setTargetPath($target);
+
+            if (!$debug) {
+                return $import->dump();
+            }
+
+            // add a comment about the import
+            return sprintf("/* begin import: \"%s\" from \"%s\" */\n%s\n/* end import: \"%1\$s\" from \"%2\$s\" */\n", $matches['url'], $path, $import->dump());
         };
 
-        $content = $this->filterImports($asset->getContent(), $callback);
+        $content = $asset->getContent();
+
+        do {
+            $count = 0;
+            $content = $this->filterImports($content, $callback);
+        } while (0 < $count);
 
         $asset->setContent($content);
     }
