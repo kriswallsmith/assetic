@@ -21,66 +21,72 @@ use Assetic\Asset\FileAsset;
  */
 class CssImportFilter extends BaseCssFilter
 {
-    private $debug;
     private $rewriteFilter;
 
-    public function __construct($debug = false, FilterInterface $rewriteFilter = null)
+    public function __construct(FilterInterface $rewriteFilter = null)
     {
-        $this->debug = $debug;
         $this->rewriteFilter = $rewriteFilter ?: new CssRewriteFilter();
     }
 
     public function filterLoad(AssetInterface $asset)
     {
-        $debug = $this->debug;
         $rewriteFilter = $this->rewriteFilter;
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-        $target = $asset->getTargetPath();
+        $sourceRoot = $asset->getSourceRoot();
+        $sourcePath = $asset->getSourcePath();
 
-        $callback = function($matches) use($debug, $rewriteFilter, $root, $path, $target)
+        $callback = function($matches) use($rewriteFilter, $sourceRoot, $sourcePath)
         {
             if (!$matches['url']) {
-                // empty (wtf)
-                return $debug ? "/* unable to import -- empty url */\n{$matches[0]}" : $matches[0];
+                return $matches[0];
             }
 
-            if (null === $root) {
-                // not enough information
-                return $debug ? "/* unable to import -- asset has no source root */\n{$matches[0]}" : $matches[0];
+            if (null === $sourceRoot) {
+                return $matches[0];
             }
 
-            if ('/' == $matches['url'][0]) {
+            $importRoot = $sourceRoot;
+
+            if (false !== strpos($matches['url'], '://')) {
+                // absolute
+                list($importScheme, $tmp) = explode('://', $matches['url'], 2);
+                list($importHost, $importPath) = explode('/', $tmp, 2);
+                $importRoot = $importScheme.'://'.$importHost;
+            } elseif (0 === strpos($matches['url'], '//')) {
+                // protocol-relative
+                list($importHost, $importPath) = explode('/', substr($matches['url'], 2), 2);
+                $importHost = '//'.$importHost;
+            } elseif ('/' == $matches['url'][0]) {
+                // root-relative
                 $importPath = substr($matches['url'], 1);
-            } elseif (null !== $path) {
-                $importPath = dirname($path).'/'.$matches['url'];
+            } elseif (null !== $sourcePath) {
+                // document-relative
+                $importPath = $matches['url'];
+                if ('.' != $sourceDir = dirname($sourcePath)) {
+                    $importPath = $sourceDir.'/'.$importPath;
+                }
             } else {
-                // not enough information
-                return $debug ? "/* unable to import -- asset has no source path */\n{$matches[0]}" : $matches[0];
+                return $matches[0];
             }
 
-            if (!file_exists($file = $root.'/'.$importPath)) {
-                // not found
-                return $debug ? "/* unable to import -- file not found */\n{$matches[0]}" : $matches[0];
+            $importSource = $importRoot.'/'.$importPath;
+
+            if (false === strpos($importSource, '://') && 0 !== strpos($importSource, '//') && !file_exists($importSource)) {
+                return $matches[0];
             }
 
-            $import = new FileAsset($file, array($rewriteFilter), $root, $importPath);
-            $import->setTargetPath($target);
+            $import = new FileAsset($importSource, array($rewriteFilter), $importRoot, $importPath);
+            $import->setTargetPath($sourcePath);
 
-            if (!$debug) {
-                return $import->dump();
-            }
-
-            // add a comment about the import
-            return sprintf("/* begin import: \"%s\" from \"%s\" */\n%s\n/* end import: \"%1\$s\" from \"%2\$s\" */\n", $matches['url'], $path, $import->dump());
+            return $import->dump();
         };
 
         $content = $asset->getContent();
+        $lastHash = md5($content);
 
         do {
-            $count = 0;
             $content = $this->filterImports($content, $callback);
-        } while (0 < $count);
+            $hash = md5($content);
+        } while ($lastHash != $hash && $lastHash = $hash);
 
         $asset->setContent($content);
     }
