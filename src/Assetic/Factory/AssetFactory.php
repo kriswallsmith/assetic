@@ -219,8 +219,11 @@ class AssetFactory
 
     public function generateAssetName($inputs, $filters, $options = array())
     {
-        // ignore name
-        unset($options['name']);
+        foreach (array_diff(array_keys($options), array('output', 'debug', 'root')) as $key) {
+            unset($options[$key]);
+        }
+
+        ksort($options);
 
         return substr(sha1(serialize($inputs).serialize($filters).serialize($options)), 0, 7);
     }
