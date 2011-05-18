@@ -43,10 +43,10 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
     public function getInputs()
     {
         return array(
-            array('"js/core.js"',        'asdf', array('asdf' => array(array('js/core.js'), array(), array('name' => 'asdf', 'output' => 'js/*.js')))),
-            array("'js/core.js'",        'asdf', array('asdf' => array(array('js/core.js'), array(), array('name' => 'asdf', 'output' => 'js/*.js')))),
-            array("array('js/core.js')", 'asdf', array('asdf' => array(array('js/core.js'), array(), array('name' => 'asdf', 'output' => 'js/*.js')))),
-            array('array("js/core.js")', 'asdf', array('asdf' => array(array('js/core.js'), array(), array('name' => 'asdf', 'output' => 'js/*.js')))),
+            array('"js/core.js"',        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array("'js/core.js'",        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array("array('js/core.js')", 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array('array("js/core.js")', 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
         );
     }
 

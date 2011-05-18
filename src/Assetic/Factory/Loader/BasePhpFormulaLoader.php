@@ -115,16 +115,20 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
         $options = isset($args[2]) ? $args[2] : array();
 
+        if (!isset($options['debug'])) {
+            $options['debug'] = $this->factory->isDebug();
+        }
+
         if (!is_array($options)) {
             throw new \RuntimeException('The third argument must be omitted, null or an array.');
         }
 
+        // apply the prototype options
+        $options += $protoOptions;
+
         if (!isset($options['name'])) {
             $options['name'] = $this->factory->generateAssetName($inputs, $filters, $options);
         }
-
-        // apply the prototype options
-        $options += $protoOptions;
 
         return array($options['name'] => array($inputs, $filters, $options));
     }

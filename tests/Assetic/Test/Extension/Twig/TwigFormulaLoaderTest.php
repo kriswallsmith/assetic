@@ -54,9 +54,10 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
                 array('foo', 'foo/*', '@foo'),
                 array(),
                 array(
-                    'output' => 'packed/mixture',
-                    'name'   => 'mixture',
-                    'debug'  => false,
+                    'output'  => 'packed/mixture',
+                    'name'    => 'mixture',
+                    'debug'   => false,
+                    'combine' => null,
                 ),
             ),
         );
