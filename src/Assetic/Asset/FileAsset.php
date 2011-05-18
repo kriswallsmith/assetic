@@ -54,7 +54,10 @@ class FileAsset extends BaseAsset
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad(file_get_contents($this->source), $additionalFilter);
+        // file_get_contents() doesn't understand protocol-relative
+        $source = 0 === strpos($this->source, '//') ? 'http:'.$this->source : $this->source;
+
+        $this->doLoad(file_get_contents($source), $additionalFilter);
     }
 
     public function getLastModified()
