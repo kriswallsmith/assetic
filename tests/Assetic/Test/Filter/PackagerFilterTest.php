@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * This file is part of the Assetic package, an OpenSky project.
+ *
+ * (c) 2010-2011 OpenSky Project Inc
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Assetic\Test\Filter;
+
+use Assetic\Asset\FileAsset;
+use Assetic\Filter\PackagerFilter;
+
+/**
+ * @group integration
+ */
+class PackagerFilterTest extends \PHPUnit_Framework_TestCase
+{
+    protected function setUp()
+    {
+        if (!class_exists('Packager', false)) {
+            $this->markTestSkipped('Packager is not available.');
+        }
+    }
+
+    public function testPackager()
+    {
+    }
+}
