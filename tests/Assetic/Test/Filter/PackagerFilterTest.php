@@ -28,5 +28,42 @@ class PackagerFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testPackager()
     {
+        $expected = <<<EOF
+/*
+---
+
+name: Util
+
+provides: [Util]
+
+...
+*/
+
+function foo() {}
+
+
+/*
+---
+
+name: App
+
+requires: [Util/Util]
+
+...
+*/
+
+var bar = foo();
+
+
+EOF;
+
+        $asset = new FileAsset(__DIR__.'/fixtures/packager/app/application.js', array(), __DIR__.'/fixtures/packager/app', 'application.js');
+        $asset->load();
+
+        $filter = new PackagerFilter();
+        $filter->addPackage(__DIR__.'/fixtures/packager/lib');
+        $filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() runs packager');
     }
 }
