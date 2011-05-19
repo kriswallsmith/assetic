@@ -21,7 +21,12 @@ use Assetic\Asset\AssetInterface;
  */
 class PackagerFilter implements FilterInterface
 {
-    private $packages = array();
+    private $packages;
+
+    public function __construct(array $packages = array())
+    {
+        $this->packages = $packages;
+    }
 
     public function addPackage($package)
     {
