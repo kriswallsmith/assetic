@@ -1,3 +1,5 @@
+# Assetic ![project status](http://stillmaintained.com/kriswallsmith/assetic.png) #
+
 Assetic is an asset management framework for PHP.
 
     $js = new AssetCollection(array(
