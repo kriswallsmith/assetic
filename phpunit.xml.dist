@@ -24,6 +24,7 @@
         <!-- <server name="PNGOUT_BIN" value="/path/to/pngout" /> -->
         <!-- <server name="CSSMIN" value="/path/to/cssmin/source/CssMin.php" /> -->
         <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
+        <!-- <server name="PACKAGER" value="/path/to/packager.php" /> -->
     </php>
 
     <filter>

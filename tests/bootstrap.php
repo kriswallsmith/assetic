@@ -39,3 +39,7 @@ if (isset($_SERVER['LESSPHP'])) {
 if (isset($_SERVER['CSSMIN'])) {
     require_once $_SERVER['CSSMIN'];
 }
+
+if (isset($_SERVER['PACKAGER'])) {
+    require_once $_SERVER['PACKAGER'];
+}
