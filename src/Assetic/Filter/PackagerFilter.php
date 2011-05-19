@@ -36,19 +36,20 @@ class PackagerFilter implements FilterInterface
     public function filterLoad(AssetInterface $asset)
     {
         static $manifest = <<<EOF
-name: Application
+name: Application%s
 sources: [source.js]
 
 EOF;
 
-        $package = sys_get_temp_dir().'/assetic_packager_'.substr(sha1(time().rand(11111, 99999)), 0, 7);
+        $hash = substr(sha1(time().rand(11111, 99999)), 0, 7);
+        $package = sys_get_temp_dir().'/assetic_packager_'.$hash;
 
         mkdir($package);
-        file_put_contents($package.'/package.yml', $manifest);
+        file_put_contents($package.'/package.yml', sprintf($manifest, $hash));
         file_put_contents($package.'/source.js', $asset->getContent());
 
         $packager = new \Packager(array_merge(array($package), $this->packages));
-        $content = $packager->build(array(), array(), array('Application'));
+        $content = $packager->build(array(), array(), array('Application'.$hash));
 
         unlink($package.'/package.yml');
         unlink($package.'/source.js');
