@@ -253,12 +253,13 @@ return 404 errors.
 <?php
 
 use Assetic\Factory\LazyAssetManager,
-    Assetic\AssetWriter;
+    Assetic\AssetWriter,
+    Assetic\Extension\Twig\TwigFormulaLoader;
 
 $am = new LazyAssetManager($factory);
 
 // loop through all your templates
-$loader = new Twig\FormulaLoader($twig);
+$loader = new TwigFormulaLoader($twig);
 foreach ($templates as $template) {
     $am->addFormulae($loader->load($template));
 }
