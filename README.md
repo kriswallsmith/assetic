@@ -3,6 +3,7 @@
 Assetic is an asset management framework for PHP.
 
 ``` php
+<?php
 
 $js = new AssetCollection(array(
     new GlobAsset('/path/to/js/*'),
@@ -11,7 +12,6 @@ $js = new AssetCollection(array(
 
 // the code is merged when the asset is dumped
 echo $js->dump();
-
 ```
 
 Assets
@@ -35,6 +35,7 @@ Filters
 Filters can be applied to manipulate assets.
 
 ``` php
+<?php
 
 $css = new AssetCollection(array(
     new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
@@ -45,19 +46,18 @@ $css = new AssetCollection(array(
 
 // this will echo CSS compiled by LESS and compressed by YUI
 echo $css->dump();
-
 ```
 
 The filters applied to the collection will cascade to each asset leaf if you
 iterate over it.
 
 ``` php
+<?php
 
 foreach ($css as $leaf) {
     // each leaf is compressed by YUI
     echo $leaf->dump();
 }
-
 ```
 
 The core provides the following filters in the `Assetic\Filter` namespace:
@@ -88,22 +88,22 @@ Asset Manager
 An asset manager is provided for organizing assets.
 
 ``` php
+<?php
 
 $am = new AssetManager();
 $am->set('jquery', new FileAsset('/path/to/jquery.js'));
 $am->set('base_css', new GlobAsset('/path/to/css/*'));
-
 ```
 
 The asset manager can also be used to reference assets to avoid duplication.
 
 ``` php
+<?php
 
 $am->set('my_plugin', new AssetCollection(array(
     new AssetReference($am, 'jquery'),
     new FileAsset('/path/to/jquery.plugin.js'),
 )));
-
 ```
 
 Asset Factory
@@ -113,6 +113,7 @@ If you'd rather not create all these objects by hand, you can use the asset
 factory, which will do most of the work for you.
 
 ``` php
+<?php
 
 $factory = new AssetFactory('/path/to/web');
 $factory->setAssetManager($am);
@@ -128,7 +129,6 @@ $css = $factory->createAsset(array(
 ));
 
 echo $css->dump();
-
 ```
 
 Prefixing a filter name with a question mark, as `yui_css` is here, will cause
@@ -139,8 +139,7 @@ Caching
 
 A simple caching mechanism is provided to avoid unnecessary work.
 
-```
-
+``` php
 <?php
 
 $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
@@ -153,7 +152,6 @@ $js = new AssetCache(
 $js->dump();
 $js->dump();
 $js->dump();
-
 ```
 
 Static Assets
@@ -162,13 +160,11 @@ Static Assets
 Alternatively you can just write filtered assets to your web directory and be
 done with it.
 
-```
-
+``` php
 <?php
 
 $writer = new AssetWriter('/path/to/web');
 $writer->writeManagerAssets($am);
-
 ```
 
 Twig
@@ -211,6 +207,8 @@ These assets need to be written to the web directory so these URLs don't
 return 404 errors.
 
 ``` php
+<?php
+
 $am = new LazyAssetManager($factory);
 
 // loop through all your templates
