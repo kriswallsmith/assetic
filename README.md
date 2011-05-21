@@ -183,7 +183,7 @@ $twig->addExtension(new AsseticExtension($factory, $debug));
 Once in place, the extension exposes a stylesheets and a javascripts tag with a syntax similar
 to what the asset factory uses:
 
-```
+``` html+jinja
 {% stylesheets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
 {% endstylesheets %}
@@ -199,7 +199,7 @@ using the `?` prefix.
 
 This behavior can also be triggered by setting a `debug` attribute on the tag:
 
-```
+``` html+jinja
 {% stylesheets 'css/*' debug=true %} ... {% stylesheets %}
 ```
 
