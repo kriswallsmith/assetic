@@ -172,8 +172,8 @@ return 404 errors.
     $am->setLoader('assetic', $loader);
 
     foreach ($templates as $template) {
-        $ressource = new Twig\TwigResource($twigLoader, $template);
-        $am->addResource($ressource, 'assetic');
+        $resource = new Twig\TwigResource($twigLoader, $template);
+        $am->addResource($resource, 'assetic');
     }
 
     $writer = new AssetWriter('/path/to/web');
