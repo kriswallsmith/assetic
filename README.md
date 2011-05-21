@@ -152,14 +152,14 @@ factory, which will do most of the work for you.
 
 use Assetic\Factory\AssetFactory;
 
-$factory = new AssetFactory('/path/to/web');
+$factory = new AssetFactory('/path/to/asset/directory/');
 $factory->setAssetManager($am);
 $factory->setFilterManager($fm);
 $factory->setDebug(true);
 
 $css = $factory->createAsset(array(
     '@reset',         // load the asset manager's "reset" asset
-    'css/src/*.scss', // load everything in the core directory
+    'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
 ), array(
     'scss',           // filter through the filter manager's "scss" filter
     '?yui_css',       // don't use this filter in debug mode
