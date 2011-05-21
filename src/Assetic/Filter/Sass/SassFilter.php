@@ -150,9 +150,14 @@ class SassFilter implements FilterInterface
             $options[] = '--compass';
         }
 
-        // input
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_sass');
-        file_put_contents($input, $asset->getContent());
+        // input 
+        // @Changed: to compile sass directly from the original file becuase when 
+        // using --debug-info, it will reference the original file in FireSass instead
+        // of some random /tmp/file_ssewRWRo9 file :)
+        // Bad code as I have manually put in the dir separator ... I'm sure there is a better way!
+        
+        $options[] = $input = $asset->getSourceRoot().'/'.$asset->getSourcePath();
+        // Removed: file_put_contents($input, $asset->getContent());
 
         // output
         $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
@@ -167,7 +172,9 @@ class SassFilter implements FilterInterface
 
         $asset->setContent(file_get_contents($output));
 
-        unlink($input);
+        // Removed: unlink($input);
+        // Unless you want your original files to be deleted!!!
+        
         unlink($output);
     }
 
