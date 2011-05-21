@@ -168,9 +168,12 @@ return 404 errors.
     $am = new LazyAssetManager($factory);
 
     // loop through all your templates
-    $loader = new Twig\FormulaLoader($twig);
+    $loader = new Twig\TwigFormulaLoader($twig);
+    $am->setLoader('assetic', $loader);
+
     foreach ($templates as $template) {
-        $am->addFormulae($loader->load($template));
+        $ressource = new Twig\TwigResource($twigLoader, $template);
+        $am->addResource($ressource, 'assetic');
     }
 
     $writer = new AssetWriter('/path/to/web');
