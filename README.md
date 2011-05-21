@@ -2,14 +2,16 @@
 
 Assetic is an asset management framework for PHP.
 
-```
-    $js = new AssetCollection(array(
-        new GlobAsset('/path/to/js/*'),
-        new FileAsset('/path/to/another.js'),
-    ));
+``` php
 
-    // the code is merged when the asset is dumped
-    echo $js->dump();
+$js = new AssetCollection(array(
+    new GlobAsset('/path/to/js/*'),
+    new FileAsset('/path/to/another.js'),
+));
+
+// the code is merged when the asset is dumped
+echo $js->dump();
+
 ```
 
 Assets
@@ -32,7 +34,8 @@ Filters
 
 Filters can be applied to manipulate assets.
 
-```
+``` php
+
 $css = new AssetCollection(array(
     new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
     new GlobAsset('/path/to/css/*'),
@@ -42,16 +45,19 @@ $css = new AssetCollection(array(
 
 // this will echo CSS compiled by LESS and compressed by YUI
 echo $css->dump();
+
 ```
 
 The filters applied to the collection will cascade to each asset leaf if you
 iterate over it.
 
-```
+``` php
+
 foreach ($css as $leaf) {
     // each leaf is compressed by YUI
     echo $leaf->dump();
 }
+
 ```
 
 The core provides the following filters in the `Assetic\Filter` namespace:
@@ -81,19 +87,23 @@ Asset Manager
 
 An asset manager is provided for organizing assets.
 
-```
+``` php
+
 $am = new AssetManager();
 $am->set('jquery', new FileAsset('/path/to/jquery.js'));
 $am->set('base_css', new GlobAsset('/path/to/css/*'));
+
 ```
 
 The asset manager can also be used to reference assets to avoid duplication.
 
-```
+``` php
+
 $am->set('my_plugin', new AssetCollection(array(
     new AssetReference($am, 'jquery'),
     new FileAsset('/path/to/jquery.plugin.js'),
 )));
+
 ```
 
 Asset Factory
@@ -102,7 +112,8 @@ Asset Factory
 If you'd rather not create all these objects by hand, you can use the asset
 factory, which will do most of the work for you.
 
-```
+``` php
+
 $factory = new AssetFactory('/path/to/web');
 $factory->setAssetManager($am);
 $factory->setFilterManager($fm);
@@ -117,6 +128,7 @@ $css = $factory->createAsset(array(
 ));
 
 echo $css->dump();
+
 ```
 
 Prefixing a filter name with a question mark, as `yui_css` is here, will cause
@@ -128,6 +140,7 @@ Caching
 A simple caching mechanism is provided to avoid unnecessary work.
 
 ```
+
 <?php
 
 $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
@@ -140,6 +153,7 @@ $js = new AssetCache(
 $js->dump();
 $js->dump();
 $js->dump();
+
 ```
 
 Static Assets
@@ -149,6 +163,7 @@ Alternatively you can just write filtered assets to your web directory and be
 done with it.
 
 ```
+
 <?php
 
 $writer = new AssetWriter('/path/to/web');
@@ -173,9 +188,9 @@ Once in place, the extension exposes a stylesheets and a javascripts tag with a 
 to what the asset factory uses:
 
 ```
-    {% stylesheets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
-        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
-    {% endstylesheets %}
+{% stylesheets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+{% endstylesheets %}
 ```
 
 This example will render one `link` element on the page that includes a URL
@@ -189,23 +204,23 @@ using the `?` prefix.
 This behavior can also be triggered by setting a `debug` attribute on the tag:
 
 ```
-    {% stylesheets 'css/*' debug=true %} ... {% stylesheets %}
+{% stylesheets 'css/*' debug=true %} ... {% stylesheets %}
 ```
 
 These assets need to be written to the web directory so these URLs don't
 return 404 errors.
 
-```
-    $am = new LazyAssetManager($factory);
+``` php
+$am = new LazyAssetManager($factory);
 
-    // loop through all your templates
-    $loader = new Twig\FormulaLoader($twig);
-    foreach ($templates as $template) {
-        $am->addFormulae($loader->load($template));
-    }
+// loop through all your templates
+$loader = new Twig\FormulaLoader($twig);
+foreach ($templates as $template) {
+    $am->addFormulae($loader->load($template));
+}
 
-    $writer = new AssetWriter('/path/to/web');
-    $writer->writeManagerAssets($am);
+$writer = new AssetWriter('/path/to/web');
+$writer->writeManagerAssets($am);
 ```
 
 ---
