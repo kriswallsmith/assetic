@@ -5,6 +5,10 @@ Assetic is an asset management framework for PHP.
 ``` php
 <?php
 
+use Assetic\Asset\AssetCollection,
+    Assetic\Asset\GlobAsset,
+    Assetic\Asset\FileAsset;
+
 $js = new AssetCollection(array(
     new GlobAsset('/path/to/js/*'),
     new FileAsset('/path/to/another.js'),
@@ -36,6 +40,12 @@ Filters can be applied to manipulate assets.
 
 ``` php
 <?php
+
+use Assetic\Asset\AssetCollection,
+    Assetic\Asset\GlobAsset,
+    Assetic\Asset\FileAsset,
+    Assetic\Filter\LessFilter,
+    Assetic\Filter\Yui;
 
 $css = new AssetCollection(array(
     new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
@@ -90,6 +100,10 @@ An asset manager is provided for organizing assets.
 ``` php
 <?php
 
+use Assetic\AssetManager,
+    Assetic\Asset\FileAsset,
+    Assetic\Asset\GlobAsset;
+
 $am = new AssetManager();
 $am->set('jquery', new FileAsset('/path/to/jquery.js'));
 $am->set('base_css', new GlobAsset('/path/to/css/*'));
@@ -100,10 +114,31 @@ The asset manager can also be used to reference assets to avoid duplication.
 ``` php
 <?php
 
+use Assetic\Asset\AssetCollection,
+    Assetic\Asset\AssetReference
+    Assetic\Asset\FileAsset;
+
 $am->set('my_plugin', new AssetCollection(array(
     new AssetReference($am, 'jquery'),
     new FileAsset('/path/to/jquery.plugin.js'),
 )));
+```
+
+Filter Manager
+--------------
+
+A filter manager is also provided for organizing filters.
+
+``` php
+<?php
+
+use Assetic\FilterManager,
+    Assetic\Filter\Sass\SassFilter,
+    Assetic\Filter\Yui;
+
+$fm = new FilterManager();
+$fm->set('sass', new SassFilter('/path/to/parser/sass'));
+$fm->set('yui_css', new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'));
 ```
 
 Asset Factory
@@ -114,6 +149,8 @@ factory, which will do most of the work for you.
 
 ``` php
 <?php
+
+use Assetic\Factory\AssetFactory;
 
 $factory = new AssetFactory('/path/to/web');
 $factory->setAssetManager($am);
@@ -142,6 +179,11 @@ A simple caching mechanism is provided to avoid unnecessary work.
 ``` php
 <?php
 
+use Assetic\Filter\Yui,
+    Assetic\Asset\AssetCache,
+    Assetic\Asset\FileAsset,
+    Assetic\Cache\FilesystemCache;
+
 $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
 $js = new AssetCache(
     new FileAsset('/path/to/some.js', array($yui)),
@@ -163,6 +205,8 @@ done with it.
 ``` php
 <?php
 
+use Assetic\AssetWriter;
+
 $writer = new AssetWriter('/path/to/web');
 $writer->writeManagerAssets($am);
 ```
@@ -177,7 +221,6 @@ environment:
 <?php
 
 $twig->addExtension(new AsseticExtension($factory, $debug));
-
 ```
 
 Once in place, the extension exposes a stylesheets and a javascripts tag with a syntax similar
@@ -208,6 +251,9 @@ return 404 errors.
 
 ``` php
 <?php
+
+use Assetic\Factory\LazyAssetManager,
+    Assetic\AssetWriter;
 
 $am = new LazyAssetManager($factory);
 
