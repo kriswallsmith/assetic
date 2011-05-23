@@ -53,4 +53,15 @@ CSS;
             array(new CssRewriteFilter(), new CssImportFilter()),
         );
     }
+
+    public function testNonCssImport()
+    {
+        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/noncssimport.css', array(), __DIR__.'/fixtures/cssimport', 'noncssimport.css');
+        $asset->load();
+
+        $filter = new CssImportFilter();
+        $filter->filterLoad($asset);
+
+        $this->assertEquals(file_get_contents(__DIR__.'/fixtures/cssimport/noncssimport.css'), $asset->getContent(), '->filterLoad() skips non css');
+    }
 }

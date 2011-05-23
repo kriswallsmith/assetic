@@ -73,8 +73,13 @@ class CssImportFilter extends BaseCssFilter
                 return $matches[0];
             }
 
-            $importSource = $importRoot.'/'.$importPath;
+            // ignore other imports
+            if ('css' != pathinfo($importPath, PATHINFO_EXTENSION)) {
+                return $matches[0];
+            }
 
+            // ignore not found imports
+            $importSource = $importRoot.'/'.$importPath;
             if (false === strpos($importSource, '://') && 0 !== strpos($importSource, '//') && !file_exists($importSource)) {
                 return $matches[0];
             }
