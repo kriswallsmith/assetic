@@ -21,20 +21,25 @@ use Assetic\Asset\FileAsset;
  */
 class CssImportFilter extends BaseCssFilter
 {
-    private $rewriteFilter;
+    private $importFilter;
 
-    public function __construct(FilterInterface $rewriteFilter = null)
+    /**
+     * Constructor.
+     *
+     * @param FilterInterface $importFilter Filter for each imported asset
+     */
+    public function __construct(FilterInterface $importFilter = null)
     {
-        $this->rewriteFilter = $rewriteFilter ?: new CssRewriteFilter();
+        $this->importFilter = $importFilter ?: new CssRewriteFilter();
     }
 
     public function filterLoad(AssetInterface $asset)
     {
-        $rewriteFilter = $this->rewriteFilter;
+        $importFilter = $this->importFilter;
         $sourceRoot = $asset->getSourceRoot();
         $sourcePath = $asset->getSourcePath();
 
-        $callback = function($matches) use($rewriteFilter, $sourceRoot, $sourcePath)
+        $callback = function($matches) use($importFilter, $sourceRoot, $sourcePath)
         {
             if (!$matches['url']) {
                 return $matches[0];
@@ -74,7 +79,7 @@ class CssImportFilter extends BaseCssFilter
                 return $matches[0];
             }
 
-            $import = new FileAsset($importSource, array($rewriteFilter), $importRoot, $importPath);
+            $import = new FileAsset($importSource, array($importFilter), $importRoot, $importPath);
             $import->setTargetPath($sourcePath);
 
             return $import->dump();
