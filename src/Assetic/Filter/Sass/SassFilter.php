@@ -42,7 +42,7 @@ class SassFilter implements FilterInterface
     public function __construct($sassPath = '/usr/bin/sass')
     {
         $this->sassPath = $sassPath;
-        $this->cacheLocation = sys_get_temp_dir();
+        $this->cacheLocation = rtrim(sys_get_temp_dir(), '/\\');
     }
 
     public function setUnixNewlines($unixNewlines)
@@ -157,7 +157,7 @@ class SassFilter implements FilterInterface
         // output
         $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = new Process(implode(' ', array_map(function($val) { return false === strpos($val, ' ') ? $val : escapeshellarg($val); }, $options)));
         $code = $proc->run();
 
         if (0 < $code) {
