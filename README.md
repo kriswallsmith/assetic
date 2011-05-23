@@ -5,9 +5,9 @@ Assetic is an asset management framework for PHP.
 ``` php
 <?php
 
-use Assetic\Asset\AssetCollection,
-    Assetic\Asset\GlobAsset,
-    Assetic\Asset\FileAsset;
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\FileAsset;
+use Assetic\Asset\GlobAsset;
 
 $js = new AssetCollection(array(
     new GlobAsset('/path/to/js/*'),
@@ -41,11 +41,11 @@ Filters can be applied to manipulate assets.
 ``` php
 <?php
 
-use Assetic\Asset\AssetCollection,
-    Assetic\Asset\GlobAsset,
-    Assetic\Asset\FileAsset,
-    Assetic\Filter\LessFilter,
-    Assetic\Filter\Yui;
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\FileAsset;
+use Assetic\Asset\GlobAsset;
+use Assetic\Filter\LessFilter;
+use Assetic\Filter\Yui;
 
 $css = new AssetCollection(array(
     new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
@@ -74,6 +74,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
 
  * `CoffeeScriptFilter`: compiles CoffeeScript into Javascript
  * `CssEmbedFilter`: embeds image data in your stylesheets
+ * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
@@ -100,9 +101,9 @@ An asset manager is provided for organizing assets.
 ``` php
 <?php
 
-use Assetic\AssetManager,
-    Assetic\Asset\FileAsset,
-    Assetic\Asset\GlobAsset;
+use Assetic\AssetManager;
+use Assetic\Asset\FileAsset;
+use Assetic\Asset\GlobAsset;
 
 $am = new AssetManager();
 $am->set('jquery', new FileAsset('/path/to/jquery.js'));
@@ -114,9 +115,9 @@ The asset manager can also be used to reference assets to avoid duplication.
 ``` php
 <?php
 
-use Assetic\Asset\AssetCollection,
-    Assetic\Asset\AssetReference
-    Assetic\Asset\FileAsset;
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetReference;
+use Assetic\Asset\FileAsset;
 
 $am->set('my_plugin', new AssetCollection(array(
     new AssetReference($am, 'jquery'),
@@ -132,9 +133,9 @@ A filter manager is also provided for organizing filters.
 ``` php
 <?php
 
-use Assetic\FilterManager,
-    Assetic\Filter\Sass\SassFilter,
-    Assetic\Filter\Yui;
+use Assetic\FilterManager;
+use Assetic\Filter\Sass\SassFilter;
+use Assetic\Filter\Yui;
 
 $fm = new FilterManager();
 $fm->set('sass', new SassFilter('/path/to/parser/sass'));
@@ -179,10 +180,10 @@ A simple caching mechanism is provided to avoid unnecessary work.
 ``` php
 <?php
 
-use Assetic\Filter\Yui,
-    Assetic\Asset\AssetCache,
-    Assetic\Asset\FileAsset,
-    Assetic\Cache\FilesystemCache;
+use Assetic\Asset\AssetCache;
+use Assetic\Asset\FileAsset;
+use Assetic\Cache\FilesystemCache;
+use Assetic\Filter\Yui;
 
 $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
 $js = new AssetCache(
@@ -252,20 +253,20 @@ return 404 errors.
 ``` php
 <?php
 
-use Assetic\Factory\LazyAssetManager,
-    Assetic\AssetWriter,
-    Assetic\Extension\Twig\TwigFormulaLoader,
-    Assetic\Extension\Twig\TwigResource;
+use Assetic\AssetWriter;
+use Assetic\Extension\Twig\TwigFormulaLoader;
+use Assetic\Extension\Twig\TwigResource;
+use Assetic\Factory\LazyAssetManager;
 
 $am = new LazyAssetManager($factory);
 
-// loop through all your templates
-$loader = new TwigFormulaLoader($twig);
-$am->setLoader('assetic', $loader);
+// enable loading assets from twig templates
+$am->setLoader('twig', new TwigFormulaLoader($twig));
 
+// loop through all your templates
 foreach ($templates as $template) {
     $resource = new TwigResource($twigLoader, $template);
-    $am->addResource($resource, 'assetic');
+    $am->addResource($resource, 'twig');
 }
 
 $writer = new AssetWriter('/path/to/web');
