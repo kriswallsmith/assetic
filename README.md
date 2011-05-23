@@ -228,7 +228,7 @@ Once in place, the extension exposes a stylesheets and a javascripts tag with a 
 to what the asset factory uses:
 
 ``` html+jinja
-{% stylesheets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css' %}
+{% stylesheets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css/all.css' %}
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
 {% endstylesheets %}
 ```
