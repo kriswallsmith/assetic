@@ -18,7 +18,7 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CssRewriteFilter implements FilterInterface
+class CssRewriteFilter extends BaseCssFilter
 {
     public function filterLoad(AssetInterface $asset)
     {
@@ -70,7 +70,7 @@ class CssRewriteFilter implements FilterInterface
             }
         }
 
-        $callback = function($matches) use($host, $path)
+        $content = $this->filterReferences($asset->getContent(), function($matches) use($host, $path)
         {
             if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//')) {
                 // absolute or protocol-relative
@@ -90,12 +90,7 @@ class CssRewriteFilter implements FilterInterface
             }
 
             return str_replace($matches['url'], $host.$path.$url, $matches[0]);
-        };
-
-        $content = $asset->getContent();
-
-        $content = preg_replace_callback('/url\((["\']?)(?<url>.*)(\\1)\)/', $callback, $content);
-        $content = preg_replace_callback('/import (["\'])(?<url>.*)(\\1)/', $callback, $content);
+        });
 
         $asset->setContent($content);
     }

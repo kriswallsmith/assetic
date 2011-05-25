@@ -47,14 +47,17 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testMixture()
     {
+        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+
         $expected = array(
             'mixture' => array(
                 array('foo', 'foo/*', '@foo'),
                 array(),
                 array(
-                    'output' => 'packed/mixture',
-                    'name'   => 'mixture',
-                    'debug'  => false,
+                    'output'  => 'packed/mixture',
+                    'name'    => 'mixture',
+                    'debug'   => false,
+                    'combine' => null,
                 ),
             ),
         );
@@ -63,6 +66,10 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/mixture.twig')));
+        $this->am->expects($this->any())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue($asset));
 
         $formulae = $this->loader->load($resource);
         $this->assertEquals($expected, $formulae);

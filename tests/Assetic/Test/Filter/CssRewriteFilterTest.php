@@ -59,6 +59,39 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/images/foo.gif', 'http://foo.com/images/foo.gif'),
         );
     }
+    
+    /**
+     * @dataProvider provideMultipleUrls
+     */
+    public function testMultipleUrls($format, $sourcePath, $targetPath, $inputUrl1, $inputUrl2, $expectedUrl1, $expectedUrl2)
+    {
+        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2), array(), null, $sourcePath);
+        $asset->setTargetPath($targetPath);
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+
+        $this->assertEquals(sprintf($format, $expectedUrl1, $expectedUrl2), $asset->getContent(), '->filterDump() rewrites relative urls');
+    }
+
+    public function provideMultipleUrls()
+    {
+        return array(
+            // multiple url
+            array('body { background: url(%s); background: url(%s) }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
+            array("body { background: url(%s);\nbackground: url(%s) }", 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
+
+            // multiple import
+            array('@import "%s"; @import "%s";', 'css/imports.css', 'css/build/main.css', 'import.css', 'import2.css', '../import.css', '../import2.css'),
+            array("@import \"%s\";\n@import \"%s\";", 'css/imports.css', 'css/build/main.css', 'import.css', 'import2.css', '../import.css', '../import2.css'),
+
+            // mixed urls and imports
+            array('@import "%s"; body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'import.css', '../images/bg2.gif', '../import.css', '../../images/bg2.gif'),
+            array("@import \"%s\";\nbody { background: url(%s); }", 'css/body.css', 'css/build/main.css', 'import.css', '../images/bg2.gif', '../import.css', '../../images/bg2.gif'),
+        );
+    }
 
     public function testNoTargetPath()
     {

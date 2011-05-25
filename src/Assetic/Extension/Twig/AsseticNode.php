@@ -21,6 +21,7 @@ class AsseticNode extends \Twig_Node
      * Available attributes:
      *
      *  * debug:    The debug mode
+     *  * combine:  Whether to combine assets
      *  * var_name: The name of the variable to expose to the body node
      *
      * @param AssetInterface     $asset      The asset
@@ -37,7 +38,7 @@ class AsseticNode extends \Twig_Node
         $nodes = array('body' => $body);
 
         $attributes = array_replace(
-            array('debug' => null, 'var_name' => 'asset_url'),
+            array('debug' => null, 'combine' => null, 'var_name' => 'asset_url'),
             $attributes,
             array('asset' => $asset, 'inputs' => $inputs, 'filters' => $filters, 'name' => $name)
         );
@@ -49,7 +50,14 @@ class AsseticNode extends \Twig_Node
     {
         $compiler->addDebugInfo($this);
 
-        if (null === $debug = $this->getAttribute('debug')) {
+        $combine = $this->getAttribute('combine');
+        $debug = $this->getAttribute('debug');
+
+        if (null === $combine && null !== $debug) {
+            $combine = !$debug;
+        }
+
+        if (null === $combine) {
             $compiler
                 ->write("if (isset(\$context['assetic']['debug']) && \$context['assetic']['debug']) {\n")
                 ->indent()
@@ -69,10 +77,10 @@ class AsseticNode extends \Twig_Node
                 ->outdent()
                 ->write("}\n")
             ;
-        } elseif ($debug) {
-            $this->compileDebug($compiler);
-        } else {
+        } elseif ($combine) {
             $this->compileAsset($compiler, $this->getAttribute('asset'), $this->getAttribute('name'));
+        } else {
+            $this->compileDebug($compiler);
         }
 
         $compiler

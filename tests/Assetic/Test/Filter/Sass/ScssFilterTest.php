@@ -14,6 +14,9 @@ namespace Assetic\Test\Filter\Sass;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\Sass\ScssFilter;
 
+/**
+ * @group integration
+ */
 class ScssFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testImport()

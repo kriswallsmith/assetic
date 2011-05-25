@@ -141,6 +141,20 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertStringEndsWith('.css', (string) $xml->asset[0]['url']);
     }
 
+    public function testCombine()
+    {
+        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+
+        $this->fm->expects($this->once())
+            ->method('get')
+            ->with('bar')
+            ->will($this->returnValue($filter));
+
+        $xml = $this->renderXml('combine.twig');
+        $this->assertEquals(1, count($xml->asset));
+        $this->assertEquals('css/packed.css', (string) $xml->asset[0]['url']);
+    }
+
     public function testImage()
     {
         $xml = $this->renderXml('image.twig');

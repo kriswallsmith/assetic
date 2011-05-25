@@ -15,17 +15,6 @@ use Assetic\Factory\Worker\EnsureFilterWorker;
 
 class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testReturnsAsset()
-    {
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
-
-        $worker = new EnsureFilterWorker('/\.css$/', $filter);
-        $asset = $worker->process($asset);
-
-        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $asset, '->process() returns an asset');
-    }
-
     public function testMatch()
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');

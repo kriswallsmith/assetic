@@ -45,4 +45,26 @@ EOF;
 
         $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the sass');
     }
+
+    public function testScssGuess()
+    {
+        $input = <<<'EOF'
+$red: #F00;
+
+.foo {
+    color: $red;
+}
+
+EOF;
+
+        $expected = '.foo { color: red; }';
+
+        $asset = new StringAsset($input, array(), null, 'foo.scss');
+        $asset->load();
+
+        $this->filter->setStyle(SassFilter::STYLE_COMPACT);
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals(".foo { color: red; }\n", $asset->getContent(), '->filterLoad() detects SCSS based on source path extension');
+    }
 }
