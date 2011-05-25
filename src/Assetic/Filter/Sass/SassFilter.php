@@ -12,15 +12,14 @@
 namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
+use Assetic\Filter\AbstractProcessFilter;
 
 /**
  * Loads SASS files.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SassFilter implements FilterInterface
+class SassFilter extends AbstractProcessFilter
 {
     const STYLE_NESTED     = 'nested';
     const STYLE_EXPANDED   = 'expanded';
@@ -42,7 +41,7 @@ class SassFilter implements FilterInterface
     public function __construct($sassPath = '/usr/bin/sass')
     {
         $this->sassPath = $sassPath;
-        $this->cacheLocation = sys_get_temp_dir();
+        $this->cacheLocation = $this->getTempDir();
     }
 
     public function setUnixNewlines($unixNewlines)
@@ -157,12 +156,11 @@ class SassFilter implements FilterInterface
         // output
         $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
-        $code = $proc->run();
-
-        if (0 < $code) {
+        try {
+            $this->runProcess($options);
+        } catch (\RuntimeException $ex) {
             unlink($input);
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw $ex;
         }
 
         $asset->setContent(file_get_contents($output));

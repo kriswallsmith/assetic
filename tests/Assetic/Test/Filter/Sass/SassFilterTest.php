@@ -28,6 +28,7 @@ class SassFilterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->filter = new SassFilter($_SERVER['SASS_BIN']);
+        $this->filter->setUnixNewLines(true);
     }
 
     public function testSass()

@@ -12,15 +12,14 @@
 namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
+use Assetic\Filter\AbstractProcessFilter;
 
 /**
  * Base YUI compressor filter.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompressorFilter implements FilterInterface
+abstract class BaseCompressorFilter extends AbstractProcessFilter
 {
     private $jarPath;
     private $javaPath;
@@ -77,13 +76,8 @@ abstract class BaseCompressorFilter implements FilterInterface
             $options[] = $this->lineBreak;
         }
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, array(), $content);
-        $code = $proc->run();
+        $this->runProcess($options);
 
-        if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
-        }
-
-        return $proc->getOutput();
+        return $this->getProcessOutput();
     }
 }

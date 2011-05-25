@@ -12,7 +12,6 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Runs assets through OptiPNG.
@@ -20,7 +19,7 @@ use Assetic\Util\Process;
  * @link   http://optipng.sourceforge.net/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class OptiPngFilter implements FilterInterface
+class OptiPngFilter extends AbstractProcessFilter
 {
     private $optipngBin;
     private $level;
@@ -60,12 +59,11 @@ class OptiPngFilter implements FilterInterface
         $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_optipng');
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
-        $code = $proc->run();
-
-        if (0 < $code) {
+        try {
+            $this->runProcess($options);
+        } catch (\RuntimeException $ex) {
             unlink($input);
-            throw new \RuntimeException($proc->getOutput());
+            throw $ex;
         }
 
         $asset->setContent(file_get_contents($output));

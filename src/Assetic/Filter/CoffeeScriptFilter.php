@@ -12,7 +12,6 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Compiles CoffeeScript into Javascript.
@@ -20,7 +19,7 @@ use Assetic\Util\Process;
  * @link http://jashkenas.github.com/coffee-script/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CoffeeScriptFilter implements FilterInterface
+class CoffeeScriptFilter extends AbstractProcessFilter
 {
     private $coffeePath;
     private $nodePath;
@@ -31,18 +30,18 @@ class CoffeeScriptFilter implements FilterInterface
         $this->nodePath = $nodePath;
     }
 
+    /**
+     * @param \Assetic\Asset\AssetInterface $asset
+     * @return void
+     * @throw \RuntimeException
+     */
     public function filterLoad(AssetInterface $asset)
     {
         $options = array($this->nodePath, $this->coffeePath, '-sc');
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, array(), $asset->getContent());
-        $code = $proc->run();
+        $this->runProcess($options);
 
-        if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
-        }
-
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($this->getProcessOutput());
     }
 
     public function filterDump(AssetInterface $asset)

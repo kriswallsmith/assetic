@@ -12,7 +12,6 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Filter for the Google Closure Compiler JAR.
@@ -81,14 +80,15 @@ class CompilerJarFilter extends BaseCompilerFilter
         $options[] = $cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
-        $code = $proc->run();
-        array_map('unlink', $cleanup);
-
-        if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+        try {
+            $this->runProcess($options);
+        } catch (\RuntimeException $ex) {
+            array_map('unlink', $cleanup);
+            throw $ex;
         }
 
-        $asset->setContent($proc->getOutput());
+        array_map('unlink', $cleanup);
+
+        $asset->setContent($this->getProcessOutput());
     }
 }

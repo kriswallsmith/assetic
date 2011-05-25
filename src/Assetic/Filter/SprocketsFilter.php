@@ -12,7 +12,6 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Runs assets through Sprockets.
@@ -24,7 +23,7 @@ use Assetic\Util\Process;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SprocketsFilter implements FilterInterface
+class SprocketsFilter extends AbstractProcessFilter
 {
     private $sprocketsLib;
     private $rubyBin;
@@ -101,16 +100,18 @@ EOF;
             $more
         ));
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', array($this->rubyBin, $input))));
-        $code = $proc->run();
+        try {
+            $this->runProcess(array($this->rubyBin, $input));
+        } catch (\RuntimeException $ex) {
+            unlink($tmpAsset);
+            unlink($input);
+            throw $ex;
+        }
+
         unlink($tmpAsset);
         unlink($input);
 
-        if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
-        }
-
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($this->getProcessOutput());
     }
 
     public function filterDump(AssetInterface $asset)

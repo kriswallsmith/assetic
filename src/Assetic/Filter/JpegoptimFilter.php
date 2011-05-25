@@ -12,7 +12,6 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Runs assets through Jpegoptim.
@@ -20,7 +19,7 @@ use Assetic\Util\Process;
  * @link   http://www.kokkonen.net/tjko/projects.html
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JpegoptimFilter implements FilterInterface
+class JpegoptimFilter extends AbstractProcessFilter
 {
     private $jpegoptimBin;
     private $stripAll;
@@ -55,12 +54,13 @@ class JpegoptimFilter implements FilterInterface
         $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim');
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
-        $proc->run();
+        try {
+            $this->runProcess($options);
+        } catch (\RuntimeException $ex) {}
 
-        if (false !== strpos($proc->getOutput(), 'ERROR')) {
+        if (false !== strpos($this->getProcessOutput(), 'ERROR')) {
             unlink($input);
-            throw new \RuntimeException($proc->getOutput());
+            throw new \RuntimeException($this->getProcessOutput());
         }
 
         $asset->setContent(file_get_contents($input));

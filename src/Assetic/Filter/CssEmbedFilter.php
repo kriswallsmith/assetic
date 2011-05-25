@@ -13,14 +13,13 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
 
 /**
  * CSSEmbed filter
  *
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
-class CssEmbedFilter implements FilterInterface
+class CssEmbedFilter extends AbstractProcessFilter
 {
     private $jarPath;
     private $javaPath;
@@ -131,14 +130,15 @@ class CssEmbedFilter implements FilterInterface
         $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_cssembed');
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
-        $code = $proc->run();
-        unlink($input);
-
-        if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+        try {
+            $this->runProcess($options);
+        } catch (\RuntimeException $ex) {
+            unlink($input);
+            throw $ex;
         }
 
-        $asset->setContent($proc->getOutput());
+        unlink($input);
+
+        $asset->setContent($this->getProcessOutput());
     }
 }
