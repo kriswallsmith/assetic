@@ -33,7 +33,6 @@ abstract class AbstractProcessFilter implements FilterInterface
             };
         }
 
-        echo implode(' ', array_map($this->escapingAlgorithm, $options)) . "\r\n\r\n";
         $process = new Process(implode(' ', array_map($this->escapingAlgorithm, $options)));
         $this->processReturnCode = $process->run();
         $this->processErrorOutput = $process->getErrorOutput();
