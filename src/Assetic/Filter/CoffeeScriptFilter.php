@@ -39,9 +39,12 @@ class CoffeeScriptFilter extends AbstractProcessFilter
     {
         $options = array($this->nodePath, $this->coffeePath, '-sc');
 
-        $this->runProcess($options);
-
-        $asset->setContent($this->getProcessOutput());
+        $process = $this->createProcess($options);
+        $code = $process->run();
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

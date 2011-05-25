@@ -127,18 +127,15 @@ class CssEmbedFilter extends AbstractProcessFilter
         }
 
         // input
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_cssembed');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_cssembed');
         file_put_contents($input, $asset->getContent());
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {
-            unlink($input);
-            throw $ex;
-        }
-
+        $process = $this->createProcess($options);
+        $code = $process->run();
         unlink($input);
-
-        $asset->setContent($this->getProcessOutput());
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        $asset->setContent($process->getOutput());
     }
 }

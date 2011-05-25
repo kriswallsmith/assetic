@@ -88,23 +88,20 @@ EOF;
 
         $options = array($this->nodeBin);
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_less');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_less');
         file_put_contents($input, sprintf($format,
             json_encode($parserOptions),
             json_encode($asset->getContent()),
             json_encode($treeOptions)
         ));
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {
-            unlink($input);
-            throw $ex;
-        }
-
+        $process = $this->createProcess($options);
+        $code = $process->run();
         unlink($input);
-
-        $asset->setContent($this->getProcessOutput());
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

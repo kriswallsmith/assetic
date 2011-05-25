@@ -15,17 +15,13 @@ use Assetic\Util\Process;
  */
 abstract class AbstractProcessFilter implements FilterInterface
 {
-    private $processReturnCode = null;
-    private $processErrorOutput = '';
-    private $processOutput = '';
     private $escapingAlgorithm = null;
 
     /**
      * @param array $options
-     * @return int
-     * @throw \RuntimeException
+     * @return \Assetic\Util\Process
      */
-    protected function runProcess($options)
+    protected function createProcess($options)
     {
         if (null == $this->escapingAlgorithm) {
             $this->escapingAlgorithm = function($option) {
@@ -33,40 +29,7 @@ abstract class AbstractProcessFilter implements FilterInterface
             };
         }
 
-        $process = new Process(implode(' ', array_map($this->escapingAlgorithm, $options)));
-        $this->processReturnCode = $process->run();
-        $this->processErrorOutput = $process->getErrorOutput();
-        $this->processOutput = $process->getOutput();
-
-        if (0 < $this->processReturnCode) {
-            throw new \RuntimeException($this->processErrorOutput);
-        }
-
-        return $this->getProcessReturnCode();
-    }
-
-    /**
-     * @return int
-     */
-    public function getProcessReturnCode()
-    {
-        return $this->processReturnCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProcessErrorOutput()
-    {
-        return $this->getProcessErrorOutput();
-    }
-
-    /**
-     * @return string
-     */
-    public function getProcessOutput()
-    {
-        return $this->getProcessOutput();
+        return new Process(implode(' ', array_map($this->escapingAlgorithm, $options)));
     }
 
     /**
@@ -81,7 +44,7 @@ abstract class AbstractProcessFilter implements FilterInterface
     /**
      * @return string
      */
-    protected function getTempDir()
+    public static function getTempDir()
     {
         return rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
     }

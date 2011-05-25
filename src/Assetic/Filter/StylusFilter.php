@@ -87,22 +87,19 @@ EOF;
         }
 
         $options = array($this->nodeBin);
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_stylus');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_stylus');
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
             json_encode($parserOptions)
         ));
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {
-            unlink($input);
-            throw $ex;
-        }
-
+        $process = $this->createProcess($options);
+        $code = $process->run();
         unlink($input);
-
-        $asset->setContent($this->getProcessOutput());
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        $asset->setContent($process->getOutput());
     }
 
     /**

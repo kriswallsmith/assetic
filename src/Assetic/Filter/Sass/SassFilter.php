@@ -41,7 +41,7 @@ class SassFilter extends AbstractProcessFilter
     public function __construct($sassPath = '/usr/bin/sass')
     {
         $this->sassPath = $sassPath;
-        $this->cacheLocation = $this->getTempDir();
+        $this->cacheLocation = self::getTempDir();
     }
 
     public function setUnixNewlines($unixNewlines)
@@ -150,22 +150,20 @@ class SassFilter extends AbstractProcessFilter
         }
 
         // input
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_sass');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_sass');
         file_put_contents($input, $asset->getContent());
 
         // output
-        $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
+        $options[] = $output = tempnam(self::getTempDir(), 'assetic_sass');
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {
-            unlink($input);
-            throw $ex;
+        $process = $this->createProcess($options);
+        $code = $process->run();
+        unlink($input);
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
         $asset->setContent(file_get_contents($output));
 
-        unlink($input);
         unlink($output);
     }
 

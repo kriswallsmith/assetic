@@ -87,10 +87,10 @@ EOF;
             $more .= "\n";
         }
 
-        $tmpAsset = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
+        $tmpAsset = tempnam(self::getTempDir(), 'assetic_sprockets');
         file_put_contents($tmpAsset, $asset->getContent());
 
-        $input = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
+        $input = tempnam(self::getTempDir(), 'assetic_sprockets');
         file_put_contents($input, sprintf($format,
             $this->sprocketsLib
                 ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))
@@ -100,18 +100,14 @@ EOF;
             $more
         ));
 
-        try {
-            $this->runProcess(array($this->rubyBin, $input));
-        } catch (\RuntimeException $ex) {
-            unlink($tmpAsset);
-            unlink($input);
-            throw $ex;
-        }
-
+        $process = $this->createProcess(array($this->rubyBin, $input));
+        $code = $process->run();
         unlink($tmpAsset);
         unlink($input);
-
-        $asset->setContent($this->getProcessOutput());
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

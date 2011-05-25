@@ -51,20 +51,16 @@ class JpegoptimFilter extends AbstractProcessFilter
             $options[] = '--strip-all';
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_jpegoptim');
         file_put_contents($input, $asset->getContent());
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {}
-
-        if (false !== strpos($this->getProcessOutput(), 'ERROR')) {
+        $process = $this->createProcess($options);
+        $process->run();
+        if (false !== strpos($process->getOutput(), 'ERROR')) {
             unlink($input);
-            throw new \RuntimeException($this->getProcessOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
         $asset->setContent(file_get_contents($input));
-
         unlink($input);
     }
 }

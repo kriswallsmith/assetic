@@ -53,22 +53,20 @@ class OptiPngFilter extends AbstractProcessFilter
         }
 
         $options[] = '-out';
-        $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_optipng');
+        $options[] = $output = tempnam(self::getTempDir(), 'assetic_optipng');
         unlink($output);
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_optipng');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_optipng');
         file_put_contents($input, $asset->getContent());
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {
-            unlink($input);
-            throw $ex;
-        }
-
-        $asset->setContent(file_get_contents($output));
-
+        $process = $this->createProcess($options);
+        $code = $process->run();
         unlink($input);
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        $asset->setContent($process->getOutput());
+
         unlink($output);
     }
 }

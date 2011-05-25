@@ -76,8 +76,11 @@ abstract class BaseCompressorFilter extends AbstractProcessFilter
             $options[] = $this->lineBreak;
         }
 
-        $this->runProcess($options);
-
-        return $this->getProcessOutput();
+        $process = $this->createProcess($options);
+        $code = $process->run();
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        return $process->getOutput();
     }
 }

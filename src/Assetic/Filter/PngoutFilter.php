@@ -102,23 +102,21 @@ class PngoutFilter extends AbstractProcessFilter
             $options[] = '-b'.$this->blockSplitThreshold;
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_pngout');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_pngout');
         file_put_contents($input, $asset->getContent());
 
-        $output = tempnam(sys_get_temp_dir(), 'assetic_pngout');
+        $output = tempnam(self::getTempDir(), 'assetic_pngout');
         unlink($output);
         $options[] = $output .= '.png';
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {
-            unlink($input);
-            throw $ex;
+        $process = $this->createProcess($options);
+        $code = $process->run();
+        unlink($input);
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
         $asset->setContent(file_get_contents($output));
 
-        unlink($input);
         unlink($output);
     }
 }

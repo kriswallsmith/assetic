@@ -45,14 +45,14 @@ class CompilerJarFilter extends BaseCompilerFilter
         }
 
         if (null !== $this->jsExterns) {
-            $cleanup[] = $externs = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
+            $cleanup[] = $externs = tempnam(self::getTempDir(), 'assetic_google_closure_compiler');
             file_put_contents($externs, $this->jsExterns);
             $options[] = '--externs';
             $options[] = $externs;
         }
 
         if (null !== $this->externsUrl) {
-            $cleanup[] = $externs = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
+            $cleanup[] = $externs = tempnam(self::getTempDir(), 'assetic_google_closure_compiler');
             file_put_contents($externs, file_get_contents($this->externsUrl));
             $options[] = '--externs';
             $options[] = $externs;
@@ -77,18 +77,15 @@ class CompilerJarFilter extends BaseCompilerFilter
         }
 
         $options[] = '--js';
-        $options[] = $cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
+        $options[] = $cleanup[] = $input = tempnam(self::getTempDir(), 'assetic_google_closure_compiler');
         file_put_contents($input, $asset->getContent());
 
-        try {
-            $this->runProcess($options);
-        } catch (\RuntimeException $ex) {
-            array_map('unlink', $cleanup);
-            throw $ex;
-        }
-
+        $process = $this->createProcess($options);
+        $code = $process->run();
         array_map('unlink', $cleanup);
-
-        $asset->setContent($this->getProcessOutput());
+        if (0 < $code) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+        $asset->setContent($process->getOutput());
     }
 }
