@@ -12,15 +12,14 @@
 namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
+use Assetic\Filter\AbstractProcessFilter;
 
 /**
  * Loads SASS files.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SassFilter implements FilterInterface
+class SassFilter extends AbstractProcessFilter
 {
     const STYLE_NESTED     = 'nested';
     const STYLE_EXPANDED   = 'expanded';
@@ -42,7 +41,7 @@ class SassFilter implements FilterInterface
     public function __construct($sassPath = '/usr/bin/sass')
     {
         $this->sassPath = $sassPath;
-        $this->cacheLocation = sys_get_temp_dir();
+        $this->cacheLocation = self::getTempDir();
     }
 
     public function setUnixNewlines($unixNewlines)
@@ -151,23 +150,20 @@ class SassFilter implements FilterInterface
         }
 
         // input
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_sass');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_sass');
         file_put_contents($input, $asset->getContent());
 
         // output
-        $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
+        $options[] = $output = tempnam(self::getTempDir(), 'assetic_sass');
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
-        $code = $proc->run();
-
+        $process = $this->createProcess($options);
+        $code = $process->run();
+        unlink($input);
         if (0 < $code) {
-            unlink($input);
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
         $asset->setContent(file_get_contents($output));
 
-        unlink($input);
         unlink($output);
     }
 

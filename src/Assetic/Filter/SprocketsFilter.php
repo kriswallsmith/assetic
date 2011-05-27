@@ -12,7 +12,6 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Runs assets through Sprockets.
@@ -24,7 +23,7 @@ use Assetic\Util\Process;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SprocketsFilter implements FilterInterface
+class SprocketsFilter extends AbstractProcessFilter
 {
     private $sprocketsLib;
     private $rubyBin;
@@ -88,10 +87,10 @@ EOF;
             $more .= "\n";
         }
 
-        $tmpAsset = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
+        $tmpAsset = tempnam(self::getTempDir(), 'assetic_sprockets');
         file_put_contents($tmpAsset, $asset->getContent());
 
-        $input = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
+        $input = tempnam(self::getTempDir(), 'assetic_sprockets');
         file_put_contents($input, sprintf($format,
             $this->sprocketsLib
                 ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))
@@ -101,16 +100,14 @@ EOF;
             $more
         ));
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', array($this->rubyBin, $input))));
-        $code = $proc->run();
+        $process = $this->createProcess(array($this->rubyBin, $input));
+        $code = $process->run();
         unlink($tmpAsset);
         unlink($input);
-
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

@@ -13,6 +13,7 @@ namespace Assetic\Factory\Loader;
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Filter\AbstractProcessFilter;
 
 /**
  * Loads asset formulae from PHP files.
@@ -101,7 +102,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
 
     private function processCall($call, array $protoOptions = array())
     {
-        $tmp = tempnam(sys_get_temp_dir(), 'assetic');
+        $tmp = tempnam(AbstractProcessFilter::getTempDir(), 'assetic');
         file_put_contents($tmp, implode("\n", array(
             '<?php',
             $this->registerSetupCode(),

@@ -12,14 +12,13 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Runs assets through jpegtran.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JpegtranFilter implements FilterInterface
+class JpegtranFilter extends AbstractProcessFilter
 {
     const COPY_NONE = 'none';
     const COPY_COMMENTS = 'comments';
@@ -87,17 +86,15 @@ class JpegtranFilter implements FilterInterface
             $options[] = $this->restart;
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_jpegtran');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_jpegtran');
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
-        $code = $proc->run();
+        $process = $this->createProcess($options);
+        $code = $process->run();
         unlink($input);
-
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 }

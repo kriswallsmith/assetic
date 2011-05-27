@@ -12,14 +12,14 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
+use Assetic\Filter\AbstractProcessFilter;
 
 /**
  * Base filter for the Google Closure Compiler implementations.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompilerFilter implements FilterInterface
+abstract class BaseCompilerFilter extends AbstractProcessFilter
 {
     // compilation levels
     const COMPILE_WHITESPACE_ONLY = 'WHITESPACE_ONLY';

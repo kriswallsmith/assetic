@@ -12,14 +12,13 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Runs assets through pngout.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class PngoutFilter implements FilterInterface
+class PngoutFilter extends AbstractProcessFilter
 {
     // -c#
     const COLOR_GREY       = '0';
@@ -103,24 +102,21 @@ class PngoutFilter implements FilterInterface
             $options[] = '-b'.$this->blockSplitThreshold;
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_pngout');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_pngout');
         file_put_contents($input, $asset->getContent());
 
-        $output = tempnam(sys_get_temp_dir(), 'assetic_pngout');
+        $output = tempnam(self::getTempDir(), 'assetic_pngout');
         unlink($output);
         $options[] = $output .= '.png';
 
-        $proc = new Process($cmd = implode(' ', array_map('escapeshellarg', $options)));
-        $code = $proc->run();
-
+        $process = $this->createProcess($options);
+        $code = $process->run();
+        unlink($input);
         if (0 < $code) {
-            unlink($input);
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
         $asset->setContent(file_get_contents($output));
 
-        unlink($input);
         unlink($output);
     }
 }

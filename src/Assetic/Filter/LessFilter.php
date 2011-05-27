@@ -12,14 +12,13 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Loads LESS files.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessFilter implements FilterInterface
+class LessFilter extends AbstractProcessFilter
 {
     private $nodeBin;
     private $nodePaths;
@@ -89,22 +88,20 @@ EOF;
 
         $options = array($this->nodeBin);
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_less');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_less');
         file_put_contents($input, sprintf($format,
             json_encode($parserOptions),
             json_encode($asset->getContent()),
             json_encode($treeOptions)
         ));
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, $env);
-        $code = $proc->run();
+        $process = $this->createProcess($options);
+        $code = $process->run();
         unlink($input);
-
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

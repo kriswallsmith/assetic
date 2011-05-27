@@ -12,14 +12,13 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
 
 /**
  * Loads STYL files.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class StylusFilter implements FilterInterface
+class StylusFilter extends AbstractProcessFilter
 {
     private $nodeBin;
     private $nodePaths;
@@ -88,21 +87,19 @@ EOF;
         }
 
         $options = array($this->nodeBin);
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_stylus');
+        $options[] = $input = tempnam(self::getTempDir(), 'assetic_stylus');
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
             json_encode($parserOptions)
         ));
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, $env);
-        $code = $proc->run();
+        $process = $this->createProcess($options);
+        $code = $process->run();
         unlink($input);
-
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
-
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 
     /**
