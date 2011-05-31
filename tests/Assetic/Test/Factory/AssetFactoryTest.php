@@ -136,12 +136,14 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
     public function testWorkers()
     {
         $worker = $this->getMock('Assetic\\Factory\\Worker\\WorkerInterface');
-        $worker->expects($this->once())
+
+        // called once on the collection and once on each leaf
+        $worker->expects($this->exactly(3))
             ->method('process')
             ->with($this->isInstanceOf('Assetic\\Asset\\AssetInterface'));
 
         $this->factory->addWorker($worker);
-        $this->factory->createAsset('foo.js');
+        $this->factory->createAsset(array('foo.js', 'bar.js'));
     }
 
     public function testNestedFormula()

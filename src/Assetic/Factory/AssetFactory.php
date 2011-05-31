@@ -312,18 +312,23 @@ class AssetFactory
     /**
      * Filters an asset through the factory workers.
      *
+     * Each leaf asset will be processed first if the asset is traversable,
+     * followed by the asset itself.
+     *
      * @param AssetInterface $asset An asset
      */
     private function processAsset(AssetInterface $asset)
     {
-        if (!$asset instanceof \Traversable) {
-            $asset = array($asset);
+        if ($asset instanceof \Traversable) {
+            foreach ($asset as $leaf) {
+                foreach ($this->workers as $worker) {
+                    $worker->process($leaf);
+                }
+            }
         }
 
-        foreach ($asset as $leaf) {
-            foreach ($this->workers as $worker) {
-                $worker->process($leaf);
-            }
+        foreach ($this->workers as $worker) {
+            $worker->process($asset);
         }
     }
 
