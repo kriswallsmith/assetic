@@ -42,7 +42,7 @@ class SassFilter implements FilterInterface
     public function __construct($sassPath = '/usr/bin/sass')
     {
         $this->sassPath = $sassPath;
-        $this->cacheLocation = sys_get_temp_dir();
+        $this->cacheLocation = realpath(sys_get_temp_dir());
     }
 
     public function setUnixNewlines($unixNewlines)
