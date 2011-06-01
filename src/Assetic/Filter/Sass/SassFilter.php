@@ -151,21 +151,15 @@ class SassFilter implements FilterInterface
         $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_sass'));
         file_put_contents($input, $asset->getContent());
 
-        // output
-        $pb->add($output = tempnam(sys_get_temp_dir(), 'assetic_sass'));
-
         $proc = $pb->getProcess();
         $code = $proc->run();
+        unlink($input);
 
         if (0 < $code) {
-            unlink($input);
             throw new \RuntimeException($proc->getErrorOutput());
         }
 
-        $asset->setContent(file_get_contents($output));
-
-        unlink($input);
-        unlink($output);
+        $asset->setContent($proc->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)
