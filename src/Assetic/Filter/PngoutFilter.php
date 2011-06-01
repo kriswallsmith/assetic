@@ -12,7 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through pngout.
@@ -85,32 +85,33 @@ class PngoutFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $options = array($this->pngoutBin);
+        $pb = new ProcessBuilder();
+        $pb->add($this->pngoutBin);
 
         if (null !== $this->color) {
-            $options[] = '-c'.$this->color;
+            $pb->add('-c'.$this->color);
         }
 
         if (null !== $this->filter) {
-            $options[] = '-f'.$this->filter;
+            $pb->add('-f'.$this->filter);
         }
 
         if (null !== $this->strategy) {
-            $options[] = '-s'.$this->strategy;
+            $pb->add('-s'.$this->strategy);
         }
 
         if (null !== $this->blockSplitThreshold) {
-            $options[] = '-b'.$this->blockSplitThreshold;
+            $pb->add('-b'.$this->blockSplitThreshold);
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_pngout');
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_pngout'));
         file_put_contents($input, $asset->getContent());
 
         $output = tempnam(sys_get_temp_dir(), 'assetic_pngout');
         unlink($output);
-        $options[] = $output .= '.png';
+        $pb->add($output .= '.png');
 
-        $proc = new Process($cmd = implode(' ', array_map('escapeshellarg', $options)));
+        $proc = $pb->getProcess();
         $code = $proc->run();
 
         if (0 < $code) {

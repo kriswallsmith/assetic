@@ -12,7 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through OptiPNG.
@@ -46,21 +46,20 @@ class OptiPngFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $options = array($this->optipngBin);
+        $pb = new ProcessBuilder();
+        $pb->add($this->optipngBin);
 
         if (null !== $this->level) {
-            $options[] = '-o';
-            $options[] = $this->level;
+            $pb->add('-o')->add($this->level);
         }
 
-        $options[] = '-out';
-        $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_optipng');
+        $pb->add('-out')->add($output = tempnam(sys_get_temp_dir(), 'assetic_optipng'));
         unlink($output);
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_optipng');
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_optipng'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = $pb->getProcess();
         $code = $proc->run();
 
         if (0 < $code) {

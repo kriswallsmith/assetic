@@ -12,7 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through Jpegoptim.
@@ -46,16 +46,17 @@ class JpegoptimFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $options = array($this->jpegoptimBin);
+        $pb = new ProcessBuilder();
+        $pb->add($this->jpegoptimBin);
 
         if ($this->stripAll) {
-            $options[] = '--strip-all';
+            $pb->add('--strip-all');
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim');
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = $pb->getProcess();
         $proc->run();
 
         if (false !== strpos($proc->getOutput(), 'ERROR')) {

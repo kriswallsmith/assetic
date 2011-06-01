@@ -12,7 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Loads LESS files.
@@ -81,22 +81,21 @@ EOF;
             $treeOptions['compress'] = $this->compress;
         }
 
+        $pb = new ProcessBuilder();
+
         // node.js configuration
-        $env = array();
         if (0 < count($this->nodePaths)) {
-            $env['NODE_PATH'] = implode(':', $this->nodePaths);
+            $pb->setEnvironmentVariable('NODE_PATH', implode(':', $this->nodePaths));
         }
 
-        $options = array($this->nodeBin);
-
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_less');
+        $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_less'));
         file_put_contents($input, sprintf($format,
             json_encode($parserOptions),
             json_encode($asset->getContent()),
             json_encode($treeOptions)
         ));
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, $env);
+        $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 

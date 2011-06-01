@@ -13,7 +13,7 @@ namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Base YUI compressor filter.
@@ -58,26 +58,23 @@ abstract class BaseCompressorFilter implements FilterInterface
      */
     protected function compress($content, $type, $options = array())
     {
-        // prepend the start of the command
-        $options = array_merge(array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
-            '--type',
-            $type,
-        ), $options);
+        $pb = new ProcessBuilder();
+        $pb->add($this->javaPath)->add('-jar')->add($this->jarPath)->add('--type')->add($type);
+        foreach ($options as $option) {
+            $pb->add($option);
+        }
 
         if (null !== $this->charset) {
-            $options[] = '--charset';
-            $options[] = $this->charset;
+            $pb->add('--charset')->add($this->charset);
         }
 
         if (null !== $this->lineBreak) {
-            $options[] = '--line-break';
-            $options[] = $this->lineBreak;
+            $pb->add('--line-break')->add($this->lineBreak);
         }
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)), null, array(), $content);
+        $pb->setStandardInput($content);
+
+        $proc = $pb->getProcess();
         $code = $proc->run();
 
         if (0 < $code) {

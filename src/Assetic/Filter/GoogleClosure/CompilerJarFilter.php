@@ -12,7 +12,7 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Filter for the Google Closure Compiler JAR.
@@ -34,54 +34,45 @@ class CompilerJarFilter extends BaseCompilerFilter
     {
         $cleanup = array();
 
-        $options = array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
-        );
+        $pb = new ProcessBuilder();
+        $pb->add($this->javaPath)->add('-jar')->add($this->jarPath);
 
         if (null !== $this->compilationLevel) {
-            $options[] = '--compilation_level';
-            $options[] = $this->compilationLevel;
+            $pb->add('--compilation_level')->add($this->compilationLevel);
         }
 
         if (null !== $this->jsExterns) {
             $cleanup[] = $externs = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
             file_put_contents($externs, $this->jsExterns);
-            $options[] = '--externs';
-            $options[] = $externs;
+            $pb->add('--externs')->add($externs);
         }
 
         if (null !== $this->externsUrl) {
             $cleanup[] = $externs = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
             file_put_contents($externs, file_get_contents($this->externsUrl));
-            $options[] = '--externs';
-            $options[] = $externs;
+            $pb->add('--externs')->add($externs);
         }
 
         if (null !== $this->excludeDefaultExterns) {
-            $options[] = '--use_only_custom_externs';
+            $pb->add('--use_only_custom_externs');
         }
 
         if (null !== $this->formatting) {
-            $options[] = '--formatting';
-            $options[] = $this->formatting;
+            $pb->add('--formatting')->add($this->formatting);
         }
 
         if (null !== $this->useClosureLibrary) {
-            $options[] = '--manage_closure_dependencies';
+            $pb->add('--manage_closure_dependencies');
         }
 
         if (null !== $this->warningLevel) {
-            $options[] = '--warning_level';
-            $options[] = $this->warningLevel;
+            $pb->add('--warning_level')->add($this->warningLevel);
         }
 
-        $options[] = '--js';
-        $options[] = $cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler');
+        $pb->add('--js')->add($cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = $pb->getProcess();
         $code = $proc->run();
         array_map('unlink', $cleanup);
 

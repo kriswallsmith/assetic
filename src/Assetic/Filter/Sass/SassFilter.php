@@ -13,7 +13,7 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Loads SASS files.
@@ -97,67 +97,64 @@ class SassFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $options = array($this->sassPath);
+        $pb = new ProcessBuilder();
+        $pb->add($this->sassPath);
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
         if ($root && $path) {
-            $options[] = '--load-path';
-            $options[] = dirname($root.'/'.$path);
+            $pb->add('--load-path')->add(dirname($root.'/'.$path));
         }
 
         if ($this->unixNewlines) {
-            $options[] = '--unix-newlines';
+            $pb->add('--unix-newlines');
         }
 
         if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($path, PATHINFO_EXTENSION))) {
-            $options[] = '--scss';
+            $pb->add('--scss');
         }
 
         if ($this->style) {
-            $options[] = '--style';
-            $options[] = $this->style;
+            $pb->add('--style')->add($this->style);
         }
 
         if ($this->quiet) {
-            $options[] = '--quiet';
+            $pb->add('--quiet');
         }
 
         if ($this->debugInfo) {
-            $options[] = '--debug-info';
+            $pb->add('--debug-info');
         }
 
         if ($this->lineNumbers) {
-            $options[] = '--line-numbers';
+            $pb->add('--line-numbers');
         }
 
         foreach ($this->loadPaths as $loadPath) {
-            $options[] = '--load-path';
-            $options[] = $loadPath;
+            $pb->add('--load-path')->add($loadPath);
         }
 
         if ($this->cacheLocation) {
-            $options[] = '--cache-location';
-            $options[] = $this->cacheLocation;
+            $pb->add('--cache-location')->add($this->cacheLocation);
         }
 
         if ($this->noCache) {
-            $options[] = '--no-cache';
+            $pb->add('--no-cache');
         }
 
         if ($this->compass) {
-            $options[] = '--compass';
+            $pb->add('--compass');
         }
 
         // input
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_sass');
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_sass'));
         file_put_contents($input, $asset->getContent());
 
         // output
-        $options[] = $output = tempnam(sys_get_temp_dir(), 'assetic_sass');
+        $pb->add($output = tempnam(sys_get_temp_dir(), 'assetic_sass'));
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = $pb->getProcess();
         $code = $proc->run();
 
         if (0 < $code) {

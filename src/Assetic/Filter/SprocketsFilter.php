@@ -12,7 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through Sprockets.
@@ -101,7 +101,10 @@ EOF;
             $more
         ));
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', array($this->rubyBin, $input))));
+        $pb = new ProcessBuilder();
+        $pb->add($this->rubyBin)->add($input);
+
+        $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($tmpAsset);
         unlink($input);

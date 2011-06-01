@@ -12,7 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through jpegtran.
@@ -67,30 +67,29 @@ class JpegtranFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $options = array($this->jpegtranBin);
+        $pb = new ProcessBuilder();
+        $pb->add($this->jpegtranBin);
 
         if ($this->optimize) {
-            $options[] = '-optimize';
+            $pb->add('-optimize');
         }
 
         if ($this->copy) {
-            $options[] = '-copy';
-            $options[] = $this->copy;
+            $pb->add('-copy')->add($this->copy);
         }
 
         if ($this->progressive) {
-            $options[] = '-progressive';
+            $pb->add('-progressive');
         }
 
         if (null !== $this->restart) {
-            $options[] = '-restart';
-            $options[] = $this->restart;
+            $pb->add('-restart')->add($this->restart);
         }
 
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_jpegtran');
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegtran'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 

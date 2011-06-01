@@ -13,7 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * CSSEmbed filter
@@ -79,24 +79,19 @@ class CssEmbedFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $options = array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
-        );
+        $pb = new ProcessBuilder();
+        $pb->add($this->javaPath)->add('-jar')->add($this->jarPath);
 
         if (null !== $this->charset) {
-            $options[] = '--charset';
-            $options[] = $this->charset;
+            $pb->add('--charset')->add($this->charset);
         }
 
         if ($this->mhtml) {
-            $options[] = '--mhtml';
+            $pb->add('--mhtml');
         }
 
         if (null !== $this->mhtmlRoot) {
-            $options[] = '--mhtmlroot';
-            $options[] = $this->mhtmlRoot;
+            $pb->add('--mhtmlroot')->add($this->mhtmlRoot);
         }
 
         // automatically define root if not already defined
@@ -105,33 +100,29 @@ class CssEmbedFilter implements FilterInterface
             $path = $asset->getSourcePath();
 
             if ($root && $path) {
-                $options[] = '--root';
-                $options[] = dirname($root.'/'.$path);
+                $pb->add('--root')->add(dirname($root.'/'.$path));
             }
         } else {
-            $options[] = '--root';
-            $options[] = $this->root;
+            $pb->add('--root')->add($this->root);
         }
 
         if ($this->skipMissing) {
-            $options[] = '--skip-missing';
+            $pb->add('--skip-missing');
         }
 
         if (null !== $this->maxUriLength) {
-            $options[] = '--max-uri-length';
-            $options[] = $this->maxUriLength;
+            $pb->add('--max-uri-length')->add($this->maxUriLength);
         }
 
         if (null !== $this->maxImageSize) {
-            $options[] = '--max-image-size';
-            $options[] = $this->maxImageSize;
+            $pb->add('--max-image-size')->add($this->maxImageSize);
         }
 
         // input
-        $options[] = $input = tempnam(sys_get_temp_dir(), 'assetic_cssembed');
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_cssembed'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = new Process(implode(' ', array_map('escapeshellarg', $options)));
+        $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
