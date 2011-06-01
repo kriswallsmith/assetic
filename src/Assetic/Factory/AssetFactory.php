@@ -16,6 +16,7 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
+use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
 use Assetic\Factory\Worker\WorkerInterface;
 use Assetic\FilterManager;
@@ -234,9 +235,9 @@ class AssetFactory
      * The input string can be one of the following:
      *
      *  * A reference:     If the string starts with an "at" sign it will be interpreted as a reference to an asset in the asset manager
-     *  * An absolute URL: If the string contains "://" it will be interpreted as a remote asset
+     *  * An absolute URL: If the string contains "://" or starts with "//" it will be interpreted as an HTTP asset
      *  * A glob:          If the string contains a "*" it will be interpreted as a glob
-     *  * A path:          Otherwise the string is interpreted as a path
+     *  * A path:          Otherwise the string is interpreted as a filesystem path
      *
      * Both globs and paths will be absolutized using the current root directory.
      *
@@ -251,11 +252,8 @@ class AssetFactory
             return $this->createAssetReference(substr($input, 1));
         }
 
-        if (false !== strpos($input, '://')) {
-            list($scheme, $url) = explode('://', $input, 2);
-            list($host, $path) = explode('/', $url, 2);
-
-            return $this->createFileAsset($input, $scheme.'://'.$host, $path);
+        if (false !== strpos($input, '://') || 0 === strpos($input, '//')) {
+            return $this->createHttpAsset($input);
         }
 
         if (self::isAbsolutePath($input)) {
@@ -288,6 +286,11 @@ class AssetFactory
         }
 
         return new AssetReference($this->am, $name);
+    }
+
+    protected function createHttpAsset($sourceUrl)
+    {
+        return new HttpAsset($sourceUrl);
     }
 
     protected function createGlobAsset($glob, $root = null)

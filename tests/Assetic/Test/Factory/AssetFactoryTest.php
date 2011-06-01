@@ -29,12 +29,6 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory->setFilterManager($this->fm);
     }
 
-    public function testCreateHttpAsset()
-    {
-        $factory = new AssetFactory('.');
-        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $factory->createAsset(array('http://example.com/main.css')));
-    }
-
     public function testNoAssetManagerReference()
     {
         $this->setExpectedException('LogicException', 'There is no asset manager.');
@@ -69,6 +63,25 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $assets = $this->factory->createAsset(array('@jquery'));
         $arr = iterator_to_array($assets);
         $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $arr[0], '->createAsset() creates a reference');
+    }
+
+    /**
+     * @dataProvider getHttpUrls
+     */
+    public function testCreateHttpAsset($sourceUrl)
+    {
+        $assets = $this->factory->createAsset(array($sourceUrl));
+        $arr = iterator_to_array($assets);
+        $this->assertInstanceOf('Assetic\\Asset\\HttpAsset', $arr[0], '->createAsset() creates an HTTP asset');
+    }
+
+    public function getHttpUrls()
+    {
+        return array(
+            array('http://example.com/foo.css'),
+            array('https://example.com/foo.css'),
+            array('//example.com/foo.css'),
+        );
     }
 
     public function testCreateFileAsset()
