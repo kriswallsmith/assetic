@@ -40,6 +40,7 @@ class CompassFilter implements FilterInterface
     private $javascriptsDir;
 
     // compass configuration file options
+    private $plugins = array();
     private $loadPaths = array();
     private $httpPath;
     private $httpImagesPath;
@@ -104,6 +105,11 @@ class CompassFilter implements FilterInterface
     }
 
     // compass configuration file options setters
+    public function addPlugin($plugin)
+    {
+        $this->plugins[] = $plugin;
+    }
+
     public function addLoadPath($loadPath)
     {
         $this->loadPaths[] = $loadPath;
@@ -203,6 +209,9 @@ class CompassFilter implements FilterInterface
         // options in configuration file
         if (count($optionsConfig)) {
             $config = array();
+            foreach($this->plugins as $plugin) {
+                $config[] = sprintf("require '%s'", $plugin);
+            }
             foreach($optionsConfig as $name => $value) {
                 if (!is_array($value)) {
                     $config[] = sprintf('%s = "%s"', $name, $value);
