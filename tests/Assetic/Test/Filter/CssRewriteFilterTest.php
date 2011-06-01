@@ -59,7 +59,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/images/foo.gif', 'http://foo.com/images/foo.gif'),
         );
     }
-    
+
     /**
      * @dataProvider provideMultipleUrls
      */
@@ -104,5 +104,33 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $filter->filterDump($asset);
 
         $this->assertEquals($content, $asset->getContent(), '->filterDump() urls are not changed without urls');
+    }
+
+    public function testAbsoluteUrlRewrite()
+    {
+        $content = 'body{url(foo.gif)}';
+
+        $asset = new StringAsset($content, array(), null, '/root/path/');
+        $asset->setTargetPath('/path/to/css/file.css');
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterDump($asset);
+
+        $this->assertEquals('body{url(/root/path/foo.gif)}', $asset->getContent(), '->filterDump() url should be changed');
+    }
+
+    public function testRelativeUrlRewrite()
+    {
+        $content = 'body{url(test/foo.gif)}';
+
+        $asset = new StringAsset($content, array(), null, 'root/test');
+        $asset->setTargetPath('/path/to/css/file.css');
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterDump($asset);
+
+        $this->assertEquals('body{url(../../../root/test/foo.gif)}', $asset->getContent(), '->filterDump() url should be changed');
     }
 }
