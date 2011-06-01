@@ -27,6 +27,7 @@ class LazyAssetManager extends AssetManager
     private $resources;
     private $formulae;
     private $loaded;
+    private $loading;
 
     /**
      * Constructor.
@@ -41,6 +42,7 @@ class LazyAssetManager extends AssetManager
         $this->resources = array();
         $this->formulae = array();
         $this->loaded = false;
+        $this->loading = false;
 
         foreach ($loaders as $alias => $loader) {
             $this->setLoader($alias, $loader);
@@ -142,19 +144,24 @@ class LazyAssetManager extends AssetManager
      */
     public function load()
     {
+        if ($this->loading) {
+            return;
+        }
+
         if ($diff = array_diff(array_keys($this->resources), array_keys($this->loaders))) {
             throw new \LogicException('The following loader(s) are not registered: '.implode(', ', $diff));
         }
 
-        $formulae = array();
+        $this->loading = true;
+
         foreach ($this->resources as $loader => $resources) {
             foreach ($resources as $resource) {
-                $formulae += $this->loaders[$loader]->load($resource);
+                $this->formulae = array_replace($this->formulae, $this->loaders[$loader]->load($resource));
             }
         }
 
-        $this->formulae = $formulae + $this->formulae;
         $this->loaded = true;
+        $this->loading = false;
     }
 
     public function get($name)
