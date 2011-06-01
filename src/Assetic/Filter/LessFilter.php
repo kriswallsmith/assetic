@@ -85,7 +85,7 @@ EOF;
 
         // node.js configuration
         if (0 < count($this->nodePaths)) {
-            $pb->setEnvironmentVariable('NODE_PATH', implode(':', $this->nodePaths));
+            $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
         }
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_less'));

@@ -38,7 +38,7 @@ class CoffeeScriptFilter implements FilterInterface
             ->add($this->nodePath)
             ->add($this->coffeePath)
             ->add('-sc')
-            ->setStandardInput($asset->getContent());
+            ->setInput($asset->getContent());
         ;
 
         $proc = $pb->getProcess();

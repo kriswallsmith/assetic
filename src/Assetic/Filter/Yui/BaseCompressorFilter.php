@@ -72,7 +72,7 @@ abstract class BaseCompressorFilter implements FilterInterface
             $pb->add('--line-break')->add($this->lineBreak);
         }
 
-        $pb->setStandardInput($content);
+        $pb->setInput($content);
 
         $proc = $pb->getProcess();
         $code = $proc->run();

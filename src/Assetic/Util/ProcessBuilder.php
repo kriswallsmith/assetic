@@ -33,14 +33,14 @@ class ProcessBuilder
         return $this;
     }
 
-    public function setCurrentWorkingDirectory($cwd)
+    public function setWorkingDirectory($cwd)
     {
         $this->cwd = $cwd;
 
         return $this;
     }
 
-    public function setEnvironmentVariable($name, $value)
+    public function setEnv($name, $value)
     {
         if (null === $this->env) {
             $this->env = array();
@@ -51,7 +51,7 @@ class ProcessBuilder
         return $this;
     }
 
-    public function setStandardInput($stdin)
+    public function setInput($stdin)
     {
         $this->stdin = $stdin;
 
