@@ -13,6 +13,7 @@ namespace Assetic\Asset;
 
 use Assetic\Filter\FilterCollection;
 use Assetic\Filter\FilterInterface;
+use Assetic\Filter\LastModifiedInterface;
 
 /**
  * A base abstract asset.
@@ -121,5 +122,30 @@ abstract class BaseAsset implements AssetInterface
     public function setTargetPath($targetPath)
     {
         $this->targetPath = $targetPath;
+    }
+
+    /**
+     * Returns the last modified timestamp according to the filters.
+     *
+     * @return integer|null A UNIX timestamp
+     */
+    protected function getLastModifiedPerFilters()
+    {
+        $filters = $this->filters->all();
+
+        if (0 < count($filters)) {
+            return;
+        }
+
+        $mtimes = array();
+        foreach ($filters as $filter) {
+            if ($filter instanceof LastModifiedInterface && is_integer($mtime = $filter->getLastModified($this))) {
+                $mtimes[] = $mtime;
+            }
+        }
+
+        if (0 < count($mtimes)) {
+            return max($mtimes);
+        }
     }
 }
