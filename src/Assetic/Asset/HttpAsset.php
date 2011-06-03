@@ -21,6 +21,7 @@ use Assetic\Filter\FilterInterface;
 class HttpAsset extends BaseAsset
 {
     private $sourceUrl;
+    private $ignoreErrors;
 
     /**
      * Constructor.
@@ -30,7 +31,7 @@ class HttpAsset extends BaseAsset
      *
      * @throws InvalidArgumentException If the first argument is not an URL
      */
-    public function __construct($sourceUrl, $filters = array())
+    public function __construct($sourceUrl, $filters = array(), $ignoreErrors = false)
     {
         if (0 === strpos($sourceUrl, '//')) {
             $sourceUrl = 'http:'.$sourceUrl;
@@ -39,6 +40,7 @@ class HttpAsset extends BaseAsset
         }
 
         $this->sourceUrl = $sourceUrl;
+        $this->ignoreErrors = $ignoreErrors;
 
         list($scheme, $url) = explode('://', $sourceUrl, 2);
         list($host, $path) = explode('/', $url, 2);
@@ -49,7 +51,11 @@ class HttpAsset extends BaseAsset
     public function load(FilterInterface $additionalFilter = null)
     {
         if (false === $content = @file_get_contents($this->sourceUrl)) {
-            throw new \RuntimeException(sprintf('Unable to load asset from URL "%s"', $this->sourceUrl));
+            if ($this->ignoreErrors) {
+                return;
+            } else {
+                throw new \RuntimeException(sprintf('Unable to load asset from URL "%s"', $this->sourceUrl));
+            }
         }
 
         $this->doLoad($content, $additionalFilter);
