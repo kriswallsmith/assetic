@@ -33,6 +33,7 @@ class CompassFilter implements FilterInterface
 
     // compass options
     private $config;
+    private $force;
     private $style;
     private $quiet;
     private $noLineComments;
@@ -79,6 +80,11 @@ class CompassFilter implements FilterInterface
     }
 
     // compass options setters
+    public function setForce($force)
+    {
+        $this->force = $force;
+    }
+
     public function setStyle($style)
     {
         $this->style = $style;
@@ -141,6 +147,10 @@ class CompassFilter implements FilterInterface
 
         $pb = new ProcessBuilder();
         $pb->add($this->compassPath)->add('compile');
+
+        if ($this->force) {
+            $pb->add('--force');
+        }
 
         if ($this->style) {
             $pb->add('--output-style')->add($this->style);
