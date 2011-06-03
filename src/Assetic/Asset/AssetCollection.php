@@ -70,6 +70,11 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
         return $this->filters->all();
     }
 
+    public function clearFilters()
+    {
+        $this->filters->clear();
+    }
+
     public function load(FilterInterface $additionalFilter = null)
     {
         // loop through leaves and load each asset

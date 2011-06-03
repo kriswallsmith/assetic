@@ -35,6 +35,11 @@ interface AssetInterface
     function getFilters();
 
     /**
+     * Clears all filters from the current asset.
+     */
+    function clearFilters();
+
+    /**
      * Loads the asset into memory and applies load filters.
      *
      * You may provide an additional filter to apply during load.

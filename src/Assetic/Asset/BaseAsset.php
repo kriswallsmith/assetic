@@ -55,6 +55,11 @@ abstract class BaseAsset implements AssetInterface
         return $this->filters->all();
     }
 
+    public function clearFilters()
+    {
+        $this->filters->clear();
+    }
+
     /**
      * Encapsulates asset loading logic.
      *

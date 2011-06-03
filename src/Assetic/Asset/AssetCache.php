@@ -40,6 +40,11 @@ class AssetCache implements AssetInterface
         return $this->asset->getFilters();
     }
 
+    public function clearFilters()
+    {
+        $this->asset->clearFilters();
+    }
+
     public function load(FilterInterface $additionalFilter = null)
     {
         $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'load');
