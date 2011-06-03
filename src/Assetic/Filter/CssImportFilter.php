@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
+use Assetic\Asset\HttpAsset;
 
 /**
  * Inlines imported stylesheets.
@@ -78,13 +79,16 @@ class CssImportFilter extends BaseCssFilter
                 return $matches[0];
             }
 
-            // ignore not found imports
             $importSource = $importRoot.'/'.$importPath;
-            if (false === strpos($importSource, '://') && 0 !== strpos($importSource, '//') && !file_exists($importSource)) {
+            if (false !== strpos($importSource, '://') || 0 === strpos($importSource, '//')) {
+                $import = new HttpAsset($importSource, array($importFilter), true);
+            } elseif (!file_exists($importSource)) {
+                // ignore not found imports
                 return $matches[0];
+            } else {
+                $import = new FileAsset($importSource, array($importFilter), $importRoot, $importPath);
             }
 
-            $import = new FileAsset($importSource, array($importFilter), $importRoot, $importPath);
             $import->setTargetPath($sourcePath);
 
             return $import->dump();
