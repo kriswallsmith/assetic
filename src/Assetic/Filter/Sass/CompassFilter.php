@@ -13,7 +13,7 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\Process;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Loads Compass files.
@@ -138,36 +138,31 @@ class CompassFilter implements FilterInterface
         if ($root && $path) {
             $this->loadPaths[] = dirname($root . '/' . $path);
         }
-        
-        $options = array(
-            $this->compassPath,
-            'compile'
-        );
+
+        $pb = new ProcessBuilder();
+        $pb->add($this->compassPath)->add('compile');
 
         if ($this->style) {
-            $options[] = '--output-style';
-            $options[] = $this->style;
+            $pb->add('--output-style')->add($this->style);
         }
 
         if ($this->quiet) {
-            $options[] = '--quiet';
+            $pb->add('--quiet');
         }
 
         if ($this->noLineComments) {
-            $options[] = '--no-line-comments';
+            $pb->add('--no-line-comments');
         }
 
         // these two options are not passed into the config file
         // because like this, compass adapts this to be xxx_dir or xxx_path
         // whether it's an absolute path or not
         if ($this->imagesDir) {
-            $options[] = '--images-dir';
-            $options[] = $this->imagesDir;
+            $pb->add('--images-dir')->add($this->imagesDir);
         }
 
         if ($this->javascriptsDir) {
-            $options[] = '--javascripts-dir';
-            $options[] = $this->javascriptsDir;
+            $pb->add('--javascripts-dir')->add($this->javascriptsDir);
         }
 
         // options in config file
@@ -227,36 +222,35 @@ class CompassFilter implements FilterInterface
         }
 
         if ($this->config) {
-            $options[] = '--config';
-            $options[] = $this->config;
+            $pb->add('--config')->add($this->config);
         }
 
-        $options[] = '--sass-dir';
-        $options[] = $tempDir;
-        $options[] = '--css-dir';
-        $options[] = $tempDir;
+        $pb->add('--sass-dir')->add($tempDir)->add('--css-dir')->add($tempDir);
 
         // compass choose the type (sass or scss from the filename)
-        if ($path) {
+        if (null !== $this->scss) {
+            $type = $this->scss ? 'scss' : 'sass';
+        }
+        elseif ($path) {
             $type = pathinfo($path, PATHINFO_EXTENSION);
         }
         else {
-            $type = $this->scss ? 'scss' : 'sass';
+            $type = 'scss';
         }
 
         $tempName = tempnam($tempDir, 'assetic_compass');
 
         // input
-        $options[] = $input =  ($tempName . '.' . $type);
+        $pb->add($input =  ($tempName . '.' . $type));
         file_put_contents($input, $asset->getContent());
 
         // output
         $output = $tempName . '.css';
 
-        $proc = new Process(
-            'export HOME=' . $_SERVER['DOCUMENT_ROOT'] . '; ' .  // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
-            implode(' ', array_map('escapeshellarg', $options))
-        );
+        // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
+        $pb->setEnv('HOME', sys_get_temp_dir());
+
+        $proc = $pb->getProcess();
         $code = $proc->run();
 
         if (0 < $code) {
