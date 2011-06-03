@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Filter\Sass;
+namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
-use Assetic\Filter\Sass\CompassFilter;
+use Assetic\Filter\CompassFilter;
 
 /**
  * Compass filter test case.
@@ -31,7 +31,7 @@ class CompassFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterLoadWithScss()
     {
-        $asset = new FileAsset(__DIR__.'/../fixtures/compass/stylesheet.scss');
+        $asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.scss');
         $asset->load();
 
         $filter = new CompassFilter($_SERVER['COMPASS_BIN']);
@@ -43,7 +43,7 @@ class CompassFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterLoadWithSass()
     {
-        $asset = new FileAsset(__DIR__.'/../fixtures/compass/stylesheet.sass');
+        $asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.sass');
         $asset->load();
 
         $filter = new CompassFilter($_SERVER['COMPASS_BIN']);
@@ -55,7 +55,7 @@ class CompassFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testCompassMixin()
     {
-        $asset = new FileAsset(__DIR__.'/../fixtures/compass/compass.sass');
+        $asset = new FileAsset(__DIR__.'/fixtures/compass/compass.sass');
         $asset->load();
 
         $filter = new CompassFilter($_SERVER['COMPASS_BIN']);
