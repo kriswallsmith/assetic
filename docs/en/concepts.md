@@ -125,3 +125,5 @@ The asset collection iterates recursively, which means you will only see the
 "leaf" assets during iteration. Iteration also includes a smart filter which
 ensures you only see each asset once, even if the same asset has been included
 multiple times.
+
+Next: [Defining Assets "On The Fly"](define.md)

@@ -28,3 +28,5 @@ In your HTML template you would include this generated Javascript using a
 simple `<script>` tag:
 
     <script src="/assets/javascripts.php"></script>
+
+Next: [Basic Concepts](concepts.md)

@@ -17,3 +17,5 @@ There are two distinct approaches you can take when using Assetic:
 
 The first approach is simpler, but the second, with all its moving parts,
 offers more flexibility and opportunity for optimization.
+
+Next: [Building and Dumping Assets](build.md)
