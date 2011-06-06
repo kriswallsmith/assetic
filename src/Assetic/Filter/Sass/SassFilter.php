@@ -155,7 +155,7 @@ class SassFilter implements FilterInterface
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 != $code) {
             throw new \RuntimeException($proc->getErrorOutput());
         }
 
