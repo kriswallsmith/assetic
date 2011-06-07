@@ -240,4 +240,10 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count(array_unique($urls)), 'iterator prevents basename collisions');
     }
+
+    public function testEmptyMtime()
+    {
+        $coll = new AssetCollection();
+        $this->assertNull($coll->getLastModified(), '->getLastModified() returns null on empty collection');
+    }
 }

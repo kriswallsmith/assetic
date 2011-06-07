@@ -129,6 +129,10 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
      */
     public function getLastModified()
     {
+        if (!count($this->assets)) {
+            return;
+        }
+
         $mapper = function (AssetInterface $asset)
         {
             return $asset->getLastModified();
