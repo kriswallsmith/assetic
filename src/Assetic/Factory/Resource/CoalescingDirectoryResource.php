@@ -18,7 +18,7 @@ namespace Assetic\Factory\Resource;
  */
 class CoalescingDirectoryResource implements IteratorResourceInterface
 {
-    protected $directories;
+    private $directories;
 
     public function __construct($directories)
     {
@@ -76,20 +76,31 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
     }
 
     /**
+     * Returns the relative version of a filename.
+     *
+     * @param ResourceInterface $file      The file
+     * @param ResourceInterface $directory The directory
+     *
+     * @return string The name to compare with files from other directories
+     */
+    protected function getRelativeName(ResourceInterface $file, ResourceInterface $directory)
+    {
+        return substr((string) $file, strlen((string) $directory));
+    }
+
+    /**
      * Performs the coalesce.
      *
      * @return array An array of file resources
      */
-    protected function getFileResources()
+    private function getFileResources()
     {
         $paths = array();
 
         foreach ($this->directories as $directory) {
-            $path = (string) $directory;
-            $offset = strlen($path);
             foreach ($directory as $file) {
-                $pathname = (string) $file;
-                $relative = substr($pathname, $offset);
+                $relative = $this->getRelativeName($file, $directory);
+
                 if (!isset($paths[$relative])) {
                     $paths[$relative] = $file;
                 }
