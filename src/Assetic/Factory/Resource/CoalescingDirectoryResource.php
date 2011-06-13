@@ -18,7 +18,7 @@ namespace Assetic\Factory\Resource;
  */
 class CoalescingDirectoryResource implements IteratorResourceInterface
 {
-    private $directories;
+    protected $directories;
 
     public function __construct($directories)
     {
