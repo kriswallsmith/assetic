@@ -29,7 +29,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
         }
     }
 
-    public function addDirectory(DirectoryResource $directory)
+    public function addDirectory(IteratorResourceInterface $directory)
     {
         $this->directories[] = $directory;
     }
