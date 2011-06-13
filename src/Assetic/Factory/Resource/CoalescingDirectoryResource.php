@@ -83,15 +83,11 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
     private function getFileResources()
     {
         $paths = array();
-
         foreach ($this->directories as $directory) {
-            $path = (string) $directory;
-            $offset = strlen($path);
             foreach ($directory as $file) {
                 $pathname = (string) $file;
-                $relative = substr($pathname, $offset);
-                if (!isset($paths[$relative])) {
-                    $paths[$relative] = $file;
+                if (!isset($paths[$pathname])) {
+                    $paths[$pathname] = $file;
                 }
             }
         }
