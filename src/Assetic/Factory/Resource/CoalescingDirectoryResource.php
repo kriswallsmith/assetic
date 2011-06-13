@@ -80,7 +80,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
      *
      * @return array An array of file resources
      */
-    private function getFileResources()
+    protected function getFileResources()
     {
         $paths = array();
 
