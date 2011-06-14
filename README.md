@@ -85,7 +85,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
  * `OptiPngFilter`: optimize your PNGs
  * `PngoutFilter`: optimize your PNGs
- * `Sass\CompassFilter`: Compass CSS authoring framework
+ * `CompassFilter`: Compass CSS authoring framework
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
  * `SprocketsFilter`: Sprockets Javascript dependency management
