@@ -220,8 +220,7 @@ class CompassFilter implements FilterInterface
             foreach($optionsConfig as $name => $value) {
                 if (!is_array($value)) {
                     $config[] = sprintf('%s = "%s"', $name, $value);
-                }
-                elseif (!empty($value)) {
+                } elseif (!empty($value)) {
                     $config[] = sprintf('%s = %s', $name, $this->formatArrayToRuby($value));
                 }
             }
@@ -240,11 +239,9 @@ class CompassFilter implements FilterInterface
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
             $type = $this->scss ? 'scss' : 'sass';
-        }
-        elseif ($path) {
+        } elseif ($path) {
             $type = pathinfo($path, PATHINFO_EXTENSION);
-        }
-        else {
+        } else {
             $type = 'scss';
         }
 
@@ -286,15 +283,12 @@ class CompassFilter implements FilterInterface
         $output = array();
 
         // does we have an associative array ?
-        if (count(array_filter(array_keys($array), "is_numeric")) != count($array))
-        {
+        if (count(array_filter(array_keys($array), "is_numeric")) != count($array)) {
             foreach($array as $name => $value) {
                 $output[] = sprintf('    :%s => "%s"', $name, $value);
             }
             $output = "{\n". implode(",\n", $output) . "\n}";
-        }
-        else
-        {
+        } else {
             foreach($array as $name => $value) {
                 $output[] = sprintf('    "%s"', $value);
             }
