@@ -24,6 +24,7 @@ class JpegoptimFilter implements FilterInterface
 {
     private $jpegoptimBin;
     private $stripAll;
+    private $max;
 
     /**
      * Constructor.
@@ -40,6 +41,11 @@ class JpegoptimFilter implements FilterInterface
         $this->stripAll = $stripAll;
     }
 
+    public function setMax($max)
+    {
+        $this->max = $max;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -51,6 +57,10 @@ class JpegoptimFilter implements FilterInterface
 
         if ($this->stripAll) {
             $pb->add('--strip-all');
+        }
+
+        if ($this->max) {
+            $pb->add('--max='.$this->max);
         }
 
         $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim'));
