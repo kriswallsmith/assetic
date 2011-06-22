@@ -278,6 +278,14 @@ Smarty
 
 Assetic can also easily be integrated with Smarty, as it provides a Smarty plugin.
 
+First, you have to add Assetic/Extension/Smarty to your Smarty plugin_dirs:
+
+``` php
+$smarty = new Smarty();
+// ...
+$smarty->plugins_dir[] = 'path/to/Assetic/Extension/Smarty';
+```
+
 A simple usage example:
 
 ``` html
