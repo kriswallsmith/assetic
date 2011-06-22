@@ -64,8 +64,7 @@ function smarty_block_assetic($params, $content, $template, &$repeat)
         
         if (isset($params['filters'])) {
             $filters = explode(',', $params['filters']);
-        }
-        else {
+        } else {
             $filters = array();
         }
         
@@ -86,9 +85,8 @@ function smarty_block_assetic($params, $content, $template, &$repeat)
             );
             
             $writer->writeAsset($cache);
-        }
         // If individual assets are provided
-        elseif (isset($params['assets'])) {
+        } elseif (isset($params['assets'])) {
             $assets = array();
             // Include only the references first
             foreach (explode(',', $params['assets']) as $a) {
@@ -159,14 +157,12 @@ function smarty_block_assetic($params, $content, $template, &$repeat)
             $count = count($assetsUrls);
             
             $template->assign($params['asset_url'], $params['build_path'].'/'.$assetsUrls[$count-1]);
-        }
         // Production mode, include an all-in-one asset
-        else {
+        } else {
             $template->assign($params['asset_url'], $params['build_path'].'/'.$asset->getTargetPath());
         }
-    }
     // Closing tag
-    else {
+    } else {
         if (isset($content)) {
             // If debug mode is active, we want to include assets separately
             if ($params['debug']) {
