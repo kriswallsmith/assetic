@@ -69,12 +69,10 @@ class CompilerJarFilter extends BaseCompilerFilter
             $pb->add('--warning_level')->add($this->warningLevel);
         }
 
-        $pb->add('--js')->add($cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler'));
-        file_put_contents($input, $asset->getContent());
+        $pb->setInput($asset->getContent());
 
         $proc = $pb->getProcess();
         $code = $proc->run();
-        array_map('unlink', $cleanup);
 
         if (0 < $code) {
             throw new \RuntimeException($proc->getErrorOutput());
