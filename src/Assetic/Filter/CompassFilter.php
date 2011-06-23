@@ -176,7 +176,7 @@ class CompassFilter implements FilterInterface
         }
 
         // options in config file
-        $optionsConfig = array('sass_options' => array());
+        $optionsConfig = array();
 
         if (!empty($this->loadPaths)) {
             $optionsConfig['additional_import_paths'] = $this->loadPaths;
@@ -184,6 +184,10 @@ class CompassFilter implements FilterInterface
 
         if ($this->unixNewlines) {
             $optionsConfig['sass_options']['unix_newlines'] = true;
+        }
+
+        if ($this->debugInfo) {
+            $optionsConfig['sass_options']['debug_info'] = true;
         }
 
         if ($this->cacheLocation) {
