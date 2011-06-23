@@ -246,6 +246,7 @@ class CompassFilter implements FilterInterface
         }
 
         $tempName = tempnam($tempDir, 'assetic_compass');
+        unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
         $pb->add($input =  ($tempName . '.' . $type));
@@ -262,6 +263,9 @@ class CompassFilter implements FilterInterface
 
         if (0 < $code) {
             unlink($input);
+            if (is_file($this->config)) {
+                unlink($this->config);
+            }
             throw new \RuntimeException($proc->getErrorOutput());
         }
 
