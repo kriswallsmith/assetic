@@ -142,7 +142,7 @@ class CompassFilter implements FilterInterface
         $path = $asset->getSourcePath();
 
         if ($root && $path) {
-            $this->loadPaths[] = dirname($root . '/' . $path);
+            $this->loadPaths[] = dirname($root.'/'.$path);
         }
 
         $pb = new ProcessBuilder();
@@ -176,9 +176,7 @@ class CompassFilter implements FilterInterface
         }
 
         // options in config file
-        $optionsConfig = array(
-            'sass_options' => array()
-        );
+        $optionsConfig = array('sass_options' => array());
 
         if (!empty($this->loadPaths)) {
             $optionsConfig['additional_import_paths'] = $this->loadPaths;
@@ -214,10 +212,10 @@ class CompassFilter implements FilterInterface
         // options in configuration file
         if (count($optionsConfig)) {
             $config = array();
-            foreach($this->plugins as $plugin) {
+            foreach ($this->plugins as $plugin) {
                 $config[] = sprintf("require '%s'", $plugin);
             }
-            foreach($optionsConfig as $name => $value) {
+            foreach ($optionsConfig as $name => $value) {
                 if (!is_array($value)) {
                     $config[] = sprintf('%s = "%s"', $name, $value);
                 } elseif (!empty($value)) {
@@ -225,7 +223,7 @@ class CompassFilter implements FilterInterface
                 }
             }
 
-            $config = implode("\n", $config) . "\n";
+            $config = implode("\n", $config)."\n";
             $this->config = tempnam($tempDir, 'assetic_compass');
             file_put_contents($this->config, $config);
         }
@@ -240,6 +238,7 @@ class CompassFilter implements FilterInterface
         if (null !== $this->scss) {
             $type = $this->scss ? 'scss' : 'sass';
         } elseif ($path) {
+            // FIXME: what if the extension is something else?
             $type = pathinfo($path, PATHINFO_EXTENSION);
         } else {
             $type = 'scss';
@@ -249,11 +248,11 @@ class CompassFilter implements FilterInterface
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
-        $pb->add($input =  ($tempName . '.' . $type));
+        $pb->add($input = $tempName.'.'.$type);
         file_put_contents($input, $asset->getContent());
 
         // output
-        $output = $tempName . '.css';
+        $output = $tempName.'.css';
 
         // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
         $pb->setEnv('HOME', sys_get_temp_dir());
@@ -291,12 +290,12 @@ class CompassFilter implements FilterInterface
             foreach($array as $name => $value) {
                 $output[] = sprintf('    :%s => "%s"', $name, $value);
             }
-            $output = "{\n". implode(",\n", $output) . "\n}";
+            $output = "{\n".implode(",\n", $output)."\n}";
         } else {
             foreach($array as $name => $value) {
                 $output[] = sprintf('    "%s"', $value);
             }
-            $output = "[\n". implode(",\n", $output) . "\n]";
+            $output = "[\n".implode(",\n", $output)."\n]";
         }
 
         return $output;
