@@ -18,7 +18,7 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-interface LastModifiedInterface
+interface LastModifiedFilterInterface extends FilterInterface
 {
     /**
      * Returns the time the asset was last modified.

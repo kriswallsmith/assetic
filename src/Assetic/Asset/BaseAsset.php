@@ -13,7 +13,7 @@ namespace Assetic\Asset;
 
 use Assetic\Filter\FilterCollection;
 use Assetic\Filter\FilterInterface;
-use Assetic\Filter\LastModifiedInterface;
+use Assetic\Filter\LastModifiedFilterInterface;
 
 /**
  * A base abstract asset.
@@ -144,7 +144,7 @@ abstract class BaseAsset implements AssetInterface
 
         $mtimes = array();
         foreach ($filters as $filter) {
-            if ($filter instanceof LastModifiedInterface && is_integer($mtime = $filter->getLastModified($this))) {
+            if ($filter instanceof LastModifiedFilterInterface && is_integer($mtime = $filter->getLastModified($this))) {
                 $mtimes[] = $mtime;
             }
         }
