@@ -138,7 +138,7 @@ abstract class BaseAsset implements AssetInterface
     {
         $filters = $this->filters->all();
 
-        if (0 < count($filters)) {
+        if (!count($filters)) {
             return;
         }
 
