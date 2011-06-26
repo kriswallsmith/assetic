@@ -18,7 +18,7 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FilterCollection implements FilterInterface, \IteratorAggregate
+class FilterCollection implements FilterInterface, \IteratorAggregate, \Countable
 {
     private $filters = array();
 
@@ -73,5 +73,10 @@ class FilterCollection implements FilterInterface, \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->filters);
+    }
+
+    public function count()
+    {
+        return count($this->filters);
     }
 }

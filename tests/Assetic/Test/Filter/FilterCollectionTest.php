@@ -49,4 +49,11 @@ class FilterCollectionTest extends \PHPUnit_Framework_TestCase
         $filter = new FilterCollection();
         $this->assertInternalType('array', $filter->all(), '->all() returns an array');
     }
+
+    public function testCountable()
+    {
+        $filters = new FilterCollection(array($this->getMock('Assetic\\Filter\\FilterInterface')));
+
+        $this->assertEquals(1, count($filters), 'Countable returns the count');
+    }
 }
