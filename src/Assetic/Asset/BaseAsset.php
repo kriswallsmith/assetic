@@ -45,6 +45,11 @@ abstract class BaseAsset implements AssetInterface
         $this->loaded = false;
     }
 
+    public function __clone()
+    {
+        $this->filters = clone $this->filters;
+    }
+
     public function ensureFilter(FilterInterface $filter)
     {
         $this->filters->ensure($filter);
@@ -136,21 +141,39 @@ abstract class BaseAsset implements AssetInterface
      */
     protected function getLastModifiedPerFilters()
     {
-        $filters = $this->filters->all();
-
-        if (!count($filters)) {
+        if (!count($this->filters)) {
             return;
         }
 
-        $mtimes = array();
-        foreach ($filters as $filter) {
-            if ($filter instanceof LastModifiedFilterInterface && is_integer($mtime = $filter->getLastModified($this))) {
-                $mtimes[] = $mtime;
+        $times = array();
+        $queue  = array();
+
+        foreach ($this->filters as $filter) {
+            if ($filter instanceof LastModifiedFilterInterface) {
+                // lazily setup the asset
+                if (!isset($asset)) {
+                    $asset = clone $this;
+                    $asset->clearFilters();
+                    $asset->load();
+                }
+
+                // flush the filter queue
+                while ($f = array_shift($queue)) {
+                    $f->filterLoad($asset);
+                }
+
+                // check mtime
+                if ($time = $filter->getLastModified($asset)) {
+                    $times[] = $time;
+                }
             }
+
+            // queue for the next mtime-aware filter
+            $queue[] = $filter;
         }
 
-        if (0 < count($mtimes)) {
-            return max($mtimes);
+        if (0 < count($times)) {
+            return max($times);
         }
     }
 }
