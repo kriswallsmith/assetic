@@ -246,4 +246,17 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll = new AssetCollection();
         $this->assertNull($coll->getLastModified(), '->getLastModified() returns null on empty collection');
     }
+
+    public function testLeafManipulation()
+    {
+        $coll = new AssetCollection(array(new StringAsset('asdf')));
+
+        foreach ($coll as $leaf) {
+            $leaf->setTargetPath('asdf');
+        }
+
+        foreach ($coll as $leaf) {
+            $this->assertEquals('asdf', $leaf->getTargetPath(), 'leaf changes persist between iterations');
+        }
+    }
 }

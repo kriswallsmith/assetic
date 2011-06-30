@@ -239,6 +239,8 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
  */
 class AssetCollectionIterator implements \RecursiveIterator
 {
+    static private $clones = array();
+
     private $assets;
     private $filters;
     private $output;
@@ -269,13 +271,20 @@ class AssetCollectionIterator implements \RecursiveIterator
             return $asset;
         }
 
-        // clone before making changes
-        $clone = clone $asset;
+        // clone once
+        $oid = spl_object_hash($asset);
+        if (!isset(self::$clones[$oid])) {
+            self::$clones[$oid] = clone $asset;
+        }
+        $clone = self::$clones[$oid];
 
-        // generate an url based on asset name
-        $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
-        $clone->setTargetPath(str_replace('*', $name, $this->output));
+        if (!$clone->getTargetPath()) {
+            // generate a target path based on asset name
+            $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
+            $clone->setTargetPath(str_replace('*', $name, $this->output));
+        }
 
+        // cascade filters
         foreach ($this->filters as $filter) {
             $clone->ensureFilter($filter);
         }
