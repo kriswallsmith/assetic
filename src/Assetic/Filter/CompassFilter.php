@@ -111,6 +111,11 @@ class CompassFilter implements FilterInterface
     }
 
     // compass configuration file options setters
+    public function setPlugins(array $plugins)
+    {
+        $this->plugins = $plugins;
+    }
+
     public function addPlugin($plugin)
     {
         $this->plugins[] = $plugin;
