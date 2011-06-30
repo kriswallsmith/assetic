@@ -26,6 +26,7 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
     private $sourceRoot;
     private $targetPath;
     private $content;
+    private $clones;
 
     /**
      * Constructor.
@@ -43,6 +44,7 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
 
         $this->filters = new FilterCollection($filters);
         $this->sourceRoot = $sourceRoot;
+        $this->clones = new \SplObjectStorage();
     }
 
     /**
@@ -151,7 +153,7 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \RecursiveIteratorIterator(new AssetCollectionFilterIterator(new AssetCollectionIterator($this)));
+        return new \RecursiveIteratorIterator(new AssetCollectionFilterIterator(new AssetCollectionIterator($this, $this->clones)));
     }
 }
 
@@ -242,12 +244,14 @@ class AssetCollectionIterator implements \RecursiveIterator
     private $assets;
     private $filters;
     private $output;
+    private $clones;
 
-    public function __construct(AssetCollection $coll)
+    public function __construct(AssetCollection $coll, \SplObjectStorage $clones)
     {
         $this->assets  = $coll->all();
         $this->filters = $coll->getFilters();
         $this->output  = $coll->getTargetPath();
+        $this->clones  = $clones;
 
         if (false === $pos = strpos($this->output, '.')) {
             $this->output .= '_*';
@@ -269,13 +273,18 @@ class AssetCollectionIterator implements \RecursiveIterator
             return $asset;
         }
 
-        // clone before making changes
-        $clone = clone $asset;
+        // clone once
+        if (!isset($this->clones[$asset])) {
+            $clone = $this->clones[$asset] = clone $asset;
 
-        // generate an url based on asset name
-        $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
-        $clone->setTargetPath(str_replace('*', $name, $this->output));
+            // generate a target path based on asset name
+            $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
+            $clone->setTargetPath(str_replace('*', $name, $this->output));
+        } else {
+            $clone = $this->clones[$asset];
+        }
 
+        // cascade filters
         foreach ($this->filters as $filter) {
             $clone->ensureFilter($filter);
         }
@@ -313,6 +322,6 @@ class AssetCollectionIterator implements \RecursiveIterator
      */
     public function getChildren()
     {
-        return new self($this->current());
+        return new self($this->current(), $this->clones);
     }
 }
