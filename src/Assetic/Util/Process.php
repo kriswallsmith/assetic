@@ -119,14 +119,8 @@ class Process
             }
         };
 
-        // Workaround for http://bugs.php.net/bug.php?id=51800
-        if (strstr(PHP_OS, 'WIN')) {
-            $stderrPipeMode = 'a';
-        } else {
-            $stderrPipeMode = 'w';
-        }
-
-        $descriptors = array(array('pipe', 'r'), array('pipe', 'w'), array('pipe', $stderrPipeMode));
+        $errFilePath = tempnam(sys_get_temp_dir(), 'cpe');
+        $descriptors = array(array('pipe', 'r'), array('pipe', 'w'), array('file', $errFilePath, 'a'));
 
         $process = proc_open($this->commandline, $descriptors, $pipes, $this->cwd, $this->env, $this->options);
 
@@ -159,6 +153,7 @@ class Process
                 break;
             } elseif ($n === 0) {
                 proc_terminate($process);
+                @unlink($errFilePath);
 
                 throw new \RuntimeException('The process timed out.');
             }
@@ -197,6 +192,7 @@ class Process
         }
 
         proc_close($process);
+        @unlink($errFilePath);
 
         if ($this->status['signaled']) {
             throw new \RuntimeException(sprintf('The process stopped because of a "%s" signal.', $this->status['stopsig']));

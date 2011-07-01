@@ -46,11 +46,39 @@ class CompassFilter implements FilterInterface
     private $httpPath;
     private $httpImagesPath;
     private $httpJavascriptsPath;
+    private $tempPath = '';
     
     public function __construct($compassPath = '/usr/bin/compass')
     {
         $this->compassPath = $compassPath;
-        $this->cacheLocation = sys_get_temp_dir();
+        $this->cacheLocation = $this->getTempPath();
+    }
+
+    /**
+     * Compass is unix oriented so unix directory separators will always be used
+     */
+    private function normalizePath($path)
+    {
+        return str_replace('\\', '/', $path);
+    }
+
+    /**
+     * On Windows Compass does not detect absolute paths in config files so a user may want to specify a relative temp 
+     * path on the same partition as the project dir. This may still not be enough. 
+     * Compass fix: change the 2 (at this point) definitions of the method absolute_path to:
+     * path.index(File::SEPARATOR) == 0 || path.index(':') == 1
+     */
+    public function getTempPath()
+    {
+        if ('' === $this->tempPath) {
+            $this->tempPath = $this->normalizePath(sys_get_temp_dir());
+        }
+        return $this->tempPath;
+    }
+
+    public function setTempPath($tempPath)
+    {
+        $this->tempPath = $tempPath;
     }
 
     public function setScss($scss)
@@ -71,7 +99,7 @@ class CompassFilter implements FilterInterface
 
     public function setCacheLocation($cacheLocation)
     {
-        $this->cacheLocation = $cacheLocation;
+        $this->cacheLocation = $this->normalizePath($cacheLocation);
     }
 
     public function setNoCache($noCache)
@@ -102,12 +130,12 @@ class CompassFilter implements FilterInterface
     
     public function setImagesDir($imagesDir)
     {
-        $this->imagesDir = $imagesDir;
+        $this->imagesDir = $this->normalizePath($imagesDir);
     }
 
     public function setJavascriptsDir($javascriptsDir)
     {
-        $this->javascriptsDir = $javascriptsDir;
+        $this->javascriptsDir = $this->normalizePath($javascriptsDir);
     }
 
     // compass configuration file options setters
@@ -123,22 +151,22 @@ class CompassFilter implements FilterInterface
 
     public function addLoadPath($loadPath)
     {
-        $this->loadPaths[] = $loadPath;
+        $this->loadPaths[] = $this->normalizePath($loadPath);
     }
 
     public function setHttpPath($httpPath)
     {
-        $this->httpPath = $httpPath;
+        $this->httpPath = $this->normalizePath($httpPath);
     }
     
     public function setHttpImagesPath($httpImagesPath)
     {
-        $this->httpImagesPath = $httpImagesPath;
+        $this->httpImagesPath = $this->normalizePath($httpImagesPath);
     }
     
     public function setHttpJavascriptsPath($httpJavascriptsPath)
     {
-        $this->httpJavascriptsPath = $httpJavascriptsPath;
+        $this->httpJavascriptsPath = $this->normalizePath($httpJavascriptsPath);
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -147,11 +175,14 @@ class CompassFilter implements FilterInterface
         $path = $asset->getSourcePath();
 
         if ($root && $path) {
-            $this->loadPaths[] = dirname($root.'/'.$path);
+            $this->loadPaths[] = $this->normalizePath(dirname($root.'/'.$path));
         }
 
+        // compass does not seems to handle symlink, so we use realpath()
+        $tempDir = $this->normalizePath(realpath($this->getTempPath()));
+
         $pb = new ProcessBuilder();
-        $pb->add($this->compassPath)->add('compile');
+        $pb->add($this->compassPath)->add('compile')->add($tempDir);
 
         if ($this->force) {
             $pb->add('--force');
@@ -215,8 +246,8 @@ class CompassFilter implements FilterInterface
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
         }
 
-        // compass does not seems to handle symlink, so we use realpath()
-        $tempDir = realpath(sys_get_temp_dir());
+
+
 
         // options in configuration file
         if (count($optionsConfig)) {
@@ -238,10 +269,10 @@ class CompassFilter implements FilterInterface
         }
 
         if ($this->config) {
-            $pb->add('--config')->add($this->config);
+            $pb->add('--config')->add($this->normalizePath($this->config));
         }
 
-        $pb->add('--sass-dir')->add($tempDir)->add('--css-dir')->add($tempDir);
+        $pb->add('--sass-dir')->add('""')->add('--css-dir')->add('""');
 
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
@@ -257,14 +288,14 @@ class CompassFilter implements FilterInterface
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
-        $pb->add($input = $tempName.'.'.$type);
+        $pb->add($this->normalizePath($input = $tempName.'.'.$type));
         file_put_contents($input, $asset->getContent());
 
         // output
         $output = $tempName.'.css';
 
         // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
-        $pb->setEnv('HOME', sys_get_temp_dir());
+        $pb->setEnv('HOME', $this->getTempPath());
 
         $proc = $pb->getProcess();
         $code = $proc->run();
@@ -272,7 +303,7 @@ class CompassFilter implements FilterInterface
         if (0 < $code) {
             unlink($input);
             if (is_file($this->config)) {
-                unlink($this->config);
+               unlink($this->config);
             }
             throw new \RuntimeException($proc->getErrorOutput());
         }

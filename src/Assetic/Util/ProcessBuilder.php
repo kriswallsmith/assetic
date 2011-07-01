@@ -40,10 +40,15 @@ class ProcessBuilder
         return $this;
     }
 
+    /**
+     * Make sure variables_order contains E in your php.ini file. Without it there will be no environment inheritance 
+     * and calls relaying on PATH settings, for example, will fail
+     */
     public function setEnv($name, $value)
     {
+        // initialize the environment with the current process's
         if (null === $this->env) {
-            $this->env = array();
+            $this->env = $_ENV;
         }
 
         $this->env[$name] = $value;
