@@ -63,18 +63,14 @@ class HttpAsset extends BaseAsset
 
     public function getLastModified()
     {
-        $perFilters = $this->getLastModifiedPerFilters();
-
         if (false !== @file_get_contents($this->sourceUrl, false, stream_context_create(array('http' => array('method' => 'HEAD'))))) {
             foreach ($http_response_header as $header) {
                 if (0 === stripos($header, 'Last-Modified: ')) {
                     list(, $mtime) = explode(':', $header, 2);
 
-                    return max(strtotime(trim($mtime)), $perFilters);
+                    return strtotime(trim($mtime));
                 }
             }
         }
-
-        return $perFilters;
     }
 }

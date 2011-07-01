@@ -59,6 +59,6 @@ class FileAsset extends BaseAsset
 
     public function getLastModified()
     {
-        return max(filemtime($this->source), $this->getLastModifiedPerFilters());
+        return filemtime($this->source);
     }
 }

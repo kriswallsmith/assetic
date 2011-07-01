@@ -50,6 +50,6 @@ class StringAsset extends BaseAsset
 
     public function getLastModified()
     {
-        return max($this->lastModified, $this->getLastModifiedPerFilters());
+        return $this->lastModified;
     }
 }
