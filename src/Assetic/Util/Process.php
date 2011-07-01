@@ -119,20 +119,13 @@ class Process
             }
         };
 
-        // Workaround for http://bugs.php.net/bug.php?id=51800
-        if (strstr(PHP_OS, 'WIN')) {
-            $stderrPipeMode = 'a';
-        } else {
-            $stderrPipeMode = 'w';
-        }
-
-        $descriptors = array(array('pipe', 'r'), array('pipe', 'w'), array('pipe', $stderrPipeMode));
+        $errFilePath = tempnam(sys_get_temp_dir(), 'cpe');
+        $descriptors = array(array('pipe', 'r'), array('pipe', 'w'), array('file', $errFilePath, 'a'));
 
         $process = proc_open($this->commandline, $descriptors, $pipes, $this->cwd, $this->env, $this->options);
 
         stream_set_blocking($pipes[1], false);
-        stream_set_blocking($pipes[2], false);
-
+        
         if (!is_resource($process)) {
             throw new \RuntimeException('Unable to launch a new process.');
         }
@@ -153,6 +146,7 @@ class Process
                 break;
             } elseif ($n === 0) {
                 proc_terminate($process);
+                @unlink($errFilePath);
 
                 throw new \RuntimeException('The process timed out.');
             } elseif ($n > 0) {
@@ -165,9 +159,11 @@ class Process
                         call_user_func($callback, 'out', $line);
                     }
 
-                    if ($line = fgets($pipes[2], 1024)) {
-                        $called = $c = true;
-                        call_user_func($callback, 'err', $line);
+                    // There is the possibility that error output may be truncated. Used file for error output because
+                    // the pipe with mode a (as recommended on Win) would not yield any output in case of errors
+                    $errOutput = file_get_contents($errFilePath);
+                    if (FALSE !== $errOutput && '' !== $errOutput) {
+                        call_user_func($callback, 'err', $errOutput);
                     }
 
                     if (!$c) {
@@ -184,6 +180,7 @@ class Process
         $this->status = proc_get_status($process);
 
         proc_close($process);
+        @unlink($errFilePath);
 
         if ($this->status['signaled']) {
             throw new \RuntimeException(sprintf('The process stopped because of a "%s" signal.', $this->status['stopsig']));
