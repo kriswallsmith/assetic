@@ -18,9 +18,9 @@ use Assetic\Factory\Resource\FileResource;
 class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider getInputs
+     * @dataProvider getJavascriptInputs
      */
-    public function testInput($inputs, $name, $expected)
+    public function testInput($function, $inputs, $name, $expected)
     {
         $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
         $factory = $this->getMockBuilder('Assetic\\Factory\\AssetFactory')
@@ -29,7 +29,7 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
         $resource->expects($this->once())
             ->method('getContent')
-            ->will($this->returnValue('<?php assetic_javascripts('.$inputs.') ?>'));
+            ->will($this->returnValue('<?php '.$function.'('.$inputs.') ?>'));
         $factory->expects($this->once())
             ->method('generateAssetName')
             ->will($this->returnValue($name));
@@ -40,13 +40,14 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $formulae);
     }
 
-    public function getInputs()
+    public function getJavascriptInputs()
     {
         return array(
-            array('"js/core.js"',        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
-            array("'js/core.js'",        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
-            array("array('js/core.js')", 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
-            array('array("js/core.js")', 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array('assetic_javascripts', '"js/core.js"',        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array('assetic_javascripts', "'js/core.js'",        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array('assetic_javascripts', "array('js/core.js')", 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array('assetic_javascripts', 'array("js/core.js")', 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf', )))),
+            array('assetic_image',       '"images/logo.gif"',   'asdf', array('asdf' => array(array('images/logo.gif'), array(), array('debug' => false, 'output' => 'images/*', 'name' => 'asdf')))),
         );
     }
 
