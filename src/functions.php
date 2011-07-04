@@ -42,7 +42,7 @@ function assetic_javascripts($inputs = array(), $filters = array(), array $optio
         $options['output'] = 'js/*.js';
     }
 
-    return _assetic_assets($inputs, $filters, $options);
+    return _assetic_urls($inputs, $filters, $options);
 }
 
 /**
@@ -62,7 +62,7 @@ function assetic_stylesheets($inputs = array(), $filters = array(), array $optio
         $options['output'] = 'css/*.css';
     }
 
-    return _assetic_assets($inputs, $filters, $options);
+    return _assetic_urls($inputs, $filters, $options);
 }
 
 /**
@@ -82,7 +82,7 @@ function assetic_image($input, $filters = array(), array $options = array())
         $options['output'] = 'images/*';
     }
 
-    $urls = _assetic_assets($input, $filters, $options);
+    $urls = _assetic_urls($input, $filters, $options);
 
     return current($urls);
 }
@@ -96,7 +96,7 @@ function assetic_image($input, $filters = array(), array $options = array())
  *
  * @return array An array of URLs
  */
-function _assetic_assets($inputs = array(), $filters = array(), array $options = array())
+function _assetic_urls($inputs = array(), $filters = array(), array $options = array())
 {
     global $_assetic;
 
