@@ -36,8 +36,6 @@ function assetic_init(AssetFactory $factory)
  */
 function assetic_javascripts($inputs = array(), $filters = array(), array $options = array())
 {
-    global $_assetic;
-
     if (!isset($options['output'])) {
         $options['output'] = 'js/*.js';
     }
@@ -56,8 +54,6 @@ function assetic_javascripts($inputs = array(), $filters = array(), array $optio
  */
 function assetic_stylesheets($inputs = array(), $filters = array(), array $options = array())
 {
-    global $_assetic;
-
     if (!isset($options['output'])) {
         $options['output'] = 'css/*.css';
     }
@@ -76,8 +72,6 @@ function assetic_stylesheets($inputs = array(), $filters = array(), array $optio
  */
 function assetic_image($input, $filters = array(), array $options = array())
 {
-    global $_assetic;
-
     if (!isset($options['output'])) {
         $options['output'] = 'images/*';
     }
