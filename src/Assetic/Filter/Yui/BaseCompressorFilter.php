@@ -24,7 +24,7 @@ abstract class BaseCompressorFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;
-    private $charset = 'utf-8';
+    private $charset;
     private $lineBreak;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
