@@ -72,10 +72,13 @@ abstract class BaseCompressorFilter implements FilterInterface
             $pb->add('--line-break')->add($this->lineBreak);
         }
 
-        $pb->setInput($content);
+        $input = tempnam(sys_get_temp_dir(), 'assetic_yui_compressor');
+        file_put_contents($input, $content);
+        $pb->add($input);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
+        unlink($input);
 
         if (0 < $code) {
             throw new \RuntimeException($proc->getErrorOutput());
