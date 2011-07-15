@@ -59,7 +59,15 @@ abstract class BaseCompressorFilter implements FilterInterface
     protected function compress($content, $type, $options = array())
     {
         $pb = new ProcessBuilder();
-        $pb->add($this->javaPath)->add('-jar')->add($this->jarPath)->add('--type')->add($type);
+        $pb
+            ->inheritEnvironmentVariables()
+            ->add($this->javaPath)
+            ->add('-jar')
+            ->add($this->jarPath)
+            ->add('--type')
+            ->add($type)
+        ;
+
         foreach ($options as $option) {
             $pb->add($option);
         }

@@ -38,6 +38,7 @@ class CoffeeScriptFilter implements FilterInterface
 
         $pb = new ProcessBuilder();
         $pb
+            ->inheritEnvironmentVariables()
             ->add($this->nodePath)
             ->add($this->coffeePath)
             ->add('-cp')

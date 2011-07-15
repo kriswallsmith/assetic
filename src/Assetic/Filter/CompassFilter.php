@@ -154,7 +154,12 @@ class CompassFilter implements FilterInterface
         $tempDir = realpath(sys_get_temp_dir());
 
         $pb = new ProcessBuilder();
-        $pb->add($this->compassPath)->add('compile')->add($tempDir);
+        $pb
+            ->inheritEnvironmentVariables()
+            ->add($this->compassPath)
+            ->add('compile')
+            ->add($tempDir)
+        ;
 
         if ($this->force) {
             $pb->add('--force');

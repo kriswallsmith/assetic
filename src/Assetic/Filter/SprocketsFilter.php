@@ -102,7 +102,11 @@ EOF;
         ));
 
         $pb = new ProcessBuilder();
-        $pb->add($this->rubyBin)->add($input);
+        $pb
+            ->inheritEnvironmentVariables()
+            ->add($this->rubyBin)
+            ->add($input)
+        ;
 
         $proc = $pb->getProcess();
         $code = $proc->run();
