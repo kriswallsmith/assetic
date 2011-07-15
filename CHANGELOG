@@ -1,0 +1,13 @@
+1.0.1 (July 15, 2011)
+---------------------
+
+ * Fixed Twig error handling
+ * Removed use of STDIN
+ * Added inheritance of environment variables
+ * Fixed Compass on Windows
+ * Improved escaping of commands
+
+1.0.0 (July 10, 2011)
+---------------------
+
+ * Initial release
