@@ -29,11 +29,6 @@ class TwigFilter implements FilterInterface
         $this->context = $context;
     }
 
-    public function addContextValue($name, $value)
-    {
-        $this->context[$name] = $value;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
         $name = 'assetic_'.substr(sha1(time().rand(11111, 99999)), 0, 7);

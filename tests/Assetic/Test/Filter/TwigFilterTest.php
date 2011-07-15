@@ -34,7 +34,6 @@ class TwigFilterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(sha1(rand(11111, 99999))));
 
         $this->twig = new \Twig_Environment($this->loader);
-        $this->filter = new TwigFilter($this->twig);
     }
 
     public function testFilterLoad()
@@ -42,7 +41,8 @@ class TwigFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset('{{ "foobar"|upper ~ "baz" }}');
         $asset->load();
 
-        $this->filter->filterLoad($asset);
+        $filter = new TwigFilter($this->twig);
+        $filter->filterLoad($asset);
 
         $this->assertEquals('FOOBARbaz', $asset->getContent(), '->filterLoad() parses the asset as a Twig template');
     }
@@ -52,8 +52,8 @@ class TwigFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset('{{ foobar }}');
         $asset->load();
 
-        $this->filter->addContextValue('foobar', 'ok');
-        $this->filter->filterLoad($asset);
+        $filter = new TwigFilter($this->twig, array('foobar' => 'ok'));
+        $filter->filterLoad($asset);
 
         $this->assertEquals('ok', $asset->getContent(), '->filterLoad() includes context values from the filter');
     }
