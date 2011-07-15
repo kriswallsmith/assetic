@@ -150,8 +150,11 @@ class CompassFilter implements FilterInterface
             $this->loadPaths[] = dirname($root.'/'.$path);
         }
 
+        // compass does not seems to handle symlink, so we use realpath()
+        $tempDir = realpath(sys_get_temp_dir());
+
         $pb = new ProcessBuilder();
-        $pb->add($this->compassPath)->add('compile');
+        $pb->add($this->compassPath)->add('compile')->add($tempDir);
 
         if ($this->force) {
             $pb->add('--force');
@@ -215,18 +218,15 @@ class CompassFilter implements FilterInterface
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
         }
 
-        // compass does not seems to handle symlink, so we use realpath()
-        $tempDir = realpath(sys_get_temp_dir());
-
         // options in configuration file
         if (count($optionsConfig)) {
             $config = array();
             foreach ($this->plugins as $plugin) {
-                $config[] = sprintf("require '%s'", $plugin);
+                $config[] = sprintf("require '%s'", addcslahes($plugin, '\\'));
             }
             foreach ($optionsConfig as $name => $value) {
                 if (!is_array($value)) {
-                    $config[] = sprintf('%s = "%s"', $name, $value);
+                    $config[] = sprintf('%s = "%s"', $name, addcslashes($value, '\\'));
                 } elseif (!empty($value)) {
                     $config[] = sprintf('%s = %s', $name, $this->formatArrayToRuby($value));
                 }
@@ -241,7 +241,7 @@ class CompassFilter implements FilterInterface
             $pb->add('--config')->add($this->config);
         }
 
-        $pb->add('--sass-dir')->add($tempDir)->add('--css-dir')->add($tempDir);
+        $pb->add('--sass-dir')->add('""')->add('--css-dir')->add('""');
 
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
@@ -297,12 +297,12 @@ class CompassFilter implements FilterInterface
         // does we have an associative array ?
         if (count(array_filter(array_keys($array), "is_numeric")) != count($array)) {
             foreach($array as $name => $value) {
-                $output[] = sprintf('    :%s => "%s"', $name, $value);
+                $output[] = sprintf('    :%s => "%s"', $name, addcslashes($value, '\\'));
             }
             $output = "{\n".implode(",\n", $output)."\n}";
         } else {
             foreach($array as $name => $value) {
-                $output[] = sprintf('    "%s"', $value);
+                $output[] = sprintf('    "%s"', addcslashes($value, '\\'));
             }
             $output = "[\n".implode(",\n", $output)."\n]";
         }
