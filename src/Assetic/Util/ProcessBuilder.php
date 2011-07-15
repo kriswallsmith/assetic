@@ -24,6 +24,7 @@ class ProcessBuilder
     private $stdin;
     private $timeout = 60;
     private $options = array();
+    private $inheritEnv = false;
     private $escaper;
 
     public function add($part)
@@ -40,15 +41,17 @@ class ProcessBuilder
         return $this;
     }
 
-    /**
-     * Make sure variables_order contains E in your php.ini file. Without it there will be no environment inheritance 
-     * and calls relaying on PATH settings, for example, will fail
-     */
+    public function inheritEnvironmentVariables($inheritEnv = true)
+    {
+        $this->inheritEnv = $inheritEnv;
+
+        return $this;
+    }
+
     public function setEnv($name, $value)
     {
-        // initialize the environment with the current process's
         if (null === $this->env) {
-            $this->env = $_ENV;
+            $this->env = array();
         }
 
         $this->env[$name] = $value;
@@ -91,6 +94,8 @@ class ProcessBuilder
             return false === strpos($value, ' ') ? $value : escapeshellarg($value);
         };
 
-        return new Process(implode(' ', array_map($escaper, $this->parts)), $this->cwd, $this->env, $this->stdin, $this->timeout, $this->options);
+        $env = $this->inheritEnv ? ($this->env ?: array()) + $_ENV : $this->env;
+
+        return new Process(implode(' ', array_map($escaper, $this->parts)), $this->cwd, $env, $this->stdin, $this->timeout, $this->options);
     }
 }
