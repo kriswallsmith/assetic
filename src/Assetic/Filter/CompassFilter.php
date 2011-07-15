@@ -241,7 +241,7 @@ class CompassFilter implements FilterInterface
             $pb->add('--config')->add($this->config);
         }
 
-        $pb->add('--sass-dir')->add('""')->add('--css-dir')->add('""');
+        $pb->add('--sass-dir')->add('')->add('--css-dir')->add('');
 
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {

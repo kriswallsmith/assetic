@@ -25,7 +25,6 @@ class ProcessBuilder
     private $timeout = 60;
     private $options = array();
     private $inheritEnv = false;
-    private $escaper;
 
     public function add($part)
     {
@@ -80,22 +79,18 @@ class ProcessBuilder
         return $this;
     }
 
-    public function setEscaper(\Closure $escaper)
-    {
-        $this->escaper = $escaper;
-
-        return $this;
-    }
-
     public function getProcess()
     {
-        $escaper = $this->escaper ?: function($value)
-        {
-            return false === strpos($value, ' ') ? $value : escapeshellarg($value);
-        };
+        if (!count($this->parts)) {
+            throw new \LogicException('You must add() command parts before calling getProcess().');
+        }
+
+        $parts = $this->parts;
+        $cmd = array_shift($parts);
+        $script = escapeshellcmd($cmd).' '.implode(' ', array_map('escapeshellarg', $parts));
 
         $env = $this->inheritEnv ? ($this->env ?: array()) + $_ENV : $this->env;
 
-        return new Process(implode(' ', array_map($escaper, $this->parts)), $this->cwd, $env, $this->stdin, $this->timeout, $this->options);
+        return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $this->options);
     }
 }
