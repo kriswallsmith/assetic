@@ -26,6 +26,7 @@
         <!-- <server name="CSSMIN" value="/path/to/cssmin/source/CssMin.php" /> -->
         <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
         <!-- <server name="PACKAGER" value="/path/to/packager.php" /> -->
+        <!-- <server name="CSSCRUSH" value="/path/to/CssCrush.php" /> -->
     </php>
 
     <filter>

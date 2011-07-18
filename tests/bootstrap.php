@@ -43,3 +43,7 @@ if (isset($_SERVER['CSSMIN'])) {
 if (isset($_SERVER['PACKAGER'])) {
     require_once $_SERVER['PACKAGER'];
 }
+
+if (isset($_SERVER['CSSCRUSH'])) {
+    require_once $_SERVER['CSSCRUSH'];
+}
