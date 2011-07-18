@@ -24,7 +24,7 @@ class CssEmbedFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;
-    private $charset = 'utf-8';
+    private $charset;
     private $mhtml; // Enable MHTML mode.
     private $mhtmlRoot; // Use <root> as the MHTML root for the file.
     private $root; // Prepends <root> to all relative URLs.
