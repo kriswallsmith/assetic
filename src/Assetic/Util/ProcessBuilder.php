@@ -18,7 +18,7 @@ namespace Assetic\Util;
  */
 class ProcessBuilder
 {
-    private $parts = array();
+    private $arguments = array();
     private $cwd;
     private $env;
     private $stdin;
@@ -26,9 +26,14 @@ class ProcessBuilder
     private $options = array();
     private $inheritEnv = false;
 
-    public function add($part)
+    /**
+     * Adds an unescaped argument to the command string.
+     *
+     * @param string $argument A command argument
+     */
+    public function add($argument)
     {
-        $this->parts[] = $part;
+        $this->arguments[] = $argument;
 
         return $this;
     }
@@ -81,8 +86,8 @@ class ProcessBuilder
 
     public function getProcess()
     {
-        if (!count($this->parts)) {
-            throw new \LogicException('You must add() command parts before calling getProcess().');
+        if (!count($this->arguments)) {
+            throw new \LogicException('You must add() command arguments before calling getProcess().');
         }
 
         if (defined(PHP_WINDOWS_MAJOR_VERSION)) {
@@ -97,6 +102,6 @@ class ProcessBuilder
         }
         $env = $this->inheritEnv ? ($this->env ?: array()) + $_ENV : $this->env;
 
-        return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $this->options);
+        return new Process($cmd, $this->cwd, $env, $this->stdin, $this->timeout, $this->options);
     }
 }
