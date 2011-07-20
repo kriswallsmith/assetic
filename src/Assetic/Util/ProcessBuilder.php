@@ -85,10 +85,16 @@ class ProcessBuilder
             throw new \LogicException('You must add() command parts before calling getProcess().');
         }
 
-        $parts = $this->parts;
-        $cmd = array_shift($parts);
-        $script = escapeshellcmd($cmd).' '.implode(' ', array_map('escapeshellarg', $parts));
-
+        if (defined(PHP_WINDOWS_MAJOR_VERSION)) {
+            $this->setOption('bypass_shell', true);
+            $parts = $this->parts;
+            $cmd = array_shift($parts);
+            $script = '"' . $cmd '"' .' ' . implode(' ', array_map('escapeshellarg', $parts));
+        } else {
+            $parts = $this->parts;
+            $cmd = array_shift($parts);
+            $script = escapeshellcmd($cmd).' '.implode(' ', array_map('escapeshellarg', $parts));
+        }
         $env = $this->inheritEnv ? ($this->env ?: array()) + $_ENV : $this->env;
 
         return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $this->options);
