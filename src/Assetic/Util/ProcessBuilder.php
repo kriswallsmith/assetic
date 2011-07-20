@@ -89,7 +89,7 @@ class ProcessBuilder
             $this->setOption('bypass_shell', true);
             $parts = $this->parts;
             $cmd = array_shift($parts);
-            $script = '"' . $cmd '"' .' ' . implode(' ', array_map('escapeshellarg', $parts));
+            $script = '"' . $cmd . '"' .' ' . implode(' ', array_map('escapeshellarg', $parts));
         } else {
             $parts = $this->parts;
             $cmd = array_shift($parts);
