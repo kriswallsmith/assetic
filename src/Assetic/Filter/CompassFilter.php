@@ -227,7 +227,7 @@ class CompassFilter implements FilterInterface
         if (count($optionsConfig)) {
             $config = array();
             foreach ($this->plugins as $plugin) {
-                $config[] = sprintf("require '%s'", addcslahes($plugin, '\\'));
+                $config[] = sprintf("require '%s'", addcslashes($plugin, '\\'));
             }
             foreach ($optionsConfig as $name => $value) {
                 if (!is_array($value)) {
@@ -269,7 +269,6 @@ class CompassFilter implements FilterInterface
         $output = $tempName.'.css';
 
         // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
-        $pb->inheritEnvironmentVariables();
         $pb->setEnv('HOME', sys_get_temp_dir());
 
         $proc = $pb->getProcess();
@@ -280,7 +279,11 @@ class CompassFilter implements FilterInterface
             if (is_file($this->config)) {
                 unlink($this->config);
             }
-            throw new \RuntimeException($proc->getErrorOutput());
+            $retMsg = $proc->getErrorOutput();
+            if (!strlen($retMsg)) {
+                $retMsg = $proc->getOutput();
+            }
+            throw new \RuntimeException($retMsg);
         }
 
         $asset->setContent(file_get_contents($output));
