@@ -237,12 +237,8 @@ class CompassFilter implements FilterInterface
                 }
             }
 
-            $config = implode("\n", $config)."\n";
             $this->config = tempnam($tempDir, 'assetic_compass');
-            file_put_contents($this->config, $config);
-        }
-
-        if ($this->config) {
+            file_put_contents($this->config, implode("\n", $config)."\n");
             $pb->add('--config')->add($this->config);
         }
 
@@ -279,11 +275,8 @@ class CompassFilter implements FilterInterface
             if (is_file($this->config)) {
                 unlink($this->config);
             }
-            $retMsg = $proc->getErrorOutput();
-            if (!strlen($retMsg)) {
-                $retMsg = $proc->getOutput();
-            }
-            throw new \RuntimeException($retMsg);
+
+            throw new \RuntimeException($proc->getErrorOutput() ?: $proc->getOutput());
         }
 
         $asset->setContent(file_get_contents($output));
