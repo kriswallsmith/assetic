@@ -56,7 +56,6 @@ new(less.Parser)(%s).parse(%s, function(e, tree) {
 
     try {
         sys.print(tree.toCSS(%s));
-        process.exit(0);
     } catch (e) {
         less.writeError(e);
         process.exit(3);
