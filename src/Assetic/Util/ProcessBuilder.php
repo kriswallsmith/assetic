@@ -90,9 +90,11 @@ class ProcessBuilder
             throw new \LogicException('You must add() command arguments before calling getProcess().');
         }
 
-        if (defined(PHP_WINDOWS_MAJOR_VERSION)) {
-            $this->setOption('bypass_shell', true);
-            $parts = $this->parts;
+        $options = $this->options;
+
+        if (defined('PHP_WINDOWS_MAJOR_VERSION')) {
+            $options['bypass_shell'] = true;
+            $parts = $this->arguments;
             $cmd = array_shift($parts);
             $script = '"' . $cmd . '"' .' ' . implode(' ', array_map('escapeshellarg', $parts));
         } else {
@@ -102,6 +104,6 @@ class ProcessBuilder
         }
         $env = $this->inheritEnv ? ($this->env ?: array()) + $_ENV : $this->env;
 
-        return new Process($cmd, $this->cwd, $env, $this->stdin, $this->timeout, $this->options);
+        return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $options);
     }
 }
