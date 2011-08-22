@@ -93,7 +93,7 @@ class ProcessBuilder
         $options = $this->options;
 
         if (defined('PHP_WINDOWS_MAJOR_VERSION')) {
-            $options['bypass_shell'] = true;
+            $options += array('bypass_shell' => true);
 
             $args = $this->arguments;
             $cmd = array_shift($args);
