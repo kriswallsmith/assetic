@@ -64,8 +64,6 @@ abstract class BaseCompressorFilter implements FilterInterface
             ->add($this->javaPath)
             ->add('-jar')
             ->add($this->jarPath)
-            ->add('--type')
-            ->add($type)
         ;
 
         foreach ($options as $option) {
@@ -80,18 +78,31 @@ abstract class BaseCompressorFilter implements FilterInterface
             $pb->add('--line-break')->add($this->lineBreak);
         }
 
-        $input = tempnam(sys_get_temp_dir(), 'assetic_yui_compressor');
+        // input and output files
+        $tempDir = realpath(sys_get_temp_dir());
+        $hash = substr(sha1(time().rand(11111, 99999)), 0, 7);
+        $input = $tempDir.DIRECTORY_SEPARATOR.$hash.'.'.$type;
+        $output = $tempDir.DIRECTORY_SEPARATOR.$hash.'-min.'.$type;
         file_put_contents($input, $content);
-        $pb->add($input);
+        $pb->add('-o')->add($output)->add($input);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
         if (0 < $code) {
+            if (file_exists($output)) {
+                unlink($output);
+            }
+
             throw new \RuntimeException($proc->getErrorOutput());
+        } elseif (!file_exists($output)) {
+            throw new \RuntimeException('Error creating output file.');
         }
 
-        return $proc->getOutput();
+        $retval = file_get_contents($output);
+        unlink($output);
+
+        return $retval;
     }
 }
