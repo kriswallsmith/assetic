@@ -94,13 +94,16 @@ class ProcessBuilder
 
         if (defined('PHP_WINDOWS_MAJOR_VERSION')) {
             $options['bypass_shell'] = true;
-            $parts = $this->arguments;
-            $cmd = array_shift($parts);
-            $script = '"' . $cmd . '"' .' ' . implode(' ', array_map('escapeshellarg', $parts));
+
+            $args = $this->arguments;
+            $cmd = array_shift($args);
+
+            $script = '"'.$cmd.'"';
+            if ($args) {
+                $script .= ' '.implode(' ', array_map('escapeshellarg', $parts));
+            }
         } else {
-            $parts = $this->parts;
-            $cmd = array_shift($parts);
-            $script = escapeshellcmd($cmd).' '.implode(' ', array_map('escapeshellarg', $parts));
+            $script = implode(' ', array_map('escapeshellarg', $this->arguments));
         }
         $env = $this->inheritEnv ? ($this->env ?: array()) + $_ENV : $this->env;
 
