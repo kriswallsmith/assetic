@@ -21,7 +21,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class AssetCollection implements AssetInterface, \IteratorAggregate
+class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
 {
     private $assets;
     private $filters;

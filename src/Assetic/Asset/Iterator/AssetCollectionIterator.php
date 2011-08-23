@@ -11,7 +11,7 @@
 
 namespace Assetic\Asset\Iterator;
 
-use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetCollectionInterface;
 
 /**
  * Iterates over an asset collection.
@@ -28,7 +28,7 @@ class AssetCollectionIterator implements \RecursiveIterator
     private $output;
     private $clones;
 
-    public function __construct(AssetCollection $coll, \SplObjectStorage $clones)
+    public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones)
     {
         $this->assets  = $coll->all();
         $this->filters = $coll->getFilters();
@@ -96,7 +96,7 @@ class AssetCollectionIterator implements \RecursiveIterator
 
     public function hasChildren()
     {
-        return current($this->assets) instanceof AssetCollection;
+        return current($this->assets) instanceof AssetCollectionInterface;
     }
 
     /**

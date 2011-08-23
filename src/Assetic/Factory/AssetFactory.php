@@ -12,6 +12,7 @@
 namespace Assetic\Factory;
 
 use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
@@ -322,7 +323,7 @@ class AssetFactory
      */
     private function processAsset(AssetInterface $asset)
     {
-        if ($asset instanceof \Traversable) {
+        if ($asset instanceof AssetCollectionInterface) {
             foreach ($asset as $leaf) {
                 foreach ($this->workers as $worker) {
                     $worker->process($leaf);
