@@ -24,4 +24,30 @@ interface AssetCollectionInterface extends AssetInterface, \Traversable
      * @return array An array of AssetInterface objects
      */
     function all();
+
+    /**
+     * Adds an asset to the current collection.
+     *
+     * @param AssetInterface $asset An asset
+     */
+    function add(AssetInterface $asset);
+
+    /**
+     * Removes a leaf.
+     *
+     * @param AssetInterface $needle The leaf to remove
+     *
+     * @throws InvalidArgumentException If the asset cannot be found
+     */
+    function removeLeaf(AssetInterface $leaf);
+
+    /**
+     * Replaces an existing leaf with a new one.
+     *
+     * @param AssetInterface $needle      The current asset to replace
+     * @param AssetInterface $replacement The new asset
+     *
+     * @throws InvalidArgumentException If the asset cannot be found
+     */
+    function replaceLeaf(AssetInterface $needle, AssetInterface $replacement);
 }

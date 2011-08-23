@@ -259,4 +259,60 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('asdf', $leaf->getTargetPath(), 'leaf changes persist between iterations');
         }
     }
+
+    public function testRemoveLeaf()
+    {
+        $coll = new AssetCollection(array(
+            $leaf = new StringAsset('asdf'),
+        ));
+
+        $this->assertTrue($coll->removeLeaf($leaf));
+    }
+
+    public function testRemoveRecursiveLeaf()
+    {
+        $coll = new AssetCollection(array(
+            new AssetCollection(array(
+                $leaf = new StringAsset('asdf'),
+            ))
+        ));
+
+        $this->assertTrue($coll->removeLeaf($leaf));
+    }
+
+    public function testRemoveInvalidLeaf()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $coll = new AssetCollection();
+        $coll->removeLeaf(new StringAsset('asdf'));
+    }
+
+    public function testReplaceLeaf()
+    {
+        $coll = new AssetCollection(array(
+            $leaf = new StringAsset('asdf'),
+        ));
+
+        $this->assertTrue($coll->replaceLeaf($leaf, new StringAsset('foo')));
+    }
+
+    public function testReplaceRecursiveLeaf()
+    {
+        $coll = new AssetCollection(array(
+            new AssetCollection(array(
+                $leaf = new StringAsset('asdf'),
+            )),
+        ));
+
+        $this->assertTrue($coll->replaceLeaf($leaf, new StringAsset('foo')));
+    }
+
+    public function testReplaceInvalidLeaf()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $coll = new AssetCollection();
+        $coll->replaceLeaf(new StringAsset('foo'), new StringAsset('bar'));
+    }
 }

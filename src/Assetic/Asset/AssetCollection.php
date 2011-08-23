@@ -49,19 +49,53 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->clones = new \SplObjectStorage();
     }
 
-    /**
-     * Adds an asset to the current collection.
-     *
-     * @param AssetInterface $asset An asset
-     */
+    public function all()
+    {
+        return $this->assets;
+    }
+
     public function add(AssetInterface $asset)
     {
         $this->assets[] = $asset;
     }
 
-    public function all()
+    public function removeLeaf(AssetInterface $needle, $graceful = false)
     {
-        return $this->assets;
+        foreach ($this->assets as $i => $asset) {
+            $clone = isset($this->clones[$asset]) ? $this->clones[$asset] : null;
+            if (in_array($needle, array($asset, $clone), true)) {
+                unset($this->clones[$asset], $this->assets[$i]);
+                return true;
+            } elseif ($asset instanceof AssetCollectionInterface && $asset->removeLeaf($needle, true)) {
+                return true;
+            }
+        }
+
+        if ($graceful) {
+            return false;
+        }
+
+        throw new \InvalidArgumentException('Leaf not found.');
+    }
+
+    public function replaceLeaf(AssetInterface $needle, AssetInterface $replacement, $graceful = false)
+    {
+        foreach ($this->assets as $i => $asset) {
+            $clone = isset($this->clones[$asset]) ? $this->clones[$asset] : null;
+            if (in_array($needle, array($asset, $clone), true)) {
+                unset($this->clones[$asset]);
+                $this->assets[$i] = $replacement;
+                return true;
+            } elseif ($asset instanceof AssetCollectionInterface && $asset->replaceLeaf($needle, $replacement, true)) {
+                return true;
+            }
+        }
+
+        if ($graceful) {
+            return false;
+        }
+
+        throw new \InvalidArgumentException('Leaf not found.');
     }
 
     public function ensureFilter(FilterInterface $filter)
