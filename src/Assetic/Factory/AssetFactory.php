@@ -213,10 +213,8 @@ class AssetFactory
         // output --> target url
         $asset->setTargetPath(str_replace('*', $options['name'], $options['output']));
 
-        // apply workers
-        $this->processAsset($asset);
-
-        return $asset;
+        // apply workers and return
+        return $this->applyWorkers($asset);
     }
 
     public function generateAssetName($inputs, $filters, $options = array())
@@ -275,9 +273,9 @@ class AssetFactory
         }
     }
 
-    protected function createAssetCollection()
+    protected function createAssetCollection(array $assets = array())
     {
-        return new AssetCollection();
+        return new AssetCollection($assets);
     }
 
     protected function createAssetReference($name)
@@ -314,23 +312,34 @@ class AssetFactory
     }
 
     /**
-     * Filters an asset through the factory workers.
+     * Filters an asset collection through the factory workers.
      *
-     * Each leaf asset will be processed first, followed by the asset itself.
+     * Each leaf asset will be processed first, followed by the asset
+     * collection itself.
      *
      * @param AssetCollectionInterface $asset An asset collection
      */
-    private function processAsset(AssetCollectionInterface $asset)
+    private function applyWorkers(AssetCollectionInterface $asset)
     {
         foreach ($asset as $leaf) {
             foreach ($this->workers as $worker) {
-                $worker->process($leaf);
+                $retval = $worker->process($leaf);
+
+                if ($retval instanceof AssetInterface && $leaf !== $retval) {
+                    $asset->replaceLeaf($leaf, $retval);
+                }
             }
         }
 
         foreach ($this->workers as $worker) {
-            $worker->process($asset);
+            $retval = $worker->process($asset);
+
+            if ($retval instanceof AssetInterface) {
+                $asset = $retval;
+            }
         }
+
+        return $asset instanceof AssetCollectionInterface ? $asset : $this->createAssetCollection(array($asset));
     }
 
     static private function isAbsolutePath($path)
