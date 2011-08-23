@@ -316,18 +316,15 @@ class AssetFactory
     /**
      * Filters an asset through the factory workers.
      *
-     * Each leaf asset will be processed first if the asset is traversable,
-     * followed by the asset itself.
+     * Each leaf asset will be processed first, followed by the asset itself.
      *
-     * @param AssetInterface $asset An asset
+     * @param AssetCollectionInterface $asset An asset collection
      */
-    private function processAsset(AssetInterface $asset)
+    private function processAsset(AssetCollectionInterface $asset)
     {
-        if ($asset instanceof AssetCollectionInterface) {
-            foreach ($asset as $leaf) {
-                foreach ($this->workers as $worker) {
-                    $worker->process($leaf);
-                }
+        foreach ($asset as $leaf) {
+            foreach ($this->workers as $worker) {
+                $worker->process($leaf);
             }
         }
 
