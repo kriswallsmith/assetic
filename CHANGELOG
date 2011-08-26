@@ -1,3 +1,12 @@
+1.0.2 (August 26, 2011)
+-----------------------
+
+ * Twig 1.2 compatibility
+ * Fixed filtering of large LessCSS assets
+ * Fixed escaping of commands on Windows
+ * Misc fixes to Compass filter
+ * Removed default CssEmbed charset
+
 1.0.1 (July 15, 2011)
 ---------------------
 
