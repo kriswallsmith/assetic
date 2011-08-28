@@ -37,8 +37,10 @@ abstract class BaseCssFilter implements FilterInterface
     /**
      * Filters all CSS url()'s through a callable.
      *
-     * @param string $content  The CSS
-     * @param mixed  $callback A PHP callable
+     * @param string  $content  The CSS
+     * @param mixed   $callback A PHP callable
+     * @param integer $limit    Limit the number of replacements
+     * @param integer $count    Will be populated with the count
      *
      * @return string The filtered CSS
      */
@@ -52,6 +54,8 @@ abstract class BaseCssFilter implements FilterInterface
      *
      * @param string  $content    The CSS
      * @param mixed   $callback   A PHP callable
+     * @param integer $limit      Limit the number of replacements
+     * @param integer $count      Will be populated with the count
      * @param Boolean $includeUrl Whether to include url() in the pattern
      *
      * @return string The filtered CSS
