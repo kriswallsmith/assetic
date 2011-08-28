@@ -21,20 +21,17 @@ use Assetic\Util\ProcessBuilder;
  */
 class LessFilter implements FilterInterface
 {
-    private $nodeBin;
-    private $nodePaths;
+    private $lesscBin;
     private $compress;
 
     /**
      * Constructor.
      *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
+     * @param string $lesscBin The path to the lessc binary
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct($lesscBin = '/usr/bin/lessc')
     {
-        $this->nodeBin = $nodeBin;
-        $this->nodePaths = $nodePaths;
+        $this->lesscBin = $lesscBin;
     }
 
     public function setCompress($compress)
@@ -44,66 +41,49 @@ class LessFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<'EOF'
-var less = require('less');
-var sys  = require('sys');
+        $pb = new ProcessBuilder();
+        $pb
+            ->inheritEnvironmentVariables()
+            ->add($this->lesscBin)
+        ;
 
-new(less.Parser)(%s).parse(%s, function(e, tree) {
-    if (e) {
-        less.writeError(e);
-        process.exit(2);
-    }
+        // compress
+        if ($this->compress) {
+            $pb->add('--compress');
+        }
 
-    try {
-        sys.print(tree.toCSS(%s));
-    } catch (e) {
-        less.writeError(e);
-        process.exit(3);
-    }
-});
-
-EOF;
-
+        // include path
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
-
-        // parser options
-        $parserOptions = array();
         if ($root && $path) {
-            $parserOptions['paths'] = array(dirname($root.'/'.$path));
-            $parserOptions['filename'] = basename($path);
+            $pb->add('-I'.dirname($root.DIRECTORY_SEPARATOR.$path));
         }
 
-        // tree options
-        $treeOptions = array();
-        if (null !== $this->compress) {
-            $treeOptions['compress'] = $this->compress;
-        }
+        // input
+        $input = tempnam(sys_get_temp_dir(), 'assetic_less');
+        $pb->add($input);
+        file_put_contents($input, $asset->getContent());
 
-        $pb = new ProcessBuilder();
-        $pb->inheritEnvironmentVariables();
-
-        // node.js configuration
-        if (0 < count($this->nodePaths)) {
-            $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
-        }
-
-        $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_less'));
-        file_put_contents($input, sprintf($format,
-            json_encode($parserOptions),
-            json_encode($asset->getContent()),
-            json_encode($treeOptions)
-        ));
+        // output
+        $output = $input.'.out';
+        $pb->add($output);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
         if (0 < $code) {
+            if (file_exists($output)) {
+                unlink($output);
+            }
+
             throw new \RuntimeException($proc->getErrorOutput());
+        } elseif (!file_exists($output)) {
+            throw new \RuntimeException('Error creating output file.');
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent(file_get_contents($output));
+        unlink($output);
     }
 
     public function filterDump(AssetInterface $asset)

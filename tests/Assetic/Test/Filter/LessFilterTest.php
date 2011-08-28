@@ -24,11 +24,11 @@ class LessFilterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        if (!isset($_SERVER['NODE_BIN']) || !isset($_SERVER['NODE_PATH'])) {
-            $this->markTestSkipped('No node.js configuration.');
+        if (!isset($_SERVER['LESS'])) {
+            $this->markTestSkipped('No less configuration.');
         }
 
-        $this->filter = new LessFilter($_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
+        $this->filter = new LessFilter($_SERVER['LESS']);
     }
 
     public function testFilterLoad()
