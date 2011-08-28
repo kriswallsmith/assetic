@@ -42,11 +42,7 @@ class CssImportFilter extends BaseCssFilter
 
         $callback = function($matches) use($importFilter, $sourceRoot, $sourcePath)
         {
-            if (!$matches['url']) {
-                return $matches[0];
-            }
-
-            if (null === $sourceRoot) {
+            if (!$matches['url'] || null === $sourceRoot) {
                 return $matches[0];
             }
 
