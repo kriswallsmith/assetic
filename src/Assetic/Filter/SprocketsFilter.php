@@ -103,7 +103,6 @@ EOF;
 
         $pb = new ProcessBuilder();
         $pb
-            ->inheritEnvironmentVariables()
             ->add($this->rubyBin)
             ->add($input)
         ;

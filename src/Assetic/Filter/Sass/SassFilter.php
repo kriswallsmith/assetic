@@ -98,10 +98,7 @@ class SassFilter implements FilterInterface
     public function filterLoad(AssetInterface $asset)
     {
         $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
-            ->add($this->sassPath)
-        ;
+        $pb->add($this->sassPath);
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();

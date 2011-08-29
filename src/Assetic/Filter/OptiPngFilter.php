@@ -47,10 +47,7 @@ class OptiPngFilter implements FilterInterface
     public function filterDump(AssetInterface $asset)
     {
         $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
-            ->add($this->optipngBin)
-        ;
+        $pb->add($this->optipngBin);
 
         if (null !== $this->level) {
             $pb->add('-o')->add($this->level);

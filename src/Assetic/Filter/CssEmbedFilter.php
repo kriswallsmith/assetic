@@ -81,7 +81,6 @@ class CssEmbedFilter implements FilterInterface
     {
         $pb = new ProcessBuilder();
         $pb
-            ->inheritEnvironmentVariables()
             ->add($this->javaPath)
             ->add('-jar')
             ->add($this->jarPath)

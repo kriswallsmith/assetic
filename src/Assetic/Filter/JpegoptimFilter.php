@@ -53,10 +53,7 @@ class JpegoptimFilter implements FilterInterface
     public function filterDump(AssetInterface $asset)
     {
         $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
-            ->add($this->jpegoptimBin)
-        ;
+        $pb->add($this->jpegoptimBin);
 
         if ($this->stripAll) {
             $pb->add('--strip-all');

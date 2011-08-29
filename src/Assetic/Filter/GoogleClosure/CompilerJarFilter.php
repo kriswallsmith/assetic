@@ -36,7 +36,6 @@ class CompilerJarFilter extends BaseCompilerFilter
 
         $pb = new ProcessBuilder();
         $pb
-            ->inheritEnvironmentVariables()
             ->add($this->javaPath)
             ->add('-jar')
             ->add($this->jarPath)
