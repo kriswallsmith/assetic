@@ -152,13 +152,12 @@ class CompassFilter implements FilterInterface
         // compass does not seems to handle symlink, so we use realpath()
         $tempDir = realpath(sys_get_temp_dir());
 
-        $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
-            ->add($this->compassPath)
-            ->add('compile')
-            ->add($tempDir)
-        ;
+        $pb = new ProcessBuilder(array(
+            $this->compassPath,
+            'compile',
+            $tempDir,
+        ));
+        $pb->inheritEnvironmentVariables();
 
         if ($this->force) {
             $pb->add('--force');

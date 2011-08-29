@@ -36,13 +36,12 @@ class CoffeeScriptFilter implements FilterInterface
         $input = tempnam(sys_get_temp_dir(), 'assetic_coffeescript');
         file_put_contents($input, $asset->getContent());
 
-        $pb = new ProcessBuilder();
-        $pb
-            ->add($this->nodePath)
-            ->add($this->coffeePath)
-            ->add('-cp')
-            ->add($input)
-        ;
+        $pb = new ProcessBuilder(array(
+            $this->nodePath,
+            $this->coffeePath,
+            '-cp',
+            $input,
+        ));
 
         $proc = $pb->getProcess();
         $code = $proc->run();

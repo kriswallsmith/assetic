@@ -18,13 +18,18 @@ namespace Assetic\Util;
  */
 class ProcessBuilder
 {
-    private $arguments = array();
+    private $arguments;
     private $cwd;
     private $env;
     private $stdin;
     private $timeout = 60;
     private $options = array();
     private $inheritEnv = false;
+
+    public function __construct(array $arguments = array())
+    {
+        $this->arguments = $arguments;
+    }
 
     /**
      * Adds an unescaped argument to the command string.

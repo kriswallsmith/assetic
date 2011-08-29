@@ -58,12 +58,11 @@ abstract class BaseCompressorFilter implements FilterInterface
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = new ProcessBuilder();
-        $pb
-            ->add($this->javaPath)
-            ->add('-jar')
-            ->add($this->jarPath)
-        ;
+        $pb = new ProcessBuilder(array(
+            $this->javaPath,
+            '-jar',
+            $this->jarPath,
+        ));
 
         foreach ($options as $option) {
             $pb->add($option);
