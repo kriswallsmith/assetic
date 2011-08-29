@@ -79,13 +79,11 @@ class CssEmbedFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
-            ->add($this->javaPath)
-            ->add('-jar')
-            ->add($this->jarPath)
-        ;
+        $pb = new ProcessBuilder(array(
+            $this->javaPath,
+            '-jar',
+            $this->jarPath,
+        ));
 
         if (null !== $this->charset) {
             $pb->add('--charset')->add($this->charset);

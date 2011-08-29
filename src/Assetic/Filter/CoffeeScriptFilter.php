@@ -44,13 +44,11 @@ class CoffeeScriptFilter implements FilterInterface
         $input = tempnam(sys_get_temp_dir(), 'assetic_coffeescript');
         file_put_contents($input, $asset->getContent());
 
-        $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
-            ->add($this->nodePath)
-            ->add($this->coffeePath)
-            ->add('-cp')
-        ;
+        $pb = new ProcessBuilder(array(
+            $this->nodePath,
+            $this->coffeePath,
+            '-cp',
+        ));
 
         if ($this->bare) {
             $pb->add('--bare');

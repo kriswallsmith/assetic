@@ -85,11 +85,7 @@ class PngoutFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
-            ->add($this->pngoutBin)
-        ;
+        $pb = new ProcessBuilder(array($this->pngoutBin));
 
         if (null !== $this->color) {
             $pb->add('-c'.$this->color);
