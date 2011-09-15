@@ -19,7 +19,7 @@ namespace Assetic\Filter;
 abstract class BaseCssFilter implements FilterInterface
 {
     /**
-     * Filters all references -- url() and @import -- through a callable.
+     * Filters all references -- url() and "@import" -- through a callable.
      *
      * @param string $content  The CSS
      * @param mixed  $callback A PHP callable
