@@ -45,7 +45,7 @@ class CompassFilter implements FilterInterface
     private $httpPath;
     private $httpImagesPath;
     private $httpJavascriptsPath;
-    
+
     public function __construct($compassPath = '/usr/bin/compass')
     {
         $this->compassPath = $compassPath;
@@ -98,7 +98,7 @@ class CompassFilter implements FilterInterface
     {
         $this->noLineComments = $noLineComments;
     }
-    
+
     public function setImagesDir($imagesDir)
     {
         $this->imagesDir = $imagesDir;
@@ -129,12 +129,12 @@ class CompassFilter implements FilterInterface
     {
         $this->httpPath = $httpPath;
     }
-    
+
     public function setHttpImagesPath($httpImagesPath)
     {
         $this->httpImagesPath = $httpImagesPath;
     }
-    
+
     public function setHttpJavascriptsPath($httpJavascriptsPath)
     {
         $this->httpJavascriptsPath = $httpJavascriptsPath;
@@ -274,7 +274,11 @@ class CompassFilter implements FilterInterface
                 unlink($configFile);
             }
 
-            throw new \RuntimeException($proc->getErrorOutput() ?: $proc->getOutput());
+            throw new \RuntimeException(sprintf(
+                "An error occurred when running:\n%s\n\nOutput:\n%s",
+                $proc->getCommandLine(),
+                trim($proc->getErrorOutput() ?: $proc->getOutput())
+            ));
         }
 
         $asset->setContent(file_get_contents($output));
