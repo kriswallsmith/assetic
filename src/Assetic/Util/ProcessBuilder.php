@@ -18,6 +18,8 @@ namespace Assetic\Util;
  */
 class ProcessBuilder
 {
+    private static $isWindows;
+
     private $arguments;
     private $cwd;
     private $env;
@@ -29,6 +31,10 @@ class ProcessBuilder
     public function __construct(array $arguments = array())
     {
         $this->arguments = $arguments;
+
+        if (null === self::$isWindows) {
+            self::$isWindows = defined('PHP_WINDOWS_VERSION_MAJOR');
+        }
     }
 
     /**
@@ -97,7 +103,7 @@ class ProcessBuilder
 
         $options = $this->options;
 
-        if (defined('PHP_WINDOWS_MAJOR_VERSION')) {
+        if (self::$isWindows) {
             $options += array('bypass_shell' => true);
 
             $args = $this->arguments;
@@ -105,8 +111,10 @@ class ProcessBuilder
 
             $script = '"'.$cmd.'"';
             if ($args) {
-                $script .= ' '.implode(' ', array_map('escapeshellarg', $parts));
+                $script .= ' '.implode(' ', array_map('escapeshellarg', $args));
             }
+
+            $script = 'cmd /V:ON /E:ON /C "'.$script.'"';
         } else {
             $script = implode(' ', array_map('escapeshellarg', $this->arguments));
         }
@@ -115,3 +123,4 @@ class ProcessBuilder
         return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $options);
     }
 }
+
