@@ -274,10 +274,13 @@ class CompassFilter implements FilterInterface
                 unlink($configFile);
             }
 
+            $output = $proc->getErrorOutput() ?: $proc->getOutput();
+            $output = str_replace("\r", '', $output);
+
             throw new \RuntimeException(sprintf(
                 "An error occurred when running:\n%s\n\nOutput:\n%s",
                 $proc->getCommandLine(),
-                trim($proc->getErrorOutput() ?: $proc->getOutput())
+                $output
             ));
         }
 
