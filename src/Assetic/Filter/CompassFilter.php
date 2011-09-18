@@ -11,6 +11,7 @@
 
 namespace Assetic\Filter;
 
+use Assetic\Exception\FilterException;
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
 use Assetic\Util\ProcessBuilder;
@@ -274,14 +275,7 @@ class CompassFilter implements FilterInterface
                 unlink($configFile);
             }
 
-            $output = $proc->getErrorOutput() ?: $proc->getOutput();
-            $output = str_replace("\r", '', $output);
-
-            throw new \RuntimeException(sprintf(
-                "An error occurred when running:\n%s\n\nOutput:\n%s",
-                $proc->getCommandLine(),
-                $output
-            ));
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent(file_get_contents($output));
