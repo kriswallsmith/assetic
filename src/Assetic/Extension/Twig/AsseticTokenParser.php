@@ -88,6 +88,11 @@ class AsseticTokenParser extends \Twig_TokenParser
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $attributes['combine'] = 'true' == $stream->expect(\Twig_Token::NAME_TYPE, array('true', 'false'))->getValue();
+            } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'expire')) {
+                // expire='timestamp|hash'
+                $stream->next();
+                $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+                $attributes['expire'] = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, $this->extensions)) {
                 // an arbitrary configured attribute
                 $key = $stream->next()->getValue();

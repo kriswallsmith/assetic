@@ -164,10 +164,6 @@ class AssetFactory
             $options['output'] = $this->output;
         }
 
-        if (!isset($options['name'])) {
-            $options['name'] = $this->generateAssetName($inputs, $filters, $options);
-        }
-
         if (!isset($options['debug'])) {
             $options['debug'] = $this->debug;
         }
@@ -196,6 +192,10 @@ class AssetFactory
             }
         }
 
+        if (!isset($options['name'])) {
+            $options['name'] = $this->generateAssetName($inputs, $filters, $options, $asset);
+        }
+
         // filters
         foreach ($filters as $filter) {
             if ('?' != $filter[0]) {
@@ -217,15 +217,37 @@ class AssetFactory
         return $this->applyWorkers($asset);
     }
 
-    public function generateAssetName($inputs, $filters, $options = array())
+    public function generateAssetName($inputs, $filters, $options = array(), AssetCollection $asset = null)
     {
+        $hash = hash_init('sha1');
+
         foreach (array_diff(array_keys($options), array('output', 'debug', 'root')) as $key) {
             unset($options[$key]);
         }
 
         ksort($options);
 
-        return substr(sha1(serialize($inputs).serialize($filters).serialize($options)), 0, 7);
+        $expire = 'none';
+        if(isset($options['expire']) && $asset !== null) {
+            $expire = $options['expire'];
+        }
+
+        switch($expire) {
+            case 'timestamp':
+                hash_update($hash, $asset->getLastModified());
+                break;
+            case 'hash':
+                hash_update($hash, $asset->getContent());
+                break;
+            case 'none':
+            default:
+                hash_update($hash, serialize($inputs));
+        }
+        
+        hash_update($hash, serialize($filters));
+        hash_update($hash, serialize($options));
+
+        return substr(hash_final($hash), 0, 7);
     }
 
     /**
