@@ -17,6 +17,9 @@ use Assetic\Util\ProcessBuilder;
 
 /**
  * CSSEmbed filter
+ * 
+ * Uses the cssembed tool to embed Images in the css file.
+ * For the cssembed jar, see: https://github.com/nzakas/cssembed/.
  *
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
