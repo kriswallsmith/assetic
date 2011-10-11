@@ -39,7 +39,7 @@ class CssRewriteFilter extends BaseCssFilter
             list($scheme, $url) = explode('://', $sourceBase.'/'.$sourcePath, 2);
             list($host, $path) = explode('/', $url, 2);
 
-            $host = $scheme.'://'.$host;
+            $host = $scheme.'://'.$host . '/';
             $path = false === strpos($path, '/') ? '' : dirname($path);
             $path .= '/';
         } else {
