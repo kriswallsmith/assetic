@@ -93,7 +93,7 @@ abstract class BaseCompressorFilter implements FilterInterface
                 unlink($output);
             }
 
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw new \RuntimeException($proc->getErrorOutput()." while trying to execute '$this->javaPath'");
         } elseif (!file_exists($output)) {
             throw new \RuntimeException('Error creating output file.');
         }
