@@ -59,7 +59,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/images/foo.gif', 'http://foo.com/images/foo.gif'),
         );
     }
-    
+
     /**
      * @dataProvider provideMultipleUrls
      */
@@ -80,8 +80,8 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             // multiple url
-            array('body { background: url(%s); background: url(%s) }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
-            array("body { background: url(%s);\nbackground: url(%s) }", 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
+            array('body { background: url(%s); background: url(%s); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
+            array("body { background: url(%s);\nbackground: url(%s); }", 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../images/bg2.gif', '../../images/bg.gif', '../../images/bg2.gif'),
 
             // multiple import
             array('@import "%s"; @import "%s";', 'css/imports.css', 'css/build/main.css', 'import.css', 'import2.css', '../import.css', '../import2.css'),
@@ -95,7 +95,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testNoTargetPath()
     {
-        $content = 'body{url(foo.gif)}';
+        $content = 'body { background: url(foo.gif); }';
 
         $asset = new StringAsset($content);
         $asset->load();
@@ -104,5 +104,17 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $filter->filterDump($asset);
 
         $this->assertEquals($content, $asset->getContent(), '->filterDump() urls are not changed without urls');
+    }
+
+    public function testExternalSource()
+    {
+        $asset = new StringAsset('body { background: url(../images/bg.gif); }', array(), 'http://www.example.com', 'css/main.css');
+        $asset->setTargetPath('css/packed/main.css');
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterDump($asset);
+
+        $this->assertContains('http://www.example.com/css/../images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
     }
 }
