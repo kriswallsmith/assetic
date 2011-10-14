@@ -255,6 +255,9 @@ class CompassFilter implements FilterInterface
 
         $tempName = tempnam($tempDir, 'assetic_compass');
         unlink($tempName); // FIXME: don't use tempnam() here
+        
+        // No colored ouput please
+        $pb->add('--boring');
 
         // input
         $pb->add($input = $tempName.'.'.$type);
@@ -274,7 +277,6 @@ class CompassFilter implements FilterInterface
             if (isset($configFile)) {
                 unlink($configFile);
             }
-
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
