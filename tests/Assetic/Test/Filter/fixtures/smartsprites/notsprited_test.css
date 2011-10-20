@@ -1,0 +1,11 @@
+#foo {
+  width: 17px; height: 17px;
+  background-repeat: no-repeat;
+  background-image: url(../home.gif);
+}
+
+#bar {
+  width: 17px; height: 17px;
+  background-repeat: no-repeat;
+  background-image: url(/home.png);
+}
