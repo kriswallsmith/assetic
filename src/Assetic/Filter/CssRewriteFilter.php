@@ -69,7 +69,7 @@ class CssRewriteFilter extends BaseCssFilter
 
         $content = $this->filterReferences($asset->getContent(), function($matches) use($host, $path)
         {
-            if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//')) {
+            if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
                 // absolute or protocol-relative
                 return $matches[0];
             }
