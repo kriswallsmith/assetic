@@ -39,7 +39,7 @@ class CompassFilter implements FilterInterface
     private $noLineComments;
     private $imagesDir;
     private $javascriptsDir;
-    private $boring;
+    private $boring = false;
 
     // compass configuration file options
     private $plugins = array();
