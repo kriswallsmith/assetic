@@ -39,6 +39,7 @@ class CompassFilter implements FilterInterface
     private $noLineComments;
     private $imagesDir;
     private $javascriptsDir;
+    private $boring;
 
     // compass configuration file options
     private $plugins = array();
@@ -110,6 +111,11 @@ class CompassFilter implements FilterInterface
         $this->javascriptsDir = $javascriptsDir;
     }
 
+    public function setBoring($boring)
+    {
+      $this->boring = $boring;
+    }
+
     // compass configuration file options setters
     public function setPlugins(array $plugins)
     {
@@ -174,6 +180,10 @@ class CompassFilter implements FilterInterface
 
         if ($this->noLineComments) {
             $pb->add('--no-line-comments');
+        }
+
+        if ($this->boring) {
+            $pb->add('--boring');
         }
 
         // these two options are not passed into the config file
@@ -255,9 +265,6 @@ class CompassFilter implements FilterInterface
 
         $tempName = tempnam($tempDir, 'assetic_compass');
         unlink($tempName); // FIXME: don't use tempnam() here
-        
-        // No colored ouput please
-        $pb->add('--boring');
 
         // input
         $pb->add($input = $tempName.'.'.$type);
