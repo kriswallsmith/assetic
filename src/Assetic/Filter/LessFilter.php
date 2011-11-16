@@ -46,7 +46,7 @@ class LessFilter implements FilterInterface
     {
         static $format = <<<'EOF'
 var less = require('less');
-var sys  = require('sys');
+var sys  = require(process.binding('natives').util ? 'util' : 'sys');
 
 new(less.Parser)(%s).parse(%s, function(e, tree) {
     if (e) {

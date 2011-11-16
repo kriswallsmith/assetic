@@ -54,7 +54,7 @@ class StylusFilter implements FilterInterface
     {
         static $format = <<<'EOF'
 var stylus = require('stylus');
-var sys    = require('sys');
+var sys    = require(process.binding('natives').util ? 'util' : 'sys');
 
 stylus(%s, %s).render(function(e, css){
     if (e) {
