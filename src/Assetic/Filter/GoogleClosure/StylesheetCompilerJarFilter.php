@@ -20,7 +20,7 @@ use Assetic\Util\ProcessBuilder;
  *
  * @author Matthias Krauser <matthias@krauser.eu>
  */
-class StylesheetsCompilerJarFilter implements FilterInterface
+class StylesheetCompilerJarFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;
@@ -132,8 +132,6 @@ class StylesheetsCompilerJarFilter implements FilterInterface
         
         $pb->add($cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_stylesheets_compiler'));
         file_put_contents($input, $asset->getContent());
-
-        var_dump($pb);
         
         $proc = $pb->getProcess();
         $code = $proc->run();

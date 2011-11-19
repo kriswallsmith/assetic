@@ -12,15 +12,15 @@
 namespace Assetic\Test\Filter\GoogleClosure;
 
 use Assetic\Asset\StringAsset;
-use Assetic\Filter\GoogleClosure\StylesheetsCompilerJarFilter;
+use Assetic\Filter\GoogleClosure\StylesheetCompilerJarFilter;
 
 /**
  * @group integration
  */
-class StylesheetsCompilerJarFilterTest extends \PHPUnit_Framework_TestCase
+class StylesheetCompilerJarFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testCompile()
-    {        
+    {
         if (!isset($_SERVER['GSS_CLOSURE_JAR'])) {
             $this->markTestSkipped('There is no GSS_CLOSURE_JAR environment variable.');
         }
@@ -37,7 +37,7 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new StylesheetsCompilerJarFilter($_SERVER['GSS_CLOSURE_JAR']);
+        $filter = new StylesheetCompilerJarFilter($_SERVER['GSS_CLOSURE_JAR']);
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 
