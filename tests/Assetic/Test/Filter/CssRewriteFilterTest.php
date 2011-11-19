@@ -57,6 +57,9 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/bar.gif', 'http://foo.com/bar.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '/images/foo.gif', '/images/foo.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/images/foo.gif', 'http://foo.com/images/foo.gif'),
+            
+            // ignore inline-data
+            array('body { background: url(%s); }', 'css/body.css,', 'css/build/main.css', 'data:image/gif;base64', 'data:image/gif;base64'),
         );
     }
 
