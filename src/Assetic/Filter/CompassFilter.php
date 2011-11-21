@@ -146,8 +146,9 @@ class CompassFilter implements FilterInterface
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
+        $loadPaths = $this->loadPaths;
         if ($root && $path) {
-            $this->loadPaths[] = dirname($root.'/'.$path);
+            $loadPaths[] = dirname($root.'/'.$path);
         }
 
         // compass does not seems to handle symlink, so we use realpath()
@@ -190,8 +191,8 @@ class CompassFilter implements FilterInterface
         // options in config file
         $optionsConfig = array();
 
-        if (!empty($this->loadPaths)) {
-            $optionsConfig['additional_import_paths'] = $this->loadPaths;
+        if (!empty($loadPaths)) {
+            $optionsConfig['additional_import_paths'] = $loadPaths;
         }
 
         if ($this->unixNewlines) {
