@@ -34,12 +34,9 @@ class LessphpFilter implements FilterInterface
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
-        $lc = new \lessc();
-        if ($root && $path) {
-            $lc->importDir = dirname($root.'/'.$path);
-        }
+        $lc = new \lessc($root.'/'.$path);
 
-        $asset->setContent($lc->parse($asset->getContent()));
+        $asset->setContent($lc->parse());
     }
 
     public function filterDump(AssetInterface $asset)
