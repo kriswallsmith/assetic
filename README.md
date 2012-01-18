@@ -84,6 +84,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `LessFilter`: parses LESS into CSS (using less.js with node.js)
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
  * `OptiPngFilter`: optimize your PNGs
+ * `PackerFilter`: compresses Javascript using Dean Edwards's Packer
  * `PngoutFilter`: optimize your PNGs
  * `CompassFilter`: Compass CSS authoring framework
  * `Sass\SassFilter`: parses SASS into CSS
