@@ -21,8 +21,8 @@ class GssFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testCompile()
     {
-        if (!isset($_SERVER['GSS_CLOSURE_JAR'])) {
-            $this->markTestSkipped('There is no GSS_CLOSURE_JAR environment variable.');
+        if (!isset($_SERVER['GSS_JAR'])) {
+            $this->markTestSkipped('There is no GSS_JAR environment variable.');
         }
 
         $input = <<<EOF
@@ -37,7 +37,7 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new GssFilter($_SERVER['GSS_CLOSURE_JAR']);
+        $filter = new GssFilter($_SERVER['GSS_JAR']);
         $filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent());
