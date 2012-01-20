@@ -12,12 +12,12 @@
 namespace Assetic\Test\Filter\GoogleClosure;
 
 use Assetic\Asset\StringAsset;
-use Assetic\Filter\GoogleClosure\StylesheetCompilerJarFilter;
+use Assetic\Filter\GssFilter;
 
 /**
  * @group integration
  */
-class StylesheetCompilerJarFilterTest extends \PHPUnit_Framework_TestCase
+class GssFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testCompile()
     {
@@ -37,7 +37,7 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new StylesheetCompilerJarFilter($_SERVER['GSS_CLOSURE_JAR']);
+        $filter = new GssFilter($_SERVER['GSS_CLOSURE_JAR']);
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 

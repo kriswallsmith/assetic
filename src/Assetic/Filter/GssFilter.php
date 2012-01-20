@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Filter\GoogleClosure;
+namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
 use Assetic\Util\ProcessBuilder;
 
 /**
@@ -20,7 +19,7 @@ use Assetic\Util\ProcessBuilder;
  *
  * @author Matthias Krauser <matthias@krauser.eu>
  */
-class StylesheetCompilerJarFilter implements FilterInterface
+class GssFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;
