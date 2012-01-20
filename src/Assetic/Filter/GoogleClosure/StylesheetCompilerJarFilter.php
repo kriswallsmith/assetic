@@ -142,5 +142,4 @@ class StylesheetCompilerJarFilter implements FilterInterface
 
         $asset->setContent($proc->getOutput());
     }
-
 }
