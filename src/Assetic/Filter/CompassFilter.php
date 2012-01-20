@@ -35,6 +35,7 @@ class CompassFilter implements FilterInterface
     private $force;
     private $style;
     private $quiet;
+    private $boring;
     private $noLineComments;
     private $imagesDir;
     private $javascriptsDir;
@@ -50,6 +51,10 @@ class CompassFilter implements FilterInterface
     {
         $this->compassPath = $compassPath;
         $this->cacheLocation = sys_get_temp_dir();
+
+        if ('cli' !== php_sapi_name()) {
+            $this->boring = true;
+        }
     }
 
     public function setScss($scss)
@@ -92,6 +97,11 @@ class CompassFilter implements FilterInterface
     public function setQuiet($quiet)
     {
         $this->quiet = $quiet;
+    }
+
+    public function setBoring($boring)
+    {
+        $this->boring = $boring;
     }
 
     public function setNoLineComments($noLineComments)
@@ -170,6 +180,10 @@ class CompassFilter implements FilterInterface
 
         if ($this->quiet) {
             $pb->add('--quiet');
+        }
+
+        if ($this->boring) {
+            $pb->add('--boring');
         }
 
         if ($this->noLineComments) {
