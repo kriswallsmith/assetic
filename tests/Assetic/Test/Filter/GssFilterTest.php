@@ -39,7 +39,6 @@ EOF;
 
         $filter = new GssFilter($_SERVER['GSS_CLOSURE_JAR']);
         $filter->filterLoad($asset);
-        $filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getContent());
     }
