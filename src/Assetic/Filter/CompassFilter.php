@@ -275,7 +275,7 @@ class CompassFilter implements FilterInterface
                 unlink($configFile);
             }
 
-            throw new \RuntimeException($proc->getErrorOutput() ?: $proc->getOutput());
+            throw new \RuntimeException($proc->getErrorOutput().'...'.$proc->getOutput());
         }
 
         $asset->setContent(file_get_contents($output));
