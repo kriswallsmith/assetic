@@ -40,6 +40,10 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url("%s"); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
             array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
 
+            //url with data:
+            array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', 'data:image/png;base64,abcdef=', 'data:image/png;base64,abcdef='),
+            array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', '../images/bg-data:.gif', '../../images/bg-data:.gif'),
+
             // @import variants
             array('@import "%s";', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
             array('@import url(%s);', 'css/imports.css', 'css/build/main.css', 'import.css', '../import.css'),
