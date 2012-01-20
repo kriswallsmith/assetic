@@ -24,19 +24,18 @@ class StylesheetCompilerJarFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;
-
-    protected $allowUnrecognizedFunctions;
-    protected $allowedNonStandardFunctions;
-    protected $copyrightNotice;
-    protected $define;
-    protected $excludeClassesFromRenaming;
-    protected $gssFunctionMapProvider;
-    protected $inputOrientation;
-    protected $outputOrientation;
-    protected $outputRenamingMap;
-    protected $outputRenamingMapFormat;
-    protected $prettyPrint;
-    protected $rename;
+    private $allowUnrecognizedFunctions;
+    private $allowedNonStandardFunctions;
+    private $copyrightNotice;
+    private $define;
+    private $excludeClassesFromRenaming;
+    private $gssFunctionMapProvider;
+    private $inputOrientation;
+    private $outputOrientation;
+    private $outputRenamingMap;
+    private $outputRenamingMapFormat;
+    private $prettyPrint;
+    private $rename;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
