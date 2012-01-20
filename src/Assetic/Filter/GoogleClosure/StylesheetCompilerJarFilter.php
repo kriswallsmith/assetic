@@ -85,10 +85,6 @@ class StylesheetCompilerJarFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
         $cleanup = array();
 
         $pb = new ProcessBuilder(array(
@@ -141,5 +137,9 @@ class StylesheetCompilerJarFilter implements FilterInterface
         }
 
         $asset->setContent($proc->getOutput());
+    }
+
+    public function filterDump(AssetInterface $asset)
+    {
     }
 }
