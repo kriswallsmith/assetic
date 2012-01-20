@@ -23,6 +23,8 @@ use Assetic\Util\ProcessBuilder;
  */
 class CompassFilter implements FilterInterface
 {
+    private static $isWindows;
+
     private $compassPath;
     private $scss;
 
@@ -51,6 +53,10 @@ class CompassFilter implements FilterInterface
     {
         $this->compassPath = $compassPath;
         $this->cacheLocation = sys_get_temp_dir();
+        
+        if (null === self::$isWindows) {
+            self::$isWindows = defined('PHP_WINDOWS_VERSION_MAJOR');
+        }
     }
 
     public function setScss($scss)
@@ -257,7 +263,14 @@ class CompassFilter implements FilterInterface
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
-        $pb->add($input = $tempName.'.'.$type);
+        $input = $tempName.'.'.$type;
+
+        // Compass issue, https://github.com/chriseppstein/compass/pull/554
+        if (self::$isWindows) {
+            $input = str_replace('\\','/', $input);
+        }
+
+        $pb->add($input);
         file_put_contents($input, $asset->getContent());
 
         // output
