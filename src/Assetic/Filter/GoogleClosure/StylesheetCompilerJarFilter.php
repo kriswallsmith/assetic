@@ -37,7 +37,7 @@ class StylesheetCompilerJarFilter implements FilterInterface
     protected $outputRenamingMapFormat;
     protected $prettyPrint;
     protected $rename;
-    
+
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
         $this->jarPath = $jarPath;
@@ -68,26 +68,26 @@ class StylesheetCompilerJarFilter implements FilterInterface
     {
         $this->gssFunctionMapProvider = $gssFunctionMapProvider;
     }
-    
+
     public function setInputOrientation($inputOrientation)
     {
         $this->inputOrientation = $inputOrientation;
     }
-    
+
     public function setOutputOrientation($outputOrientation)
     {
         $this->outputOrientation = $outputOrientation;
     }
-       
+
     public function setPrettyPrint($prettyPrint)
     {
         $this->prettyPrint = $prettyPrint;
     }
-    
+
     public function filterLoad(AssetInterface $asset)
     {
     }
-    
+
     public function filterDump(AssetInterface $asset)
     {
         $cleanup = array();
@@ -121,18 +121,18 @@ class StylesheetCompilerJarFilter implements FilterInterface
         if (null !== $this->inputOrientation) {
             $pb->add('--input-orientation')->add($this->inputOrientation);
         }
-        
+
         if (null !== $this->outputOrientation) {
             $pb->add('--output-orientation')->add($this->outputOrientation);
         }
-        
+
         if (null !== $this->prettyPrint) {
             $pb->add('--pretty-print');
         }
-        
+
         $pb->add($cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_stylesheets_compiler'));
         file_put_contents($input, $asset->getContent());
-        
+
         $proc = $pb->getProcess();
         $code = $proc->run();
         array_map('unlink', $cleanup);
