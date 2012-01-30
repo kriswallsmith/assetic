@@ -18,17 +18,19 @@ use Assetic\Util\ProcessBuilder;
  * Executes a js file with nodejs.
  *
  * @link https://github.com/AntonStoeckl/assetic/
- * @author Anton Stöckl
+ * @author Anton Stöckl / Voycer AG (http://www.voycer.biz)
  */
 class NodejsFilter implements FilterInterface
 {
     private $nodePath;
     private $env;
+    private $args;
 
-    public function __construct($nodePath = '/usr/bin/node', $env = array())
+    public function __construct($nodePath = '/usr/bin/node', $env = array(), $args = array())
     {
         $this->nodePath = $nodePath;
         $this->env = $env;
+        $this->args = $args;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -41,14 +43,20 @@ class NodejsFilter implements FilterInterface
             }
         }
         
-        $pb
-            ->add($this->nodePath)
-            ->add($asset->getSourceRoot() . DIRECTORY_SEPARATOR .  $asset->getSourcePath())
-        ;
+        $tempDir = realpath(sys_get_temp_dir()); // temp dir might be a symlink
         
-
+        $pb->add($this->nodePath)
+           ->add($input = tempnam($tempDir, 'assetic_nodejs'));
+        
+        file_put_contents($input, $asset->getContent());
+        
+        foreach ($this->args as $arg) {
+            $pb->add($arg);
+        }
+        
         $proc = $pb->getProcess();
         $code = $proc->run();
+        unlink($input);
 
         if (0 < $code) {
             throw new \RuntimeException($proc->getErrorOutput());
