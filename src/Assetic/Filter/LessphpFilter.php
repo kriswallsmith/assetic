@@ -29,7 +29,19 @@ use Assetic\Asset\AssetInterface;
  */
 class LessphpFilter implements FilterInterface
 {
-    public function filterLoad(AssetInterface $asset)
+    private $presets;
+
+     /**
+     * Constructor.
+     *
+     * @param array $presets An array of pre-defined variables
+     */
+    public function __construct(array $presets = array())
+    {
+        $this->presets = $presets;
+    }
+
+   public function filterLoad(AssetInterface $asset)
     {
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
@@ -39,7 +51,7 @@ class LessphpFilter implements FilterInterface
             $lc->importDir = dirname($root.'/'.$path);
         }
 
-        $asset->setContent($lc->parse($asset->getContent()));
+        $asset->setContent($lc->parse($asset->getContent(), $this->presets));
     }
 
     public function filterDump(AssetInterface $asset)
