@@ -14,7 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Exception\FilterException;
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\ProcessBuilder;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Loads Compass files.

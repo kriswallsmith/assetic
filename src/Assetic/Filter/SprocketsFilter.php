@@ -12,7 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\ProcessBuilder;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through Sprockets.

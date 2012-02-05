@@ -29,6 +29,12 @@ spl_autoload_register(function($class)
             require_once $file;
             return true;
         }
+    } elseif (isset($_SERVER['SYMFONY_PROCESS']) && 0 === strpos($class, 'Symfony\\Component\\Process\\')) {
+        $file = $_SERVER['SYMFONY_PROCESS'] . '/' . implode('/', array_slice(explode('\\', $class), 3)) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return true;
+        }
     }
 });
 

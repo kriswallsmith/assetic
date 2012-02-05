@@ -13,7 +13,7 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\ProcessBuilder;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Loads SASS files.
