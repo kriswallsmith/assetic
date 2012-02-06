@@ -153,10 +153,23 @@ class LazyAssetManager extends AssetManager
         }
 
         $this->loading = true;
+        $outputs = array();
 
         foreach ($this->resources as $loader => $resources) {
             foreach ($resources as $resource) {
-                $this->formulae = array_replace($this->formulae, $this->loaders[$loader]->load($resource));
+                foreach ($this->loaders[$loader]->load($resource) as $name => $formula) {
+                    if (isset($formula[2]['output']) && false === strpos($formula[2]['output'], '*')) {
+                        $output = $formula[2]['output'];
+
+                        if (isset($outputs[$output]) && $outputs[$output] != $name) {
+                            throw new \LogicException(sprintf('There are multiple asset formulae with an output string of "%s"', $output));
+                        }
+
+                        $outputs[$output] = $name;
+                    }
+
+                    $this->formulae[$name] = $formula;
+                }
             }
         }
 
