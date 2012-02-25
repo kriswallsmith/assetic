@@ -225,7 +225,16 @@ class AssetFactory
 
         ksort($options);
 
-        return substr(sha1(serialize($inputs).serialize($filters).serialize($options)), 0, 7);
+        // generate md5 hashes for inputs
+        $md5 = array();
+        foreach($inputs as &$input) {
+            $filepath = realpath($this->root . DIRECTORY_SEPARATOR . $input);
+            if (file_exists($filepath)) {
+                $md5 = md5_file($filepath);
+            }
+        }
+
+        return substr(sha1(serialize($inputs).serialize($md5).serialize($filters).serialize($options)), 0, 7);    
     }
 
     /**
