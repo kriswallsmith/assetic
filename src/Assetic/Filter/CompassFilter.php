@@ -237,6 +237,12 @@ class CompassFilter implements FilterInterface
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
         }
 
+        // compass should only parse sass and scss files
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        if ('sass' != $type && 'scss' != $type) {
+            return;
+        }
+
         // options in configuration file
         if (count($optionsConfig)) {
             $config = array();
@@ -257,16 +263,6 @@ class CompassFilter implements FilterInterface
         }
 
         $pb->add('--sass-dir')->add('')->add('--css-dir')->add('');
-
-        // compass choose the type (sass or scss from the filename)
-        if (null !== $this->scss) {
-            $type = $this->scss ? 'scss' : 'sass';
-        } elseif ($path) {
-            // FIXME: what if the extension is something else?
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-        } else {
-            $type = 'scss';
-        }
 
         $tempName = tempnam($tempDir, 'assetic_compass');
         unlink($tempName); // FIXME: don't use tempnam() here
