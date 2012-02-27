@@ -230,7 +230,7 @@ class AssetFactory
         foreach($inputs as &$input) {
             $filepath = realpath($this->root . DIRECTORY_SEPARATOR . $input);
             if (file_exists($filepath)) {
-                $md5 = md5_file($filepath);
+                $md5[] = md5_file($filepath);
             }
         }
 
