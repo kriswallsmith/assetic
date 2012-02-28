@@ -9,7 +9,6 @@ before_script:
     - php composer.phar install --install-suggests
     - git clone https://github.com/kamicane/packager.git vendor/packager --quiet --depth 1
     - git clone https://github.com/leafo/lessphp.git vendor/lessphp --quiet --depth 1
-    - git clone https://github.com/fabpot/Twig.git vendor/twig --quiet --depth 1
     - svn checkout http://cssmin.googlecode.com/svn/trunk/ vendor/cssmin --quiet
 
 script: phpunit --configuration phpunit.travis.xml
