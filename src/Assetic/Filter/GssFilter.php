@@ -12,6 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Exception\FilterException;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -27,14 +28,10 @@ class GssFilter implements FilterInterface
     private $allowedNonStandardFunctions;
     private $copyrightNotice;
     private $define;
-    private $excludeClassesFromRenaming;
     private $gssFunctionMapProvider;
     private $inputOrientation;
     private $outputOrientation;
-    private $outputRenamingMap;
-    private $outputRenamingMapFormat;
     private $prettyPrint;
-    private $rename;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -132,7 +129,7 @@ class GssFilter implements FilterInterface
         array_map('unlink', $cleanup);
 
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent($proc->getOutput());
