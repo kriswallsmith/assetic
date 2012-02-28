@@ -17,7 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Compiles CoffeeScript into Javascript.
  *
- * @link http://jashkenas.github.com/coffee-script/
+ * @link http://coffeescript.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class CoffeeScriptFilter implements FilterInterface

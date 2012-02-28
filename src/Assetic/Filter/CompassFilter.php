@@ -19,6 +19,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Loads Compass files.
  *
+ * @link http://compass-style.org/
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
 class CompassFilter implements FilterInterface

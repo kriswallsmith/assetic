@@ -17,6 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Loads LESS files.
  *
+ * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class LessFilter implements FilterInterface

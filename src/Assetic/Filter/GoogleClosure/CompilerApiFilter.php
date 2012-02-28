@@ -16,6 +16,7 @@ use Assetic\Asset\AssetInterface;
 /**
  * Filter for the Google Closure Compiler API.
  *
+ * @link https://developers.google.com/closure/compiler/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class CompilerApiFilter extends BaseCompilerFilter

@@ -18,6 +18,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Base YUI compressor filter.
  *
+ * @link http://developer.yahoo.com/yui/compressor/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 abstract class BaseCompressorFilter implements FilterInterface

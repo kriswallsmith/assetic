@@ -18,6 +18,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Loads SASS files.
  *
+ * @link http://sass-lang.com/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class SassFilter implements FilterInterface

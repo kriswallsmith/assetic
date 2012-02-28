@@ -17,6 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Runs assets through jpegtran.
  *
+ * @link http://jpegclub.org/jpegtran/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class JpegtranFilter implements FilterInterface

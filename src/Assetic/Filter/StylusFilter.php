@@ -17,6 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Loads STYL files.
  *
+ * @link http://learnboost.github.com/stylus/
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
 class StylusFilter implements FilterInterface

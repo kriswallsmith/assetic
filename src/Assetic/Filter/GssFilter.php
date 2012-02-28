@@ -17,6 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Filter for the Google Closure Stylesheets Compiler JAR.
  *
+ * @link http://code.google.com/p/closure-stylesheets/
  * @author Matthias Krauser <matthias@krauser.eu>
  */
 class GssFilter implements FilterInterface

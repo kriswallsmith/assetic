@@ -17,6 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Filter for the Google Closure Compiler JAR.
  *
+ * @link https://developers.google.com/closure/compiler/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class CompilerJarFilter extends BaseCompilerFilter

@@ -17,6 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * Runs assets through pngout.
  *
+ * @link http://advsys.net/ken/utils.htm#pngout
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class PngoutFilter implements FilterInterface

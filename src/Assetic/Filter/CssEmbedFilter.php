@@ -18,6 +18,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * CSSEmbed filter
  *
+ * @link https://github.com/nzakas/cssembed
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
 class CssEmbedFilter implements FilterInterface
