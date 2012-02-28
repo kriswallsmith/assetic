@@ -17,7 +17,7 @@
         <!-- <server name="COMPASS_BIN" value="/path/to/compass" /> -->
         <!-- <server name="RUBY_BIN" value="/path/to/ruby" /> -->
         <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
-        <server name="TWIG_LIB" value="vendor/twig/lib" />
+        <!-- <server name="TWIG_LIB" value="vendor/twig/lib" /> -->
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
         <!-- <server name="OPTIPNG_BIN" value="/path/to/optipng" /> -->
         <!-- <server name="JPEGOPTIM_BIN" value="/path/to/jpegoptim" /> -->
