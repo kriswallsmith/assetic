@@ -13,6 +13,7 @@ namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
+use Assetic\Exception\FilterException;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -93,7 +94,7 @@ abstract class BaseCompressorFilter implements FilterInterface
                 unlink($output);
             }
 
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw FilterException::fromProcess($proc)->setInput($content);
         } elseif (!file_exists($output)) {
             throw new \RuntimeException('Error creating output file.');
         }
