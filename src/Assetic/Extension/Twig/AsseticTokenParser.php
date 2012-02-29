@@ -51,6 +51,7 @@ class AsseticTokenParser extends \Twig_TokenParser
         $attributes = array(
             'output'   => $this->output,
             'var_name' => 'asset_url',
+            'vars'     => array(),
         );
 
         $stream = $this->parser->getStream();
@@ -88,6 +89,23 @@ class AsseticTokenParser extends \Twig_TokenParser
                 $stream->next();
                 $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
                 $attributes['combine'] = 'true' == $stream->expect(\Twig_Token::NAME_TYPE, array('true', 'false'))->getValue();
+            } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'vars')) {
+                // vars=['locale','browser']
+                $stream->next();
+                $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+                $stream->expect(\Twig_Token::PUNCTUATION_TYPE, '[');
+
+                while ($stream->test(\Twig_Token::STRING_TYPE)) {
+                    $attributes['vars'][] = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
+
+                    if (!$stream->test(\Twig_Token::PUNCTUATION_TYPE, ',')) {
+                        break;
+                    }
+
+                    $stream->next();
+                }
+
+                $stream->expect(\Twig_Token::PUNCTUATION_TYPE, ']');
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, $this->extensions)) {
                 // an arbitrary configured attribute
                 $key = $stream->next()->getValue();

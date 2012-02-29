@@ -11,6 +11,8 @@
 
 namespace Assetic\Asset;
 
+use Assetic\Util\PathUtils;
+
 use Assetic\Filter\FilterInterface;
 
 /**
@@ -31,7 +33,7 @@ class HttpAsset extends BaseAsset
      *
      * @throws InvalidArgumentException If the first argument is not an URL
      */
-    public function __construct($sourceUrl, $filters = array(), $ignoreErrors = false)
+    public function __construct($sourceUrl, $filters = array(), $ignoreErrors = false, array $vars = array())
     {
         if (0 === strpos($sourceUrl, '//')) {
             $sourceUrl = 'http:'.$sourceUrl;
@@ -45,12 +47,13 @@ class HttpAsset extends BaseAsset
         list($scheme, $url) = explode('://', $sourceUrl, 2);
         list($host, $path) = explode('/', $url, 2);
 
-        parent::__construct($filters, $scheme.'://'.$host, $path);
+        parent::__construct($filters, $scheme.'://'.$host, $path, $vars);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        if (false === $content = @file_get_contents($this->sourceUrl)) {
+        if (false === $content = @file_get_contents(PathUtils::resolvePath(
+                $this->sourceUrl, $this->getVars(), $this->getValues()))) {
             if ($this->ignoreErrors) {
                 return;
             } else {

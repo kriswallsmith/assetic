@@ -45,10 +45,10 @@ class AssetFactory
      */
     public function __construct($root, $debug = false)
     {
-        $this->root    = rtrim($root, '/');
-        $this->debug   = $debug;
-        $this->output  = 'assetic/*';
-        $this->workers = array();
+        $this->root      = rtrim($root, '/');
+        $this->debug     = $debug;
+        $this->output    = 'assetic/*';
+        $this->workers   = array();
     }
 
     /**
@@ -164,6 +164,10 @@ class AssetFactory
             $options['output'] = $this->output;
         }
 
+        if (!isset($options['vars'])) {
+            $options['vars'] = array();
+        }
+
         if (!isset($options['debug'])) {
             $options['debug'] = $this->debug;
         }
@@ -182,7 +186,7 @@ class AssetFactory
             $options['name'] = $this->generateAssetName($inputs, $filters, $options);
         }
 
-        $asset = $this->createAssetCollection();
+        $asset = $this->createAssetCollection(array(), $options);
         $extensions = array();
 
         // inner assets
@@ -202,6 +206,22 @@ class AssetFactory
                 $asset->ensureFilter($this->getFilter($filter));
             } elseif (!$options['debug']) {
                 $asset->ensureFilter($this->getFilter(substr($filter, 1)));
+            }
+        }
+
+        // append variables
+        if (!empty($options['vars'])) {
+            $toAdd = array();
+            foreach ($options['vars'] as $var) {
+                if (false !== strpos($options['output'], '{'.$var.'}')) {
+                    continue;
+                }
+
+                $toAdd[] = '{'.$var.'}';
+            }
+
+            if ($toAdd) {
+                $options['output'] = str_replace('*', '*.'.implode('.', $toAdd), $options['output']);
             }
         }
 
@@ -252,7 +272,7 @@ class AssetFactory
         }
 
         if (false !== strpos($input, '://') || 0 === strpos($input, '//')) {
-            return $this->createHttpAsset($input);
+            return $this->createHttpAsset($input, $options['vars']);
         }
 
         if (self::isAbsolutePath($input)) {
@@ -267,15 +287,15 @@ class AssetFactory
             $input = $this->root.'/'.$path;
         }
         if (false !== strpos($input, '*')) {
-            return $this->createGlobAsset($input, $root);
+            return $this->createGlobAsset($input, $root, $options['vars']);
         } else {
-            return $this->createFileAsset($input, $root, $path);
+            return $this->createFileAsset($input, $root, $path, $options['vars']);
         }
     }
 
-    protected function createAssetCollection(array $assets = array())
+    protected function createAssetCollection(array $assets = array(), array $options = array())
     {
-        return new AssetCollection($assets);
+        return new AssetCollection($assets, array(), null, isset($options['vars']) ? $options['vars'] : array());
     }
 
     protected function createAssetReference($name)
@@ -287,19 +307,19 @@ class AssetFactory
         return new AssetReference($this->am, $name);
     }
 
-    protected function createHttpAsset($sourceUrl)
+    protected function createHttpAsset($sourceUrl, $vars)
     {
-        return new HttpAsset($sourceUrl);
+        return new HttpAsset($sourceUrl, array(), false, $vars);
     }
 
-    protected function createGlobAsset($glob, $root = null)
+    protected function createGlobAsset($glob, $root = null, $vars)
     {
-        return new GlobAsset($glob, array(), $root);
+        return new GlobAsset($glob, array(), $root, $vars);
     }
 
-    protected function createFileAsset($source, $root = null, $path = null)
+    protected function createFileAsset($source, $root = null, $path = null, $vars)
     {
-        return new FileAsset($source, array(), $root, $path);
+        return new FileAsset($source, array(), $root, $path, $vars);
     }
 
     protected function getFilter($name)

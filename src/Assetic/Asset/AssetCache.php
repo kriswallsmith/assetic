@@ -105,6 +105,21 @@ class AssetCache implements AssetInterface
         return $this->asset->getLastModified();
     }
 
+    public function getVars()
+    {
+        return $this->asset->getVars();
+    }
+
+    public function setValues(array $values)
+    {
+        $this->asset->setValues($values);
+    }
+
+    public function getValues()
+    {
+        return $this->asset->getValues();
+    }
+
     /**
      * Returns a cache key for the current asset.
      *
@@ -136,6 +151,11 @@ class AssetCache implements AssetInterface
 
         foreach ($asset->getFilters() as $filter) {
             $cacheKey .= serialize($filter);
+        }
+
+        if ($values = $asset->getValues()) {
+            asort($values);
+            $cacheKey .= serialize($values);
         }
 
         return md5($cacheKey.$salt);

@@ -30,13 +30,15 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->am = $this->getMock('Assetic\\AssetManager');
         $this->fm = $this->getMock('Assetic\\FilterManager');
 
+        $this->valueSupplier = $this->getMock('Assetic\ValueSupplierInterface');
+
         $this->factory = new AssetFactory(__DIR__.'/templates');
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
 
         $this->twig = new \Twig_Environment();
         $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new AsseticExtension($this->factory));
+        $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
     }
 
     public function testReference()
@@ -181,6 +183,18 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $xml = $this->renderXml('function.twig');
         $this->assertEquals(1, count($xml->asset));
         $this->assertStringEndsWith('.css', (string) $xml->asset[0]['url']);
+    }
+
+    public function testVariables()
+    {
+        $this->valueSupplier->expects($this->once())
+            ->method('getValues')
+            ->will($this->returnValue(array('foo' => 'a', 'bar' => 'b')));
+
+        $xml = $this->renderXml('variables.twig');
+        $this->assertEquals(2, $xml->url->count());
+        $this->assertEquals("js/7d0828c_foo_1.a.b.js", (string) $xml->url[0]);
+        $this->assertEquals("js/7d0828c_variable_input.a_2.a.b.js", (string) $xml->url[1]);
     }
 
     private function renderXml($name, $context = array())

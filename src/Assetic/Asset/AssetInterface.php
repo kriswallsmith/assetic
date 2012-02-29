@@ -132,4 +132,25 @@ interface AssetInterface
      * @return integer|null A UNIX timestamp
      */
     function getLastModified();
+
+    /**
+     * Returns an array of variable names for this asset.
+     *
+     * @return array
+     */
+    function getVars();
+
+    /**
+     * Sets the values for the asset's variables.
+     *
+     * @param array $values
+     */
+    function setValues(array $values);
+
+    /**
+     * Returns the current values for this asset.
+     *
+     * @return array an array of strings
+     */
+    function getValues();
 }
