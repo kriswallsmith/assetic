@@ -12,6 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Exception\FilterException;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -70,7 +71,7 @@ class JpegoptimFilter implements FilterInterface
 
         if (false !== strpos($proc->getOutput(), 'ERROR')) {
             unlink($input);
-            throw new \RuntimeException($proc->getOutput());
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent(file_get_contents($input));
