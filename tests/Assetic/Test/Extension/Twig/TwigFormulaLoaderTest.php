@@ -58,6 +58,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
                     'name'    => 'mixture',
                     'debug'   => false,
                     'combine' => null,
+                    'vars'    => array(),
                 ),
             ),
         );

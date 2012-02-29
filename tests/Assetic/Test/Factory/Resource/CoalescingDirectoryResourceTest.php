@@ -29,14 +29,14 @@ class CoalescingDirectoryResourceTest extends \PHPUnit_Framework_TestCase
 
         $paths = array();
         foreach ($resource as $file) {
-            $paths[] = (string) $file;
+            $paths[] = realpath((string) $file);
         }
         sort($paths);
 
         $this->assertEquals(array(
-            __DIR__.'/Fixtures/dir1/file1.txt',
-            __DIR__.'/Fixtures/dir1/file2.txt',
-            __DIR__.'/Fixtures/dir2/file3.txt',
+            realpath(__DIR__.'/Fixtures/dir1/file1.txt'),
+            realpath(__DIR__.'/Fixtures/dir1/file2.txt'),
+            realpath(__DIR__.'/Fixtures/dir2/file3.txt'),
         ), $paths, 'files from multiple directories are merged');
     }
 }

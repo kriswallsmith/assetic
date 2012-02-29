@@ -29,6 +29,8 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     private $targetPath;
     private $content;
     private $clones;
+    private $vars;
+    private $values;
 
     /**
      * Constructor.
@@ -37,7 +39,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
      * @param array  $filters    Filters for the current collection
      * @param string $sourceRoot The root directory
      */
-    public function __construct($assets = array(), $filters = array(), $sourceRoot = null)
+    public function __construct($assets = array(), $filters = array(), $sourceRoot = null, array $vars = array())
     {
         $this->assets = array();
         foreach ($assets as $asset) {
@@ -47,6 +49,8 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->filters = new FilterCollection($filters);
         $this->sourceRoot = $sourceRoot;
         $this->clones = new \SplObjectStorage();
+        $this->vars = $vars;
+        $this->values = array();
     }
 
     public function all()
@@ -190,5 +194,24 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function getIterator()
     {
         return new \RecursiveIteratorIterator(new AssetCollectionFilterIterator(new AssetCollectionIterator($this, $this->clones)));
+    }
+
+    public function getVars()
+    {
+        return $this->vars;
+    }
+
+    public function setValues(array $values)
+    {
+        $this->values = $values;
+
+        foreach ($this as $asset) {
+            $asset->setValues(array_intersect_key($values, array_flip($asset->getVars())));
+        }
+    }
+
+    public function getValues()
+    {
+        return $this->values;
     }
 }

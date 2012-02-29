@@ -99,6 +99,21 @@ class AssetReference implements AssetInterface
         return $this->callAsset(__FUNCTION__);
     }
 
+    public function getVars()
+    {
+        return $this->callAsset(__FUNCTION__);
+    }
+
+    public function getValues()
+    {
+        return $this->callAsset(__FUNCTION__);
+    }
+
+    public function setValues(array $values)
+    {
+        $this->callAsset(__FUNCTION__, array($values));
+    }
+
     // private
 
     private function callAsset($method, $arguments = array())
