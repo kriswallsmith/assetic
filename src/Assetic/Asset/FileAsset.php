@@ -67,9 +67,12 @@ class FileAsset extends BaseAsset
 
     public function getLastModified()
     {
-        if (!is_file($this->source)) {
-            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $this->source));
+        $source = PathUtils::resolvePath($this->source, $this->getVars(),
+            $this->getValues());
+
+        if (!is_file($source)) {
+            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
-        return filemtime($this->source);
+        return filemtime($source);
     }
 }
