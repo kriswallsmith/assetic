@@ -1,3 +1,10 @@
+1.0.3 (March 2, 2012)
+---------------------
+
+ * Added "boring" option to Compass filter
+ * Fixed accumulation of load paths in Compass filter
+ * Fixed issues in CssImport and CssRewrite filters
+
 1.0.2 (August 26, 2011)
 -----------------------
 
