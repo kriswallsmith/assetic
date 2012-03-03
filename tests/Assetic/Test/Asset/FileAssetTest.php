@@ -36,6 +36,14 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
+    public function testGetLastModifiedTypeFileNotFound()
+    {
+        $asset = new FileAsset(__DIR__ . "/foo/bar/baz.css");
+
+        $this->setExpectedException("RuntimeException", "The source file");
+        $asset->getLastModified();
+    }
+
     public function testGetLastModifiedValue()
     {
         $asset = new FileAsset(__FILE__);
