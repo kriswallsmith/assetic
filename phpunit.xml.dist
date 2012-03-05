@@ -28,6 +28,7 @@
         <!-- <server name="SYMFONY_PROCESS" value="/path/to/Process" /> -->
         <!-- <server name="TWIG_LIB" value="/path/to/twig/lib" /> -->
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+        <!-- <server name="UGLIFYJS_BIN" value="/path/to/uglifyjs" /> -->
     </php>
 
     <filter>
