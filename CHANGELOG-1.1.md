@@ -1,6 +1,7 @@
 1.1.0 (???)
 ---------------------
 
+ * Added the UglifyJsFilter
  * added support for asset variables: 
  
        Asset variables allow you to pre-compile your assets for a finite set of known
