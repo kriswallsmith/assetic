@@ -23,7 +23,7 @@ class ApcCache implements CacheInterface
     /**
      * @see CacheInterface::has()
      */
-    function has($key)
+    public function has($key)
     {
         return apc_exists($key);
     }
@@ -31,7 +31,7 @@ class ApcCache implements CacheInterface
     /**
      * @see CacheInterface::get()
      */
-    function get($key)
+    public function get($key)
     {
         $value = apc_fetch($key, $success);
 
@@ -45,7 +45,7 @@ class ApcCache implements CacheInterface
     /**
      * @see CacheInterface::set()
      */
-    function set($key, $value)
+    public function set($key, $value)
     {
         $store = apc_store($key, $value, $this->ttl);
 
@@ -59,7 +59,7 @@ class ApcCache implements CacheInterface
     /**
      * @see CacheInterface::remove()
      */
-    function remove($key)
+    public function remove($key)
     {
         return apc_delete($key);
     }
