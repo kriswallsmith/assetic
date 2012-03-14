@@ -271,7 +271,14 @@ class CompassFilter implements FilterInterface
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
-        $pb->add($input = $tempName.'.'.$type);
+        $input = $tempName.'.'.$type;
+
+        // work-around for https://github.com/chriseppstein/compass/issues/748
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $input = str_replace('\\', '/', $input);
+        }
+
+        $pb->add($input);
         file_put_contents($input, $asset->getContent());
 
         // output
