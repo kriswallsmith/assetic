@@ -97,7 +97,7 @@ class ProcessBuilder
 
         $options = $this->options;
 
-        if (defined('PHP_WINDOWS_MAJOR_VERSION')) {
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $options += array('bypass_shell' => true);
 
             $args = $this->arguments;
@@ -105,12 +105,16 @@ class ProcessBuilder
 
             $script = '"'.$cmd.'"';
             if ($args) {
-                $script .= ' '.implode(' ', array_map('escapeshellarg', $parts));
+                $script .= ' '.implode(' ', array_map('escapeshellarg', $args));
             }
+            
+            $env = null;
         } else {
             $script = implode(' ', array_map('escapeshellarg', $this->arguments));
+            
+            $env = $this->inheritEnv && $_ENV ? ($this->env ?: array()) + $_ENV : $this->env;
         }
-        $env = $this->inheritEnv && $_ENV ? ($this->env ?: array()) + $_ENV : $this->env;
+        
 
         return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $options);
     }
