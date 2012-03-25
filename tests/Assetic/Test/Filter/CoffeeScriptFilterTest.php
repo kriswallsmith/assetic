@@ -28,9 +28,11 @@ class CoffeeScriptFilterTest extends \PHPUnit_Framework_TestCase
         $expected = <<<JAVASCRIPT
 (function() {
   var square;
+
   square = function(x) {
     return x * x;
   };
+
 }).call(this);
 
 JAVASCRIPT;
