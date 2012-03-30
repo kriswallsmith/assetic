@@ -77,6 +77,15 @@ class PipelineAssetLocator extends FileAssetLocator
             ?: $this->locateDirectoryAssets($input, $type, $options);
     }
 
+    /**
+     * Locates single asset in watched paths.
+     *
+     * @param string $resource An asset resource string
+     * @param string $type     An asset type (js, css)
+     * @param array  $options  An array of options
+     *
+     * @return AssetInterface|null
+     */
     protected function locateSingleAsset($resource, $type, array $options)
     {
         $subpath  = pathinfo($resource, PATHINFO_DIRNAME);
@@ -98,6 +107,15 @@ class PipelineAssetLocator extends FileAssetLocator
         return $this->createAssetFromFinder($files, $options);
     }
 
+    /**
+     * Locates index asset for provided path in watched paths.
+     *
+     * @param string $resource An asset path resource string
+     * @param string $type     An asset type (js, css)
+     * @param array  $options  An array of options
+     *
+     * @return AssetInterface|null
+     */
     protected function locateIndexAsset($resource, $type, array $options)
     {
         $paths = array();
@@ -120,16 +138,18 @@ class PipelineAssetLocator extends FileAssetLocator
         return $this->createAssetFromFinder($files, $options);
     }
 
+    /**
+     * Locates all 0-level assets inside provided directory resource in wathed paths.
+     *
+     * @param string $resource An asset directory resource string
+     * @param string $type     An asset type (js, css)
+     * @param array  $options  An array of options
+     *
+     * @return AssetCollection|null
+     */
     protected function locateDirectoryAssets($resource, $type, array $options)
     {
-        $path = null;
-        foreach ($this->paths as $watchedPath) {
-            if (is_dir($possiblePath = $watchedPath.'/'.$type.'/'.$resource)) {
-                $path = $possiblePath;
-                break;
-            }
-        }
-        if (null === $path) {
+        if (null === $path = $this->getDirectoryPath($resource, $type)) {
             return;
         }
 
@@ -148,16 +168,18 @@ class PipelineAssetLocator extends FileAssetLocator
         return $asset;
     }
 
+    /**
+     * Locates all multilevel assets inside provided directory resource in wathed paths.
+     *
+     * @param string $resource An asset directory resource string
+     * @param string $type     An asset type (js, css)
+     * @param array  $options  An array of options
+     *
+     * @return AssetCollection|null
+     */
     protected function locateTreeAssets($resource, $type, array $options)
     {
-        $path = null;
-        foreach ($this->paths as $watchedPath) {
-            if (is_dir($possiblePath = $watchedPath.'/'.$type.'/'.$resource)) {
-                $path = $possiblePath;
-                break;
-            }
-        }
-        if (null === $path) {
+        if (null === $path = $this->getDirectoryPath($resource, $type)) {
             return;
         }
 
@@ -174,6 +196,30 @@ class PipelineAssetLocator extends FileAssetLocator
         return $asset;
     }
 
+    /**
+     * Searches for existing path in watched paths.
+     *
+     * @param string $resource A directory resource
+     *
+     * @return string|null
+     */
+    private function getDirectoryPath($resource, $type)
+    {
+        foreach ($this->paths as $watchedPath) {
+            if (is_dir($path = $watchedPath.'/'.$type.'/'.$resource)) {
+                return $path;
+            }
+        }
+    }
+
+    /**
+     * Creates asset from finder instance.
+     *
+     * @param Finder $files   Finder instance
+     * @param array  $options An array of options
+     *
+     * @return AssetInterface|null
+     */
     private function createAssetFromFinder(Finder $files, array $options)
     {
         $input = null;
@@ -188,9 +234,17 @@ class PipelineAssetLocator extends FileAssetLocator
         return $this->createAssetFromPath($input, $options);
     }
 
-    private function createAssetFromPath($input, array $options)
+    /**
+     * Creates asset instance from provided path.
+     *
+     * @param string $path    An asset path
+     * @param array  $options An array of options
+     *
+     * @return AssetInterface|null
+     */
+    private function createAssetFromPath($path, array $options)
     {
-        list($root, $path, $input) = $this->prepareRootPathInput($input, $options);
+        list($root, $path, $input) = $this->prepareRootPathInput($path, $options);
 
         return $this->createFileAsset($input, $root, $path, $options['vars']);
     }
