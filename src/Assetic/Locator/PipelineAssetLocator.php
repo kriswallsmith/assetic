@@ -139,7 +139,7 @@ class PipelineAssetLocator extends FileAssetLocator
     }
 
     /**
-     * Locates all 0-level assets inside provided directory resource in wathed paths.
+     * Locates all 0-level assets inside provided directory resource in watched paths.
      *
      * @param string $resource An asset directory resource string
      * @param string $type     An asset type (js, css)
@@ -169,7 +169,7 @@ class PipelineAssetLocator extends FileAssetLocator
     }
 
     /**
-     * Locates all multilevel assets inside provided directory resource in wathed paths.
+     * Locates all multilevel assets inside provided directory resource in watched paths.
      *
      * @param string $resource An asset directory resource string
      * @param string $type     An asset type (js, css)
