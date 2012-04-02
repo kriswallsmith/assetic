@@ -57,14 +57,31 @@ class CompilerApiFilter extends BaseCompilerFilter
             $query['warning_level'] = $this->warningLevel;
         }
 
-        $context = stream_context_create(array('http' => array(
-            'method'  => 'POST',
-            'header'  => 'Content-Type: application/x-www-form-urlencoded',
-            'content' => http_build_query($query),
-        )));
+        if (preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))) {
+            $context = stream_context_create(array('http' => array(
+                'method'  => 'POST',
+                'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                'content' => http_build_query($query),
+            )));
 
-        $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
-        $data = json_decode($response);
+            $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
+            $data = json_decode($response);
+
+         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
+
+            $ch = curl_init('http://closure-compiler.appspot.com/compile');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded'));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $data = json_decode($response);
+        } else {
+            throw new \RuntimeException("There is no known way to contact closure compiler available");
+        }
 
         if (isset($data->serverErrors) && 0 < count($data->serverErrors)) {
             // @codeCoverageIgnoreStart
