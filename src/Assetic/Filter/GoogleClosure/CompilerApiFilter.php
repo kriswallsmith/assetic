@@ -57,7 +57,7 @@ class CompilerApiFilter extends BaseCompilerFilter
             $query['warning_level'] = $this->warningLevel;
         }
 
-        if(preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))){
+        if (preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))) {
             $context = stream_context_create(array('http' => array(
                 'method'  => 'POST',
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
@@ -67,7 +67,7 @@ class CompilerApiFilter extends BaseCompilerFilter
             $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
             $data = json_decode($response);
 
-         } elseif (defined('CURLOPT_POST') && !in_array($function, explode(',', ini_get('disable_functions')))) {
+         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
 
             $ch = curl_init('http://closure-compiler.appspot.com/compile');
             curl_setopt($ch, CURLOPT_POST, true);
@@ -79,10 +79,8 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_close($ch);
 
             $data = json_decode($response);
-        }else{
-            // @codeCoverageIgnoreStart
+        } else {
             throw new \RuntimeException("There is no known way to contact closure compiler available");
-            // @codeCoverageIgnoreEnd
         }
 
         if (isset($data->serverErrors) && 0 < count($data->serverErrors)) {
