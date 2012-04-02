@@ -18,8 +18,8 @@ class JSMinFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        if (!class_exists('JsMin')) {
-            $this->markTestSkipped('JsMin is not installed.');
+        if (!class_exists('JSMin')) {
+            $this->markTestSkipped('JSMin is not installed.');
         }
     }
 
@@ -28,7 +28,7 @@ class JSMinFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__DIR__.'/fixtures/jsmin/js.js');
         $asset->load();
 
-        $filter = new JsMinFilter();
+        $filter = new JSMinFilter();
         $filter->filterDump($asset);
 
         $this->assertEquals('var a="abc";;;var bbb="u";', $asset->getContent());

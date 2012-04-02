@@ -20,7 +20,7 @@ use Assetic\Asset\AssetInterface;
  * @link https://raw.github.com/mrclay/minify/master/min/lib/JSMin.php
  * @author Brunoais <brunoaiss@gmail.com>
  */
-class JsMinFilter implements FilterInterface
+class JSMinFilter implements FilterInterface
 {
 
     public function filterLoad(AssetInterface $asset)
@@ -30,6 +30,6 @@ class JsMinFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $asset->setContent(\JsMin::minify($asset->getContent()));
+        $asset->setContent(\JSMin::minify($asset->getContent()));
     }
 }
