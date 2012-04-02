@@ -13,6 +13,8 @@
         <!-- <server name="COMPASS_BIN" value="/path/to/compass" /> -->
         <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
         <!-- <server name="CSSMIN" value="/path/to/cssmin/source/CssMin.php" /> -->
+        <!-- <server name="JSMIN" value="/path/to/minify/min/lib/JSMin.php" /> -->
+        <!-- <server name="JSMINPLUS" value="/path/to/minify/min/lib/JSMinPlus.php" /> -->
         <!-- <server name="GSS_JAR" value="/path/to/closure-stylesheets.jar" /> -->
         <!-- <server name="JPEGOPTIM_BIN" value="/path/to/jpegoptim" /> -->
         <!-- <server name="JPEGTRAN_BIN" value="/path/to/jpegtran" /> -->

@@ -18,7 +18,6 @@ class JSMinFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-		include 'JSMin.php';
         if (!class_exists('JsMin')) {
             $this->markTestSkipped('JsMin is not installed.');
         }

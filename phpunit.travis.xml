@@ -24,6 +24,8 @@
         <!-- <server name="JPEGTRAN_BIN" value="/path/to/jpegtran" /> -->
         <!-- <server name="PNGOUT_BIN" value="/path/to/pngout" /> -->
         <server name="CSSMIN" value="vendor/cssmin/source/CssMin.php" />
+        <server name="JSMIN" value="vendor/minify/min/lib/JSMin.php" />
+        <server name="JSMINPLUS" value="vendor/minify/min/lib/JSMinPlus.php" />
         <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
         <server name="PACKAGER" value="vendor/packager/packager.php" />
     </php>
