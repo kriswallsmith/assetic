@@ -9,28 +9,17 @@
  * file that was distributed with this source code.
  */
 
-spl_autoload_register(function($class)
-{
-    if (0 === strpos($class, 'Assetic\\Test\\')) {
-        $file = __DIR__ . '/../tests/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) {
-            require_once $file;
-            return true;
-        }
-    } elseif (0 === strpos($class, 'Assetic\\')) {
-        $file = __DIR__ . '/../src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) {
-            require_once $file;
-            return true;
-        }
-    } elseif (isset($_SERVER['TWIG_LIB']) && 0 === strpos($class, 'Twig_')) {
-        $file = $_SERVER['TWIG_LIB'] . '/' . str_replace('_', '/', $class) . '.php';
-        if (file_exists($file)) {
-            require_once $file;
-            return true;
-        }
-    }
-});
+if (!$loader = @include __DIR__.'/../vendor/.composer/autoload.php') {
+    die('You must set up the project dependencies, run the following commands:'.PHP_EOL.
+        'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
+        'php composer.phar install'.PHP_EOL);
+}
+
+$loader->add('Assetic\Test', __DIR__);
+
+if (isset($_SERVER['TWIG_LIB'])) {
+    $loader->add('Twig_', $_SERVER['TWIG_LIB']);
+}
 
 if (isset($_SERVER['LESSPHP'])) {
     require_once $_SERVER['LESSPHP'];
@@ -38,6 +27,14 @@ if (isset($_SERVER['LESSPHP'])) {
 
 if (isset($_SERVER['CSSMIN'])) {
     require_once $_SERVER['CSSMIN'];
+}
+
+if (isset($_SERVER['JSMIN'])) {
+    require_once $_SERVER['JSMIN'];
+}
+
+if (isset($_SERVER['JSMINPLUS'])) {
+    require_once $_SERVER['JSMINPLUS'];
 }
 
 if (isset($_SERVER['PACKAGER'])) {

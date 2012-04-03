@@ -12,12 +12,13 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
-use Assetic\Util\ProcessBuilder;
+use Assetic\Exception\FilterException;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * CSSEmbed filter
  *
+ * @link https://github.com/nzakas/cssembed
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
 class CssEmbedFilter implements FilterInterface
@@ -130,7 +131,7 @@ class CssEmbedFilter implements FilterInterface
         unlink($input);
 
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent($proc->getOutput());

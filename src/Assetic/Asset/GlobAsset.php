@@ -11,6 +11,8 @@
 
 namespace Assetic\Asset;
 
+use Assetic\Util\PathUtils;
+
 use Assetic\Filter\FilterInterface;
 
 /**
@@ -30,12 +32,12 @@ class GlobAsset extends AssetCollection
      * @param array        $filters An array of filters
      * @param string       $root    The root directory
      */
-    public function __construct($globs, $filters = array(), $root = null)
+    public function __construct($globs, $filters = array(), $root = null, array $vars = array())
     {
         $this->globs = (array) $globs;
         $this->initialized = false;
 
-        parent::__construct(array(), $filters, $root);
+        parent::__construct(array(), $filters, $root, $vars);
     }
 
     public function all()
@@ -83,12 +85,20 @@ class GlobAsset extends AssetCollection
         return parent::getIterator();
     }
 
+    public function setValues(array $values)
+    {
+        parent::setValues($values);
+        $this->initialized = false;
+    }
+
     /**
      * Initializes the collection based on the glob(s) passed in.
      */
     private function initialize()
     {
         foreach ($this->globs as $glob) {
+            $glob = PathUtils::resolvePath($glob, $this->getVars(), $this->getValues());
+
             if (false !== $paths = glob($glob)) {
                 foreach ($paths as $path) {
                     $this->add(new FileAsset($path, array(), $this->getSourceRoot()));

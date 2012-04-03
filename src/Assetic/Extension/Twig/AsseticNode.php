@@ -101,6 +101,22 @@ class AsseticNode extends \Twig_Node
 
     protected function compileAsset(\Twig_Compiler $compiler, AssetInterface $asset, $name)
     {
+        if ($vars = $asset->getVars()) {
+            $compiler->write("// check variable conditions\n");
+
+            foreach ($vars as $var) {
+                $compiler
+                    ->write("if (!isset(\$context['assetic']['vars']['$var'])) {\n")
+                    ->indent()
+                    ->write("throw new \RuntimeException(sprintf('The asset \"".$name."\" expected variable \"".$var."\" to be set, but got only these vars: %s. Did you set-up a value supplier?', isset(\$context['assetic']['vars']) && \$context['assetic']['vars'] ? implode(', ', \$context['assetic']['vars']) : '# none #'));\n")
+                    ->outdent()
+                    ->write("}\n")
+                ;
+            }
+
+            $compiler->raw("\n");
+        }
+
         $compiler
             ->write("// asset \"$name\"\n")
             ->write('$context[')
@@ -118,6 +134,33 @@ class AsseticNode extends \Twig_Node
 
     protected function compileAssetUrl(\Twig_Compiler $compiler, AssetInterface $asset, $name)
     {
-        $compiler->repr($asset->getTargetPath());
+        if (!$vars = $asset->getVars()) {
+            $compiler->repr($asset->getTargetPath());
+
+            return;
+        }
+
+        $compiler
+            ->raw("strtr(")
+            ->string($asset->getTargetPath())
+            ->raw(", array(");
+        ;
+
+        $first = true;
+        foreach ($vars as $var) {
+            if (!$first) {
+                $compiler->raw(", ");
+            }
+            $first = false;
+
+            $compiler
+                ->string("{".$var."}")
+                ->raw(" => \$context['assetic']['vars']['$var']")
+            ;
+        }
+
+        $compiler
+            ->raw("))")
+        ;
     }
 }

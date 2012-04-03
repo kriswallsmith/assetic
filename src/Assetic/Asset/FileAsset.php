@@ -11,6 +11,7 @@
 
 namespace Assetic\Asset;
 
+use Assetic\Util\PathUtils;
 use Assetic\Filter\FilterInterface;
 
 /**
@@ -32,7 +33,7 @@ class FileAsset extends BaseAsset
      *
      * @throws InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
-    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null)
+    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
     {
         if (null === $sourceRoot) {
             $sourceRoot = dirname($source);
@@ -49,16 +50,29 @@ class FileAsset extends BaseAsset
 
         $this->source = $source;
 
-        parent::__construct($filters, $sourceRoot, $sourcePath);
+        parent::__construct($filters, $sourceRoot, $sourcePath, $vars);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad(file_get_contents($this->source), $additionalFilter);
+        $source = PathUtils::resolvePath($this->source, $this->getVars(),
+            $this->getValues());
+
+        if (!is_file($source)) {
+            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
+        }
+
+        $this->doLoad(file_get_contents($source), $additionalFilter);
     }
 
     public function getLastModified()
     {
-        return filemtime($this->source);
+        $source = PathUtils::resolvePath($this->source, $this->getVars(),
+            $this->getValues());
+
+        if (!is_file($source)) {
+            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
+        }
+        return filemtime($source);
     }
 }

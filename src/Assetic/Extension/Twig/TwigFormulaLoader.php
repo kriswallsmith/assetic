@@ -58,6 +58,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                     'name'    => $node->getAttribute('name'),
                     'debug'   => $node->getAttribute('debug'),
                     'combine' => $node->getAttribute('combine'),
+                    'vars'    => $node->getAttribute('vars'),
                 ),
             );
         } elseif ($node instanceof \Twig_Node_Expression_Function) {

@@ -11,17 +11,20 @@
 
 namespace Assetic\Extension\Twig;
 
+use Assetic\ValueSupplierInterface;
 use Assetic\Factory\AssetFactory;
 
 class AsseticExtension extends \Twig_Extension
 {
     protected $factory;
     protected $functions;
+    protected $valueSupplier;
 
-    public function __construct(AssetFactory $factory, $functions = array())
+    public function __construct(AssetFactory $factory, $functions = array(), ValueSupplierInterface $valueSupplier = null)
     {
         $this->factory = $factory;
         $this->functions = array();
+        $this->valueSupplier = $valueSupplier;
 
         foreach ($functions as $function => $options) {
             if (is_integer($function) && is_string($options)) {
@@ -54,7 +57,10 @@ class AsseticExtension extends \Twig_Extension
     public function getGlobals()
     {
         return array(
-            'assetic' => array('debug' => $this->factory->isDebug()),
+            'assetic' => array(
+                'debug' => $this->factory->isDebug(),
+                'vars'  => null !== $this->valueSupplier ? $this->valueSupplier->getValues() : array(),
+            ),
         );
     }
 

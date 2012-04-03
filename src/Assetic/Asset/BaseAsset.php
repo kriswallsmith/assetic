@@ -30,17 +30,21 @@ abstract class BaseAsset implements AssetInterface
     private $targetPath;
     private $content;
     private $loaded;
+    private $vars;
+    private $values;
 
     /**
      * Constructor.
      *
      * @param array $filters Filters for the asset
      */
-    public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null)
+    public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
     {
         $this->filters = new FilterCollection($filters);
         $this->sourceRoot = $sourceRoot;
         $this->sourcePath = $sourcePath;
+        $this->vars = $vars;
+        $this->values = array();
         $this->loaded = false;
     }
 
@@ -130,6 +134,36 @@ abstract class BaseAsset implements AssetInterface
 
     public function setTargetPath($targetPath)
     {
+        if ($this->vars) {
+            foreach ($this->vars as $var) {
+                if (false === strpos($targetPath, $var)) {
+                    throw new \RuntimeException(sprintf('The asset target path "%s" must contain the variable "{%s}".', $targetPath, $var));
+                }
+            }
+        }
+
         $this->targetPath = $targetPath;
+    }
+
+    public function getVars()
+    {
+        return $this->vars;
+    }
+
+    public function setValues(array $values)
+    {
+        foreach ($values as $var => $v) {
+            if (!in_array($var, $this->vars, true)) {
+                throw new \InvalidArgumentException(sprintf('The asset with source path "%s" has no variable named "%s".', $this->sourcePath, $var));
+            }
+        }
+
+        $this->values = $values;
+        $this->loaded = false;
+    }
+
+    public function getValues()
+    {
+        return $this->values;
     }
 }

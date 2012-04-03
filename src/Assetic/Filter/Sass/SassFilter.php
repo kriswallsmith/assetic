@@ -13,11 +13,13 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\ProcessBuilder;
+use Assetic\Exception\FilterException;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Loads SASS files.
  *
+ * @link http://sass-lang.com/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class SassFilter implements FilterInterface
@@ -155,7 +157,7 @@ class SassFilter implements FilterInterface
         unlink($input);
 
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent($proc->getOutput());

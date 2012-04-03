@@ -12,11 +12,13 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\ProcessBuilder;
+use Assetic\Exception\FilterException;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Loads LESS files.
  *
+ * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class LessFilter implements FilterInterface
@@ -100,7 +102,7 @@ EOF;
         unlink($input);
 
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent($proc->getOutput());

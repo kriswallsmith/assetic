@@ -12,11 +12,13 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\ProcessBuilder;
+use Assetic\Exception\FilterException;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through jpegtran.
  *
+ * @link http://jpegclub.org/jpegtran/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class JpegtranFilter implements FilterInterface
@@ -93,7 +95,7 @@ class JpegtranFilter implements FilterInterface
         unlink($input);
 
         if (0 < $code) {
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent($proc->getOutput());

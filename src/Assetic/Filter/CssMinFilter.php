@@ -16,6 +16,7 @@ use Assetic\Asset\AssetInterface;
 /**
  * Filters assets through CssMin.
  *
+ * @link http://code.google.com/p/cssmin
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class CssMinFilter implements FilterInterface

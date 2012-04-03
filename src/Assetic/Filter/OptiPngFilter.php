@@ -12,7 +12,8 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\ProcessBuilder;
+use Assetic\Exception\FilterException;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through OptiPNG.
@@ -63,7 +64,7 @@ class OptiPngFilter implements FilterInterface
 
         if (0 < $code) {
             unlink($input);
-            throw new \RuntimeException($proc->getErrorOutput());
+            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
         $asset->setContent(file_get_contents($output));
