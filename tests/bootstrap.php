@@ -29,6 +29,14 @@ if (isset($_SERVER['CSSMIN'])) {
     require_once $_SERVER['CSSMIN'];
 }
 
+if (isset($_SERVER['JSMIN'])) {
+    require_once $_SERVER['JSMIN'];
+}
+
+if (isset($_SERVER['JSMINPLUS'])) {
+    require_once $_SERVER['JSMINPLUS'];
+}
+
 if (isset($_SERVER['PACKAGER'])) {
     require_once $_SERVER['PACKAGER'];
 }
