@@ -29,19 +29,14 @@ use Assetic\Asset\AssetInterface;
  */
 class LessphpFilter implements FilterInterface
 {
-    private $presets;
+    private $presets = array();
 
-     /**
-     * Constructor.
-     *
-     * @param array $presets An array of pre-defined variables
-     */
-    public function __construct(array $presets = array())
+    public function setPresets(array $presets)
     {
         $this->presets = $presets;
     }
 
-   public function filterLoad(AssetInterface $asset)
+    public function filterLoad(AssetInterface $asset)
     {
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
