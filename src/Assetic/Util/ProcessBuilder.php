@@ -107,14 +107,10 @@ class ProcessBuilder
             if ($args) {
                 $script .= ' '.implode(' ', array_map('escapeshellarg', $args));
             }
-            
-            $env = null;
         } else {
             $script = implode(' ', array_map('escapeshellarg', $this->arguments));
-            
-            $env = $this->inheritEnv && $_ENV ? ($this->env ?: array()) + $_ENV : $this->env;
         }
-        
+        $env = $this->inheritEnv && $_ENV ? ($this->env ?: array()) + $_ENV : $this->env;
 
         return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $options);
     }
