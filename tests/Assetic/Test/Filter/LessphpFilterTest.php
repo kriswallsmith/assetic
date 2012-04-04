@@ -54,4 +54,18 @@ EOF;
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
+
+    public function testPresets()
+    {
+        $asset = new StringAsset('.foo { color: @bar }');
+        $asset->load();
+
+        $this->filter->setPresets(array(
+            'bar' => 'green'
+        ));
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals(".foo { color:green; }\n", $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+    }
 }
