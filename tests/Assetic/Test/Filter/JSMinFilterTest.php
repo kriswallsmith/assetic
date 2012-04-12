@@ -14,6 +14,9 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\JSMinFilter;
 
+/**
+ * @group integration
+ */
 class JSMinFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
