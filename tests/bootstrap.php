@@ -40,3 +40,7 @@ if (isset($_SERVER['JSMINPLUS'])) {
 if (isset($_SERVER['PACKAGER'])) {
     require_once $_SERVER['PACKAGER'];
 }
+
+if (isset($_SERVER['PACKER'])) {
+    require_once $_SERVER['PACKER'];
+}
