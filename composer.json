@@ -14,10 +14,13 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/process": ">=2.1.0-dev"
+        "symfony/process": "2.1.*"
+    },
+    "require-dev": {
+        "twig/twig": ">=1.6.0,<2.0"
     },
     "suggest": {
-        "twig/twig": ">=1.6.0,<2.0"
+        "twig/twig": "Assetic provides the integration with the Twig templating engine"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" }
