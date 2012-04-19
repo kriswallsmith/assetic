@@ -28,6 +28,7 @@
         <server name="JSMINPLUS" value="vendor/minify/min/lib/JSMinPlus.php" />
         <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
         <server name="PACKAGER" value="vendor/packager/packager.php" />
+        <!-- <server name="PACKER" value="/path/to/class.JavaScriptPacker.php" /> -->
     </php>
 
     <filter>
