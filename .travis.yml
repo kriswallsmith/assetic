@@ -6,7 +6,7 @@ php:
 
 before_script:
     - wget http://getcomposer.org/composer.phar
-    - php composer.phar install --install-suggests
+    - php composer.phar install --dev
     - git clone https://github.com/kamicane/packager.git vendor/packager --quiet --depth 1
     - git clone https://github.com/leafo/lessphp.git vendor/lessphp --quiet --depth 1
     - git clone https://github.com/mrclay/minify.git vendor/minify --quiet --depth 1
