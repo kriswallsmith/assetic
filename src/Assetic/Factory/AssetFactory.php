@@ -47,7 +47,7 @@ class AssetFactory
         $this->debug     = $debug;
         $this->output    = 'assetic/*';
         $this->workers   = array();
-        $this->resolvers  = array();
+        $this->resolvers = array();
     }
 
     /**
