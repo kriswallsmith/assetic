@@ -28,15 +28,15 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
 
-        $this->factory->addLocator(new \Assetic\Locator\AssetReferenceLocator($this->am));
-        $this->factory->addLocator(new \Assetic\Locator\HttpAssetLocator());
-        $this->factory->addLocator(new \Assetic\Locator\GlobAssetLocator(__DIR__));
-        $this->factory->addLocator(new \Assetic\Locator\FileAssetLocator(__DIR__));
+        $this->factory->addResolver(new \Assetic\Resolver\AssetReferenceResolver($this->am));
+        $this->factory->addResolver(new \Assetic\Resolver\HttpAssetResolver());
+        $this->factory->addResolver(new \Assetic\Resolver\GlobAssetResolver(__DIR__));
+        $this->factory->addResolver(new \Assetic\Resolver\FileAssetResolver(__DIR__));
     }
 
-    public function testNoAppropriateLocator()
+    public function testNoAppropriateResolver()
     {
-        $this->setExpectedException('LogicException', 'Can not locate asset "@foo".');
+        $this->setExpectedException('LogicException', 'Can not resolve asset "@foo".');
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('@foo'));

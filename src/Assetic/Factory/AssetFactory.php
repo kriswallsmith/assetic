@@ -11,7 +11,7 @@
 
 namespace Assetic\Factory;
 
-use Assetic\Locator\AssetLocatorInterface;
+use Assetic\Resolver\AssetResolverInterface;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
@@ -30,7 +30,7 @@ class AssetFactory
     private $debug;
     private $output;
     private $workers;
-    private $locators;
+    private $resolvers;
     private $am;
     private $fm;
 
@@ -47,7 +47,7 @@ class AssetFactory
         $this->debug     = $debug;
         $this->output    = 'assetic/*';
         $this->workers   = array();
-        $this->locators  = array();
+        $this->resolvers  = array();
     }
 
     /**
@@ -91,13 +91,13 @@ class AssetFactory
     }
 
     /**
-     * Adds asset locator.
+     * Adds asset resolver.
      *
-     * @param AssetLocatorInterface $locator A locator
+     * @param AssetResolverInterface $resolver A resolver
      */
-    public function addLocator(AssetLocatorInterface $locator)
+    public function addResolver(AssetResolverInterface $resolver)
     {
-        $this->locators[] = $locator;
+        $this->resolvers[] = $resolver;
     }
 
     /**
@@ -204,7 +204,7 @@ class AssetFactory
                 // nested formula
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
-                $asset->add($this->locateAsset($input, $options));
+                $asset->add($this->resolveAsset($input, $options));
                 $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
             }
         }
@@ -258,22 +258,22 @@ class AssetFactory
     }
 
     /**
-     * Uses registered asset locators to create asset instance from provided input.
+     * Uses registered asset resolvers to create asset instance from provided input.
      *
      * @param string $input   An input string
      * @param array  $options An array of options
      *
      * @return AssetInterface An asset
      */
-    protected function locateAsset($input, array $options = array())
+    protected function resolveAsset($input, array $options = array())
     {
-        foreach ($this->locators as $locator) {
-            if ($asset = $locator->locate($input, $options)) {
+        foreach ($this->resolvers as $resolver) {
+            if ($asset = $resolver->resolve($input, $options)) {
                 return $asset;
             }
         }
 
-        throw new \LogicException(sprintf('Can not locate asset "%s".', $input));
+        throw new \LogicException(sprintf('Can not resolve asset "%s".', $input));
     }
 
     protected function createAssetCollection(array $assets = array(), array $options = array())
