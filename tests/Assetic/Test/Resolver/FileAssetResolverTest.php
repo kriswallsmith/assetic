@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Locator;
+namespace Assetic\Test\Resolver;
 
-use Assetic\Locator\FileAssetLocator;
+use Assetic\Resolver\FileAssetResolver;
 
-class FileAssetLocatorTest extends \PHPUnit_Framework_TestCase
+class FileAssetResolverTest extends \PHPUnit_Framework_TestCase
 {
     private $locator;
 
     protected function setUp()
     {
-        $this->locator = new FileAssetLocator(__DIR__.'/../Fixture/root');
+        $this->locator = new FileAssetResolver(__DIR__.'/../Fixture/root');
     }
 
     public function filesystemPaths()
@@ -36,7 +36,7 @@ class FileAssetLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCorrectInput($input)
     {
-        $asset = $this->locator->locate($input, array('vars' => array()));
+        $asset = $this->locator->resolve($input, array('vars' => array()));
 
         $this->assertNotNull($asset);
         $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $asset);
@@ -44,7 +44,7 @@ class FileAssetLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testWrongInput()
     {
-        $asset = $this->locator->locate('css/jquery.js', array('vars' => array()));
+        $asset = $this->locator->resolve('css/jquery.js', array('vars' => array()));
 
         $this->assertNull($asset);
     }

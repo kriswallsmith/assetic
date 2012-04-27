@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Locator;
+namespace Assetic\Test\Resolver;
 
-use Assetic\Locator\PipelineAssetLocator;
+use Assetic\Resolver\PipelineAssetResolver;
 
-class PipelineAssetLocatorTest extends \PHPUnit_Framework_TestCase
+class PipelineAssetResolverTest extends \PHPUnit_Framework_TestCase
 {
     private $path;
     private $locator;
@@ -22,30 +22,30 @@ class PipelineAssetLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->path = realpath(__DIR__.'/../Fixture/pipeline');
 
-        $this->locator = new PipelineAssetLocator(array(
+        $this->locator = new PipelineAssetResolver(array(
             $this->path.'/track3',
             $this->path.'/track2',
             $this->path.'/track1',
         ));
     }
 
-    public function testLocateSingleAsset()
+    public function testresolveSingleAsset()
     {
-        $this->assertNotNull($asset = $this->locator->locate(
+        $this->assertNotNull($asset = $this->locator->resolve(
             'simple_script', array('vars' => array(), 'output' => '*.js', 'root' => array())
         ));
         $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $asset);
         $this->assertSame($this->path.'/track1/js', $asset->getSourceRoot());
         $this->assertSame('simple_script.js', $asset->getSourcePath());
 
-        $this->assertNotNull($asset = $this->locator->locate(
+        $this->assertNotNull($asset = $this->locator->resolve(
             'subdir/subscript.js', array('vars' => array(), 'output' => '*.js', 'root' => array())
         ));
         $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $asset);
         $this->assertSame($this->path.'/track2/js/subdir', $asset->getSourceRoot());
         $this->assertSame('subscript.js', $asset->getSourcePath());
 
-        $this->assertNotNull($asset = $this->locator->locate(
+        $this->assertNotNull($asset = $this->locator->resolve(
             'style', array('vars' => array(), 'output' => '*.css', 'root' => array())
         ));
         $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $asset);
@@ -53,16 +53,16 @@ class PipelineAssetLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('style.css', $asset->getSourcePath());
     }
 
-    public function testLocateIndexAsset()
+    public function testresolveIndexAsset()
     {
-        $this->assertNotNull($asset = $this->locator->locate(
+        $this->assertNotNull($asset = $this->locator->resolve(
             'library', array('vars' => array(), 'output' => '*.js', 'root' => array())
         ));
         $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $asset);
         $this->assertSame($this->path.'/track3/js/library', $asset->getSourceRoot());
         $this->assertSame('index.js', $asset->getSourcePath());
 
-        $this->assertNotNull($asset = $this->locator->locate(
+        $this->assertNotNull($asset = $this->locator->resolve(
             'library/sublib', array('vars' => array(), 'output' => '*.css', 'root' => array())
         ));
         $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $asset);
@@ -70,9 +70,9 @@ class PipelineAssetLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('index.css', $asset->getSourcePath());
     }
 
-    public function testLocateDirectoryAssets()
+    public function testresolveDirectoryAssets()
     {
-        $this->assertNotNull($asset = $this->locator->locate(
+        $this->assertNotNull($asset = $this->locator->resolve(
             'unindexed_library', array('vars' => array(), 'output' => '*.js', 'root' => array())
         ));
         $this->assertInstanceOf('Assetic\\Asset\\AssetCollection', $asset);
@@ -91,9 +91,9 @@ class PipelineAssetLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('file2.js', $asset->getSourcePath());
     }
 
-    public function testLocateTreeAssets()
+    public function testresolveTreeAssets()
     {
-        $this->assertNotNull($asset = $this->locator->locate(
+        $this->assertNotNull($asset = $this->locator->resolve(
             'unindexed_tree', array('vars' => array(), 'output' => '*.css', 'root' => array(), 'type' => 'tree/css')
         ));
         $this->assertInstanceOf('Assetic\\Asset\\AssetCollection', $asset);

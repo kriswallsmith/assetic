@@ -9,22 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Locator;
+namespace Assetic\Test\Resolver;
 
-use Assetic\Locator\GlobAssetLocator;
+use Assetic\Resolver\GlobAssetResolver;
 
-class GlobAssetLocatorTest extends \PHPUnit_Framework_TestCase
+class GlobAssetResolverTest extends \PHPUnit_Framework_TestCase
 {
     private $locator;
 
     protected function setUp()
     {
-        $this->locator = new GlobAssetLocator(__DIR__.'/../Fixture/root');
+        $this->locator = new GlobAssetResolver(__DIR__.'/../Fixture/root');
     }
 
     public function testCorrectInput()
     {
-        $asset = $this->locator->locate('*.js', array('vars' => array()));
+        $asset = $this->locator->resolve('*.js', array('vars' => array()));
 
         $this->assertNotNull($asset);
         $this->assertInstanceOf('Assetic\\Asset\\GlobAsset', $asset);
@@ -32,7 +32,7 @@ class GlobAssetLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testWrongInput()
     {
-        $asset = $this->locator->locate('js/jquery.js', array('vars' => array()));
+        $asset = $this->locator->resolve('js/jquery.js', array('vars' => array()));
 
         $this->assertNull($asset);
     }

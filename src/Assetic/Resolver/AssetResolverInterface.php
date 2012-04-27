@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Locator;
+namespace Assetic\Resolver;
 
 /**
- * The asset locator creates asset from an input string.
+ * The asset resolver resolves asset string into asset instance.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-interface AssetLocatorInterface
+interface AssetResolverInterface
 {
     /**
      * Parses an input string string into an asset.
@@ -26,5 +26,5 @@ interface AssetLocatorInterface
      *
      * @return AssetInterface An asset
      */
-    function locate($input, array $options = array());
+    function resolve($input, array $options = array());
 }

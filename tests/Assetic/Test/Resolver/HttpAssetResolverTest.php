@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Locator;
+namespace Assetic\Test\Resolver;
 
-use Assetic\Locator\HttpAssetLocator;
+use Assetic\Resolver\HttpAssetResolver;
 
-class HttpAssetLocatorTest extends \PHPUnit_Framework_TestCase
+class HttpAssetResolverTest extends \PHPUnit_Framework_TestCase
 {
     private $locator;
 
     protected function setUp()
     {
-        $this->locator = new HttpAssetLocator();
+        $this->locator = new HttpAssetResolver();
     }
 
     public function getHttpUrls()
@@ -36,15 +36,15 @@ class HttpAssetLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCorrectInput($sourceUrl)
     {
-        $asset = $this->locator->locate($sourceUrl, array('vars' => array()));
+        $asset = $this->locator->resolve($sourceUrl, array('vars' => array()));
 
         $this->assertNotNull($asset);
-        $this->assertInstanceOf('Assetic\\Asset\\HttpAsset', $asset, '->locate() creates proper asset');
+        $this->assertInstanceOf('Assetic\\Asset\\HttpAsset', $asset, '->resolve() creates proper asset');
     }
 
     public function testWrongInput()
     {
-        $asset = $this->locator->locate('example.com/foo.css');
+        $asset = $this->locator->resolve('example.com/foo.css');
 
         $this->assertNull($asset);
     }

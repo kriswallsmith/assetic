@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Locator;
+namespace Assetic\Test\Resolver;
 
-use Assetic\Locator\AssetReferenceLocator;
+use Assetic\Resolver\AssetReferenceResolver;
 
-class AssetReferenceLocatorTest extends \PHPUnit_Framework_TestCase
+class AssetReferenceResolverTest extends \PHPUnit_Framework_TestCase
 {
     private $locator;
 
@@ -23,12 +23,12 @@ class AssetReferenceLocatorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->locator = new AssetReferenceLocator($am);
+        $this->locator = new AssetReferenceResolver($am);
     }
 
     public function testCorrectInput()
     {
-        $asset = $this->locator->locate('@jquery');
+        $asset = $this->locator->resolve('@jquery');
 
         $this->assertNotNull($asset);
         $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $asset);
@@ -36,7 +36,7 @@ class AssetReferenceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testWrongInput()
     {
-        $asset = $this->locator->locate('jquery');
+        $asset = $this->locator->resolve('jquery');
 
         $this->assertNull($asset);
     }

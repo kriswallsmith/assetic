@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Locator;
+namespace Assetic\Resolver;
 
 use Assetic\AssetManager;
 use Assetic\Asset\AssetReference;
@@ -19,7 +19,7 @@ use Assetic\Asset\AssetReference;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class AssetReferenceLocator implements AssetLocatorInterface
+class AssetReferenceResolver implements AssetResolverInterface
 {
     private $am;
 
@@ -41,7 +41,7 @@ class AssetReferenceLocator implements AssetLocatorInterface
      *
      * @return AssetInterface An asset
      */
-    public function locate($input, array $options = array())
+    public function resolve($input, array $options = array())
     {
         if ('@' == $input[0]) {
             return $this->createAssetReference(substr($input, 1));

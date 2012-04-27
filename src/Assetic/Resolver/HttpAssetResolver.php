@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Locator;
+namespace Assetic\Resolver;
 
 use Assetic\Asset\HttpAsset;
 
@@ -18,7 +18,7 @@ use Assetic\Asset\HttpAsset;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class HttpAssetLocator implements AssetLocatorInterface
+class HttpAssetResolver implements AssetResolverInterface
 {
     /**
      * Parses an input string into an asset.
@@ -28,7 +28,7 @@ class HttpAssetLocator implements AssetLocatorInterface
      *
      * @return AssetInterface An asset
      */
-    public function locate($input, array $options = array())
+    public function resolve($input, array $options = array())
     {
         if (false !== strpos($input, '://') || 0 === strpos($input, '//')) {
             return $this->createHttpAsset($input, $options['vars']);

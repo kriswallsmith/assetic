@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Locator;
+namespace Assetic\Resolver;
 
 use Assetic\Asset\FileAsset;
 
@@ -18,7 +18,7 @@ use Assetic\Asset\FileAsset;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class FileAssetLocator implements AssetLocatorInterface
+class FileAssetResolver implements AssetResolverInterface
 {
     private $root;
 
@@ -40,7 +40,7 @@ class FileAssetLocator implements AssetLocatorInterface
      *
      * @return AssetInterface An asset
      */
-    public function locate($input, array $options = array())
+    public function resolve($input, array $options = array())
     {
         list($root, $path, $input) = $this->prepareRootPathInput($input, $options);
 

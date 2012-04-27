@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Locator;
+namespace Assetic\Resolver;
 
 use Assetic\Asset\GlobAsset;
 
@@ -18,7 +18,7 @@ use Assetic\Asset\GlobAsset;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class GlobAssetLocator extends FileAssetLocator
+class GlobAssetResolver extends FileAssetResolver
 {
     /**
      * Parses an input string into an asset.
@@ -28,7 +28,7 @@ class GlobAssetLocator extends FileAssetLocator
      *
      * @return AssetInterface An asset
      */
-    public function locate($input, array $options = array())
+    public function resolve($input, array $options = array())
     {
         list($root, $path, $input) = $this->prepareRootPathInput($input, $options);
 

@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Locator;
+namespace Assetic\Resolver;
 
 use Assetic\Asset\AssetCollection;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Locates resource in watched folders by its relative path.
+ * resolves resource in watched folders by its relative path.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class PipelineAssetLocator extends FileAssetLocator
+class PipelineAssetResolver extends FileAssetResolver
 {
     private $paths;
 
@@ -53,7 +53,7 @@ class PipelineAssetLocator extends FileAssetLocator
      *
      * @return AssetInterface An asset or asset collection
      */
-    public function locate($input, array $options = array())
+    public function resolve($input, array $options = array())
     {
         $type = isset($options['type'])
               ? $options['type']
@@ -62,23 +62,23 @@ class PipelineAssetLocator extends FileAssetLocator
         if (2 == count($typeParts = explode('/', $type))) {
             switch ($typeParts[0]) {
                 case 'index':
-                    return $this->locateIndexAsset($input, $typeParts[1], $options);
+                    return $this->resolveIndexAsset($input, $typeParts[1], $options);
                 case 'directory':
-                    return $this->locateDirectoryAssets($input, $typeParts[1], $options);
+                    return $this->resolveDirectoryAssets($input, $typeParts[1], $options);
                 case 'tree':
-                    return $this->locateTreeAssets($input, $typeParts[1], $options);
+                    return $this->resolveTreeAssets($input, $typeParts[1], $options);
                 default:
-                    return $this->locateSingleAsset($input, $typeParts[1], $options);
+                    return $this->resolveSingleAsset($input, $typeParts[1], $options);
             }
         }
 
-        return $this->locateSingleAsset($input, $type, $options)
-            ?: $this->locateIndexAsset($input, $type, $options)
-            ?: $this->locateDirectoryAssets($input, $type, $options);
+        return $this->resolveSingleAsset($input, $type, $options)
+            ?: $this->resolveIndexAsset($input, $type, $options)
+            ?: $this->resolveDirectoryAssets($input, $type, $options);
     }
 
     /**
-     * Locates single asset in watched paths.
+     * resolves single asset in watched paths.
      *
      * @param string $resource An asset resource string
      * @param string $type     An asset type (js, css)
@@ -86,7 +86,7 @@ class PipelineAssetLocator extends FileAssetLocator
      *
      * @return AssetInterface|null
      */
-    protected function locateSingleAsset($resource, $type, array $options)
+    protected function resolveSingleAsset($resource, $type, array $options)
     {
         $subpath  = pathinfo($resource, PATHINFO_DIRNAME);
         $resource = pathinfo($resource, PATHINFO_BASENAME);
@@ -108,7 +108,7 @@ class PipelineAssetLocator extends FileAssetLocator
     }
 
     /**
-     * Locates index asset for provided path in watched paths.
+     * resolves index asset for provided path in watched paths.
      *
      * @param string $resource An asset path resource string
      * @param string $type     An asset type (js, css)
@@ -116,7 +116,7 @@ class PipelineAssetLocator extends FileAssetLocator
      *
      * @return AssetInterface|null
      */
-    protected function locateIndexAsset($resource, $type, array $options)
+    protected function resolveIndexAsset($resource, $type, array $options)
     {
         $paths = array();
         foreach ($this->paths as $path) {
@@ -139,7 +139,7 @@ class PipelineAssetLocator extends FileAssetLocator
     }
 
     /**
-     * Locates all 0-level assets inside provided directory resource in watched paths.
+     * resolves all 0-level assets inside provided directory resource in watched paths.
      *
      * @param string $resource An asset directory resource string
      * @param string $type     An asset type (js, css)
@@ -147,7 +147,7 @@ class PipelineAssetLocator extends FileAssetLocator
      *
      * @return AssetCollection|null
      */
-    protected function locateDirectoryAssets($resource, $type, array $options)
+    protected function resolveDirectoryAssets($resource, $type, array $options)
     {
         if (null === $path = $this->getDirectoryPath($resource, $type)) {
             return;
@@ -169,7 +169,7 @@ class PipelineAssetLocator extends FileAssetLocator
     }
 
     /**
-     * Locates all multilevel assets inside provided directory resource in watched paths.
+     * resolves all multilevel assets inside provided directory resource in watched paths.
      *
      * @param string $resource An asset directory resource string
      * @param string $type     An asset type (js, css)
@@ -177,7 +177,7 @@ class PipelineAssetLocator extends FileAssetLocator
      *
      * @return AssetCollection|null
      */
-    protected function locateTreeAssets($resource, $type, array $options)
+    protected function resolveTreeAssets($resource, $type, array $options)
     {
         if (null === $path = $this->getDirectoryPath($resource, $type)) {
             return;
