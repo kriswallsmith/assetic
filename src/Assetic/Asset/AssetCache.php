@@ -13,6 +13,7 @@ namespace Assetic\Asset;
 
 use Assetic\Cache\CacheInterface;
 use Assetic\Filter\FilterInterface;
+use Assetic\Filter\HashableInterface;
 
 /**
  * Caches an asset to avoid the cost of loading and dumping.
@@ -150,7 +151,11 @@ class AssetCache implements AssetInterface
         $cacheKey .= $asset->getLastModified();
 
         foreach ($asset->getFilters() as $filter) {
-            $cacheKey .= serialize($filter);
+            if ($filter instanceof HashableInterface) {
+                $cacheKey .= $filter->hash();
+            } else {
+                $cacheKey .= serialize($filter);
+            }
         }
 
         if ($values = $asset->getValues()) {
