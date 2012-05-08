@@ -287,6 +287,7 @@ class CompassFilter implements FilterInterface
         $output = $tempName.'.css';
 
         // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
+        $pb->inheritEnvironmentVariables();
         $pb->setEnv('HOME', sys_get_temp_dir());
 
         $proc = $pb->getProcess();
