@@ -280,4 +280,4 @@ Assetic is based on the Python [webassets][1] library (available on
 
 [1]: http://elsdoerfer.name/docs/webassets
 [2]: https://github.com/miracle2k/webassets
-[3]: http://www.twig-project.org
+[3]: http://twig.sensiolabs.org
