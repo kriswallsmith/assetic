@@ -108,4 +108,13 @@ class TraverserTest extends \PHPUnit_Framework_TestCase
         $this->traverser->addVisitor($visitor);
         $this->assertSame($node, $this->traverser->traverse($node));
     }
+
+    /**
+     * @test
+     */
+    public function shouldTraverseWithoutVisitors()
+    {
+        $node = $this->getMock('Assetic\Tree\NodeInterface');
+        $this->traverser->traverse($node);
+    }
 }

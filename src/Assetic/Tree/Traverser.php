@@ -45,7 +45,7 @@ class Traverser implements TraverserInterface
 
     private function getVisitors()
     {
-        return call_user_func_array('array_merge', $this->visitors);
+        return $this->visitors ? call_user_func_array('array_merge', $this->visitors) : array();
     }
 
     private function traverseForVisitor(VisitorInterface $visitor, NodeInterface $node)
