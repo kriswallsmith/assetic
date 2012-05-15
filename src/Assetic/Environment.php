@@ -87,4 +87,11 @@ class Environment implements EnvironmentInterface
 
         return $this->processor;
     }
+
+    public function load($logicalPath)
+    {
+        $asset = $this->factory->createAsset(array('logical_path' => $logicalPath));
+
+        return $this->getLoader()->traverse($asset);
+    }
 }

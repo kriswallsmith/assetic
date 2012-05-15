@@ -15,16 +15,18 @@ use Assetic\Environment;
 
 class EnvironmentTest extends \PHPUnit_Framework_TestCase
 {
+    private $factory;
     private $env;
 
     protected function setUp()
     {
-        $this->env = new Environment();
+        $this->factory = $this->getMock('Assetic\Asset\FactoryInterface');
+        $this->env = new Environment($this->factory);
     }
 
     protected function tearDown()
     {
-        unset($this->env);
+        unset($this->factory, $this->env);
     }
 
     /**
@@ -104,5 +106,26 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->env->addExtension($extension);
         $loader = $this->env->getLoader();
         $loader->traverse($node);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldLoadAsset()
+    {
+        $asset = $this->getMock('Assetic\Asset\AssetInterface');
+
+        $this->factory->expects($this->once())
+            ->method('createAsset')
+            ->with(array('logical_path' => 'foo/bar'))
+            ->will($this->returnValue($asset));
+        $asset->expects($this->any())
+            ->method('getAttributes')
+            ->will($this->returnValue(array()));
+        $asset->expects($this->any())
+            ->method('getChildren')
+            ->will($this->returnValue(array()));
+
+        $this->assertSame($asset, $this->env->load('foo/bar'));
     }
 }

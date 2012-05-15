@@ -24,4 +24,6 @@ interface EnvironmentInterface
     function initialize();
     function getLoader();
     function getProcessor();
+
+    function load($logicalPath);
 }
