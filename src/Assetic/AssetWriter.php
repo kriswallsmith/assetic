@@ -23,8 +23,8 @@ use Assetic\Asset\AssetInterface;
  */
 class AssetWriter
 {
-    private $dir;
-    private $varValues;
+    protected $dir;
+    protected $varValues;
 
     /**
      * Constructor.
@@ -63,7 +63,7 @@ class AssetWriter
         }
     }
 
-    private function getCombinations(array $vars)
+    protected function getCombinations(array $vars)
     {
         if (!$vars) {
             return array(array());
