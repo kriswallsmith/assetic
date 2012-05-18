@@ -12,7 +12,6 @@
 namespace Assetic\Extension\Loader;
 
 use Assetic\AbstractExtension;
-use Assetic\EnvironmentInterface;
 use Assetic\Extension\Loader\Finder\ChainFinder;
 use Assetic\Extension\Loader\Finder\FileFinder;
 use Assetic\Extension\Loader\Loader\PathResolver;
@@ -21,7 +20,7 @@ use Assetic\Extension\Loader\Loader\SourceLoader;
 /**
  * Introduces the concepts of finders and sources.
  */
-class LoaderExtension extends AbstractExtension implements LoaderExtensionInterface
+class LoaderExtension extends AbstractExtension
 {
     private $basePaths;
     private $finders;
@@ -32,32 +31,20 @@ class LoaderExtension extends AbstractExtension implements LoaderExtensionInterf
         $this->finders = array();
     }
 
-    public function initialize(EnvironmentInterface $env)
-    {
-        $this->finders = array();
-
-        foreach ($env->getExtensions() as $extension) {
-            if ($extension instanceof LoaderExtensionInterface) {
-                $this->finders = array_merge($this->finders, $extension->getFinders());
-            }
-        }
-    }
-
     public function getLoaderVisitors()
     {
-        $finder = 1 == count($this->finders) ? $this->finders[0] : new ChainFinder($this->finders);
+        $finders = $this->finders;
+        $finders[] = new FileFinder($this->basePaths);
 
         return array(
-            new SourceLoader($finder),
+            new SourceLoader(1 == count($finders) ? $finders[0] : new ChainFinder($finders)),
             new PathResolver(),
         );
     }
 
-    public function getFinders()
+    public function addFinder(FinderInterface $finder)
     {
-        return array(
-            new FileFinder($this->basePaths),
-        );
+        $this->finders[] = $finder;
     }
 
     public function getName()
