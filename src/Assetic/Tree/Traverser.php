@@ -29,7 +29,7 @@ class Traverser implements TraverserInterface
             krsort($this->visitors);
         }
 
-        if (!in_array($visitor, $this->visitors[$priority])) {
+        if (!in_array($visitor, $this->visitors[$priority], true)) {
             $this->visitors[$priority][] = $visitor;
         }
     }
