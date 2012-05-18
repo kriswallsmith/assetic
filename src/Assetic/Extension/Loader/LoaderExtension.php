@@ -59,4 +59,9 @@ class LoaderExtension extends AbstractExtension implements LoaderExtensionInterf
             new FileFinder($this->basePaths),
         );
     }
+
+    public function getName()
+    {
+        return 'loader';
+    }
 }

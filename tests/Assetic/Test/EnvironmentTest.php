@@ -145,4 +145,20 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
         $env = new Environment();
         $this->assertInstanceOf('Assetic\Asset\FactoryInterface', $env->getFactory());
     }
+
+    /**
+     * @test
+     */
+    public function shouldGetExtensionByName()
+    {
+        $extension = $this->getMock('Assetic\ExtensionInterface');
+
+        $extension->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('testing123'));
+
+        $this->env->addExtension($extension);
+
+        $this->assertSame($extension, $this->env->getExtension('testing123'));
+    }
 }

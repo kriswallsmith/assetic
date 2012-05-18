@@ -30,4 +30,9 @@ class CssExtension extends AbstractExtension
             new CssLoader($this->factory),
         );
     }
+
+    public function getName()
+    {
+        return 'css';
+    }
 }

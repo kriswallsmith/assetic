@@ -16,4 +16,5 @@ interface ExtensionInterface
     function initialize(EnvironmentInterface $env);
     function getLoaderVisitors();
     function getProcessorVisitors();
+    function getName();
 }

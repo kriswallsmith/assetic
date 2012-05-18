@@ -47,4 +47,8 @@ class AbstractExtensionTest extends \PHPUnit_Framework_TestCase
 
 class AbstractExtensionStub extends AbstractExtension
 {
+    public function getName()
+    {
+        return 'testing123';
+    }
 }

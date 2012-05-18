@@ -20,6 +20,7 @@ interface EnvironmentInterface
 {
     function getExtensions();
     function addExtension(ExtensionInterface $extension);
+    function getExtension($name);
 
     function initialize();
     function getFactory();

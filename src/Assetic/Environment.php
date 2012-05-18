@@ -53,12 +53,19 @@ class Environment implements EnvironmentInterface
             throw new \LogicException('Cannot add an extension after environment is initialized');
         }
 
-        $this->extensions[] = $extension;
+        $this->extensions[$extension->getName()] = $extension;
     }
 
     public function getExtensions()
     {
         return $this->extensions;
+    }
+
+    public function getExtension($name)
+    {
+        if (isset($this->extensions[$name])) {
+            return $this->extensions[$name];
+        }
     }
 
     public function initialize()
