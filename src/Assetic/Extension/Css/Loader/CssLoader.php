@@ -39,8 +39,8 @@ class CssLoader extends AbstractAssetVisitor
             return $asset;
         }
 
-        $types = $asset->getAttribute('types', array());
-        if ('css' !== array_pop($types)) {
+        $extensions = $asset->getAttribute('extensions', array());
+        if ('css' !== array_pop($extensions)) {
             return $asset;
         }
 

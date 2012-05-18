@@ -41,7 +41,7 @@ class SourceVisitor extends AbstractAssetVisitor
             $asset->setAttribute('path', $source->getPath());
             $asset->setAttribute('content', $source->getContent());
             $asset->setAttribute('mtime', $source->getLastModified());
-            $asset->setAttribute('types', $source->getTypes());
+            $asset->setAttribute('extensions', $source->getExtensions());
         }
 
         return $asset;

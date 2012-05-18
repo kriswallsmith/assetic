@@ -39,7 +39,7 @@ class FileSource implements SourceInterface
         }
     }
 
-    public function getTypes()
+    public function getExtensions()
     {
         return array_slice(explode('.', $this->path), 1);
     }

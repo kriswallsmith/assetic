@@ -55,11 +55,11 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
         return array(
             array('css/core', array(
                 'content' => '/* path1/css/core.css */',
-                'types'   => array('css'),
+                'extensions'   => array('css'),
             )),
             array('css/more', array(
                 'content' => '/* path2/css/more.sass */',
-                'types'   => array('sass'),
+                'extensions'   => array('sass'),
             )),
         );
     }

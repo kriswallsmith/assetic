@@ -38,9 +38,9 @@ interface SourceInterface
     function getLastModified();
 
     /**
-     * Returns an array of types for the current asset.
+     * Returns an array of extensions for the current asset.
      *
-     * @return array An array of types
+     * @return array An array of extensions
      */
-    function getTypes();
+    function getExtensions();
 }

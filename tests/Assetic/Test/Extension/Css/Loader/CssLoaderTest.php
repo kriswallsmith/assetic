@@ -32,15 +32,15 @@ class CssLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider provideContentAndTypes
+     * @dataProvider provideContentAndExtensions
      */
-    public function shouldReturnAsset($content, $types)
+    public function shouldReturnAsset($content, $extensions)
     {
-        $asset = new Asset(array('content' => $content, 'types' => $types));
+        $asset = new Asset(array('content' => $content, 'extensions' => $extensions));
         $this->assertInstanceOf('Assetic\Asset\AssetInterface', $this->loader->enter($asset));
     }
 
-    public function provideContentAndTypes()
+    public function provideContentAndExtensions()
     {
         return array(
             array('asdf', array('css')),
@@ -57,7 +57,7 @@ class CssLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $asset = new Asset(array(
             'content' => "@import 'fonts.css';\nbody { font-size: 10px; }\n",
-            'types'   => array('css'),
+            'extensions'   => array('css'),
         ));
 
         $child = $this->getMock('Assetic\Asset\AssetInterface');
@@ -83,7 +83,7 @@ class CssLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $asset = new Asset(array(
             'content' => $content,
-            'types'   => array('css'),
+            'extensions'   => array('css'),
         ));
 
         $this->factory->expects($this->never())
@@ -120,7 +120,7 @@ CSS;
 
         $asset = new Asset(array(
             'content' => $content,
-            'types'   => array('css'),
+            'extensions'   => array('css'),
         ));
 
         $log = array();
