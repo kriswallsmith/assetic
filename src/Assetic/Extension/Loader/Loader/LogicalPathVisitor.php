@@ -17,7 +17,7 @@ use Assetic\Asset\AssetInterface;
 /**
  * Tries to figure out an asset's logical path.
  */
-class PathResolver extends AbstractAssetVisitor
+class LogicalPathVisitor extends AbstractAssetVisitor
 {
     public function __construct()
     {

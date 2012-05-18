@@ -18,7 +18,7 @@ use Assetic\Extension\Loader\Finder\FinderInterface;
 /**
  * The source loader is responsible for loading values from an asset's source.
  */
-class SourceLoader extends AbstractAssetVisitor
+class SourceVisitor extends AbstractAssetVisitor
 {
     private $finder;
 

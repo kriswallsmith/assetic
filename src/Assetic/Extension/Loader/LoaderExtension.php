@@ -14,8 +14,8 @@ namespace Assetic\Extension\Loader;
 use Assetic\AbstractExtension;
 use Assetic\Extension\Loader\Finder\ChainFinder;
 use Assetic\Extension\Loader\Finder\FileFinder;
-use Assetic\Extension\Loader\Loader\PathResolver;
-use Assetic\Extension\Loader\Loader\SourceLoader;
+use Assetic\Extension\Loader\Loader\LogicalPathVisitor;
+use Assetic\Extension\Loader\Loader\SourceVisitor;
 
 /**
  * Introduces the concepts of finders and sources.
@@ -37,8 +37,8 @@ class LoaderExtension extends AbstractExtension
         $finders[] = new FileFinder($this->basePaths);
 
         return array(
-            new SourceLoader(1 == count($finders) ? $finders[0] : new ChainFinder($finders)),
-            new PathResolver(),
+            new SourceVisitor(1 == count($finders) ? $finders[0] : new ChainFinder($finders)),
+            new LogicalPathVisitor(),
         );
     }
 
