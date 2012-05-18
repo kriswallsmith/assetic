@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension\Loader\Loader;
+namespace Assetic\Extension\Core\Visitor;
 
 use Assetic\Asset\AbstractAssetVisitor;
 use Assetic\Asset\AssetInterface;

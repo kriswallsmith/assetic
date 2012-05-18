@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension\Loader\Loader;
+namespace Assetic\Extension\Core\Visitor;
 
 use Assetic\Asset\AbstractAssetVisitor;
 use Assetic\Asset\AssetInterface;
-use Assetic\Extension\Loader\Finder\FinderInterface;
+use Assetic\Extension\Core\Finder\FinderInterface;
 
 /**
  * The source loader is responsible for loading values from an asset's source.

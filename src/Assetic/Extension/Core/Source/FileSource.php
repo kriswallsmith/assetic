@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension\Loader\Source;
+namespace Assetic\Extension\Core\Source;
 
 class FileSource implements SourceInterface
 {

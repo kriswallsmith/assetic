@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension\Loader\Finder;
+namespace Assetic\Extension\Core\Finder;
 
-use Assetic\Extension\Loader\Source\FileSource;
+use Assetic\Extension\Core\Source\FileSource;
 
 class FileFinder implements FinderInterface
 {

@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension\Loader;
+namespace Assetic\Extension\Core;
 
 use Assetic\AbstractExtension;
-use Assetic\Extension\Loader\Finder\ChainFinder;
-use Assetic\Extension\Loader\Finder\FileFinder;
-use Assetic\Extension\Loader\Loader\LogicalPathVisitor;
-use Assetic\Extension\Loader\Loader\SourceVisitor;
+use Assetic\Extension\Core\Finder\ChainFinder;
+use Assetic\Extension\Core\Finder\FileFinder;
+use Assetic\Extension\Core\Visitor\LogicalPathVisitor;
+use Assetic\Extension\Core\Visitor\SourceVisitor;
 
 /**
  * Introduces the concepts of finders and sources.
  */
-class LoaderExtension extends AbstractExtension
+class CoreExtension extends AbstractExtension
 {
     private $basePaths;
     private $finders;
@@ -49,6 +49,6 @@ class LoaderExtension extends AbstractExtension
 
     public function getName()
     {
-        return 'loader';
+        return 'core';
     }
 }

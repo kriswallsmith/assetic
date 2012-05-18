@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Extension\Loader;
+namespace Assetic\Test\Extension\Core;
 
 use Assetic\Asset\Asset;
 use Assetic\Environment;
-use Assetic\Extension\Loader\LoaderExtension;
+use Assetic\Extension\Core\CoreExtension;
 use Assetic\Tree\CallableVisitor;
 
 /**
@@ -26,7 +26,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->env = new Environment();
-        $this->env->addExtension(new LoaderExtension(array(
+        $this->env->addExtension(new CoreExtension(array(
             __DIR__.'/Fixtures/path1',
             __DIR__.'/Fixtures/path2',
         )));
