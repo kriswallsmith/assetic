@@ -15,6 +15,7 @@ use Assetic\AbstractExtension;
 use Assetic\EnvironmentInterface;
 use Assetic\Extension\Loader\Finder\ChainFinder;
 use Assetic\Extension\Loader\Finder\FileFinder;
+use Assetic\Extension\Loader\Loader\PathResolver;
 use Assetic\Extension\Loader\Loader\SourceLoader;
 
 /**
@@ -48,6 +49,7 @@ class LoaderExtension extends AbstractExtension implements LoaderExtensionInterf
 
         return array(
             new SourceLoader($finder),
+            new PathResolver(),
         );
     }
 

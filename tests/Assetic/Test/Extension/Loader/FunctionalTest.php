@@ -11,8 +11,10 @@
 
 namespace Assetic\Test\Extension\Loader;
 
+use Assetic\Asset\Asset;
 use Assetic\Environment;
 use Assetic\Extension\Loader\LoaderExtension;
+use Assetic\Tree\CallableVisitor;
 
 /**
  * @group functional
@@ -60,5 +62,25 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
                 'types'   => array('sass'),
             )),
         );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldLoadAddedChildren()
+    {
+        $this->env->getLoader()->addVisitor(new CallableVisitor(function($asset) {
+            if ('css/bg' == $asset->getAttribute('logical_path') && !$asset->getChildren()) {
+                $asset->addChildren(array(new Asset(array('parent.rev_path' => '../images/bg.gif'))));
+            }
+
+            return $asset;
+        }));
+
+        $asset = $this->env->load('css/bg');
+        $children = $asset->getChildren();
+
+        $this->assertCount(1, $children);
+        $this->assertEquals('css/../images/bg.gif', $children[0]->getAttribute('logical_path'));
     }
 }
