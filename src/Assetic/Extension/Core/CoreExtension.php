@@ -42,7 +42,7 @@ class CoreExtension extends AbstractExtension
         );
     }
 
-    public function addFinder(FinderInterface $finder)
+    public function registerFinder(FinderInterface $finder)
     {
         $this->finders[] = $finder;
     }
