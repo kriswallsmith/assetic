@@ -34,7 +34,7 @@ class Traverser implements TraverserInterface
         }
     }
 
-    public function traverse(NodeInterface $node, $recursion = 0)
+    public function traverse(NodeInterface $node)
     {
         foreach ($this->getVisitors() as $visitor) {
             $node = $this->traverseForVisitor($visitor, $node);
