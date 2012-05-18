@@ -29,6 +29,8 @@ class CssLoader extends AbstractAssetVisitor
     public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
+
+        parent::__construct();
     }
 
     protected function enterAsset(AssetInterface $asset)
