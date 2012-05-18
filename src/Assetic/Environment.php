@@ -30,7 +30,21 @@ class Environment implements EnvironmentInterface
     {
         $this->initialized = false;
         $this->extensions = array();
-        $this->factory = $factory ?: new Factory();
+        $this->factory = $factory;
+    }
+
+    public function getFactory()
+    {
+        if (!$this->factory) {
+            $this->factory = new Factory();
+        }
+
+        return $this->factory;
+    }
+
+    public function setFactory(FactoryInterface $factory)
+    {
+        $this->factory = $factory;
     }
 
     public function addExtension(ExtensionInterface $extension)
@@ -90,7 +104,7 @@ class Environment implements EnvironmentInterface
 
     public function load($logicalPath)
     {
-        $asset = $this->factory->createAsset(array('logical_path' => $logicalPath));
+        $asset = $this->getFactory()->createAsset(array('logical_path' => $logicalPath));
 
         return $this->getLoader()->traverse($asset);
     }

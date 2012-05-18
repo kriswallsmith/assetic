@@ -128,4 +128,21 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($asset, $this->env->load('foo/bar'));
     }
+
+    /**
+     * @test
+     */
+    public function shouldReturnFactory()
+    {
+        $this->assertSame($this->factory, $this->env->getFactory());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateFactory()
+    {
+        $env = new Environment();
+        $this->assertInstanceOf('Assetic\Asset\FactoryInterface', $env->getFactory());
+    }
 }

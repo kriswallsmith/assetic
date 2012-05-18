@@ -22,6 +22,7 @@ interface EnvironmentInterface
     function addExtension(ExtensionInterface $extension);
 
     function initialize();
+    function getFactory();
     function getLoader();
     function getProcessor();
 
