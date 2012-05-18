@@ -132,9 +132,13 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldReturnFactory()
+    public function shouldManageFactory()
     {
         $this->assertSame($this->factory, $this->env->getFactory());
+
+        $factory = $this->getMock('Assetic\Asset\FactoryInterface');
+        $this->env->setFactory($factory);
+        $this->assertSame($factory, $this->env->getFactory());
     }
 
     /**
@@ -160,5 +164,23 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->env->addExtension($extension);
 
         $this->assertSame($extension, $this->env->getExtension('testing123'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnNullOnInvalidExtension()
+    {
+        $this->assertNull($this->env->getExtension('testing123'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldManageExtensions()
+    {
+        $extension = $this->getMock('Assetic\ExtensionInterface');
+        $this->env->addExtension($extension);
+        $this->assertContains($extension, $this->env->getExtensions());
     }
 }
