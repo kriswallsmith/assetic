@@ -22,6 +22,7 @@ class CssExtension extends AbstractExtension
     public function initialize(EnvironmentInterface $env)
     {
         $env->getExtension('core')
+            ->registerMimeType('css', 'text/css')
             ->registerPostProcessor(new CssChildrenProcessor($env->getFactory()), 'text/css')
         ;
     }
