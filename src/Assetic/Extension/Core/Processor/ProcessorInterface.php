@@ -18,5 +18,5 @@ use Assetic\Asset\AssetInterface;
  */
 interface ProcessorInterface
 {
-    function process(AssetInterface $asset);
+    function process(AssetInterface $asset, Context $context);
 }

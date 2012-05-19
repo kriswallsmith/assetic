@@ -13,6 +13,7 @@ namespace Assetic\Extension\Css\Processor;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Asset\FactoryInterface;
+use Assetic\Extension\Core\Processor\Context;
 use Assetic\Extension\Core\Processor\ProcessorInterface;
 
 /**
@@ -31,7 +32,7 @@ class CssChildrenProcessor implements ProcessorInterface
         $this->factory = $factory;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, Context $context)
     {
         if (!$asset->getAttribute('css_loaded') && $content = $asset->getAttribute('content')) {
             $asset->setAttribute('css_loaded', true);

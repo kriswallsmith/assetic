@@ -38,7 +38,7 @@ class MimeTypeProcessor implements ProcessorInterface
         $this->delegate = $delegate;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, Context $context)
     {
         $mimeType = $asset->getAttribute('mime_type');
 
@@ -49,7 +49,7 @@ class MimeTypeProcessor implements ProcessorInterface
         }
 
         if ($match) {
-            $this->delegate->process($asset);
+            $this->delegate->process($asset, $context);
         }
     }
 }

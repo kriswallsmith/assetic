@@ -41,6 +41,7 @@ class CssChildrenProcessorTest extends \PHPUnit_Framework_TestCase
         ));
 
         $child = $this->getMock('Assetic\Asset\AssetInterface');
+        $context = $this->getMock('Assetic\Extension\Core\Processor\Context');
 
         $this->factory->expects($this->once())
             ->method('createAsset')
@@ -51,7 +52,7 @@ class CssChildrenProcessorTest extends \PHPUnit_Framework_TestCase
             ))
             ->will($this->returnValue($child));
 
-        $this->processor->process($asset);
+        $this->processor->process($asset, $context);
         $this->assertCount(1, $asset->getChildren());
     }
 
@@ -66,10 +67,12 @@ class CssChildrenProcessorTest extends \PHPUnit_Framework_TestCase
             'extensions'   => array('css'),
         ));
 
+        $context = $this->getMock('Assetic\Extension\Core\Processor\Context');
+
         $this->factory->expects($this->never())
             ->method('createAsset');
 
-        $this->processor->process($asset);
+        $this->processor->process($asset, $context);
     }
 
     public function provideCommentContent()
@@ -103,6 +106,8 @@ CSS;
             'extensions'   => array('css'),
         ));
 
+        $context = $this->getMock('Assetic\Extension\Core\Processor\Context');
+
         $log = array();
         $test = $this;
 
@@ -113,7 +118,7 @@ CSS;
                 return $test->getMock('Assetic\Asset\AssetInterface');
             }));
 
-        $this->processor->process($asset);
+        $this->processor->process($asset, $context);
 
         $this->assertCount(4, $asset->getChildren());
         $this->assertEquals(array(

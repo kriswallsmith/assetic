@@ -13,6 +13,7 @@ namespace Assetic\Extension\Core\Visitor;
 
 use Assetic\Asset\AbstractAssetVisitor;
 use Assetic\Asset\AssetInterface;
+use Assetic\Extension\Core\Processor\Context;
 use Assetic\Extension\Core\Processor\ProcessorInterface;
 
 /**
@@ -21,15 +22,17 @@ use Assetic\Extension\Core\Processor\ProcessorInterface;
 class ProcessorVisitor extends AbstractAssetVisitor
 {
     private $processor;
+    private $context;
 
-    public function __construct(ProcessorInterface $processor)
+    public function __construct(ProcessorInterface $processor, Context $context)
     {
         $this->processor = $processor;
+        $this->context = $context;
     }
 
     protected function enterAsset(AssetInterface $asset)
     {
-        $this->processor->process($asset);
+        $this->processor->process($asset, $this->context);
 
         return $asset;
     }

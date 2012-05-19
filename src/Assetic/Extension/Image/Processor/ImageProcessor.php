@@ -12,6 +12,7 @@
 namespace Assetic\Extension\Image\Processor;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Extension\Core\Processor\Context;
 use Assetic\Extension\Core\Processor\ProcessorInterface;
 use Assetic\Extension\Image\ImageExtension;
 
@@ -24,12 +25,12 @@ class ImageProcessor implements ProcessorInterface
         $this->extension = $extension;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, Context $context)
     {
         $mimeType = $asset->getAttribute('mime_type');
 
         if ($mimeType && $processor = $this->extension->getImageOptimizer($mimeType)) {
-            $processor->process($asset);
+            $processor->process($asset, $context);
         }
     }
 }

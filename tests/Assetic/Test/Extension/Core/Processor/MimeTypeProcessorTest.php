@@ -22,6 +22,7 @@ class MimeTypeProcessorTest extends \PHPUnit_Framework_TestCase
     {
         $delegate = $this->getMock('Assetic\Extension\Core\Processor\ProcessorInterface');
         $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $context = $this->getMock('Assetic\Extension\Core\Processor\Context');
 
         $asset->expects($this->any())
             ->method('getAttribute')
@@ -32,7 +33,7 @@ class MimeTypeProcessorTest extends \PHPUnit_Framework_TestCase
             ->with($asset);
 
         $processor = new MimeTypeProcessor('testing123', $delegate);
-        $processor->process($asset);
+        $processor->process($asset, $context);
     }
 
     /**
@@ -42,6 +43,7 @@ class MimeTypeProcessorTest extends \PHPUnit_Framework_TestCase
     {
         $delegate = $this->getMock('Assetic\Extension\Core\Processor\ProcessorInterface');
         $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $context = $this->getMock('Assetic\Extension\Core\Processor\Context');
 
         $asset->expects($this->any())
             ->method('getAttribute')
@@ -51,6 +53,6 @@ class MimeTypeProcessorTest extends \PHPUnit_Framework_TestCase
             ->method('process');
 
         $processor = new MimeTypeProcessor('testing456', $delegate);
-        $processor->process($asset);
+        $processor->process($asset, $context);
     }
 }

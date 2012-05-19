@@ -22,12 +22,13 @@ class AggregateProcessorTest extends \PHPUnit_Framework_TestCase
     {
         $delegate = $this->getMock('Assetic\Extension\Core\Processor\ProcessorInterface');
         $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $context = $this->getMock('Assetic\Extension\Core\Processor\Context');
 
         $delegate->expects($this->once())
             ->method('process')
             ->with($asset);
 
         $processor = new AggregateProcessor(array($delegate));
-        $processor->process($asset);
+        $processor->process($asset, $context);
     }
 }

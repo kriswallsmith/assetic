@@ -27,13 +27,13 @@ class ExtensionProcessor implements ProcessorInterface
         $this->delegate = $delegate;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, Context $context)
     {
         $extensions = $asset->getAttribute('extensions', array());
         $extension = array_pop($extensions);
 
         if ($extension && $this->extension === $extension) {
-            $this->delegate->process($asset);
+            $this->delegate->process($asset, $context);
         }
     }
 }

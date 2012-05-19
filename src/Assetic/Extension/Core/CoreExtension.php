@@ -13,6 +13,7 @@ namespace Assetic\Extension\Core;
 
 use Assetic\AbstractExtension;
 use Assetic\Extension\Core\Processor\AggregateProcessor;
+use Assetic\Extension\Core\Processor\Context;
 use Assetic\Extension\Core\Processor\ExtensionProcessor;
 use Assetic\Extension\Core\Processor\MimeTypeProcessor;
 use Assetic\Extension\Core\Processor\ProcessorInterface;
@@ -58,7 +59,7 @@ class CoreExtension extends AbstractExtension
         );
 
         if ($processor = $this->getProcessor()) {
-            $visitors[] = new ProcessorVisitor($processor);
+            $visitors[] = new ProcessorVisitor($processor, new Context());
         }
 
         return $visitors;

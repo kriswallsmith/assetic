@@ -33,10 +33,10 @@ class AggregateProcessor implements ProcessorInterface
         $this->processors[] = $processor;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, Context $context)
     {
         foreach ($this->processors as $processor) {
-            $processor->process($asset);
+            $processor->process($asset, $context);
         }
     }
 }
