@@ -13,7 +13,7 @@ namespace Assetic\Extension\Core\Visitor;
 
 use Assetic\Asset\AbstractAssetVisitor;
 use Assetic\Asset\AssetInterface;
-use Assetic\Extension\Core\Finder\FinderInterface;
+use Assetic\Extension\Core\Source\Finder\FinderInterface;
 
 /**
  * The source loader is responsible for loading values from an asset's source.

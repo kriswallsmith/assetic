@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension\Core\Finder;
+namespace Assetic\Extension\Core\Source\Finder;
 
 /**
  * Loops over many finders and returns the first source found.

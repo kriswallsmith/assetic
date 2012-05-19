@@ -12,12 +12,12 @@
 namespace Assetic\Extension\Core;
 
 use Assetic\AbstractExtension;
-use Assetic\Extension\Core\Finder\ChainFinder;
-use Assetic\Extension\Core\Finder\FileFinder;
 use Assetic\Extension\Core\Processor\AggregateProcessor;
 use Assetic\Extension\Core\Processor\ExtensionProcessor;
 use Assetic\Extension\Core\Processor\MimeTypeProcessor;
 use Assetic\Extension\Core\Processor\ProcessorInterface;
+use Assetic\Extension\Core\Source\Finder\ChainFinder;
+use Assetic\Extension\Core\Source\Finder\FileFinder;
 use Assetic\Extension\Core\Visitor\LogicalPathVisitor;
 use Assetic\Extension\Core\Visitor\ProcessorVisitor;
 use Assetic\Extension\Core\Visitor\SourceVisitor;
