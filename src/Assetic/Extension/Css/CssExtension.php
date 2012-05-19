@@ -13,7 +13,7 @@ namespace Assetic\Extension\Css;
 
 use Assetic\AbstractExtension;
 use Assetic\EnvironmentInterface;
-use Assetic\Extension\Css\Loader\CssLoader;
+use Assetic\Extension\Css\Processor\CssChildrenProcessor;
 
 class CssExtension extends AbstractExtension
 {

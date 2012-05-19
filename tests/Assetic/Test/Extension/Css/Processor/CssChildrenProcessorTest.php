@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Test\Extension\Css\Loader;
+namespace Assetic\Test\Extension\Css\Processor;
 
 use Assetic\Asset\Asset;
 use Assetic\Extension\Css\Processor\CssChildrenProcessor;
