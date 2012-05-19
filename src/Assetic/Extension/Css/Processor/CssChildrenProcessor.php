@@ -33,14 +33,10 @@ class CssChildrenProcessor implements ProcessorInterface
 
     public function process(AssetInterface $asset)
     {
-        if ($asset->getAttribute('css.loaded') || !$content = $asset->getAttribute('content')) {
-            return $asset;
+        if (!$asset->getAttribute('css_loaded') && $content = $asset->getAttribute('content')) {
+            $asset->setAttribute('css_loaded', true);
+            $asset->addChildren($this->loadChildren($content));
         }
-
-        $asset->setAttribute('css.loaded', true);
-        $asset->addChildren($this->loadChildren($content));
-
-        return $asset;
     }
 
     private function loadChildren($content)

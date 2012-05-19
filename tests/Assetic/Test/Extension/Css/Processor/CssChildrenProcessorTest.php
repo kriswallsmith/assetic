@@ -32,26 +32,6 @@ class CssChildrenProcessorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider provideContentAndExtensions
-     */
-    public function shouldReturnAsset($content, $extensions)
-    {
-        $asset = new Asset(array('content' => $content, 'extensions' => $extensions));
-        $this->assertInstanceOf('Assetic\Asset\AssetInterface', $this->processor->process($asset));
-    }
-
-    public function provideContentAndExtensions()
-    {
-        return array(
-            array('asdf', array('css')),
-            array('asdf', array('txt')),
-            array(null, array('css')),
-            array(null, array('txt')),
-        );
-    }
-
-    /**
-     * @test
      */
     public function shouldLoadImports()
     {
@@ -71,7 +51,7 @@ class CssChildrenProcessorTest extends \PHPUnit_Framework_TestCase
             ))
             ->will($this->returnValue($child));
 
-        $this->assertSame($asset, $this->processor->process($asset));
+        $this->processor->process($asset);
         $this->assertCount(1, $asset->getChildren());
     }
 
@@ -133,7 +113,7 @@ CSS;
                 return $test->getMock('Assetic\Asset\AssetInterface');
             }));
 
-        $asset = $this->processor->process($asset);
+        $this->processor->process($asset);
 
         $this->assertCount(4, $asset->getChildren());
         $this->assertEquals(array(
