@@ -61,11 +61,18 @@ class Environment implements EnvironmentInterface
         return $this->extensions;
     }
 
+    public function hasExtension($name)
+    {
+        return isset($this->extensions[$name]);
+    }
+
     public function getExtension($name)
     {
-        if (isset($this->extensions[$name])) {
-            return $this->extensions[$name];
+        if (!isset($this->extensions[$name])) {
+            throw new \InvalidArgumentException(sprintf('There is no "%s" extension', $name));
         }
+
+        return $this->extensions[$name];
     }
 
     public function initialize()

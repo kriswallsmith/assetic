@@ -168,10 +168,11 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @expectedException InvalidArgumentException
      */
-    public function shouldReturnNullOnInvalidExtension()
+    public function shouldErrorOnInvalidExtension()
     {
-        $this->assertNull($this->env->getExtension('testing123'));
+        $this->env->getExtension('testing123');
     }
 
     /**
