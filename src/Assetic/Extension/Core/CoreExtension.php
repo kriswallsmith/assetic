@@ -16,6 +16,10 @@ use Assetic\Extension\Core\Processor\AggregateProcessor;
 use Assetic\Extension\Core\Processor\ExtensionProcessor;
 use Assetic\Extension\Core\Processor\MimeTypeProcessor;
 use Assetic\Extension\Core\Processor\ProcessorInterface;
+use Assetic\Extension\Core\Source\Detector\ChainDetector;
+use Assetic\Extension\Core\Source\Detector\DetectorInterface;
+use Assetic\Extension\Core\Source\Detector\ExtensionDetector;
+use Assetic\Extension\Core\Source\Detector\FileinfoDetector;
 use Assetic\Extension\Core\Source\Finder\ChainFinder;
 use Assetic\Extension\Core\Source\Finder\FileFinder;
 use Assetic\Extension\Core\Visitor\LogicalPathVisitor;
@@ -34,18 +38,22 @@ class CoreExtension extends AbstractExtension
     private $basePaths;
     private $finders;
     private $processors;
+    private $mimeTypes;
+    private $detectors;
 
     public function __construct(array $basePaths = array())
     {
         $this->basePaths = $basePaths;
         $this->finders = array();
         $this->processors = array();
+        $this->mimeTypes = array();
+        $this->detectors = array();
     }
 
     public function getLoaderVisitors()
     {
         $visitors = array(
-            new SourceVisitor($this->getFinder()),
+            new SourceVisitor($this->getFinder(), $this->getDetector()),
             new LogicalPathVisitor(),
         );
 
@@ -59,6 +67,20 @@ class CoreExtension extends AbstractExtension
     public function registerFinder(FinderInterface $finder)
     {
         $this->finders[] = $finder;
+
+        return $this;
+    }
+
+    public function registerMimeType($extension, $mimeType)
+    {
+        $this->mimeTypes[$extension] = $mimeType;
+
+        return $this;
+    }
+
+    public function registerMimeTypeDetector(DetectorInterface $detector)
+    {
+        $this->detectors[] = $detector;
 
         return $this;
     }
@@ -109,6 +131,21 @@ class CoreExtension extends AbstractExtension
         $finders[] = new FileFinder($this->basePaths);
 
         return 1 == count($finders) ? $finders[0] : new ChainFinder($finders);
+    }
+
+    private function getDetector()
+    {
+        $detectors = $this->detectors;
+
+        if ($this->mimeTypes) {
+            $detectors[] = new ExtensionDetector($this->mimeTypes);
+        }
+
+        if (class_exists('finfo', false)) {
+            $detectors[] = new FileinfoDetector();
+        }
+
+        return 1 == count($detectors) ? $detectors[0] : new ChainDetector($detectors);
     }
 
     private function getProcessor()

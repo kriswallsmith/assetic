@@ -13,6 +13,7 @@ namespace Assetic\Extension\Core\Visitor;
 
 use Assetic\Asset\AbstractAssetVisitor;
 use Assetic\Asset\AssetInterface;
+use Assetic\Extension\Core\Source\Detector\DetectorInterface;
 use Assetic\Extension\Core\Source\Finder\FinderInterface;
 
 /**
@@ -21,10 +22,12 @@ use Assetic\Extension\Core\Source\Finder\FinderInterface;
 class SourceVisitor extends AbstractAssetVisitor
 {
     private $finder;
+    private $detector;
 
-    public function __construct(FinderInterface $finder)
+    public function __construct(FinderInterface $finder, DetectorInterface $detector)
     {
         $this->finder = $finder;
+        $this->detector = $detector;
 
         parent::__construct(128);
     }
@@ -42,6 +45,7 @@ class SourceVisitor extends AbstractAssetVisitor
             $asset->setAttribute('content', $source->getContent());
             $asset->setAttribute('mtime', $source->getLastModified());
             $asset->setAttribute('extensions', $source->getExtensions());
+            $asset->setAttribute('mime_type', $this->detector->detectMimeType($source));
         }
 
         return $asset;
