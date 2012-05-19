@@ -19,17 +19,36 @@ use Assetic\Asset\AssetInterface;
 class MimeTypeProcessor implements ProcessorInterface
 {
     private $mimeType;
+    private $isRegex;
     private $delegate;
 
     public function __construct($mimeType, ProcessorInterface $delegate)
     {
-        $this->mimeType = $mimeType;
+        if (0 === strpos($mimeType, '/')) {
+            $this->mimeType = $mimeType;
+            $this->isRegex = true;
+        } elseif (false !== strpos($mimeType, '*')) {
+            $this->mimeType = '#^'.str_replace('*', '.*', $mimeType).'$#';
+            $this->isRegex = true;
+        } else {
+            $this->mimeType = $mimeType;
+            $this->isRegex = false;
+        }
+
         $this->delegate = $delegate;
     }
 
     public function process(AssetInterface $asset)
     {
-        if ($this->mimeType === $asset->getAttribute('mime_type')) {
+        $mimeType = $asset->getAttribute('mime_type');
+
+        if ($this->isRegex) {
+            $match = 0 < preg_match($this->mimeType, $mimeType);
+        } else {
+            $match = $this->mimeType === $mimeType;
+        }
+
+        if ($match) {
             $this->delegate->process($asset);
         }
     }
