@@ -21,14 +21,9 @@ class CssExtension extends AbstractExtension
 
     public function initialize(EnvironmentInterface $env)
     {
-        $this->factory = $env->getFactory();
-    }
-
-    public function getLoaderVisitors()
-    {
-        return array(
-            new CssLoader($this->factory),
-        );
+        $env->getExtension('core')
+            ->registerPostProcessor(new CssChildrenProcessor($env->getFactory()), 'text/css')
+        ;
     }
 
     public function getName()

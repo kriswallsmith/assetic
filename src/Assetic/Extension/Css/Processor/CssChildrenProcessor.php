@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Extension\Css\Loader;
+namespace Assetic\Extension\Css\Processor;
 
-use Assetic\Asset\AbstractAssetVisitor;
 use Assetic\Asset\AssetInterface;
 use Assetic\Asset\FactoryInterface;
+use Assetic\Extension\Core\Processor\ProcessorInterface;
 
 /**
- * The CSS loader loads children from CSS assets.
+ * The CSS processor loads children from CSS assets.
  */
-class CssLoader extends AbstractAssetVisitor
+class CssChildrenProcessor implements ProcessorInterface
 {
     const REGEX_COMMENT = '/\/\*.*?\*\//s';
     const REGEX_URL     = '/url\((["\']?)(?<url>.*?)(\\1)\)/';
@@ -29,18 +29,11 @@ class CssLoader extends AbstractAssetVisitor
     public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
-
-        parent::__construct();
     }
 
-    protected function enterAsset(AssetInterface $asset)
+    public function process(AssetInterface $asset)
     {
         if ($asset->getAttribute('css.loaded') || !$content = $asset->getAttribute('content')) {
-            return $asset;
-        }
-
-        $extensions = $asset->getAttribute('extensions', array());
-        if ('css' !== array_pop($extensions)) {
             return $asset;
         }
 

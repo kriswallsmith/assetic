@@ -12,22 +12,22 @@
 namespace Assetic\Test\Extension\Css\Loader;
 
 use Assetic\Asset\Asset;
-use Assetic\Extension\Css\Loader\CssLoader;
+use Assetic\Extension\Css\Processor\CssChildrenProcessor;
 
-class CssLoaderTest extends \PHPUnit_Framework_TestCase
+class CssChildrenProcessorTest extends \PHPUnit_Framework_TestCase
 {
     private $factory;
-    private $loader;
+    private $processor;
 
     protected function setUp()
     {
         $this->factory = $this->getMock('Assetic\Asset\FactoryInterface');
-        $this->loader = new CssLoader($this->factory);
+        $this->processor = new CssChildrenProcessor($this->factory);
     }
 
     protected function tearDown()
     {
-        unset($this->factory, $this->loader);
+        unset($this->factory, $this->processor);
     }
 
     /**
@@ -37,7 +37,7 @@ class CssLoaderTest extends \PHPUnit_Framework_TestCase
     public function shouldReturnAsset($content, $extensions)
     {
         $asset = new Asset(array('content' => $content, 'extensions' => $extensions));
-        $this->assertInstanceOf('Assetic\Asset\AssetInterface', $this->loader->enter($asset));
+        $this->assertInstanceOf('Assetic\Asset\AssetInterface', $this->processor->process($asset));
     }
 
     public function provideContentAndExtensions()
@@ -71,7 +71,7 @@ class CssLoaderTest extends \PHPUnit_Framework_TestCase
             ))
             ->will($this->returnValue($child));
 
-        $this->assertSame($asset, $this->loader->enter($asset));
+        $this->assertSame($asset, $this->processor->process($asset));
         $this->assertCount(1, $asset->getChildren());
     }
 
@@ -89,7 +89,7 @@ class CssLoaderTest extends \PHPUnit_Framework_TestCase
         $this->factory->expects($this->never())
             ->method('createAsset');
 
-        $this->loader->enter($asset);
+        $this->processor->process($asset);
     }
 
     public function provideCommentContent()
@@ -133,7 +133,7 @@ CSS;
                 return $test->getMock('Assetic\Asset\AssetInterface');
             }));
 
-        $asset = $this->loader->enter($asset);
+        $asset = $this->processor->process($asset);
 
         $this->assertCount(4, $asset->getChildren());
         $this->assertEquals(array(
