@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Assetic package, an OpenSky project.
+ * This file is part of Assetic, an OpenSky project.
  *
  * (c) 2010-2012 OpenSky Project Inc
  *
