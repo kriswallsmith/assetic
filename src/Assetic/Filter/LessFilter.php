@@ -111,4 +111,13 @@ EOF;
     {
     }
 
+    /**
+     * {@inheritDoc}
+     * @see Assetic\Filter.DependendFilter::getDefaultOptions()
+     */
+    public function getDefaultOptions(){
+        return array(
+            'pattern' => '/\s*@import.*[\'|\"](.*)[\'|\"].*;\s*/iU'
+        );
+    }
 }

@@ -23,14 +23,20 @@ abstract class DependendFilter implements DependendFilterInterface
     protected $dependencyFiles = array();
 
     /**
+     * @{inheritDoc}
+     */
+    abstract public function getDefaultOptions();
+
+    /**
      * Check if Content has a dependency
      * @param AssetInterface $asset
      */
     public function hasDependencies(AssetInterface $asset)
     {
+        $options = $this->getDefaultOptions();
         $path = $asset->getSourceRoot().DIRECTORY_SEPARATOR.$asset->getSourcePath();
         $plainAssetContent = file_get_contents($path);
-        return preg_match('/\s*@import.*[\'|\"](.*)[\'|\"].*;\s*/iU', $plainAssetContent);
+        return preg_match($options['pattern'], $plainAssetContent);
     }
 
     public function getDependencyLastModified(AssetInterface $asset)
@@ -57,12 +63,13 @@ abstract class DependendFilter implements DependendFilterInterface
 
     protected function addDependencyFiles($path)
     {
+        $options = $this->getDefaultOptions();
         $files = array();
         $return = null;
         //TODO: use asset factory to generate a new asset
         $plainAssetContent = file_get_contents($path);
         $baseDir = dirname($path);
-        if ($return = preg_match_all('/\s*@import.*[\'|\"](.*)[\'|\"].*;\s*/iU', $plainAssetContent, $matches)) {
+        if ($return = preg_match_all($options['pattern'], $plainAssetContent, $matches)) {
             foreach ($matches[1] as $file) {
                 $filePath = $baseDir . DIRECTORY_SEPARATOR . $file;
                 if (!in_array($filePath, $this->dependencyFiles)) {

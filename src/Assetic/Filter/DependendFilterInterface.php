@@ -31,4 +31,12 @@ interface DependendFilterInterface extends FilterInterface
      * @param AssetInterface $asset An asset
      */
     function getDependencyLastModified(AssetInterface $asset);
+
+    /**
+     * Get the defaultoptions for this dependencies
+     * @return array(
+     *    'pattern' => '/somepattern/'
+     * );
+     */
+    function getDefaultOptions();
 }
