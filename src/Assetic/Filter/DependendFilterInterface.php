@@ -14,7 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 
 /**
- * A filter manipulates an asset at load and dump.
+ * A DependendFilter adds Dependency Management features
  *
  * @author Philipp A. Mohrenweiser <phiamo@googlemail.com>
  */
