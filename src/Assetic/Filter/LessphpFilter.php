@@ -12,15 +12,12 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use lessc;
 
 /**
  * Loads LESS files using the PHP implementation of less, lessphp.
  *
  * Less files are mostly compatible, but there are slight differences.
- *
- * To use this, you need to clone https://github.com/leafo/lessphp and make
- * sure to either include lessphp.inc.php or tell your autoloader that's where
- * lessc is located.
  *
  * @link http://leafo.net/lessphp/
  *
@@ -41,7 +38,7 @@ class LessphpFilter implements FilterInterface
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
-        $lc = new \lessc();
+        $lc = new lessc();
         if ($root && $path) {
             $lc->importDir = dirname($root.'/'.$path);
         }

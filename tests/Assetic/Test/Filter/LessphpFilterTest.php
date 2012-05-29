@@ -22,10 +22,6 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        if (!isset($_SERVER['LESSPHP'])) {
-            $this->markTestSkipped('No lessphp configuration.');
-        }
-
         $this->filter = new LessphpFilter();
     }
 
