@@ -12,7 +12,6 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use lessc;
 
 /**
  * Loads LESS files using the PHP implementation of less, lessphp.
@@ -38,7 +37,7 @@ class LessphpFilter implements FilterInterface
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
-        $lc = new lessc();
+        $lc = new \lessc();
         if ($root && $path) {
             $lc->importDir = dirname($root.'/'.$path);
         }
