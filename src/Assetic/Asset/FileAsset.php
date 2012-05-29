@@ -11,6 +11,7 @@
 
 namespace Assetic\Asset;
 
+use Assetic\Filter\DependendFilterInterface;
 use Assetic\Util\PathUtils;
 use Assetic\Filter\FilterInterface;
 
@@ -73,6 +74,21 @@ class FileAsset extends BaseAsset
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
 
-        return filemtime($source);
+        $lastModified = filemtime($source);
+
+        $dependendModificationDate = 0;
+
+        foreach ($this->getFilters() as $filter) {
+            if ($filter instanceof DependendFilterInterface) {
+                if($filter->hasDependencies($this)){
+                    $filterModificationDate = $filter->getDependencyLastModified($this);
+                    if($dependendModificationDate < $filterModificationDate){
+                        $dependendModificationDate = $filterModificationDate;
+                    }
+                }
+            }
+        }
+
+        return $lastModified < $dependendModificationDate ? $dependendModificationDate : $lastModified;
     }
 }
