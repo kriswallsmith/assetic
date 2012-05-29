@@ -11,7 +11,6 @@
 
 namespace Assetic\Asset;
 
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Assetic\Filter\DependendFilterInterface;
 use Assetic\Util\PathUtils;
 use Assetic\Filter\FilterInterface;
