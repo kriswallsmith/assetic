@@ -21,12 +21,11 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessFilter implements FilterInterface
+class LessFilter extends DependendFilter
 {
     private $nodeBin;
     private $nodePaths;
     private $compress;
-
     /**
      * Constructor.
      *
@@ -111,4 +110,5 @@ EOF;
     public function filterDump(AssetInterface $asset)
     {
     }
+
 }
