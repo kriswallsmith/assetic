@@ -1,6 +1,6 @@
 {
     "name": "kriswallsmith/assetic",
-    "description": "Asset Management for PHP 5.3",
+    "description": "Asset Management for PHP",
     "keywords": ["assets", "compression", "minification"],
     "homepage": "https://github.com/kriswallsmith/assetic",
     "type": "library",
