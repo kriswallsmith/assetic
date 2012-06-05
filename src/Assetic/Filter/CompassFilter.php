@@ -47,6 +47,7 @@ class CompassFilter implements FilterInterface
     private $loadPaths = array();
     private $httpPath;
     private $httpImagesPath;
+    private $generatedImagesPath;
     private $httpJavascriptsPath;
 
     public function __construct($compassPath = '/usr/bin/compass')
@@ -147,6 +148,11 @@ class CompassFilter implements FilterInterface
         $this->httpImagesPath = $httpImagesPath;
     }
 
+    public function setGeneratedImagesPath($generatedImagesPath)
+    {
+        $this->generatedImagesPath = $generatedImagesPath;
+    }
+
     public function setHttpJavascriptsPath($httpJavascriptsPath)
     {
         $this->httpJavascriptsPath = $httpJavascriptsPath;
@@ -232,6 +238,10 @@ class CompassFilter implements FilterInterface
 
         if ($this->httpImagesPath) {
             $optionsConfig['http_images_path'] = $this->httpImagesPath;
+        }
+
+        if ($this->generatedImagesPath) {
+            $optionsConfig['generated_images_path'] = $this->generatedImagesPath;
         }
 
         if ($this->httpJavascriptsPath) {
