@@ -105,4 +105,27 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $resource = new DirectoryResource(__DIR__.'foo');
         $this->assertEquals(0, iterator_count($resource), 'works for non-existent directory');
     }
+
+    public function testFollowSymlinks()
+    {
+        // Create the symlink if it doesn't already exist yet (if someone broke the entire testsuite perhaps)
+        if (!is_dir(__DIR__.'/Fixtures/dir3')) {
+            symlink(__DIR__.'/Fixtures/dir2', __DIR__.'/Fixtures/dir3');
+        }
+
+        $resource = new DirectoryResource(__DIR__.'/Fixtures');
+
+        foreach ($resource as $r) {
+            ++$count;
+        }
+
+        $this->assertEquals(6, $count);
+    }
+
+    public function tearDown()
+    {
+        if (is_dir(__DIR__.'/Fixtures/dir3')) {
+            unlink(__DIR__.'/Fixtures/dir3');
+        }
+    }
 }
