@@ -18,10 +18,6 @@ use Assetic\Asset\AssetInterface;
  *
  * Less files are mostly compatible, but there are slight differences.
  *
- * To use this, you need to clone https://github.com/leafo/lessphp and make
- * sure to either include lessphp.inc.php or tell your autoloader that's where
- * lessc is located.
- *
  * @link http://leafo.net/lessphp/
  *
  * @author David Buchmann <david@liip.ch>
