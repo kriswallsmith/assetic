@@ -79,7 +79,7 @@ class DirectoryResource implements IteratorResourceInterface
 
     protected function getInnerIterator()
     {
-        return new DirectoryResourceFilterIterator(new \RecursiveDirectoryIterator($this->path), $this->pattern);
+        return new DirectoryResourceFilterIterator(new \RecursiveDirectoryIterator($this->path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), $this->pattern);
     }
 }
 
@@ -128,6 +128,6 @@ class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
 
     public function getChildren()
     {
-        return new self(new \RecursiveDirectoryIterator($this->current()->getPathname()), $this->pattern);
+        return new self(new \RecursiveDirectoryIterator($this->current()->getPathname(), \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), $this->pattern);
     }
 }
