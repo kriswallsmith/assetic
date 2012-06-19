@@ -115,6 +115,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
 
         $resource = new DirectoryResource(__DIR__.'/Fixtures');
 
+        $count = 0;
         foreach ($resource as $r) {
             ++$count;
         }
