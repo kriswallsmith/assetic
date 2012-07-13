@@ -133,6 +133,11 @@ class CompassFilter implements FilterInterface
         $this->plugins[] = $plugin;
     }
 
+    public function setLoadPaths(array $loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+
     public function addLoadPath($loadPath)
     {
         $this->loadPaths[] = $loadPath;
