@@ -20,6 +20,7 @@
         "twig/twig": ">=1.6.0,<2.0",
         "leafo/lessphp": "*"
     },
+    "minimum-stability": "dev",
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler"
