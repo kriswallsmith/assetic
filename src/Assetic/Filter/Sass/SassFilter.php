@@ -30,6 +30,7 @@ class SassFilter implements FilterInterface
     const STYLE_COMPRESSED = 'compressed';
 
     private $sassPath;
+    private $rubyPath;
     private $unixNewlines;
     private $scss;
     private $style;
@@ -41,9 +42,10 @@ class SassFilter implements FilterInterface
     private $noCache;
     private $compass;
 
-    public function __construct($sassPath = '/usr/bin/sass')
+    public function __construct($sassPath = '/usr/bin/sass', $rubyPath = null)
     {
         $this->sassPath = $sassPath;
+        $this->rubyPath = $rubyPath;
         $this->cacheLocation = realpath(sys_get_temp_dir());
     }
 
@@ -99,7 +101,7 @@ class SassFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder(array($this->sassPath));
+        $pb = new ProcessBuilder(array($this->rubyPath, $this->sassPath));
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();

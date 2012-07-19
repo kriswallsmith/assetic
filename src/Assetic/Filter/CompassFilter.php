@@ -25,6 +25,7 @@ use Symfony\Component\Process\ProcessBuilder;
 class CompassFilter implements FilterInterface
 {
     private $compassPath;
+    private $rubyPath;
     private $scss;
 
     // sass options
@@ -50,9 +51,10 @@ class CompassFilter implements FilterInterface
     private $generatedImagesPath;
     private $httpJavascriptsPath;
 
-    public function __construct($compassPath = '/usr/bin/compass')
+    public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
     {
         $this->compassPath = $compassPath;
+        $this->rubyPath = $rubyPath;
         $this->cacheLocation = sys_get_temp_dir();
 
         if ('cli' !== php_sapi_name()) {
@@ -172,6 +174,7 @@ class CompassFilter implements FilterInterface
         $tempDir = realpath(sys_get_temp_dir());
 
         $pb = new ProcessBuilder(array(
+            $this->rubyPath,
             $this->compassPath,
             'compile',
             $tempDir,
@@ -330,12 +333,12 @@ class CompassFilter implements FilterInterface
 
         // does we have an associative array ?
         if (count(array_filter(array_keys($array), "is_numeric")) != count($array)) {
-            foreach($array as $name => $value) {
+            foreach ($array as $name => $value) {
                 $output[] = sprintf('    :%s => "%s"', $name, addcslashes($value, '\\'));
             }
             $output = "{\n".implode(",\n", $output)."\n}";
         } else {
-            foreach($array as $name => $value) {
+            foreach ($array as $name => $value) {
                 $output[] = sprintf('    "%s"', addcslashes($value, '\\'));
             }
             $output = "[\n".implode(",\n", $output)."\n]";
