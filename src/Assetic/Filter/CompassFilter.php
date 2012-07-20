@@ -178,12 +178,16 @@ class CompassFilter implements FilterInterface
         // compass does not seems to handle symlink, so we use realpath()
         $tempDir = realpath(sys_get_temp_dir());
 
-        $pb = new ProcessBuilder(array(
-            $this->rubyPath,
+        $compassProcessArgs = array(
             $this->compassPath,
             'compile',
             $tempDir,
-        ));
+        );
+        if (null !== $this->rubyPath) {
+            array_unshift($compassProcessArgs, $this->rubyPath);
+        }
+
+        $pb = new ProcessBuilder($compassProcessArgs);
         $pb->inheritEnvironmentVariables();
 
         if ($this->force) {

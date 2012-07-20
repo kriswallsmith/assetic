@@ -101,7 +101,12 @@ class SassFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder(array($this->rubyPath, $this->sassPath));
+        $sassProcessArgs = array($this->sassPath);
+        if (null !== $this->rubyPath) {
+            array_unshift($sassProcessArgs, $this->rubyPath);
+        }
+
+        $pb = new ProcessBuilder($sassProcessArgs);
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
