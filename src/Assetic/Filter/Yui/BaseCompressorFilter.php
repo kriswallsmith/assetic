@@ -80,11 +80,10 @@ abstract class BaseCompressorFilter implements FilterInterface
 
         // input and output files
         $tempDir = realpath(sys_get_temp_dir());
-        $hash = substr(sha1(time().rand(11111, 99999)), 0, 7);
-        $input = $tempDir.DIRECTORY_SEPARATOR.$hash.'.'.$type;
-        $output = $tempDir.DIRECTORY_SEPARATOR.$hash.'-min.'.$type;
+        $input = tempnam($tempDir, 'YUI-IN-');
+        $output = tempnam($tempDir, 'YUI-OUT-');
         file_put_contents($input, $content);
-        $pb->add('-o')->add($output)->add($input);
+        $pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
