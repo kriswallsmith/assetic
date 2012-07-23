@@ -53,7 +53,7 @@ class FilterManager
      *
      * @param string $name An asset name candidate
      *
-     * @throws InvalidArgumentException If the asset name is invalid
+     * @throws \InvalidArgumentException If the asset name is invalid
      */
     protected function checkName($name)
     {

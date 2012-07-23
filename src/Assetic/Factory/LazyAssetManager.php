@@ -111,7 +111,7 @@ class LazyAssetManager extends AssetManager
      *
      * @return array The formula
      *
-     * @throws InvalidArgumentException If there is no formula by that name
+     * @throws \InvalidArgumentException If there is no formula by that name
      */
     public function getFormula($name)
     {
@@ -140,7 +140,7 @@ class LazyAssetManager extends AssetManager
     /**
      * Loads formulae from resources.
      *
-     * @throws LogicException If a resource has been added to an invalid loader
+     * @throws \LogicException If a resource has been added to an invalid loader
      */
     public function load()
     {

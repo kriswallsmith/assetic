@@ -29,7 +29,7 @@ class AssetManager
      *
      * @return AssetInterface The asset
      *
-     * @throws InvalidArgumentException If there is no asset by that name
+     * @throws \InvalidArgumentException If there is no asset by that name
      */
     public function get($name)
     {

@@ -31,7 +31,7 @@ class FileAsset extends BaseAsset
      * @param string $sourceRoot The source asset root directory
      * @param string $sourcePath The source asset path
      *
-     * @throws InvalidArgumentException If the supplied root doesn't match the source when guessing the path
+     * @throws \InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
     public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
     {
