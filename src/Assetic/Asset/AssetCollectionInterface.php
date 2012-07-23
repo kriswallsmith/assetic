@@ -37,7 +37,7 @@ interface AssetCollectionInterface extends AssetInterface, \Traversable
      *
      * @param AssetInterface $needle The leaf to remove
      *
-     * @throws InvalidArgumentException If the asset cannot be found
+     * @throws \InvalidArgumentException If the asset cannot be found
      */
     function removeLeaf(AssetInterface $leaf);
 
