@@ -31,7 +31,7 @@ class HttpAsset extends BaseAsset
      * @param string $sourceUrl The source URL
      * @param array  $filters   An array of filters
      *
-     * @throws InvalidArgumentException If the first argument is not an URL
+     * @throws \InvalidArgumentException If the first argument is not an URL
      */
     public function __construct($sourceUrl, $filters = array(), $ignoreErrors = false, array $vars = array())
     {

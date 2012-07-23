@@ -25,7 +25,7 @@ class AsseticNode extends \Twig_Node
      *  * var_name: The name of the variable to expose to the body node
      *
      * @param AssetInterface     $asset      The asset
-     * @param Twig_NodeInterface $body       The body node
+     * @param \Twig_NodeInterface $body       The body node
      * @param array              $inputs     An array of input strings
      * @param array              $filters    An array of filter strings
      * @param string             $name       The name of the asset
