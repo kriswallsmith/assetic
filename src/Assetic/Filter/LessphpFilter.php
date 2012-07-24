@@ -23,7 +23,7 @@ use Assetic\Asset\AssetInterface;
  * @author David Buchmann <david@liip.ch>
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessphpFilter implements FilterInterface
+class LessphpFilter extends AbstractLessFilter
 {
     private $presets = array();
 
@@ -51,19 +51,10 @@ class LessphpFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
+        parent::filterLoad($asset);
+
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
-
-        if (preg_match_all('/\s*@import.*[\'|\"](.*)[\'|\"].*;\s*/iU', $asset->getContent(), $matches)) {
-            foreach ($matches[1] as $file) {
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
-                if (!$extension) {
-                    $file .= ".less";
-                }
-
-                $asset->addResourcePath($root.'/'.$file);
-            }
-        }
 
         $lc = new \lessc();
         if ($root && $path) {

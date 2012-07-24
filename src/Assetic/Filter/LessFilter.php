@@ -21,7 +21,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessFilter implements FilterInterface
+class LessFilter extends AbstractLessFilter
 {
     private $nodeBin;
     private $nodePaths;
@@ -65,6 +65,8 @@ class LessFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
+        parent::filterLoad($asset);
+
         static $format = <<<'EOF'
 var less = require('less');
 var sys  = require(process.binding('natives').util ? 'util' : 'sys');
@@ -87,17 +89,6 @@ EOF;
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
-
-        if (preg_match_all('/\s*@import.*[\'|\"](.*)[\'|\"].*;\s*/iU', $asset->getContent(), $matches)) {
-            foreach ($matches[1] as $file) {
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
-                if (!$extension) {
-                    $file .= ".less";
-                }
-
-                $asset->addResourcePath($root.'/'.$file);
-            }
-        }
 
         // parser options
         $parserOptions = array();

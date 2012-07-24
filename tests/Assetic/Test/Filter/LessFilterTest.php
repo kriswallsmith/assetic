@@ -85,7 +85,7 @@ EOF;
 
     public function testLastModified()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less', array($this->filter));
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main_nested.less', array($this->filter));
         $asset->load();
 
         $time = $asset->getLastModified();
