@@ -54,6 +54,17 @@ class LessphpFilter implements FilterInterface
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
+        if (preg_match_all('/\s*@import.*[\'|\"](.*)[\'|\"].*;\s*/iU', $asset->getContent(), $matches)) {
+            foreach ($matches[1] as $file) {
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                if (!$extension) {
+                    $file .= ".less";
+                }
+
+                $asset->addResourcePath($root.'/'.$file);
+            }
+        }
+
         $lc = new \lessc();
         if ($root && $path) {
             $lc->importDir = dirname($root.'/'.$path);

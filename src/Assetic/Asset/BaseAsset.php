@@ -32,6 +32,7 @@ abstract class BaseAsset implements AssetInterface
     private $loaded;
     private $vars;
     private $values;
+    private $resourcePaths;
 
     /**
      * Constructor.
@@ -49,6 +50,7 @@ abstract class BaseAsset implements AssetInterface
         $this->vars = $vars;
         $this->values = array();
         $this->loaded = false;
+        $this->resourcePaths = array();
     }
 
     public function __clone()
@@ -79,6 +81,8 @@ abstract class BaseAsset implements AssetInterface
      */
     protected function doLoad($content, FilterInterface $additionalFilter = null)
     {
+        $this->resourcePaths = array();
+
         $filter = clone $this->filters;
         if ($additionalFilter) {
             $filter->ensure($additionalFilter);
@@ -89,6 +93,10 @@ abstract class BaseAsset implements AssetInterface
 
         $filter->filterLoad($asset);
         $this->content = $asset->getContent();
+
+        foreach ($asset->getResourcePaths() as $resource) {
+            $this->addResourcePath($resource);
+        }
 
         $this->loaded = true;
     }
@@ -168,5 +176,17 @@ abstract class BaseAsset implements AssetInterface
     public function getValues()
     {
         return $this->values;
+    }
+
+    public function addResourcePath($resource)
+    {
+        if (!in_array($resource, $this->resourcePaths)) {
+            $this->resourcePaths[] = $resource;
+        }
+    }
+
+    public function getResourcePaths()
+    {
+        return $this->resourcePaths;
     }
 }

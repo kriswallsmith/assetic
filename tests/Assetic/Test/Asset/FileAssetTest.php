@@ -50,6 +50,28 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
         $this->assertLessThan(time(), $asset->getLastModified(), '->getLastModified() returns the mtime');
     }
 
+    public function testResourcePathLastModified()
+    {
+        $asset = new FileAsset(__FILE__);
+        $file = tempnam(sys_get_temp_dir(), 'asset_test');
+
+        $time = $asset->getLastModified();
+
+        touch($file);
+
+        $asset->addResourcePath($file);
+
+        $this->assertLessThan($asset->getLastModified(), $time, '->getLastModified() updates when dependency changes');
+
+        $time = $asset->getLastModified();
+
+        sleep(1);
+
+        unlink($file);
+
+        $this->assertLessThan($asset->getLastModified(), $time, '->getLastModified() updates when dependency is deleted');
+    }
+
     public function testDefaultBaseAndPath()
     {
         $asset = new FileAsset(__FILE__);

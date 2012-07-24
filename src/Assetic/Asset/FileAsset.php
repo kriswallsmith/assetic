@@ -11,7 +11,6 @@
 
 namespace Assetic\Asset;
 
-use Assetic\Filter\DependendFilterInterface;
 use Assetic\Util\PathUtils;
 use Assetic\Filter\FilterInterface;
 
@@ -76,19 +75,18 @@ class FileAsset extends BaseAsset
 
         $lastModified = filemtime($source);
 
-        $dependendModificationDate = 0;
+        foreach ($this->getResourcePaths() as $file) {
+            if (!file_exists($file)) {
+                return time();
+            }
 
-        foreach ($this->getFilters() as $filter) {
-            if ($filter instanceof DependendFilterInterface) {
-                if($filter->hasDependencies($this)){
-                    $filterModificationDate = $filter->getDependencyLastModified($this);
-                    if($dependendModificationDate < $filterModificationDate){
-                        $dependendModificationDate = $filterModificationDate;
-                    }
-                }
+            $resourceModificationDate = filemtime($file);
+
+            if ($lastModified < $resourceModificationDate) {
+                $lastModified = $resourceModificationDate;
             }
         }
 
-        return $lastModified < $dependendModificationDate ? $dependendModificationDate : $lastModified;
+        return $lastModified;
     }
 }
