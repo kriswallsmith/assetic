@@ -40,8 +40,14 @@ abstract class AbstractLessFilter implements FilterInterface
             foreach ($matches[1] as $file) {
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
                 if (!$extension) {
-                    $file .= ".less";
+                    $extension = "less";
+                    $file .= ".$extension";
                 }
+
+                if ("less" !== $extension) {
+                    continue;
+                }
+
                 $file = realpath($sourceRoot.'/'.$file);
 
                 $imports[] = $file;
