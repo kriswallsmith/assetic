@@ -27,28 +27,19 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory = new AssetFactory(__DIR__);
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
+
+        $this->factory->addResolver(new \Assetic\Resolver\AssetReferenceResolver($this->am));
+        $this->factory->addResolver(new \Assetic\Resolver\HttpAssetResolver());
+        $this->factory->addResolver(new \Assetic\Resolver\GlobAssetResolver(__DIR__));
+        $this->factory->addResolver(new \Assetic\Resolver\FileAssetResolver(__DIR__));
     }
 
-    public function testNoAssetManagerReference()
+    public function testNoAppropriateResolver()
     {
-        $this->setExpectedException('LogicException', 'There is no asset manager.');
+        $this->setExpectedException('LogicException', 'Can not resolve asset "@foo".');
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('@foo'));
-    }
-
-    public function testNoAssetManagerNotReference()
-    {
-        $factory = new AssetFactory('.');
-        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $factory->createAsset(array('foo')));
-    }
-
-    public function testNoFilterManager()
-    {
-        $this->setExpectedException('LogicException', 'There is no filter manager.');
-
-        $factory = new AssetFactory('.');
-        $factory->createAsset(array('foo'), array('foo'));
     }
 
     public function testCreateAssetReference()
@@ -143,7 +134,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
             ->with('foo')
             ->will($this->returnValue($this->getMock('Assetic\\Filter\\FilterInterface')));
 
-        $this->factory->createAsset(array('foo.css'), array('?foo'));
+        $this->factory->createAsset(array('../Fixture/root/foo.css'), array('?foo'));
     }
 
     public function testWorkers()
@@ -156,7 +147,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
             ->with($this->isInstanceOf('Assetic\\Asset\\AssetInterface'));
 
         $this->factory->addWorker($worker);
-        $this->factory->createAsset(array('foo.js', 'bar.js'));
+        $this->factory->createAsset(array('../Fixture/root/foo.js', '../Fixture/root/bar.js'));
     }
 
     public function testWorkerReturn()
@@ -170,7 +161,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($asset));
 
         $this->factory->addWorker($worker);
-        $coll = $this->factory->createAsset(array('foo.js', 'bar.js'));
+        $coll = $this->factory->createAsset(array('../Fixture/root/foo.js', '../Fixture/root/bar.js'));
 
         $this->assertEquals(1, count(iterator_to_array($coll)));
     }
@@ -183,10 +174,10 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getMock('Assetic\\Filter\\FilterInterface')));
 
         $inputs = array(
-            'css/main.css',
+            '../Fixture/root/css/main.css',
             array(
                 // nested formula
-                array('css/more.sass'),
+                array('../Fixture/root/css/more.sass'),
                 array('foo'),
             ),
         );

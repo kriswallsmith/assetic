@@ -14,8 +14,9 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "symfony/process": "2.1.*"
+        "php":             ">=5.3.0",
+        "symfony/process": "2.1.*",
+        "symfony/finder":  "2.1.*"
     },
     "require-dev": {
         "twig/twig": ">=1.6.0,<2.0",

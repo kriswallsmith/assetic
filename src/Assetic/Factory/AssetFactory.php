@@ -11,13 +11,10 @@
 
 namespace Assetic\Factory;
 
+use Assetic\Resolver\AssetResolverInterface;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
-use Assetic\Asset\AssetReference;
-use Assetic\Asset\FileAsset;
-use Assetic\Asset\GlobAsset;
-use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
 use Assetic\Factory\Worker\WorkerInterface;
 use Assetic\FilterManager;
@@ -33,6 +30,7 @@ class AssetFactory
     private $debug;
     private $output;
     private $workers;
+    private $resolvers;
     private $am;
     private $fm;
 
@@ -49,6 +47,7 @@ class AssetFactory
         $this->debug     = $debug;
         $this->output    = 'assetic/*';
         $this->workers   = array();
+        $this->resolvers = array();
     }
 
     /**
@@ -89,6 +88,16 @@ class AssetFactory
     public function addWorker(WorkerInterface $worker)
     {
         $this->workers[] = $worker;
+    }
+
+    /**
+     * Adds asset resolver.
+     *
+     * @param AssetResolverInterface $resolver A resolver
+     */
+    public function addResolver(AssetResolverInterface $resolver)
+    {
+        $this->resolvers[] = $resolver;
     }
 
     /**
@@ -195,7 +204,7 @@ class AssetFactory
                 // nested formula
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
-                $asset->add($this->parseInput($input, $options));
+                $asset->add($this->resolveAsset($input, $options));
                 $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
             }
         }
@@ -249,77 +258,27 @@ class AssetFactory
     }
 
     /**
-     * Parses an input string string into an asset.
-     *
-     * The input string can be one of the following:
-     *
-     *  * A reference:     If the string starts with an "at" sign it will be interpreted as a reference to an asset in the asset manager
-     *  * An absolute URL: If the string contains "://" or starts with "//" it will be interpreted as an HTTP asset
-     *  * A glob:          If the string contains a "*" it will be interpreted as a glob
-     *  * A path:          Otherwise the string is interpreted as a filesystem path
-     *
-     * Both globs and paths will be absolutized using the current root directory.
+     * Uses registered asset resolvers to create asset instance from provided input.
      *
      * @param string $input   An input string
      * @param array  $options An array of options
      *
      * @return AssetInterface An asset
      */
-    protected function parseInput($input, array $options = array())
+    protected function resolveAsset($input, array $options = array())
     {
-        if ('@' == $input[0]) {
-            return $this->createAssetReference(substr($input, 1));
-        }
-
-        if (false !== strpos($input, '://') || 0 === strpos($input, '//')) {
-            return $this->createHttpAsset($input, $options['vars']);
-        }
-
-        if (self::isAbsolutePath($input)) {
-            if ($root = self::findRootDir($input, $options['root'])) {
-                $path = ltrim(substr($input, strlen($root)), '/');
-            } else {
-                $path = null;
+        foreach ($this->resolvers as $resolver) {
+            if ($asset = $resolver->resolve($input, $options)) {
+                return $asset;
             }
-        } else {
-            $root  = $this->root;
-            $path  = $input;
-            $input = $this->root.'/'.$path;
         }
-        if (false !== strpos($input, '*')) {
-            return $this->createGlobAsset($input, $root, $options['vars']);
-        } else {
-            return $this->createFileAsset($input, $root, $path, $options['vars']);
-        }
+
+        throw new \LogicException(sprintf('Can not resolve asset "%s".', $input));
     }
 
     protected function createAssetCollection(array $assets = array(), array $options = array())
     {
         return new AssetCollection($assets, array(), null, isset($options['vars']) ? $options['vars'] : array());
-    }
-
-    protected function createAssetReference($name)
-    {
-        if (!$this->am) {
-            throw new \LogicException('There is no asset manager.');
-        }
-
-        return new AssetReference($this->am, $name);
-    }
-
-    protected function createHttpAsset($sourceUrl, $vars)
-    {
-        return new HttpAsset($sourceUrl, array(), false, $vars);
-    }
-
-    protected function createGlobAsset($glob, $root = null, $vars)
-    {
-        return new GlobAsset($glob, array(), $root, $vars);
-    }
-
-    protected function createFileAsset($source, $root = null, $path = null, $vars)
-    {
-        return new FileAsset($source, array(), $root, $path, $vars);
     }
 
     protected function getFilter($name)
@@ -360,27 +319,5 @@ class AssetFactory
         }
 
         return $asset instanceof AssetCollectionInterface ? $asset : $this->createAssetCollection(array($asset));
-    }
-
-    static private function isAbsolutePath($path)
-    {
-        return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
-    }
-
-    /**
-     * Loops through the root directories and returns the first match.
-     *
-     * @param string $path  An absolute path
-     * @param array  $roots An array of root directories
-     *
-     * @return string|null The matching root directory, if found
-     */
-    static private function findRootDir($path, array $roots)
-    {
-        foreach ($roots as $root) {
-            if (0 === strpos($path, $root)) {
-                return $root;
-            }
-        }
     }
 }
