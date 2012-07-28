@@ -119,9 +119,7 @@ class AsseticTokenParser extends \Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        $endtag = 'end'.$this->getTag();
-        $test = function(\Twig_Token $token) use($endtag) { return $token->test($endtag); };
-        $body = $this->parser->subparse($test, true);
+        $body = $this->parser->subparse(array($this, 'testEndTag'), true);
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
@@ -141,6 +139,11 @@ class AsseticTokenParser extends \Twig_TokenParser
     public function getTag()
     {
         return $this->tag;
+    }
+
+    public function testEndTag(\Twig_Token $token)
+    {
+        return $token->test(array('end'.$this->getTag()));
     }
 
     protected function createNode(AssetInterface $asset, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
