@@ -74,6 +74,10 @@ class CompilerJarFilter extends BaseCompilerFilter
             $pb->add('--warning_level')->add($this->warningLevel);
         }
 
+        if (null !== $this->language) {
+            $pb->add('--language_in')->add($this->language);
+        }
+
         $pb->add('--js')->add($cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler'));
         file_put_contents($input, $asset->getContent());
 
