@@ -19,12 +19,14 @@
     },
     "require-dev": {
         "twig/twig": ">=1.6.0,<2.0",
-        "leafo/lessphp": "*"
+        "leafo/lessphp": "*",
+        "leafo/scssphp": "*"
     },
     "minimum-stability": "dev",
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
-        "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler"
+        "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
+        "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" }
