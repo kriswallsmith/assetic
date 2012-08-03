@@ -180,12 +180,15 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             return;
         }
 
-        $mapper = function (AssetInterface $asset)
-        {
-            return $asset->getLastModified();
-        };
+        $mtime = 0;
+        foreach ($this as $asset) {
+            $assetMtime = $asset->getLastModified();
+            if ($assetMtime > $mtime) {
+                $mtime = $assetMtime;
+            }
+        }
 
-        return max(array_map($mapper, $this->assets));
+        return $mtime;
     }
 
     /**

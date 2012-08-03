@@ -12,6 +12,7 @@
 namespace Assetic\Test\Asset;
 
 use Assetic\Asset\StringAsset;
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\AssetCollection;
 use Assetic\Filter\CallablesFilter;
 
@@ -152,17 +153,29 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLastModified($timestamps, $expected)
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $assets = array();
 
         for ($i = 0; $i < count($timestamps); $i++) {
-            $asset->expects($this->at($i))
+            $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+            $asset->expects($this->once())
                 ->method('getLastModified')
                 ->will($this->returnValue($timestamps[$i]));
+            $assets[$i] = $asset;
         }
 
-        $coll = new AssetCollection(array_fill(0, count($timestamps), $asset));
+        $coll = new AssetCollection($assets);
 
         $this->assertEquals($expected, $coll->getLastModified(), '->getLastModifed() returns the highest last modified');
+    }
+
+    public function testGetLastModifiedWithValues()
+    {
+        $vars = array('locale');
+        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', array(), null, null, $vars);
+
+        $coll = new AssetCollection(array($asset), array(), null, $vars);
+        $coll->setValues(array('locale' => 'en'));
+        $coll->getLastModified();
     }
 
     public function getTimestampsAndExpected()
