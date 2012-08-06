@@ -18,7 +18,7 @@ use Assetic\Filter\LessphpFilter;
 /**
  * @group integration
  */
-class LessphpFilterTest extends \PHPUnit_Framework_TestCase
+class LessphpFilterTest extends LessFilterTest
 {
     protected function setUp()
     {
@@ -27,31 +27,5 @@ class LessphpFilterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->filter = new LessphpFilter();
-    }
-
-    public function testFilterLoad()
-    {
-        $asset = new StringAsset('.foo{.bar{width:1+ 1;}}');
-        $asset->load();
-
-        $this->filter->filterLoad($asset);
-
-        $this->assertEquals(".foo .bar { width:2; }\n", $asset->getContent(), '->filterLoad() parses the content');
-    }
-
-    public function testImport()
-    {
-        $expected = <<<EOF
-.foo { color:blue; }
-.foo { color:red; }
-
-EOF;
-
-        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
-        $asset->load();
-
-        $this->filter->filterLoad($asset);
-
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
 }

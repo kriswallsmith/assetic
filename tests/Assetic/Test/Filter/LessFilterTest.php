@@ -20,7 +20,7 @@ use Assetic\Filter\LessFilter;
  */
 class LessFilterTest extends \PHPUnit_Framework_TestCase
 {
-    private $filter;
+    protected $filter;
 
     protected function setUp()
     {
