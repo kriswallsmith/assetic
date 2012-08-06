@@ -175,7 +175,11 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $coll = new AssetCollection(array($asset), array(), null, $vars);
         $coll->setValues(array('locale' => 'en'));
-        $coll->getLastModified();
+        try {
+            $coll->getLastModified();
+        } catch (\InvalidArgumentException $e) {
+            $this->fail("->getLastModified() shouldn't fail for assets with vars");
+        }
     }
 
     public function getTimestampsAndExpected()
