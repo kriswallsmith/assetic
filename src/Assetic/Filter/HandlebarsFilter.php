@@ -23,9 +23,6 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class HandlebarsFilter implements FilterInterface
 {
-    private static $OK_RETURN_CODE = 0;
-    private static $NODE_EXECUTABLE_NOT_FOUND_RETURN_CODE = 127;
-
     private $handlebarsPath;
     private $nodePath;
 
@@ -50,7 +47,15 @@ class HandlebarsFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $processBuilder = $this->createProcessBuilder();
+        $executables = array();
+
+        if ($this->nodePath !== null) {
+            $executables[] = $this->nodePath;
+        }
+
+        $executables[] = $this->handlebarsPath;
+
+        $processBuilder = new ProcessBuilder($executables);
 
         $templateName = basename($asset->getSourcePath());
 
@@ -77,11 +82,11 @@ class HandlebarsFilter implements FilterInterface
         unlink($inputPath);
         rmdir($inputDirPath);
 
-        if (self::$NODE_EXECUTABLE_NOT_FOUND_RETURN_CODE === $returnCode) {
+        if (127 === $returnCode) {
             throw new \RuntimeException('Path to node executable could not be resolved.');
         }
 
-        if (self::$OK_RETURN_CODE < $returnCode) {
+        if (0 < $returnCode) {
             if (file_exists($outputPath)) {
                 unlink($outputPath);
             }
@@ -96,19 +101,6 @@ class HandlebarsFilter implements FilterInterface
         unlink($outputPath);
 
         $asset->setContent($compiledJs);
-    }
-
-    private function createProcessBuilder()
-    {
-        $executables = array();
-
-        if ($this->nodePath !== null) {
-            $executables[] = $this->nodePath;
-        }
-
-        $executables[] = $this->handlebarsPath;
-
-        return new ProcessBuilder($executables);
     }
 
     public function filterDump(AssetInterface $asset)
