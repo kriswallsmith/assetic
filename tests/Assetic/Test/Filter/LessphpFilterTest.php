@@ -18,41 +18,22 @@ use Assetic\Filter\LessphpFilter;
 /**
  * @group integration
  */
-class LessphpFilterTest extends \PHPUnit_Framework_TestCase
+class LessphpFilterTest extends LessFilterTest
 {
     protected function setUp()
     {
         $this->filter = new LessphpFilter();
     }
 
-    public function testFilterLoad()
-    {
-        $asset = new StringAsset('.foo{.bar{width:1+ 1;}}');
-        $asset->load();
-
-        $this->filter->filterLoad($asset);
-
-        $this->assertEquals(".foo .bar { width:2; }\n", $asset->getContent(), '->filterLoad() parses the content');
-    }
-
-    public function testImport()
+    public function testPresets()
     {
         $expected = <<<EOF
-.foo { color:blue; }
-.foo { color:red; }
+.foo {
+  color: green;
+}
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
-        $asset->load();
-
-        $this->filter->filterLoad($asset);
-
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
-    }
-
-    public function testPresets()
-    {
         $asset = new StringAsset('.foo { color: @bar }');
         $asset->load();
 
@@ -62,6 +43,6 @@ EOF;
 
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals(".foo { color:green; }\n", $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+        $this->assertEquals($expected, $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
     }
 }
