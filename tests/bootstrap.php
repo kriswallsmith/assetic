@@ -44,7 +44,3 @@ if (isset($_SERVER['PACKAGER'])) {
 if (isset($_SERVER['PACKER'])) {
     require_once $_SERVER['PACKER'];
 }
-
-if (isset($_SERVER['PHPCSSEMBED'])) {
-    require_once $_SERVER['PHPCSSEMBED'];
-}
