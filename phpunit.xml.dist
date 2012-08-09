@@ -32,6 +32,7 @@
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
         <!-- <server name="UGLIFYJS_BIN" value="/path/to/uglifyjs" /> -->
         <!-- <server name="PACKER" value="/path/to/class.JavaScriptPacker.php" /> -->
+        <!-- <server name="PHPCSSEMBED" value="/path/to/phpcssembed/src/autoload.php" /> -->
     </php>
 
     <filter>
