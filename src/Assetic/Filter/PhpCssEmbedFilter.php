@@ -11,8 +11,15 @@
 
 namespace Assetic\Filter;
 
+use CssEmbed\CssEmbed;
 use Assetic\Asset\AssetInterface;
 
+/**
+ * A filter that embed url directly into css
+ *
+ * @author Pierre Tachoire <pierre.tachoire@gmail.com>
+ * @link https://github.com/krichprollsch/phpCssEmbed
+ */
 class PhpCssEmbedFilter implements FilterInterface
 {
     private $presets = array();
@@ -27,9 +34,9 @@ class PhpCssEmbedFilter implements FilterInterface
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
-        $pce = new \CssEmbed\CssEmbed();
+        $pce = new CssEmbed();
         if ($root && $path) {
-            $pce->setRootDir( dirname($root.'/'.$path) );
+            $pce->setRootDir(dirname($root.'/'.$path));
         }
 
         $asset->setContent($pce->embedString($asset->getContent()));

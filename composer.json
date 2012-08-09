@@ -20,7 +20,8 @@
     "require-dev": {
         "twig/twig": ">=1.6.0,<2.0",
         "leafo/lessphp": "*",
-        "leafo/scssphp": "*"
+        "leafo/scssphp": "*",
+        "ptachoire/cssembed": "*"
     },
     "minimum-stability": "dev",
     "suggest": {

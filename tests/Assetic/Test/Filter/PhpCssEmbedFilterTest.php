@@ -19,13 +19,6 @@ use Assetic\Filter\PhpCssEmbedFilter;
  */
 class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!isset($_SERVER['PHPCSSEMBED'])) {
-            $this->markTestSkipped('There is no PHPCSSEMBED environment variable.');
-        }
-    }
-
     public function testCssEmbedDataUri()
     {
         $data = base64_encode(file_get_contents(__DIR__.'/fixtures/home.png'));
@@ -33,7 +26,7 @@ class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
         $asset->load();
 
-        $filter = new PhpCssEmbedFilter($_SERVER['PHPCSSEMBED']);
+        $filter = new PhpCssEmbedFilter();
         $filter->filterLoad($asset);
 
         $this->assertContains('url(data:image/png;base64,'.$data, $asset->getContent());

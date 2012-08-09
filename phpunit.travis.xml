@@ -29,7 +29,6 @@
         <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
         <server name="PACKAGER" value="vendor/packager/packager.php" />
         <server name="PACKER" value="vendor/packer/class.JavaScriptPacker.php" />
-        <server name="PHPCSSEMBED" value="vendor/phpcssembed/src/autoload.php" />
     </php>
 
     <filter>
