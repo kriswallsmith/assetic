@@ -186,6 +186,10 @@ class AssetFactory
             $options['name'] = $this->generateAssetName($inputs, $filters, $options);
         }
 
+        if (!isset($options['fileext'])) {
+            $options['fileext'] = true;
+        }
+
         $asset = $this->createAssetCollection(array(), $options);
         $extensions = array();
 
@@ -196,7 +200,9 @@ class AssetFactory
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
                 $asset->add($this->parseInput($input, $options));
-                $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+                if ($options['fileext']) {
+                    $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+                }
             }
         }
 
@@ -226,7 +232,7 @@ class AssetFactory
         }
 
         // append consensus extension if missing
-        if (1 == count($extensions) && !pathinfo($options['output'], PATHINFO_EXTENSION) && $extension = key($extensions)) {
+        if ($options['fileext'] && 1 == count($extensions) && !pathinfo($options['output'], PATHINFO_EXTENSION) && $extension = key($extensions)) {
             $options['output'] .= '.'.$extension;
         }
 
