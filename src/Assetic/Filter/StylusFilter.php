@@ -26,6 +26,7 @@ class StylusFilter implements FilterInterface
     private $nodeBin;
     private $nodePaths;
     private $compress;
+    private $useNib;
 
     /**
      * Constructs filter.
@@ -50,15 +51,30 @@ class StylusFilter implements FilterInterface
     }
 
     /**
+     * Enable the use of Nib
+     *
+     * @param   boolean     $useNib
+     */
+    public function setUseNib($useNib)
+    {
+        $this->useNib = $useNib;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<'EOF'
+        static $format = <<<"EOF"
 var stylus = require('stylus');
 var sys    = require(process.binding('natives').util ? 'util' : 'sys');
+var nib    = %s ? require('nib') : function f() {
+    return f;
+};
 
-stylus(%s, %s).render(function(e, css){
+stylus(%s, %s)
+    .use(nib())
+    .render(function(e, css){
     if (e) {
         throw e;
     }
@@ -93,6 +109,7 @@ EOF;
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
         file_put_contents($input, sprintf($format,
+            $this->useNib ? 'true' : 'false',
             json_encode($asset->getContent()),
             json_encode($parserOptions)
         ));
