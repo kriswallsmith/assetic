@@ -59,6 +59,8 @@ class FileAsset extends BaseAsset
             $this->getValues());
 
         if (!is_file($source)) {
+            if (is_dir($source)) return;
+
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
 
@@ -71,6 +73,8 @@ class FileAsset extends BaseAsset
             $this->getValues());
 
         if (!is_file($source)) {
+            if (is_dir($source)) return;
+
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
         return filemtime($source);
