@@ -25,7 +25,8 @@
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler"
     },
     "autoload": {
-        "psr-0": { "Assetic": "src/" }
+        "psr-0": { "Assetic": "src/" },
+        "files": ["src/functions.php"]
     },
     "extra": {
         "branch-alias": {
