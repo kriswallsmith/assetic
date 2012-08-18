@@ -46,7 +46,7 @@ abstract class BaseCssFilter implements FilterInterface
      */
     protected function filterUrls($content, $callback, $limit = -1, & $count = 0)
     {
-        return preg_replace_callback('/url\((["\']?)(?<url>.*?)(\\1)\)/', $callback, $content, $limit, $count);
+        return preg_replace_callback('/url\((["\']?)(?P<url>.*?)(\\1)\)/', $callback, $content, $limit, $count);
     }
 
     /**
@@ -63,8 +63,8 @@ abstract class BaseCssFilter implements FilterInterface
     protected function filterImports($content, $callback, $limit = -1, & $count = 0, $includeUrl = true)
     {
         $pattern = $includeUrl
-            ? '/@import (?:url\()?(\'|"|)(?<url>[^\'"\)\n\r]*)\1\)?;?/'
-            : '/@import (?!url\()(\'|"|)(?<url>[^\'"\)\n\r]*)\1;?/';
+            ? '/@import (?:url\()?(\'|"|)(?P<url>[^\'"\)\n\r]*)\1\)?;?/'
+            : '/@import (?!url\()(\'|"|)(?P<url>[^\'"\)\n\r]*)\1;?/';
 
         return preg_replace_callback($pattern, $callback, $content, $limit, $count);
     }
