@@ -27,6 +27,7 @@
         <!-- <server name="RUBY_BIN" value="/path/to/ruby" /> -->
         <!-- <server name="SASS_BIN" value="/path/to/sass" /> -->
         <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
+        <!-- <server name="STYLUS_BIN" value="/path/to/stylus" /> -->
         <!-- <server name="SYMFONY_PROCESS" value="/path/to/Process" /> -->
         <!-- <server name="TWIG_LIB" value="/path/to/twig/lib" /> -->
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->

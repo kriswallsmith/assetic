@@ -23,21 +23,26 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class StylusFilter implements FilterInterface
 {
-    private $nodeBin;
-    private $nodePaths;
+    private $stylusPath;
+    private $nodePath;
+    private $modulesPath;
+
+    // Stylus options
     private $compress;
     private $useNib;
 
     /**
      * Constructs filter.
      *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
+     * @param string $stylusPath      The path to the stylus binary
+     * @param string $nodePath        The path to the node binary
+     * @param array  $nodeModulesPath An array of node paths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct($stylusPath = '/usr/bin/stylus', $nodePath = '/usr/bin/node', array $nodeModulesPath = array())
     {
-        $this->nodeBin = $nodeBin;
-        $this->nodePaths = $nodePaths;
+        $this->stylusPath = $stylusPath;
+        $this->nodePath = $nodePath;
+        $this->modulesPath = $nodeModulesPath;
     }
 
     /**
@@ -65,58 +70,44 @@ class StylusFilter implements FilterInterface
      */
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<"EOF"
-var stylus = require('stylus');
-var sys    = require(process.binding('natives').util ? 'util' : 'sys');
-var nib    = %s ? require('nib') : function f() {
-    return f;
-};
+        $pb = new ProcessBuilder(array(
+            $this->nodePath,
+            $this->stylusPath,
+        ));
 
-stylus(%s, %s)
-    .use(nib())
-    .render(function(e, css){
-    if (e) {
-        throw e;
-    }
-
-    sys.print(css);
-    process.exit(0);
-});
-
-EOF;
+        for ($i = count($this->modulesPath) - 1; $i >= 0; $i--) {
+            $pb
+                ->add('--include')
+                ->add($this->modulesPath[$i])
+            ;
+        }
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
-
-        // parser options
-        $parserOptions = array();
+        
         if ($root && $path) {
-            $parserOptions['paths'] = array(dirname($root.'/'.$path));
-            $parserOptions['filename'] = basename($path);
+            $pb
+                ->add('--include')
+                ->add(dirname($root.'/'.$path))
+            ;
         }
 
-        if (null !== $this->compress) {
-            $parserOptions['compress'] = $this->compress;
+        if ($this->compress) {
+            $pb->add('--compress');
         }
 
-        $pb = new ProcessBuilder();
-        $pb->inheritEnvironmentVariables();
-
-        // node.js configuration
-        if (0 < count($this->nodePaths)) {
-            $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
+        if ($this->useNib) {
+            $pb
+                ->add('--use')
+                ->add('nib')
+            ;
         }
 
-        $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
-        file_put_contents($input, sprintf($format,
-            $this->useNib ? 'true' : 'false',
-            json_encode($asset->getContent()),
-            json_encode($parserOptions)
-        ));
-
+        // We need to override stdin as it's the only way to use stdout to fetch the results
+        // (otherwise, stylus overwrites the input file if we try using a temporary file without the .styl extension)
+        $pb->setInput($asset->getContent());
         $proc = $pb->getProcess();
         $code = $proc->run();
-        unlink($input);
 
         if (0 < $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());

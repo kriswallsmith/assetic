@@ -23,11 +23,11 @@ class StylusFilterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        if (!isset($_SERVER['NODE_BIN']) || !isset($_SERVER['NODE_PATH'])) {
+        if (!isset($_SERVER['STYLUS_BIN']) || !isset($_SERVER['NODE_BIN']) || !isset($_SERVER['NODE_PATH'])) {
             $this->markTestSkipped('No node.js configuration.');
         }
 
-        $this->filter = new StylusFilter($_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
+        $this->filter = new StylusFilter($_SERVER['STYLUS_BIN'], $_SERVER['NODE_BIN'], array($_SERVER['NODE_PATH']));
     }
 
     public function testFilterLoad()
@@ -37,7 +37,7 @@ class StylusFilterTest extends \PHPUnit_Framework_TestCase
 
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals("body {\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+        $this->assertEquals("body {\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n\n", $asset->getContent(), '->filterLoad() parses the content');
     }
 
     public function testFilterLoadWithCompression()
@@ -48,7 +48,7 @@ class StylusFilterTest extends \PHPUnit_Framework_TestCase
         $this->filter->setCompress(true);
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}\n", $asset->getContent(), '->filterLoad() parses the content and compress it');
+        $this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}\n\n", $asset->getContent(), '->filterLoad() parses the content and compress it');
     }
 
     public function testFilterLoadWithUseNib()
@@ -58,8 +58,7 @@ class StylusFilterTest extends \PHPUnit_Framework_TestCase
 
         $this->filter->setUseNib(true);
         $this->filter->filterLoad($asset);
-        var_dump($asset->getContent());
 
-        $this->assertEquals("body {\n  white-space: nowrap;\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n", $asset->getContent(), '->filterLoad() parses the content using the nib extension');
+        $this->assertEquals("body {\n  white-space: nowrap;\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n\n", $asset->getContent(), '->filterLoad() parses the content using the nib extension');
     }
 }
