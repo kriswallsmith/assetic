@@ -108,7 +108,7 @@ function _assetic_urls($inputs = array(), $filters = array(), array $options = a
     $combine = isset($options['combine']) ? $options['combine'] : !$debug;
 
     $one = $coll->getTargetPath();
-    if ($combine) {
+    if (!$combine) {
         $many = array();
         foreach ($coll as $leaf) {
             $many[] = $leaf->getTargetPath();
