@@ -31,7 +31,8 @@
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris"
     },
     "autoload": {
-        "psr-0": { "Assetic": "src/" }
+        "psr-0": { "Assetic": "src/" },
+        "files": ["src/functions.php"]
     },
     "extra": {
         "branch-alias": {
