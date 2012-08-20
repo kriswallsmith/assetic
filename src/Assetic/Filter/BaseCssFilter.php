@@ -30,6 +30,7 @@ abstract class BaseCssFilter implements FilterInterface
     {
         $content = $this->filterUrls($content, $callback, $limit, $count);
         $content = $this->filterImports($content, $callback, $limit, $count, false);
+        $content = $this->filterIEFilters($content, $callback, $limit, $count);
 
         return $content;
     }
@@ -67,5 +68,20 @@ abstract class BaseCssFilter implements FilterInterface
             : '/@import (?!url\()(\'|"|)(?<url>[^\'"\)\n\r]*)\1;?/';
 
         return preg_replace_callback($pattern, $callback, $content, $limit, $count);
+    }
+
+    /**
+     * Filters all IE filters (AlphaImageLoader filter) through a callable.
+     *
+     * @param string  $content    The CSS
+     * @param mixed   $callback   A PHP callable
+     * @param integer $limit      Limit the number of replacements
+     * @param integer $count      Will be populated with the count
+     *
+     * @return string The filtered CSS
+     */
+    protected function filterIEFilters($content, $callback, $limit = -1, & $count = 0)
+    {
+        return preg_replace_callback('/src=(["\']?)(?<url>.*?)\\1/', $callback, $content, $limit, $count);
     }
 }
