@@ -86,7 +86,16 @@ class CssRewriteFilter extends BaseCssFilter
                 $url = substr($url, 3);
             }
 
-            return str_replace($matches['url'], $host.$path.$url, $matches[0]);
+            $parts = array();
+            foreach (explode('/', $host.$path.$url) as $part) {
+                if ('..' === $part && count($parts) && '..' !== end($parts)) {
+                    array_pop($parts);
+                } else {
+                    $parts[] = $part;
+                }
+            }
+
+            return str_replace($matches['url'], implode('/', $parts), $matches[0]);
         });
 
         $asset->setContent($content);
