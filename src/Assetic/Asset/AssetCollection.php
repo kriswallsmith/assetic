@@ -133,7 +133,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     {
         // loop through leaves and dump each asset
         $parts = array();
-        foreach ($this as $asset) {
+        foreach ($this->assets as $asset) {
             $parts[] = $asset->dump($additionalFilter);
         }
 
