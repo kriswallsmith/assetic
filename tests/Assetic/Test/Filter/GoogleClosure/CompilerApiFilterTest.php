@@ -55,5 +55,30 @@ EOF;
         $filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getContent());
+
+
+        $input = <<<EOF
+(function() {
+    var int = 123;
+    console.log(int);
+})();
+EOF;
+
+        $expected = <<<EOF
+(function() {
+  console.log(123)
+})();
+
+EOF;
+
+        $asset = new StringAsset($input);
+        $asset->load();
+
+        $filter->setLanguage(CompilerApiFilter::LANGUAGE_ECMASCRIPT5);
+
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+
+        $this->assertEquals($expected, $asset->getContent());
     }
 }
