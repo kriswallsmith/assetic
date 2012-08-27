@@ -50,7 +50,7 @@ class CompassFilter implements FilterInterface
     private $httpImagesPath;
     private $generatedImagesPath;
     private $httpJavascriptsPath;
-    private $homeEnv;
+    private $homeEnv = true;
 
     public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
     {
