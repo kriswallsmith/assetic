@@ -50,6 +50,7 @@ class CompassFilter implements FilterInterface
     private $httpImagesPath;
     private $generatedImagesPath;
     private $httpJavascriptsPath;
+    private $homeEnv;
 
     public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
     {
@@ -163,6 +164,11 @@ class CompassFilter implements FilterInterface
     public function setHttpJavascriptsPath($httpJavascriptsPath)
     {
         $this->httpJavascriptsPath = $httpJavascriptsPath;
+    }
+
+    public function setHomeEnv($homeEnv)
+    {
+        $this->homeEnv = $homeEnv;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -308,8 +314,10 @@ class CompassFilter implements FilterInterface
         // output
         $output = $tempName.'.css';
 
-        // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
-        $pb->setEnv('HOME', sys_get_temp_dir());
+        if ($this->homeEnv) {
+            // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
+            $pb->setEnv('HOME', sys_get_temp_dir());
+        }
 
         $proc = $pb->getProcess();
         $code = $proc->run();
