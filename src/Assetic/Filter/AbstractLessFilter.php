@@ -36,8 +36,14 @@ abstract class AbstractLessFilter implements FilterInterface
     {
         $imports = array();
 
-        if (preg_match_all('/\s*@import.*[\'|\"](.*)[\'|\"].*;\s*/iU', $content, $matches)) {
-            foreach ($matches[1] as $file) {
+        if (preg_match_all('/\s*@import\s*(\'([^\']*)\'|\"([^\"]*)\")\s*;\s*/iU', $content, $matches)) {
+            foreach (array_merge($matches[2], $matches[3]) as $file) {
+
+                $file = trim($file);
+                if (!$file) {
+                    continue;
+                }
+
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
                 if (!$extension) {
                     $extension = "less";
