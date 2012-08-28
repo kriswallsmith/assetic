@@ -25,5 +25,5 @@ interface WorkerInterface
      *
      * @param AssetInterface $asset An asset
      */
-    function process(AssetInterface $asset);
+    public function process(AssetInterface $asset);
 }

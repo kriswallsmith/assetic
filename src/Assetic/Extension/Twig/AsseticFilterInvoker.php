@@ -11,8 +11,6 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\Factory\AssetFactory;
-
 /**
  * Filters a single asset.
  *

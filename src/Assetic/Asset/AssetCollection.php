@@ -140,8 +140,7 @@ class AssetCollection implements AssetInterface, \IteratorAggregate
             return;
         }
 
-        $mapper = function (AssetInterface $asset)
-        {
+        $mapper = function (AssetInterface $asset) {
             return $asset->getLastModified();
         };
 

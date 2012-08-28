@@ -24,8 +24,10 @@ class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
         $input = <<<EOF
 (function() {
 function unused(){}
-function foo(bar) {
+function foo(bar)
+{
     var foo = 'foo';
+
     return foo + bar;
 }
 alert(foo("bar"));

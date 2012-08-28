@@ -40,7 +40,7 @@ class StylusFilter implements FilterInterface
     /**
      * Enable output compression.
      *
-     * @param   boolean     $compress
+     * @param boolean $compress
      */
     public function setCompress($compress)
     {

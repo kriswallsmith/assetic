@@ -12,7 +12,6 @@
 namespace Assetic\Asset;
 
 use Assetic\AssetManager;
-use Assetic\Filter\FilterCollection;
 use Assetic\Filter\FilterInterface;
 
 /**

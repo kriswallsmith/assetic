@@ -34,8 +34,7 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
     {
         $dir = sys_get_temp_dir().'/assetic/fscachetest';
 
-        $tearDown = function() use($dir)
-        {
+        $tearDown = function() use ($dir) {
             array_map('unlink', glob($dir.'/*'));
             @rmdir($dir);
         };

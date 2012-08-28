@@ -102,7 +102,7 @@ class AsseticTokenParser extends \Twig_TokenParser
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
         $endtag = 'end'.$this->getTag();
-        $test = function(\Twig_Token $token) use($endtag) { return $token->test($endtag); };
+        $test = function(\Twig_Token $token) use ($endtag) { return $token->test($endtag); };
         $body = $this->parser->subparse($test, true);
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);

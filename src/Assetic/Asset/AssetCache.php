@@ -51,6 +51,7 @@ class AssetCache implements AssetInterface
         $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'load');
         if ($this->cache->has($cacheKey)) {
             $this->asset->setContent($this->cache->get($cacheKey));
+
             return;
         }
 
@@ -123,7 +124,7 @@ class AssetCache implements AssetInterface
      *
      * @return string A key for identifying the current asset
      */
-    static private function getCacheKey(AssetInterface $asset, FilterInterface $additionalFilter = null, $salt = '')
+    private static function getCacheKey(AssetInterface $asset, FilterInterface $additionalFilter = null, $salt = '')
     {
         if ($additionalFilter) {
             $asset = clone $asset;
