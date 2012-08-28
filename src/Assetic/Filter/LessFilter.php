@@ -26,6 +26,13 @@ class LessFilter implements FilterInterface
     private $nodeBin;
     private $nodePaths;
     private $compress;
+    
+    /**
+     * The the paths that less will search for includes from
+     * 
+     * @var array
+     */
+    private $paths = array();
 
     /**
      * Constructor.
@@ -42,6 +49,26 @@ class LessFilter implements FilterInterface
     public function setCompress($compress)
     {
         $this->compress = $compress;
+    }
+    
+    /**
+     * Adds a path in which less will search for imported files
+     * 
+     * @param string $path
+     */
+    public function addPath($path)
+    {
+        $this->paths[] = $path;
+    }
+    
+    /**
+     * Sets the paths in which less will search for imported files
+     * 
+     * @param array $paths
+     */
+    public function setPaths(array $paths)
+    {
+        $this->paths = $paths;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -71,8 +98,15 @@ EOF;
 
         // parser options
         $parserOptions = array();
+        if (!empty($this->paths)) {
+            $parserOptions['paths'] = $this->paths;
+        }
+        
         if ($root && $path) {
-            $parserOptions['paths'] = array(dirname($root.'/'.$path));
+            if (!array_key_exists('paths',$parserOptions)) {
+                $parserOptions['paths'] = array();
+            }
+            array_unshift($parserOptions['paths'], dirname($root.'/'.$path));
             $parserOptions['filename'] = basename($path);
         }
 
