@@ -52,7 +52,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 
             // path diffs
             array('body { background: url(%s); }', 'css/body/bg.css', 'css/build/main.css', '../../images/bg.gif', '../../images/bg.gif'),
-            array('body { background: url(%s); }', 'css/body.css', 'main.css', '../images/bg.gif', 'css/../images/bg.gif'), // fixme
+            array('body { background: url(%s); }', 'css/body.css', 'main.css', '../images/bg.gif', 'images/bg.gif'),
             array('body { background: url(%s); }', 'body.css', 'css/main.css', 'images/bg.gif', '../images/bg.gif'),
             array('body { background: url(%s); }', 'source/css/body.css', 'output/build/main.css', '../images/bg.gif', '../../source/images/bg.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '//example.com/images/bg.gif', '//example.com/images/bg.gif'),
@@ -119,6 +119,6 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new CssRewriteFilter();
         $filter->filterDump($asset);
 
-        $this->assertContains('http://www.example.com/css/../images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
+        $this->assertContains('http://www.example.com/images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
     }
 }
