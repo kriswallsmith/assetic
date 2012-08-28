@@ -190,7 +190,7 @@ class CompassFilter implements FilterInterface
             $tempDir,
         );
         if (null !== $this->rubyPath) {
-            array_unshift($compassProcessArgs, $this->rubyPath);
+            $compassProcessArgs = array_merge(explode(' ', $this->rubyPath), $compassProcessArgs);
         }
 
         $pb = new ProcessBuilder($compassProcessArgs);
