@@ -10,6 +10,7 @@
     <php>
         <!-- <server name="CLOSURE_JAR" value="/path/to/google-closure/compiler.jar" /> -->
         <!-- <server name="COFFEE_BIN" value="/path/to/coffee" /> -->
+        <!-- <server name="HANDLEBARS_BIN" value="/path/to/handlebars" /> -->
         <!-- <server name="NODE_BIN" value="/path/to/node" /> -->
         <!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
         <server name="LESSPHP" value="vendor/lessphp/lessc.inc.php" />
