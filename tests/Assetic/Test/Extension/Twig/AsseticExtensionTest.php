@@ -197,6 +197,14 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("js/7d0828c_variable_input.a_2.a.b.js", (string) $xml->url[1]);
     }
 
+    /**
+     * @expectedException Twig_Error
+     */
+    public function testUnclosedTag()
+    {
+        $this->renderXml('unclosed_tag.twig');
+    }
+
     private function renderXml($name, $context = array())
     {
         return new \SimpleXMLElement($this->twig->loadTemplate($name)->render($context));
