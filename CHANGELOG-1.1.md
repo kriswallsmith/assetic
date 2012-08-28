@@ -1,3 +1,7 @@
+1.1.0
+-----
+ * Added Handlebars support
+
 1.1.0-alpha1 (August 28, 2012)
 ------------------------------
 
