@@ -103,7 +103,7 @@ class SassFilter implements FilterInterface
     {
         $sassProcessArgs = array($this->sassPath);
         if (null !== $this->rubyPath) {
-            array_unshift($sassProcessArgs, $this->rubyPath);
+            $sassProcessArgs = array_merge(explode(' ', $this->rubyPath), $sassProcessArgs);
         }
 
         $pb = new ProcessBuilder($sassProcessArgs);
