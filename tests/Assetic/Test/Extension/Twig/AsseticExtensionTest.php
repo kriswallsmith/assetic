@@ -183,6 +183,14 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertStringEndsWith('.css', (string) $xml->asset[0]['url']);
     }
 
+    /**
+     * @expectedException Twig_Error
+     */
+    public function testUnclosedTag()
+    {
+        $this->renderXml('unclosed_tag.twig');
+    }
+
     private function renderXml($name, $context = array())
     {
         return new \SimpleXMLElement($this->twig->loadTemplate($name)->render($context));
