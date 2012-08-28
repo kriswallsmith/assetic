@@ -94,7 +94,7 @@ class AssetWriter
         return $combinations;
     }
 
-    static protected function write($path, $contents)
+    protected static function write($path, $contents)
     {
         if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
             throw new \RuntimeException('Unable to create directory '.$dir);

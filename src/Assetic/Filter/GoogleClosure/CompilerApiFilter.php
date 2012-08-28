@@ -57,6 +57,10 @@ class CompilerApiFilter extends BaseCompilerFilter
             $query['warning_level'] = $this->warningLevel;
         }
 
+        if (null !== $this->language) {
+            $query['language'] = $this->language;
+        }
+
         if (preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))) {
             $context = stream_context_create(array('http' => array(
                 'method'  => 'POST',

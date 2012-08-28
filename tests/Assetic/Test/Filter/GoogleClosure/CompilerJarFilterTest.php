@@ -28,8 +28,10 @@ class CompilerJarFilterTest extends \PHPUnit_Framework_TestCase
         $input = <<<EOF
 (function() {
 function unused(){}
-function foo(bar) {
+function foo(bar)
+{
     var foo = 'foo';
+
     return foo + bar;
 }
 alert(foo("bar"));
@@ -45,6 +47,29 @@ EOF;
         $asset->load();
 
         $filter = new CompilerJarFilter($_SERVER['CLOSURE_JAR']);
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+
+        $this->assertEquals($expected, $asset->getContent());
+
+
+        $input = <<<EOF
+(function() {
+    var int = 123;
+    console.log(int);
+})();
+EOF;
+
+        $expected = <<<EOF
+(function(){console.log(123)})();
+
+EOF;
+
+        $asset = new StringAsset($input);
+        $asset->load();
+
+        $filter->setLanguage(CompilerJarFilter::LANGUAGE_ECMASCRIPT5);
+
         $filter->filterLoad($asset);
         $filter->filterDump($asset);
 

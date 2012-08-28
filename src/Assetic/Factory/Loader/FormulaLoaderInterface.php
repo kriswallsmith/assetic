@@ -30,5 +30,5 @@ interface FormulaLoaderInterface
      *
      * @return array An array of formulae
      */
-    function load(ResourceInterface $resource);
+    public function load(ResourceInterface $resource);
 }

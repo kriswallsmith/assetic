@@ -25,19 +25,19 @@ interface ResourceInterface
      *
      * @return Boolean True if the timestamp is up to date
      */
-    function isFresh($timestamp);
+    public function isFresh($timestamp);
 
     /**
      * Returns the content of the resource.
      *
      * @return string The content
      */
-    function getContent();
+    public function getContent();
 
     /**
      * Returns a unique string for the current resource.
      *
      * @return string A unique string to identity the current resource
      */
-    function __toString();
+    public function __toString();
 }

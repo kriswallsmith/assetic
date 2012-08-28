@@ -32,7 +32,7 @@ class UglifyJsFilter implements FilterInterface
 
     /**
      * @param string $uglifyJsPath Absolute path to the uglifyjs executable
-     * @param string $nodeJsPath Absolute path to the folder containg node.js executable
+     * @param string $nodeJsPath   Absolute path to the folder containg node.js executable
      */
     public function __construct($uglifyJsPath, $nodeJsPath = null)
     {

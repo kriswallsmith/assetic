@@ -25,19 +25,19 @@ interface AssetInterface
      *
      * @param FilterInterface $filter A filter
      */
-    function ensureFilter(FilterInterface $filter);
+    public function ensureFilter(FilterInterface $filter);
 
     /**
      * Returns an array of filters currently applied.
      *
      * @return array An array of filters
      */
-    function getFilters();
+    public function getFilters();
 
     /**
      * Clears all filters from the current asset.
      */
-    function clearFilters();
+    public function clearFilters();
 
     /**
      * Loads the asset into memory and applies load filters.
@@ -46,7 +46,7 @@ interface AssetInterface
      *
      * @param FilterInterface $additionalFilter An additional filter
      */
-    function load(FilterInterface $additionalFilter = null);
+    public function load(FilterInterface $additionalFilter = null);
 
     /**
      * Applies dump filters and returns the asset as a string.
@@ -62,14 +62,14 @@ interface AssetInterface
      *
      * @return string The filtered content of the current asset
      */
-    function dump(FilterInterface $additionalFilter = null);
+    public function dump(FilterInterface $additionalFilter = null);
 
     /**
      * Returns the loaded content of the current asset.
      *
      * @return string The content
      */
-    function getContent();
+    public function getContent();
 
     /**
      * Sets the content of the current asset.
@@ -78,7 +78,7 @@ interface AssetInterface
      *
      * @param string $content The asset content
      */
-    function setContent($content);
+    public function setContent($content);
 
     /**
      * Returns an absolute path or URL to the source asset's root directory.
@@ -94,7 +94,7 @@ interface AssetInterface
      *
      * @return string|null The asset's root
      */
-    function getSourceRoot();
+    public function getSourceRoot();
 
     /**
      * Returns the relative path for the source asset.
@@ -110,47 +110,47 @@ interface AssetInterface
      *
      * @return string|null The source asset path
      */
-    function getSourcePath();
+    public function getSourcePath();
 
     /**
      * Returns the URL for the current asset.
      *
      * @return string|null A web URL where the asset will be dumped
      */
-    function getTargetPath();
+    public function getTargetPath();
 
     /**
      * Sets the URL for the current asset.
      *
      * @param string $targetPath A web URL where the asset will be dumped
      */
-    function setTargetPath($targetPath);
+    public function setTargetPath($targetPath);
 
     /**
      * Returns the time the current asset was last modified.
      *
      * @return integer|null A UNIX timestamp
      */
-    function getLastModified();
+    public function getLastModified();
 
     /**
      * Returns an array of variable names for this asset.
      *
      * @return array
      */
-    function getVars();
+    public function getVars();
 
     /**
      * Sets the values for the asset's variables.
      *
      * @param array $values
      */
-    function setValues(array $values);
+    public function setValues(array $values);
 
     /**
      * Returns the current values for this asset.
      *
      * @return array an array of strings
      */
-    function getValues();
+    public function getValues();
 }

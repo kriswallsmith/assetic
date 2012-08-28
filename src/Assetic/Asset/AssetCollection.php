@@ -69,6 +69,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             $clone = isset($this->clones[$asset]) ? $this->clones[$asset] : null;
             if (in_array($needle, array($asset, $clone), true)) {
                 unset($this->clones[$asset], $this->assets[$i]);
+
                 return true;
             } elseif ($asset instanceof AssetCollectionInterface && $asset->removeLeaf($needle, true)) {
                 return true;
@@ -89,6 +90,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             if (in_array($needle, array($asset, $clone), true)) {
                 unset($this->clones[$asset]);
                 $this->assets[$i] = $replacement;
+
                 return true;
             } elseif ($asset instanceof AssetCollectionInterface && $asset->replaceLeaf($needle, $replacement, true)) {
                 return true;
@@ -180,8 +182,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             return;
         }
 
-        $mapper = function (AssetInterface $asset)
-        {
+        $mapper = function (AssetInterface $asset) {
             return $asset->getLastModified();
         };
 

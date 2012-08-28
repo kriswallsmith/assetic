@@ -14,19 +14,21 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.3.1",
         "symfony/process": "2.1.*"
     },
     "require-dev": {
         "twig/twig": ">=1.6.0,<2.0",
         "leafo/lessphp": "*",
-        "leafo/scssphp": "*"
+        "leafo/scssphp": "*",
+        "ptachoire/cssembed": "*"
     },
     "minimum-stability": "dev",
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
-        "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler"
+        "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
+        "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" }

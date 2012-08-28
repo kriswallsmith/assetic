@@ -25,5 +25,5 @@ interface ValueSupplierInterface
      *
      * @return array
      */
-    function getValues();
+    public function getValues();
 }

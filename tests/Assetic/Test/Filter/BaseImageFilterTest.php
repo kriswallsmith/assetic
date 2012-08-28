@@ -13,7 +13,7 @@ namespace Assetic\Test\Filter;
 
 abstract class BaseImageFilterTest extends \PHPUnit_Framework_TestCase
 {
-    static public function assertMimeType($expected, $data, $message = null)
+    public static function assertMimeType($expected, $data, $message = null)
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
