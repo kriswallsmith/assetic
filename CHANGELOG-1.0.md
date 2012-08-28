@@ -1,3 +1,10 @@
+1.0.4 (August 28, 2012)
+-----------------------
+
+ * Fixed the Twig tag to avoid a fatal error when left unclosed
+ * Added the HashableInterface for non-serialiable filters
+ * Fixed a bug for compass on windows
+
 1.0.3 (March 2, 2012)
 ---------------------
 
