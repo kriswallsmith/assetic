@@ -27,5 +27,5 @@ interface WorkerInterface
      *
      * @return AssetInterface|null May optionally return a replacement asset
      */
-    function process(AssetInterface $asset);
+    public function process(AssetInterface $asset);
 }

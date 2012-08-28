@@ -362,7 +362,7 @@ class AssetFactory
         return $asset instanceof AssetCollectionInterface ? $asset : $this->createAssetCollection(array($asset));
     }
 
-    static private function isAbsolutePath($path)
+    private static function isAbsolutePath($path)
     {
         return '/' == $path[0] || '\\' == $path[0] || (3 < strlen($path) && ctype_alpha($path[0]) && $path[1] == ':' && ('\\' == $path[2] || '/' == $path[2]));
     }
@@ -375,7 +375,7 @@ class AssetFactory
      *
      * @return string|null The matching root directory, if found
      */
-    static private function findRootDir($path, array $roots)
+    private static function findRootDir($path, array $roots)
     {
         foreach ($roots as $root) {
             if (0 === strpos($path, $root)) {

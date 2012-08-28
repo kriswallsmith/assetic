@@ -25,12 +25,12 @@ interface FilterInterface
      *
      * @param AssetInterface $asset An asset
      */
-    function filterLoad(AssetInterface $asset);
+    public function filterLoad(AssetInterface $asset);
 
     /**
      * Filters an asset just before it's dumped.
      *
      * @param AssetInterface $asset An asset
      */
-    function filterDump(AssetInterface $asset);
+    public function filterDump(AssetInterface $asset);
 }
