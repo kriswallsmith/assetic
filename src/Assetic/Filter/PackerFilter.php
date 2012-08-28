@@ -15,8 +15,8 @@ use Assetic\Asset\AssetInterface;
 
 /**
  * Runs assets through Packager, a JavaScript Compressor/Obfuscator.
- * 
- * PHP Version of the Dean Edwards's Packer, ported by Nicolas Martin.   
+ *
+ * PHP Version of the Dean Edwards's Packer, ported by Nicolas Martin.
  *
  * @link http://joliclic.free.fr/php/javascript-packer/en/
  * @author Maximilian Walter <github@max-walter.net>
@@ -24,21 +24,21 @@ use Assetic\Asset\AssetInterface;
 class PackerFilter implements FilterInterface
 {
     protected $encoding = 'None';
-    
+
     protected $fastDecode = true;
-    
+
     protected $specialChars = false;
 
     public function setEncoding($encoding)
     {
         $this->encoding = $encoding;
     }
-    
+
     public function setFastDecode($fastDecode)
     {
         $this->fastDecode = (bool) $fastDecode;
     }
-    
+
     public function setSpecialChars($specialChars)
     {
         $this->specialChars = (bool) $specialChars;

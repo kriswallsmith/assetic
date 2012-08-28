@@ -73,10 +73,10 @@ abstract class BaseCssFilter implements FilterInterface
     /**
      * Filters all IE filters (AlphaImageLoader filter) through a callable.
      *
-     * @param string  $content    The CSS
-     * @param mixed   $callback   A PHP callable
-     * @param integer $limit      Limit the number of replacements
-     * @param integer $count      Will be populated with the count
+     * @param string  $content  The CSS
+     * @param mixed   $callback A PHP callable
+     * @param integer $limit    Limit the number of replacements
+     * @param integer $count    Will be populated with the count
      *
      * @return string The filtered CSS
      */

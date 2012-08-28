@@ -22,7 +22,7 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
         if (!extension_loaded('openssl')) {
             $this->markTestSkipped('The OpenSSL extension is not loaded.');
         }
-        
+
         $asset = new HttpAsset(self::JQUERY);
         $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
     }

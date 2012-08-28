@@ -81,14 +81,15 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         );
         $asset->expects($this->exactly(3))
             ->method('setValues')
-            ->will($this->returnCallback(function($values) use($self, $expectedValues) {
+            ->will($this->returnCallback(function($values) use ($self, $expectedValues) {
                 static $counter = 0;
                 $self->assertEquals($expectedValues[$counter++], $values);
             }));
         $asset->expects($this->exactly(3))
             ->method('getValues')
-            ->will($this->returnCallback(function() use($expectedValues) {
+            ->will($this->returnCallback(function() use ($expectedValues) {
                 static $counter = 0;
+
                 return $expectedValues[$counter++];
             }));
 

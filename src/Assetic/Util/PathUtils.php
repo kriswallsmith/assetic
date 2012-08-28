@@ -27,5 +27,5 @@ abstract class PathUtils
         return strtr($path, $map);
     }
 
-    private final function __construct() { }
+    final private function __construct() { }
 }

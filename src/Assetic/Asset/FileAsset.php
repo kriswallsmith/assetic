@@ -73,6 +73,7 @@ class FileAsset extends BaseAsset
         if (!is_file($source)) {
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
+
         return filemtime($source);
     }
 }

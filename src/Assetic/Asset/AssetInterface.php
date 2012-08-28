@@ -138,19 +138,19 @@ interface AssetInterface
      *
      * @return array
      */
-    function getVars();
+    public function getVars();
 
     /**
      * Sets the values for the asset's variables.
      *
      * @param array $values
      */
-    function setValues(array $values);
+    public function setValues(array $values);
 
     /**
      * Returns the current values for this asset.
      *
      * @return array an array of strings
      */
-    function getValues();
+    public function getValues();
 }
