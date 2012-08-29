@@ -73,13 +73,12 @@ EOF;
 
 EOF;
 
-        $filter = clone $this->filter;
-        $filter->addLoadPath(__DIR__.'/fixtures/less');
+        $this->filter->addLoadPath(__DIR__.'/fixtures/less');
 
         $asset = new StringAsset('@import "main";');
         $asset->load();
 
-        $filter->filterLoad($asset);
+        $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
     }
