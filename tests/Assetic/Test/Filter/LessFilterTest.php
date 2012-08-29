@@ -60,4 +60,27 @@ EOF;
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
+
+    public function testLoadPath()
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue;
+}
+.foo {
+  color: red;
+}
+
+EOF;
+
+        $filter = clone $this->filter;
+        $filter->addLoadPath(__DIR__.'/fixtures/less');
+
+        $asset = new StringAsset('@import "main";');
+        $asset->load();
+
+        $filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
+    }
 }
