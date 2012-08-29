@@ -58,7 +58,7 @@ class FileAsset extends BaseAsset
         $source = PathUtils::resolvePath($this->source, $this->getVars(),
             $this->getValues());
 
-        if (!is_file($source)) {
+        if (!is_file($source) && !is_dir($source)) {
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
 
@@ -70,7 +70,7 @@ class FileAsset extends BaseAsset
         $source = PathUtils::resolvePath($this->source, $this->getVars(),
             $this->getValues());
 
-        if (!is_file($source)) {
+        if (!is_file($source) && !is_dir($source)) {
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
 
