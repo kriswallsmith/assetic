@@ -330,4 +330,21 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll = new AssetCollection();
         $coll->replaceLeaf(new StringAsset('foo'), new StringAsset('bar'));
     }
+    
+    public function testBrowseTree()
+    {
+        $asset1 = new FileAsset(__DIR__.'/../Fixture/browsetree/foo.js');
+        $asset2 = new FileAsset(__DIR__.'/../Fixture/browsetree/view/show.js');
+        $asset3 = new FileAsset(__DIR__.'/../Fixture/browsetree/view/bar/show.js');
+
+        $coll = new AssetCollection(array($asset1, $asset2, $asset3));
+        $coll->load();
+        
+        $this->assertEquals(<<<EOF
+var app = "foo";
+var tpl = "parent show";
+var tpl = "show";
+EOF
+        , $coll->dump());
+    }
 }
