@@ -97,6 +97,22 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $arr = iterator_to_array($assets);
         $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $arr[0], '->createAsset() uses a glob to create a file assets');
     }
+    
+    public function testCreateGlobAssetAndLoadFiles()
+    {
+        $assets = $this->factory->createAsset(array('*/Fixtures/*/*'));
+        $assets->load();
+
+        $this->assertEquals(4, count(iterator_to_array($assets)), '->createAsset() adds files');
+    }
+    
+    public function testCreateGlobAssetAndExcludeDirectories()
+    {
+        $assets = $this->factory->createAsset(array('*/Fixtures/*', '*/Fixtures/*/*'));
+        $assets->load();
+        
+        $this->assertEquals(4, count(iterator_to_array($assets)), '->createAsset() excludes directories and add files');
+    }
 
     public function testCreateAssetCollection()
     {
