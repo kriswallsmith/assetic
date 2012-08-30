@@ -1,1 +1,0 @@
-var tpl = "parent show";
