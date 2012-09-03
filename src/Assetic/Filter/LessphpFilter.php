@@ -27,6 +27,23 @@ class LessphpFilter implements FilterInterface
 {
     private $presets = array();
 
+    /**
+     * Lessphp Load Paths
+     * 
+     * @var array
+     */
+    protected $loadPaths = array();
+
+    /**
+     * Adds a load path to the paths used by lessphp
+     * 
+     * @param string $path Load Path
+     */
+    public function addLoadPath($path)
+    {
+        $this->loadPaths[] = $path;
+    }
+
     public function setPresets(array $presets)
     {
         $this->presets = $presets;
@@ -40,6 +57,9 @@ class LessphpFilter implements FilterInterface
         $lc = new \lessc();
         if ($root && $path) {
             $lc->importDir = dirname($root.'/'.$path);
+        }
+        foreach ($this->loadPaths as $loadPath) {
+            $lc->addImportDir($loadPath);
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
