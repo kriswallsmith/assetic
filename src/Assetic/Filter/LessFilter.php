@@ -28,15 +28,6 @@ class LessFilter extends AbstractLessFilter
     private $compress;
 
     /**
-     * Load Paths
-     *
-     * A list of paths which less will search for includes.
-     * 
-     * @var array
-     */
-    protected $loadPaths = array();
-
-    /**
      * Constructor.
      *
      * @param string $nodeBin   The path to the node binary
@@ -51,16 +42,6 @@ class LessFilter extends AbstractLessFilter
     public function setCompress($compress)
     {
         $this->compress = $compress;
-    }
-
-    /**
-     * Adds a path where less will search for includes
-     * 
-     * @param string $path Load path (absolute)
-     */
-    public function addLoadPath($path)
-    {
-        $this->loadPaths[] = $path;
     }
 
     public function filterLoad(AssetInterface $asset)

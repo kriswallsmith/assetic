@@ -20,6 +20,26 @@ use Assetic\Asset\AssetInterface;
  */
 abstract class AbstractLessFilter implements FilterInterface
 {
+
+    /**
+     * Load Paths
+     *
+     * A list of paths which less will search for includes.
+     * 
+     * @var array
+     */
+    protected $loadPaths = array();
+
+    /**
+     * Adds a path where less will search for includes
+     * 
+     * @param string $path Load path (absolute)
+     */
+    public function addLoadPath($path)
+    {
+        $this->loadPaths[] = $path;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,22 +59,30 @@ abstract class AbstractLessFilter implements FilterInterface
         if (preg_match_all('/\s*@import\s*(\'([^\']*)\'|\"([^\"]*)\")\s*;\s*/iU', $content, $matches)) {
             foreach (array_merge($matches[2], $matches[3]) as $file) {
 
-                $file = trim($file);
-                if (!$file) {
+                $fileName = trim($file);
+                if (!$fileName) {
                     continue;
                 }
 
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $extension = pathinfo($fileName, PATHINFO_EXTENSION);
                 if (!$extension) {
                     $extension = "less";
-                    $file .= ".$extension";
+                    $fileName .= ".$extension";
                 }
 
                 if ("less" !== $extension) {
                     continue;
                 }
 
-                $file = realpath($sourceRoot.'/'.$file);
+                $file = realpath($sourceRoot.'/'.$fileName);
+
+                foreach ($this->loadPaths as $path) {
+                    if (file_exists($file)) {
+                        break;
+                    }
+
+                    $file = realpath($path.'/'.$fileName);
+                }
 
                 $imports[] = $file;
             }

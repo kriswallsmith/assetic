@@ -27,23 +27,6 @@ class LessphpFilter extends AbstractLessFilter
 {
     private $presets = array();
 
-    /**
-     * Lessphp Load Paths
-     * 
-     * @var array
-     */
-    protected $loadPaths = array();
-
-    /**
-     * Adds a load path to the paths used by lessphp
-     * 
-     * @param string $path Load Path
-     */
-    public function addLoadPath($path)
-    {
-        $this->loadPaths[] = $path;
-    }
-
     public function setPresets(array $presets)
     {
         $this->presets = $presets;
