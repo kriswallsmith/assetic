@@ -1,5 +1,8 @@
 1.1.0
 -----
+
+ * Added the UglifyCssFilter
+ * Fixed the handling of directories in the GlobAsset. #256
  * Added Handlebars support
 
 1.1.0-alpha1 (August 28, 2012)
