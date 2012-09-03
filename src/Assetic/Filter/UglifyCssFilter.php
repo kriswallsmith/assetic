@@ -26,9 +26,9 @@ class UglifyCssFilter implements FilterInterface
     private $uglifyCssPath;
     private $nodeJsPath;
 
-    private $noCopyright;
-    private $beautify;
-    private $unsafe;
+    private $expandVars;
+    private $uglyComments;
+    private $cuteComments;
 
     /**
      * @param string $uglifyCssPath Absolute path to the uglifycss executable
@@ -105,32 +105,23 @@ class UglifyCssFilter implements FilterInterface
 
         // input and output files
         $input = tempnam(sys_get_temp_dir(), 'input');
-        $output = tempnam(sys_get_temp_dir(), 'output');
 
         file_put_contents($input, $asset->getContent());
-        $pb->add('-o')->add($output)->add($input);
+        $pb->add($input);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
         if (0 < $code) {
-            if (file_exists($output)) {
-                unlink($output);
-            }
 
             if (127 === $code) {
                 throw new \RuntimeException('Path to node executable could not be resolved.');
             }
 
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        } elseif (!file_exists($output)) {
-            throw new \RuntimeException('Error creating output file.');
         }
 
-        $uglifiedCss = file_get_contents($output);
-        unlink($output);
-
-        $asset->setContent($uglifiedCss);
+        $asset->setContent($proc->getOutput());
     }
 }
