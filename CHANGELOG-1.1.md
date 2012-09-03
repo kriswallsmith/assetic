@@ -1,6 +1,7 @@
 1.1.0
 -----
 
+ * Added the possibility to configure additional load paths for less and lessphp
  * Added the UglifyCssFilter
  * Fixed the handling of directories in the GlobAsset. #256
  * Added Handlebars support
