@@ -216,7 +216,7 @@ $factory = new AssetFactory('/path/to/asset/directory/');
 $factory->setAssetManager($am);
 $factory->setFilterManager($fm);
 $factory->setDebug(true);
-$factory->addWorker(new CacheBustingWorker('content'));
+$factory->addWorker(new CacheBustingWorker(CacheBustingWorker::STRATEGY_CONTENT));
 
 $css = $factory->createAsset(array(
     '@reset',         // load the asset manager's "reset" asset

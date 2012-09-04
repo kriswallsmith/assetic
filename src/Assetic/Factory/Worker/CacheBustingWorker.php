@@ -20,9 +20,12 @@ use Assetic\Asset\AssetInterface;
  */
 class CacheBustingWorker implements WorkerInterface
 {
+    const STRATEGY_CONTENT = 1;
+    const STRATEGY_MODIFICATION = 2;
+
     private $strategy;
 
-    public function __construct($strategy = 'content')
+    public function __construct($strategy = self::STRATEGY_CONTENT)
     {
         $this->strategy = $strategy;
     }
@@ -32,10 +35,10 @@ class CacheBustingWorker implements WorkerInterface
         $hash = hash_init('sha1');
 
         switch($this->strategy) {
-            case 'modification':
+            case self::STRATEGY_MODIFICATION:
                 hash_update($hash, $asset->getLastModified());
                 break;
-            case 'content':
+            case self::STRATEGY_CONTENT:
                 hash_update($hash, $asset->dump());
                 break;
         }

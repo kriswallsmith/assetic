@@ -35,7 +35,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateUniqueAssetNameByContent()
     {
-        $this->worker->setStrategy('content');
+        $this->worker->setStrategy(CacheBustingWorker::STRATEGY_CONTENT);
 
         $filename = 'Resource/Fixtures/css/style.css';
         $filepath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $filename;
@@ -55,7 +55,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateUniqueAssetNameByModificationTime()
     {
-        $this->worker->setStrategy('modification');
+        $this->worker->setStrategy(CacheBustingWorker::STRATEGY_MODIFICATION);
 
         $filename = 'Resource/Fixtures/css/style.css';
         $filepath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $filename;
