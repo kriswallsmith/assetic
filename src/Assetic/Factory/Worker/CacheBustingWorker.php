@@ -12,10 +12,9 @@
 namespace Assetic\Factory\Worker;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
 
 /**
- * Applies a filter to an asset based on a source and/or target path match.
+ * Adds cache busting code
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
