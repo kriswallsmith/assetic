@@ -26,7 +26,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 
         $this->worker = new CacheBustingWorker();
 
-        $this->factory = new AssetFactory(__DIR__ . DIRECTORY_SEPARATOR . '..');
+        $this->factory = new AssetFactory(__DIR__ . '/..');
         $this->factory->setAssetManager($am);
         $this->factory->setFilterManager($fm);
         $this->factory->addWorker($this->worker);
@@ -38,7 +38,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
         $this->worker->setStrategy(CacheBustingWorker::STRATEGY_CONTENT);
 
         $filename = 'Resource/Fixtures/css/style.css';
-        $filepath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $filename;
+        $filepath = __DIR__ . '/../' . $filename;
 
         $originalContent = file_get_contents($filepath);
 
@@ -58,7 +58,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
         $this->worker->setStrategy(CacheBustingWorker::STRATEGY_MODIFICATION);
 
         $filename = 'Resource/Fixtures/css/style.css';
-        $filepath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $filename;
+        $filepath = __DIR__ . '/../' . $filename;
 
         $asset = $this->factory->createAsset(array($filename));
         $this->factory->addWorker(new CacheBustingWorker('modification'));
