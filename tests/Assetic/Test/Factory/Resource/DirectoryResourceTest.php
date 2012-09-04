@@ -120,7 +120,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
             ++$count;
         }
 
-        $this->assertEquals(6, $count);
+        $this->assertEquals(7, $count);
     }
 
     public function tearDown()
