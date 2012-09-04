@@ -5,6 +5,7 @@
  * Added the UglifyCssFilter
  * Fixed the handling of directories in the GlobAsset. #256
  * Added Handlebars support
+ * Added the CacheBustingWorker
 
 1.1.0-alpha1 (August 28, 2012)
 ------------------------------
