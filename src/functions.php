@@ -109,12 +109,12 @@ function _assetic_urls($inputs = array(), $filters = array(), array $options = a
 
     $one = $coll->getTargetPath();
     if ($combine) {
+        $many = array($one);
+    } else {
         $many = array();
         foreach ($coll as $leaf) {
             $many[] = $leaf->getTargetPath();
         }
-    } else {
-        $many = array($one);
     }
 
     return new TraversableString($one, $many);
