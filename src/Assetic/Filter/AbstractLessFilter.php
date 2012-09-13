@@ -74,17 +74,16 @@ abstract class AbstractLessFilter implements FilterInterface
                     continue;
                 }
 
-                $file = realpath($sourceRoot.'/'.$fileName);
+                $paths = array_merge(array($sourceRoot), $this->loadPaths);
 
-                foreach ($this->loadPaths as $path) {
-                    if (file_exists($file)) {
+                foreach ($paths as $path) {
+                    $file = realpath($path.'/'.$fileName);
+
+                    if (false !== $file) {
+                        $imports[] = $file;
                         break;
                     }
-
-                    $file = realpath($path.'/'.$fileName);
                 }
-
-                $imports[] = $file;
             }
         }
 
