@@ -21,14 +21,16 @@
         "twig/twig": ">=1.6.0,<2.0",
         "leafo/lessphp": "*",
         "leafo/scssphp": "*",
-        "ptachoire/cssembed": "*"
+        "ptachoire/cssembed": "*",
+        "leafo/scssphp-compass": "*"
     },
     "minimum-stability": "dev",
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
         "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
-        "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris"
+        "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
+        "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" }
