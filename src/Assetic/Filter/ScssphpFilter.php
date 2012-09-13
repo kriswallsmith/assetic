@@ -24,12 +24,27 @@ use Assetic\Asset\AssetInterface;
  */
 class ScssphpFilter implements FilterInterface
 {
+    private $compass = false;
+
+    public function enableCompass($enable = true)
+    {
+        $this->compass = (Boolean) $enable;
+    }
+
+    public function isCompassEnabled()
+    {
+        return $this->compass;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
         $lc = new \scssc();
+        if ($this->compass) {
+            new \scss_compass($lc);
+        }
         if ($root && $path) {
             $lc->addImportPath(dirname($root.'/'.$path));
         }
