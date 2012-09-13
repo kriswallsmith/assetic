@@ -20,9 +20,14 @@ use Assetic\Filter\ScssphpFilter;
  */
 class ScssphpFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
+
+    private function getFilter($compass = false)
     {
-        $this->filter = new ScssphpFilter();
+        $filter = new ScssphpFilter();
+        if ($compass) {
+            $filter->enableCompass();
+        }
+        return $filter;
     }
 
     public function testFilterLoad()
@@ -36,7 +41,7 @@ EOF;
         $asset = new StringAsset('.foo{.bar{width:1+ 1;}}');
         $asset->load();
 
-        $this->filter->filterLoad($asset);
+        $this->getFilter()->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() parses the content');
     }
@@ -55,8 +60,31 @@ EOF;
         $asset = new FileAsset(__DIR__.'/fixtures/sass/main.scss');
         $asset->load();
 
-        $this->filter->filterLoad($asset);
+        $this->getFilter()->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
+    }
+
+    public function testCompassExtension()
+    {
+        $expected = <<<EOF
+.shadow {
+  -webkit-box-shadow : 10px 10px 8px red;
+  -moz-box-shadow : 10px 10px 8px red;
+  box-shadow : 10px 10px 8px red; }
+
+EOF;
+
+        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
+        $asset->load();
+
+        $this->getFilter(true)->filterLoad($asset);
+        $this->assertEquals($expected, $asset->getContent(), 'compass plugin can be enabled');
+
+        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
+        $asset->load();
+
+        $this->getFilter(false)->filterLoad($asset);
+        $this->assertEquals("@import \"compass\";\n", $asset->getContent(), 'compass plugin can be disabled');
     }
 }
