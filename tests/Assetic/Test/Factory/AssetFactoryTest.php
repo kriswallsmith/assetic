@@ -103,7 +103,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $assets = $this->factory->createAsset(array('*/Fixtures/*/*'));
         $assets->load();
 
-        $this->assertEquals(4, count(iterator_to_array($assets)), '->createAsset() adds files');
+        $this->assertEquals(5, count(iterator_to_array($assets)), '->createAsset() adds files');
     }
 
     public function testCreateGlobAssetAndExcludeDirectories()
@@ -111,7 +111,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $assets = $this->factory->createAsset(array('*/Fixtures/*', '*/Fixtures/*/*'));
         $assets->load();
 
-        $this->assertEquals(4, count(iterator_to_array($assets)), '->createAsset() excludes directories and add files');
+        $this->assertEquals(5, count(iterator_to_array($assets)), '->createAsset() excludes directories and add files');
     }
 
     public function testCreateAssetCollection()

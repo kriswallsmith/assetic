@@ -199,6 +199,36 @@ $js->dump();
 $js->dump();
 ```
 
+Cache Busting
+-------------
+
+You can use the CacheBustingWorker to provide unique names.
+
+To strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
+
+``` php
+<?php
+
+use Assetic\Factory\AssetFactory;
+use Assetic\Factory\Worker\CacheBustingWorker;
+
+$factory = new AssetFactory('/path/to/asset/directory/');
+$factory->setAssetManager($am);
+$factory->setFilterManager($fm);
+$factory->setDebug(true);
+$factory->addWorker(new CacheBustingWorker(CacheBustingWorker::STRATEGY_CONTENT));
+
+$css = $factory->createAsset(array(
+    '@reset',         // load the asset manager's "reset" asset
+    'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
+), array(
+    'scss',           // filter through the filter manager's "scss" filter
+    '?yui_css',       // don't use this filter in debug mode
+));
+
+echo $css->dump();
+```
+
 Static Assets
 -------------
 
