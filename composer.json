@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
-        "files": ["src/functions.php"]
+        "files": ["src/required.php"]
     },
     "extra": {
         "branch-alias": {
