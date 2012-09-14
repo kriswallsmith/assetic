@@ -72,7 +72,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
                 unset($this->clones[$asset], $this->assets[$i]);
 
                 return true;
-            } elseif ($asset instanceof AssetCollectionInterface && $asset->removeLeaf($needle, true)) {
+            }
+
+            if ($asset instanceof AssetCollectionInterface && $asset->removeLeaf($needle, true)) {
                 return true;
             }
         }
@@ -93,7 +95,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
                 $this->assets[$i] = $replacement;
 
                 return true;
-            } elseif ($asset instanceof AssetCollectionInterface && $asset->replaceLeaf($needle, $replacement, true)) {
+            }
+
+            if ($asset instanceof AssetCollectionInterface && $asset->replaceLeaf($needle, $replacement, true)) {
                 return true;
             }
         }

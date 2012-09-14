@@ -36,7 +36,10 @@ abstract class BaseAsset implements AssetInterface
     /**
      * Constructor.
      *
-     * @param array $filters Filters for the asset
+     * @param array  $filters    Filters for the asset
+     * @param string $sourceRoot The root directory
+     * @param string $sourcePath The asset path
+     * @param array  $vars
      */
     public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
     {

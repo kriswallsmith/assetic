@@ -124,7 +124,9 @@ class UglifyJsFilter implements FilterInterface
             }
 
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        } elseif (!file_exists($output)) {
+        }
+
+        if (!file_exists($output)) {
             throw new \RuntimeException('Error creating output file.');
         }
 

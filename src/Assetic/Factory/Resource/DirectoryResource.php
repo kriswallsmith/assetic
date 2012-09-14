@@ -121,9 +121,9 @@ class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
 
         if ($file->isDir()) {
             return '.' != $name[0];
-        } else {
-            return null === $this->pattern || 0 < preg_match($this->pattern, $name);
         }
+
+        return null === $this->pattern || 0 < preg_match($this->pattern, $name);
     }
 
     public function getChildren()

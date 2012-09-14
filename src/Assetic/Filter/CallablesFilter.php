@@ -23,6 +23,10 @@ class CallablesFilter implements FilterInterface
     private $loader;
     private $dumper;
 
+    /**
+     * @param callable|null $loader
+     * @param callable|null $dumper
+     */
     public function __construct($loader = null, $dumper = null)
     {
         $this->loader = $loader;

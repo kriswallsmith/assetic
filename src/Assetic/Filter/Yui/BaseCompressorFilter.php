@@ -95,7 +95,9 @@ abstract class BaseCompressorFilter implements FilterInterface
             }
 
             throw FilterException::fromProcess($proc)->setInput($content);
-        } elseif (!file_exists($output)) {
+        }
+
+        if (!file_exists($output)) {
             throw new \RuntimeException('Error creating output file.');
         }
 

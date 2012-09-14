@@ -43,6 +43,8 @@ class TwigFormulaLoader implements FormulaLoaderInterface
     /**
      * Loads assets from the supplied node.
      *
+     * @param \Twig_Node $node
+     *
      * @return array An array of asset formulae indexed by name
      */
     private function loadNode(\Twig_Node $node)

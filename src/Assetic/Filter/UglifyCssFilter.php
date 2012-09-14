@@ -113,12 +113,11 @@ class UglifyCssFilter implements FilterInterface
         $code = $proc->run();
         unlink($input);
 
+        if (127 === $code) {
+            throw new \RuntimeException('Path to node executable could not be resolved.');
+        }
+
         if (0 < $code) {
-
-            if (127 === $code) {
-                throw new \RuntimeException('Path to node executable could not be resolved.');
-            }
-
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 

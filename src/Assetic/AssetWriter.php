@@ -30,6 +30,9 @@ class AssetWriter
      * Constructor.
      *
      * @param string $dir The base web directory
+     * @param array  $varValues
+     *
+     * @throws \InvalidArgumentException if a variable value is not a string
      */
     public function __construct($dir, array $varValues = array())
     {

@@ -40,7 +40,6 @@ class AssetFactory
      * Constructor.
      *
      * @param string  $root   The default root directory
-     * @param string  $output The default output string
      * @param Boolean $debug  Filters prefixed with a "?" will be omitted in debug mode
      */
     public function __construct($root, $debug = false)
@@ -286,11 +285,12 @@ class AssetFactory
             $path  = $input;
             $input = $this->root.'/'.$path;
         }
+
         if (false !== strpos($input, '*')) {
             return $this->createGlobAsset($input, $root, $options['vars']);
-        } else {
-            return $this->createFileAsset($input, $root, $path, $options['vars']);
         }
+
+        return $this->createFileAsset($input, $root, $path, $options['vars']);
     }
 
     protected function createAssetCollection(array $assets = array(), array $options = array())
@@ -338,6 +338,8 @@ class AssetFactory
      * collection itself.
      *
      * @param AssetCollectionInterface $asset An asset collection
+     *
+     * @return AssetCollectionInterface
      */
     private function applyWorkers(AssetCollectionInterface $asset)
     {

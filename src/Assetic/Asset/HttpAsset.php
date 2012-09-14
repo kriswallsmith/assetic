@@ -28,8 +28,10 @@ class HttpAsset extends BaseAsset
     /**
      * Constructor.
      *
-     * @param string $sourceUrl The source URL
-     * @param array  $filters   An array of filters
+     * @param string  $sourceUrl    The source URL
+     * @param array   $filters      An array of filters
+     * @param Boolean $ignoreErrors
+     * @param array   $vars
      *
      * @throws \InvalidArgumentException If the first argument is not an URL
      */
@@ -53,12 +55,13 @@ class HttpAsset extends BaseAsset
     public function load(FilterInterface $additionalFilter = null)
     {
         if (false === $content = @file_get_contents(PathUtils::resolvePath(
-                $this->sourceUrl, $this->getVars(), $this->getValues()))) {
+                $this->sourceUrl, $this->getVars(), $this->getValues()))
+        ) {
             if ($this->ignoreErrors) {
                 return;
-            } else {
-                throw new \RuntimeException(sprintf('Unable to load asset from URL "%s"', $this->sourceUrl));
             }
+
+            throw new \RuntimeException(sprintf('Unable to load asset from URL "%s"', $this->sourceUrl));
         }
 
         $this->doLoad($content, $additionalFilter);
