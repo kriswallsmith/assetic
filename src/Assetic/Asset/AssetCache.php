@@ -48,6 +48,13 @@ class AssetCache implements AssetInterface
 
     public function load(FilterInterface $additionalFilter = null)
     {
+        if ($this->asset instanceof AssetWithResourcesInterface) {
+            $resourcesCacheKey = self::getCacheKey($this->asset, $additionalFilter, 'resources');
+            if ($this->cache->has($resourcesCacheKey)) {
+                $this->asset->setResourcePaths($this->cache->get($resourcesCacheKey));
+            }
+        }
+
         $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'load');
         if ($this->cache->has($cacheKey)) {
             $this->asset->setContent($this->cache->get($cacheKey));
@@ -56,17 +63,30 @@ class AssetCache implements AssetInterface
         }
 
         $this->asset->load($additionalFilter);
+        if ($this->asset instanceof AssetWithResourcesInterface) {
+            $this->cache->set($resourcesCacheKey, $this->asset->getResourcesPaths());
+        }
         $this->cache->set($cacheKey, $this->asset->getContent());
     }
 
     public function dump(FilterInterface $additionalFilter = null)
     {
+        if ($this->asset instanceof AssetWithResourcesInterface) {
+            $resourcesCacheKey = self::getCacheKey($this->asset, $additionalFilter, 'resources');
+            if ($this->cache->has($resourcesCacheKey)) {
+                $this->asset->setResourcePaths($this->cache->get($resourcesCacheKey));
+            }
+        }
+
         $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'dump');
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
 
         $content = $this->asset->dump($additionalFilter);
+        if ($this->asset instanceof AssetWithResourcesInterface) {
+            $this->cache->set($resourcesCacheKey, $this->asset->getResourcesPaths());
+        }
         $this->cache->set($cacheKey, $content);
 
         return $content;

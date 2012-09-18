@@ -22,7 +22,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseAsset implements AssetInterface
+abstract class BaseAsset implements AssetInterface, AssetWithResourcesInterface
 {
     private $filters;
     private $sourceRoot;
@@ -178,6 +178,9 @@ abstract class BaseAsset implements AssetInterface
         return $this->values;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addResourcePath($resource)
     {
         if (!in_array($resource, $this->resourcePaths)) {
@@ -185,8 +188,19 @@ abstract class BaseAsset implements AssetInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getResourcePaths()
     {
         return $this->resourcePaths;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setResourcePaths(array $resourcePaths)
+    {
+        $this->resourcePaths = $resourcePaths;
     }
 }
