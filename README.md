@@ -1,4 +1,4 @@
-# Assetic ![project status](http://stillmaintained.com/kriswallsmith/assetic.png) #
+# Assetic [![Build Status](https://secure.travis-ci.org/kriswallsmith/assetic.png)](http://travis-ci.org/kriswallsmith/assetic) #
 
 Assetic is an asset management framework for PHP.
 
