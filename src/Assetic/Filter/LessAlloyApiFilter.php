@@ -37,17 +37,17 @@ class LessAlloyApiFilter implements FilterInterface
         if (preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))) {
             $context = stream_context_create(array('http' => array(
                 'method'  => 'POST',
-                'header'  => 'Content-Type: application/x-www-form-encoded',
-                'content' => http_build_query($query),
+                'header'  => 'Content-Type: application/json',
+                'content' => json_encode($query),
             )));
 
             $response = file_get_contents('http://alloy.divshot.com/compile', false, $context);
         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
             $ch = curl_init('http://alloy.divshot.com/compile');
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-encoded'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($query));
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
             $response = curl_exec($ch);
             curl_close($ch);
