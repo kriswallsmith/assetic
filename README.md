@@ -77,7 +77,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
- * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
+ * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the [Google Closure Compiler API](http://closure-compiler.appspot.com)
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
  * `HandlebarsFilter`: compiles Handlebars templates into Javascript
  * `JpegoptimFilter`: optimize your JPEGs
