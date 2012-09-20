@@ -26,6 +26,14 @@ class LessAlloyApiFilterTest extends LessFilterTest
     }
 
     /**
+     * @TODO Figure out how to manage Less import lines with a single API call.
+     */
+    public function testImport()
+    {
+        $this->markTestSkipped('Less Alloy API cannot load external files from a single request.');
+    }
+
+    /**
      * @TODO Support loading a directory of files with API call.
      */
     public function testLoadPath()
