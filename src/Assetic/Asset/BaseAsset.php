@@ -94,9 +94,7 @@ abstract class BaseAsset implements AssetInterface, AssetWithResourcesInterface
         $filter->filterLoad($asset);
         $this->content = $asset->getContent();
 
-        foreach ($asset->getResourcePaths() as $resource) {
-            $this->addResourcePath($resource);
-        }
+        $this->setResourcePaths($asset->getResourcePaths());
 
         $this->loaded = true;
     }
