@@ -166,7 +166,6 @@ class SassFilter implements FilterInterface
     }
 
     /**
-     *
      * Iterates through a list of loadPaths for Sass (from config)
      *
      * @param array $loadPaths
