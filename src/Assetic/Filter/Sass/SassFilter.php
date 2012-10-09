@@ -164,4 +164,16 @@ class SassFilter implements FilterInterface
     public function filterDump(AssetInterface $asset)
     {
     }
+
+    /**
+     * Iterates through a list of loadPaths for Sass (from config)
+     *
+     * @param array $loadPaths
+     */
+    public function addLoadPaths(array $loadPaths = array())
+    {
+        foreach ($loadPaths as $loadPath) {
+            $this->addLoadPath($loadPath);
+        }
+    }
 }
