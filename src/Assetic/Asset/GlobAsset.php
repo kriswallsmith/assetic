@@ -100,6 +100,7 @@ class GlobAsset extends AssetCollection
             $glob = VarUtils::resolve($glob, $this->getVars(), $this->getValues());
 
             if (false !== $paths = glob($glob)) {
+                natcasesort($paths);
                 foreach ($paths as $path) {
                     if (is_file($path)) {
                         $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
