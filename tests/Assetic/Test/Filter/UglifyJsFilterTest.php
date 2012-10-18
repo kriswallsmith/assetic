@@ -89,6 +89,20 @@ JS;
         $this->assertSame($expected, $this->asset->getContent());
     }
 
+    public function testMangleUglify()
+    {
+        $this->filter->setMangle(true);
+        $this->filter->filterDump($this->asset);
+
+        $expected = <<<JS
+/**
+ * Copyright
+ */function bar(e){return var2.push(e),e}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(e){return e};%
+JS;
+
+        $this->assertSame($expected, $this->asset->getContent());
+    }
+
     public function testNoCopyrightUglify()
     {
         $this->filter->setNoCopyright(true);
