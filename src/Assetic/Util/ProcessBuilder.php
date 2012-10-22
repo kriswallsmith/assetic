@@ -22,7 +22,7 @@ class ProcessBuilder
     private $cwd;
     private $env;
     private $stdin;
-    private $timeout = 60;
+    private $timeout = 180;
     private $options = array();
     private $inheritEnv = false;
 
