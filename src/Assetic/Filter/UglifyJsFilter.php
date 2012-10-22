@@ -29,6 +29,7 @@ class UglifyJsFilter implements FilterInterface
     private $noCopyright;
     private $beautify;
     private $unsafe;
+    private $mangle;
 
     /**
      * @param string $uglifyJsPath Absolute path to the uglifyjs executable
@@ -68,6 +69,15 @@ class UglifyJsFilter implements FilterInterface
     }
 
     /**
+     * Safely mangle variable and function names for greater file compress.
+     * @param bool $mangle True to enable
+     */
+    public function setMangle($mangle)
+    {
+        $this->mangle = $mangle;
+    }
+
+    /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
     public function filterLoad(AssetInterface $asset)
@@ -101,6 +111,10 @@ class UglifyJsFilter implements FilterInterface
 
         if ($this->unsafe) {
             $pb->add('--unsafe');
+        }
+
+        if ($this->mangle) {
+            $pb->add('--mangle');
         }
 
         // input and output files
