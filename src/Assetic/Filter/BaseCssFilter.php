@@ -84,6 +84,6 @@ abstract class BaseCssFilter implements FilterInterface
      */
     protected function filterIEFilters($content, $callback, $limit = -1, &$count = 0)
     {
-        return preg_replace_callback('/src=(["\']?)(?<url>.*?)\\1/', $callback, $content, $limit, $count);
+        return preg_replace_callback('/src=(["\']?)(?P<url>.*?)\\1/', $callback, $content, $limit, $count);
     }
 }
