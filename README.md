@@ -77,12 +77,13 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
- * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
+ * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the [Google Closure Compiler API](http://closure-compiler.appspot.com)
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
  * `HandlebarsFilter`: compiles Handlebars templates into Javascript
  * `JpegoptimFilter`: optimize your JPEGs
  * `JpegtranFilter`: optimize your JPEGs
  * `LessFilter`: parses LESS into CSS (using less.js with node.js)
+ * `LessAlloyApiFilter`: parses LESS into CSS (using [Alloy API](http://divshot.com/alloy))
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
  * `OptiPngFilter`: optimize your PNGs
  * `PackerFilter`: compresses Javascript using Dean Edwards's Packer
