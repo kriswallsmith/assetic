@@ -79,6 +79,11 @@ class SassFilter implements FilterInterface
         $this->lineNumbers = $lineNumbers;
     }
 
+    public function setLoadPaths(array $loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+    
     public function addLoadPath($loadPath)
     {
         $this->loadPaths[] = $loadPath;
