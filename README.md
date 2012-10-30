@@ -204,7 +204,7 @@ Cache Busting
 
 You can use the CacheBustingWorker to provide unique names.
 
-To strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
+Two strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
 
 ``` php
 <?php
