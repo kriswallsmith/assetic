@@ -26,6 +26,8 @@ class ScssphpFilter implements FilterInterface
 {
     private $compass = false;
 
+    private $importPaths = array();
+
     public function enableCompass($enable = true)
     {
         $this->compass = (Boolean) $enable;
@@ -48,8 +50,21 @@ class ScssphpFilter implements FilterInterface
         if ($root && $path) {
             $lc->addImportPath(dirname($root.'/'.$path));
         }
+        foreach ($this->importPaths as $path) {
+            $lc->addImportPath($path);
+        }
 
         $asset->setContent($lc->compile($asset->getContent()));
+    }
+
+    public function setImportPaths(array $paths)
+    {
+        $this->importPaths = $paths;
+    }
+
+    public function addImportPath($path)
+    {
+        $this->importPaths[] = $path;
     }
 
     public function filterDump(AssetInterface $asset)
