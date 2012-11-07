@@ -87,4 +87,16 @@ EOF;
         $this->getFilter(false)->filterLoad($asset);
         $this->assertEquals("@import \"compass\";\n", $asset->getContent(), 'compass plugin can be disabled');
     }
+
+    public function testSetImportPath()
+    {
+        $filter = $this->getFilter();
+        $filter->addImportPath(__DIR__.'/fixtures/sass/import_path');
+
+        $asset = new StringAsset("@import 'import';\n#test { color: \$red }");
+        $asset->load();
+        $filter->filterLoad($asset);
+
+        $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), 'Import paths are correctly used');
+    }
 }
