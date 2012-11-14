@@ -239,10 +239,6 @@ class CompassFilter implements FilterInterface
             $pb->add('--javascripts-dir')->add($this->javascriptsDir);
         }
 
-        if ($this->fontsDir) {
-            $pb->add('--fonts-dir')->add($this->fontsDir);
-        }
-
         // options in config file
         $optionsConfig = array();
 
@@ -284,6 +280,10 @@ class CompassFilter implements FilterInterface
 
         if ($this->httpJavascriptsPath) {
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
+        }
+
+        if ($this->fontsDir) {
+            $optionsConfig['fonts_dir'] = $this->fontsDir;
         }
 
         // options in configuration file
