@@ -61,6 +61,9 @@ class CacheBustingWorker implements WorkerInterface
             return;
         }
 
+        // Remove parent cache busting hash, only one is needed
+        $url = preg_replace('/^([^-|_]+)-[^_]+_/', '${1}_', $url);
+
         $asset->setTargetPath(substr($url, 0, (strlen($oldExt) + 1) * -1).$newExt);
     }
 
