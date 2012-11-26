@@ -16,10 +16,30 @@ use Assetic\Extension\Twig\AsseticExtension;
 
 class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\AssetManager
+     */
     private $am;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\FilterManager
+     */
     private $fm;
+
+    /**
+     * @var AssetFactory
+     */
     private $factory;
+
+    /**
+     * @var \Twig_Environment
+     */
     private $twig;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\ValueSupplierInterface
+     */
+    private $valueSupplier;
 
     protected function setUp()
     {
@@ -191,6 +211,9 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
             ->method('getValues')
             ->will($this->returnValue(array('foo' => 'a', 'bar' => 'b')));
 
+        // Add the extension again (replacing the previous one) with a value supplier mock with the expectations
+        $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
+
         $xml = $this->renderXml('variables.twig');
         $this->assertEquals(2, $xml->url->count());
         $this->assertEquals("js/7d0828c_foo_1.a.b.js", (string) $xml->url[0]);
@@ -198,7 +221,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Twig_Error
+     * @expectedException \Twig_Error
      */
     public function testUnclosedTag()
     {
