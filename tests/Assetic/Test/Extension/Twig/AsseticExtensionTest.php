@@ -211,9 +211,6 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
             ->method('getValues')
             ->will($this->returnValue(array('foo' => 'a', 'bar' => 'b')));
 
-        // Add the extension again (replacing the previous one) with a value supplier mock with the expectations
-        $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
-
         $xml = $this->renderXml('variables.twig');
         $this->assertEquals(2, $xml->url->count());
         $this->assertEquals("js/7d0828c_foo_1.a.b.js", (string) $xml->url[0]);
