@@ -42,6 +42,7 @@ class CompassFilter implements FilterInterface
     private $noLineComments;
     private $imagesDir;
     private $javascriptsDir;
+    private $fontsDir;
 
     // compass configuration file options
     private $plugins = array();
@@ -124,6 +125,11 @@ class CompassFilter implements FilterInterface
     public function setJavascriptsDir($javascriptsDir)
     {
         $this->javascriptsDir = $javascriptsDir;
+    }
+
+    public function setFontsDir($fontsDir)
+    {
+        $this->fontsDir = $fontsDir;
     }
 
     // compass configuration file options setters
@@ -274,6 +280,10 @@ class CompassFilter implements FilterInterface
 
         if ($this->httpJavascriptsPath) {
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
+        }
+
+        if ($this->fontsDir) {
+            $optionsConfig['fonts_dir'] = $this->fontsDir;
         }
 
         // options in configuration file
