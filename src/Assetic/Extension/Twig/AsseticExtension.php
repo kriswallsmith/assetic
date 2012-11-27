@@ -59,7 +59,7 @@ class AsseticExtension extends \Twig_Extension
         return array(
             'assetic' => array(
                 'debug' => $this->factory->isDebug(),
-                'vars'  => null !== $this->valueSupplier ? $this->valueSupplier->getValues() : array(),
+                'vars'  => null !== $this->valueSupplier ? new ValueContainer($this->valueSupplier) : array(),
             ),
         );
     }
