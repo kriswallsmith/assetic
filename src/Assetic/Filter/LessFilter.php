@@ -21,20 +21,11 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessFilter implements FilterInterface
+class LessFilter extends AbstractLessFilter
 {
     private $nodeBin;
     private $nodePaths;
     private $compress;
-
-    /**
-     * Load Paths
-     *
-     * A list of paths which less will search for includes.
-     * 
-     * @var array
-     */
-    protected $loadPaths = array();
 
     /**
      * Constructor.
@@ -53,18 +44,10 @@ class LessFilter implements FilterInterface
         $this->compress = $compress;
     }
 
-    /**
-     * Adds a path where less will search for includes
-     * 
-     * @param string $path Load path (absolute)
-     */
-    public function addLoadPath($path)
-    {
-        $this->loadPaths[] = $path;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
+        parent::filterLoad($asset);
+
         static $format = <<<'EOF'
 var less = require('less');
 var sys  = require(process.binding('natives').util ? 'util' : 'sys');

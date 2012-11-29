@@ -82,4 +82,16 @@ EOF;
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
     }
+
+    public function testLastModified()
+    {
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main_nested.less', array($this->filter));
+        $asset->load();
+
+        $time = $asset->getLastModified();
+
+        touch(__DIR__.'/fixtures/less/_include.less');
+
+        $this->assertLessThan($asset->getLastModified(), $time, '->getLastModified() checks the dependencies too');
+    }
 }

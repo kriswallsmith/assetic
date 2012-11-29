@@ -23,26 +23,9 @@ use Assetic\Asset\AssetInterface;
  * @author David Buchmann <david@liip.ch>
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessphpFilter implements FilterInterface
+class LessphpFilter extends AbstractLessFilter
 {
     private $presets = array();
-
-    /**
-     * Lessphp Load Paths
-     * 
-     * @var array
-     */
-    protected $loadPaths = array();
-
-    /**
-     * Adds a load path to the paths used by lessphp
-     * 
-     * @param string $path Load Path
-     */
-    public function addLoadPath($path)
-    {
-        $this->loadPaths[] = $path;
-    }
 
     public function setPresets(array $presets)
     {
@@ -51,6 +34,8 @@ class LessphpFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
+        parent::filterLoad($asset);
+
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 

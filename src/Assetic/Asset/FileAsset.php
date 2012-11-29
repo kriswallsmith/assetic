@@ -73,6 +73,20 @@ class FileAsset extends BaseAsset
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
 
-        return filemtime($source);
+        $lastModified = filemtime($source);
+
+        foreach ($this->getResourcePaths() as $file) {
+            if (!file_exists($file)) {
+                return time();
+            }
+
+            $resourceModificationDate = filemtime($file);
+
+            if ($lastModified < $resourceModificationDate) {
+                $lastModified = $resourceModificationDate;
+            }
+        }
+
+        return $lastModified;
     }
 }
