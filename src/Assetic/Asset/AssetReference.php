@@ -24,11 +24,13 @@ class AssetReference implements AssetInterface
     private $am;
     private $name;
     private $filters = array();
+    private $weight;
 
     public function __construct(AssetManager $am, $name)
     {
         $this->am = $am;
         $this->name = $name;
+        $this->weight = 0;
     }
 
     public function ensureFilter(FilterInterface $filter)
@@ -129,5 +131,15 @@ class AssetReference implements AssetInterface
         while ($filter = array_shift($this->filters)) {
             $asset->ensureFilter($filter);
         }
+    }
+
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+    }
+
+    public function getWeight()
+    {
+        return $this->weight;
     }
 }

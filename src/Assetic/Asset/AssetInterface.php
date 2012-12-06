@@ -153,4 +153,8 @@ interface AssetInterface
      * @return array an array of strings
      */
     public function getValues();
+
+    public function getWeight();
+
+    public function setWeight($weight);
 }

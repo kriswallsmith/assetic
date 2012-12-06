@@ -32,6 +32,7 @@ abstract class BaseAsset implements AssetInterface
     private $loaded;
     private $vars;
     private $values;
+    private $weight;
 
     /**
      * Constructor.
@@ -49,6 +50,7 @@ abstract class BaseAsset implements AssetInterface
         $this->vars = $vars;
         $this->values = array();
         $this->loaded = false;
+        $this->weight = 0;
     }
 
     public function __clone()
@@ -169,4 +171,16 @@ abstract class BaseAsset implements AssetInterface
     {
         return $this->values;
     }
+
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+    }
+
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+
 }

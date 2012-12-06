@@ -12,6 +12,7 @@
 namespace Assetic\Asset\Iterator;
 
 use Assetic\Asset\AssetCollectionInterface;
+use Assetic\Asset\AssetInterface;
 
 /**
  * Iterates over an asset collection.
@@ -30,7 +31,10 @@ class AssetCollectionIterator implements \RecursiveIterator
 
     public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones)
     {
-        $this->assets  = $coll->all();
+        $this->assets = $coll->all();
+        usort($this->assets, function(AssetInterface $a, AssetInterface $b) {
+            return $a->getWeight() < $b->getWeight() ? -1 : 1;
+        });
         $this->filters = $coll->getFilters();
         $this->output  = $coll->getTargetPath();
         $this->clones  = $clones;

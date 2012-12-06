@@ -24,11 +24,13 @@ class AssetCache implements AssetInterface
 {
     private $asset;
     private $cache;
+    private $weight;
 
     public function __construct(AssetInterface $asset, CacheInterface $cache)
     {
         $this->asset = $asset;
         $this->cache = $cache;
+        $this->weight = $asset->getWeight();
     }
 
     public function ensureFilter(FilterInterface $filter)
@@ -165,5 +167,15 @@ class AssetCache implements AssetInterface
         }
 
         return md5($cacheKey.$salt);
+    }
+
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+    }
+
+    public function getWeight()
+    {
+        return $this->weight;
     }
 }
