@@ -151,6 +151,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLastModified($timestamps, $expected)
     {
+        //return;
         $assets = array();
 
         for ($i = 0; $i < count($timestamps); $i++) {
