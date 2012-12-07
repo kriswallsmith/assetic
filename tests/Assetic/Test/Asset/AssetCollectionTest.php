@@ -331,4 +331,74 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll = new AssetCollection();
         $coll->replaceLeaf(new StringAsset('foo'), new StringAsset('bar'));
     }
+
+    public function testWeightNonSet()
+    {
+        $assets = array(
+            new StringAsset('asset1', array(), '/some/dir', 'foo.css'),
+            new StringAsset('asset2', array(), '/some/dir', 'foo.css'),
+            new StringAsset('asset3', array(), '/some/dir', 'bar.css'),
+        );
+
+        $coll = new AssetCollection($assets);
+
+        $i = 0;
+        foreach ($coll->all() as $asset) {
+            $this->assertEquals($assets[$i], $asset);
+            $i++;
+        }
+    }
+
+    public function testWeightSetOrder()
+    {
+        $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo.css');
+        $asset1->setWeight(-1);
+        $asset2 = new StringAsset('asset2', array(), '/some/dir', 'foo.css');
+        $asset1->setWeight(-1);
+        $asset3 = new StringAsset('asset3', array(), '/some/dir', 'bar.css');
+        $asset1->setWeight(100);
+
+        $assets = array(
+            $asset1,
+            $asset2,
+            $asset3,
+        );
+
+        $coll = new AssetCollection($assets);
+
+        $i = 0;
+        foreach ($coll->all() as $asset) {
+            $this->assertEquals($assets[$i], $asset);
+            $i++;
+        }
+    }
+
+    public function testWeightPrepend()
+    {
+        //TODO test fails
+        $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo.css');
+        $asset1->setWeight(100);
+        $asset2 = new StringAsset('asset2', array(), '/some/dir', 'foo.css');
+        $asset1->setWeight(-1);
+        $asset3 = new StringAsset('asset3', array(), '/some/dir', 'bar.css');
+        $asset1->setWeight(100);
+
+        $coll = new AssetCollection(array(
+            $asset1,
+            $asset2,
+            $asset3,
+        ));
+
+        $expected = array(
+            $asset2,
+            $asset1,
+            $asset3,
+        );
+
+        $i = 0;
+        foreach ($coll->all() as $asset) {
+            $this->assertEquals($expected[$i], $asset);
+            $i++;
+        }
+    }
 }
