@@ -35,7 +35,7 @@ class AssetCollectionIterator implements \RecursiveIterator
         $this->output  = $coll->getTargetPath();
         $this->clones  = $clones;
 
-        if (false === $pos = strpos($this->output, '.')) {
+        if (false === $pos = strrpos($this->output, '.')) {
             $this->output .= '_*';
         } else {
             $this->output = substr($this->output, 0, $pos).'_*'.substr($this->output, $pos);

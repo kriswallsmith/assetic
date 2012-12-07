@@ -255,6 +255,18 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count(array_unique($urls)), 'iterator prevents basename collisions');
     }
+    
+    public function testTargetNameGeneration()
+    {
+        $path = '/testing/dir.ectory/path/file.ext';
+        
+        $coll = new AssetCollection(array(new StringAsset('asset1'), new StringAsset('asset2')));
+        $coll->setTargetPath($path);
+        
+        foreach ($coll as $asset) {
+            $this->assertEquals(dirname($path), dirname($asset->getTargetPath()));
+        }
+    }
 
     public function testEmptyMtime()
     {
