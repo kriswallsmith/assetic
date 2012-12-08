@@ -354,9 +354,9 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo.css');
         $asset1->setWeight(-1);
         $asset2 = new StringAsset('asset2', array(), '/some/dir', 'foo.css');
-        $asset1->setWeight(-1);
+        $asset2->setWeight(-1);
         $asset3 = new StringAsset('asset3', array(), '/some/dir', 'bar.css');
-        $asset1->setWeight(100);
+        $asset3->setWeight(100);
 
         $assets = array(
             $asset1,
@@ -379,9 +379,9 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo.css');
         $asset1->setWeight(100);
         $asset2 = new StringAsset('asset2', array(), '/some/dir', 'foo.css');
-        $asset1->setWeight(-1);
+        $asset2->setWeight(-1);
         $asset3 = new StringAsset('asset3', array(), '/some/dir', 'bar.css');
-        $asset1->setWeight(100);
+        $asset3->setWeight(200);
 
         $coll = new AssetCollection(array(
             $asset1,

@@ -58,6 +58,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
 
     public function all()
     {
+        usort($this->assets, function(AssetInterface $a, AssetInterface $b) {
+            return $a->getWeight() < $b->getWeight() ? -1 : 1;
+        });
         return $this->assets;
     }
 
