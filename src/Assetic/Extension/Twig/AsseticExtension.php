@@ -11,18 +11,21 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\ValueSupplierInterface;
+use Assetic\Cache\ConfigCache;
 use Assetic\Factory\AssetFactory;
+use Assetic\ValueSupplierInterface;
 
 class AsseticExtension extends \Twig_Extension
 {
     protected $factory;
+    protected $cache;
     protected $functions;
     protected $valueSupplier;
 
-    public function __construct(AssetFactory $factory, $functions = array(), ValueSupplierInterface $valueSupplier = null)
+    public function __construct(AssetFactory $factory, ConfigCache $cache, $functions = array(), ValueSupplierInterface $valueSupplier = null)
     {
         $this->factory = $factory;
+        $this->cache = $cache;
         $this->functions = array();
         $this->valueSupplier = $valueSupplier;
 
@@ -54,6 +57,13 @@ class AsseticExtension extends \Twig_Extension
         return $functions;
     }
 
+    public function getNodeVisitors()
+    {
+        return array(
+            new AsseticNodeVisitor($this->cache),
+        );
+    }
+
     public function getGlobals()
     {
         return array(
@@ -67,6 +77,11 @@ class AsseticExtension extends \Twig_Extension
     public function getFilterInvoker($function)
     {
         return new AsseticFilterInvoker($this->factory, $this->functions[$function]);
+    }
+
+    public function getConfigCache()
+    {
+        return $this->cache;
     }
 
     public function getName()
