@@ -74,7 +74,6 @@ class AsseticNodeVisitor implements \Twig_NodeVisitorInterface
     {
         if ($node instanceof \Twig_Node_Module) {
             $this->cache->set($node->getAttribute('filename'), $this->formulae);
-            $this->formulae = array();
         }
 
         return $node;

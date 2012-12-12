@@ -13,6 +13,7 @@ namespace Assetic\Extension\Twig;
 
 use Assetic\Cache\ConfigCache;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\IteratorResourceInterface;
 use Assetic\Factory\Resource\ResourceInterface;
 
 /**
@@ -29,14 +30,25 @@ class TwigFormulaLoader implements FormulaLoaderInterface
         $this->twig = $twig;
     }
 
-    public function load(ResourceInterface $resource)
+    public function load(ResourceInterface $resources)
     {
-        $name = (string) $resource;
+        if (!$resources instanceof IteratorResourceInterface) {
+            $resources = array($resources);
+        }
 
-        // load the template to ensure what's in the cache is fresh
-        $this->twig->loadTemplate($name);
+        $formulae = array();
+        $cache = $this->twig->getExtension('assetic')->getConfigCache();
 
-        // fetch the formulae from the config cache
-        return $this->twig->getExtension('assetic')->getConfigCache()->get($name);
+        foreach ($resources as $resource) {
+            $name = (string) $resource;
+
+            // load the template to ensure what's in the cache is fresh
+            $this->twig->loadTemplate($name);
+
+            // fetch the formulae from the config cache
+            $formulae += $cache->get($name);
+        }
+
+        return $formulae;
     }
 }
