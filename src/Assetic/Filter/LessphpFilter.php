@@ -29,6 +29,8 @@ class LessphpFilter implements FilterInterface
 
     private $formatter;
 
+    private $preserveComments = false;
+
     /**
      * Lessphp Load Paths
      * 
@@ -59,6 +61,14 @@ class LessphpFilter implements FilterInterface
         $this->formatter = $formatter;
     }
 
+    /**
+     * @param boolean $preserveComments
+     */
+    public function setPreserveComments($preserveComments)
+    {
+        $this->preserveComments = (bool) $preserveComments;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $root = $asset->getSourceRoot();
@@ -75,6 +85,7 @@ class LessphpFilter implements FilterInterface
         if (!empty($this->formatter)) {
             $lc->setFormatter($this->formatter);
         }
+        $lc->setPreserveComments($this->preserveComments);
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
     }
