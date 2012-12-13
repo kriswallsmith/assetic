@@ -12,9 +12,9 @@
 namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
 use Assetic\Exception\FilterException;
 use Symfony\Component\Process\ProcessBuilder;
+use Assetic\Filter\ProcessFilter;
 
 /**
  * Base YUI compressor filter.
@@ -22,7 +22,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://developer.yahoo.com/yui/compressor/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompressorFilter implements FilterInterface
+abstract class BaseCompressorFilter extends ProcessFilter
 {
     private $jarPath;
     private $javaPath;
@@ -85,6 +85,7 @@ abstract class BaseCompressorFilter implements FilterInterface
         file_put_contents($input, $content);
         $pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
 
+        $pb->setTimeout($this->timeout);
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
