@@ -84,4 +84,44 @@ EOF;
 
         $this->assertEquals($expected, $asset->getContent(), '->setFormatter("classic")');
     }
+
+    public function testPreserveCommentsTrue()
+    {
+        $expected = "/* Line 1 */
+/* Line 2 */
+.foo {
+  color: green;
+}
+";
+
+        $asset = new StringAsset("/* Line 1 */
+/* Line 2 */
+.foo { color: green }");
+        $asset->load();
+
+        $this->filter->setFormatter('lessjs');
+        $this->filter->setPreserveComments(true);
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->setPreserveComments(true)');
+    }
+
+    public function testPreserveCommentsFalse()
+    {
+        $expected = ".foo {
+  color: green;
+}
+";
+
+        $asset = new StringAsset("/* Line 1 */
+/* Line 2 */
+.foo { color: green }");
+        $asset->load();
+
+        $this->filter->setFormatter('lessjs');
+        $this->filter->setPreserveComments(false);
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->setPreserveComments(false)');
+    }
 }
