@@ -16,6 +16,7 @@ use Assetic\Filter\LessphpFilter;
 
 /**
  * @group integration
+ * @property LessphpFilter $filter
  */
 class LessphpFilterTest extends LessFilterTest
 {
@@ -43,5 +44,44 @@ EOF;
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+    }
+
+    public function testFormatterLessjs()
+    {
+        $expected = ".foo {\n  color: green;\n}\n";
+
+        $asset = new StringAsset('.foo { color: green; }');
+        $asset->load();
+
+        $this->filter->setFormatter('lessjs');
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->setFormatter("lessjs")');
+    }
+
+    public function testFormatterCompressed()
+    {
+        $expected = '.foo{color:green;}';
+
+        $asset = new StringAsset('.foo { color: green; }');
+        $asset->load();
+
+        $this->filter->setFormatter('compressed');
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->setFormatter("compressed")');
+    }
+
+    public function testFormatterClassic()
+    {
+        $expected = ".foo { color:green; }\n";
+
+        $asset = new StringAsset('.foo { color: green; }');
+        $asset->load();
+
+        $this->filter->setFormatter('classic');
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->setFormatter("classic")');
     }
 }
