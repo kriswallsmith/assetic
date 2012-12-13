@@ -30,7 +30,8 @@
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
         "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
-        "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin"
+        "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
+        "natxet/CssMin": "Assetic provides the integration with the CssMin library"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
