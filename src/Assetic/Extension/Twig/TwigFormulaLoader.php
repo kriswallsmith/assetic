@@ -32,23 +32,21 @@ class TwigFormulaLoader implements FormulaLoaderInterface
 
     public function load(ResourceInterface $resources)
     {
+        $cache = $this->twig->getExtension('assetic')->getConfigCache();
+
         if (!$resources instanceof IteratorResourceInterface) {
             $resources = array($resources);
         }
 
         $formulae = array();
-        $cache = $this->twig->getExtension('assetic')->getConfigCache();
-
         foreach ($resources as $resource) {
             $name = (string) $resource;
 
-            // load the template to ensure what's in the cache is fresh
-            $this->twig->loadTemplate($name);
-
-            // force a parse
-            if (!$cache->has($name)) {
-                $source = $this->twig->getLoader()->getSource($name);
-                $this->twig->parse($this->twig->tokenize($source, $name));
+            try {
+                $this->loadTemplate($name, $cache);
+            } catch (\Exception $e) {
+                // ignore twig errors (none of our business)
+                continue;
             }
 
             // fetch the formulae from the config cache
@@ -56,5 +54,18 @@ class TwigFormulaLoader implements FormulaLoaderInterface
         }
 
         return $formulae;
+    }
+
+    private function loadTemplate($name, ConfigCache $cache)
+    {
+        // load the template to ensure what's in the cache is fresh
+        $this->twig->loadTemplate($name);
+
+        // force a parse if necessary
+        if (!$cache->has($name)) {
+            $source = $this->twig->getLoader()->getSource($name);
+            $tokens = $this->twig->tokenize($source, $name);
+            $nodes  = $this->twig->parse($tokens);
+        }
     }
 }
