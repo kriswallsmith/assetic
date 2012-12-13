@@ -27,6 +27,8 @@ class LessphpFilter implements FilterInterface
 {
     private $presets = array();
 
+    private $formatter;
+
     /**
      * Lessphp Load Paths
      * 
@@ -49,6 +51,14 @@ class LessphpFilter implements FilterInterface
         $this->presets = $presets;
     }
 
+    /**
+     * @param string $formatter One of "lessjs", "compressed", or "classic".
+     */
+    public function setFormatter($formatter)
+    {
+        $this->formatter = $formatter;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $root = $asset->getSourceRoot();
@@ -60,6 +70,10 @@ class LessphpFilter implements FilterInterface
         }
         foreach ($this->loadPaths as $loadPath) {
             $lc->addImportDir($loadPath);
+        }
+
+        if (!empty($this->formatter)) {
+            $lc->setFormatter($this->formatter);
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
