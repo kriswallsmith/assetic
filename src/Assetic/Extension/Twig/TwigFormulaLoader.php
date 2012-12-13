@@ -45,6 +45,12 @@ class TwigFormulaLoader implements FormulaLoaderInterface
             // load the template to ensure what's in the cache is fresh
             $this->twig->loadTemplate($name);
 
+            // force a parse
+            if (!$cache->has($name)) {
+                $source = $this->twig->getLoader()->getSource($name);
+                $this->twig->parse($this->twig->tokenize($source, $name));
+            }
+
             // fetch the formulae from the config cache
             $formulae += $cache->get($name);
         }
