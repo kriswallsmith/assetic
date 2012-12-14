@@ -12,13 +12,14 @@
 namespace Assetic\Filter;
 
 use Assetic\Filter\FilterInterface;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * An external process based filter which provides a way to set a timeout on the process.
  */
-abstract class ProcessFilter implements FilterInterface
+abstract class BaseProcessFilter implements FilterInterface
 {
-    protected $timeout = 60;
+    private $timeout;
 
     /**
      * Set the process timeout.
@@ -28,5 +29,23 @@ abstract class ProcessFilter implements FilterInterface
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
+    }
+
+    /**
+     * Creates a new process builder.
+     *
+     * @param array $arguments An optional array of arguments
+     *
+     * @return ProcessBuilder A new process builder
+     */
+    protected function createProcessBuilder(array $arguments = array())
+    {
+        $pb = new ProcessBuilder($arguments);
+
+        if (null !== $this->timeout) {
+            $pb->setTimeout($this->timeout);
+        }
+
+        return $pb;
     }
 }
