@@ -13,7 +13,6 @@ namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 use Assetic\Filter\ProcessFilter;
 
 /**
@@ -60,7 +59,7 @@ abstract class BaseCompressorFilter extends ProcessFilter
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = new ProcessBuilder(array(
+        $pb = $this->createProcessBuilder(array(
             $this->javaPath,
             '-jar',
             $this->jarPath,
@@ -85,7 +84,6 @@ abstract class BaseCompressorFilter extends ProcessFilter
         file_put_contents($input, $content);
         $pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
 
-        $pb->setTimeout($this->timeout);
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
