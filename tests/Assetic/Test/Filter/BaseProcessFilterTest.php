@@ -11,19 +11,19 @@
 
 namespace Assetic\Test\Filter;
 
-use Assetic\Filter\ProcessFilter;
+use Assetic\Filter\BaseProcessFilter;
 use Assetic\Asset\AssetInterface;
 
-class ProcessFilterTest extends \PHPUnit_Framework_TestCase
+class BaseProcessFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testInterface()
     {
-        $filter = new ProcessFilterForTest();
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'ProcessFilter implements FilterInterface');
+        $filter = new BaseProcessFilterFilter();
+        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'BaseProcessFilter implements FilterInterface');
     }
 }
 
-class ProcessFilterForTest extends ProcessFilter
+class BaseProcessFilterFilter extends BaseProcessFilter
 {
     public function filterLoad(AssetInterface $asset)
     {

@@ -13,7 +13,7 @@ namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Assetic\Filter\ProcessFilter;
+use Assetic\Filter\BaseProcessFilter;
 
 /**
  * Base YUI compressor filter.
@@ -21,7 +21,7 @@ use Assetic\Filter\ProcessFilter;
  * @link http://developer.yahoo.com/yui/compressor/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompressorFilter extends ProcessFilter
+abstract class BaseCompressorFilter extends BaseProcessFilter
 {
     private $jarPath;
     private $javaPath;
