@@ -260,10 +260,10 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
     {
         $path = '/testing/dir.ectory/path/file.ext';
         
-        $coll = new AssetCollection(array(new StringAsset('asset1'),new StringAsset('asset2')));
+        $coll = new AssetCollection(array(new StringAsset('asset1'), new StringAsset('asset2')));
         $coll->setTargetPath($path);
         
-        foreach( $coll as $asset ) {
+        foreach ($coll as $asset) {
             $this->assertEquals(dirname($path), dirname($asset->getTargetPath()));
         }
     }
