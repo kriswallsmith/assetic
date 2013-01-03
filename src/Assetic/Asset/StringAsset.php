@@ -20,8 +20,8 @@ use Assetic\Filter\FilterInterface;
  */
 class StringAsset extends BaseAsset
 {
-    private $content;
-    private $lastModified;
+    protected $content;
+    protected $lastModified;
 
     /**
      * Constructor.

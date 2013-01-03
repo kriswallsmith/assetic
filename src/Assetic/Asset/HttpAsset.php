@@ -22,8 +22,8 @@ use Assetic\Filter\FilterInterface;
  */
 class HttpAsset extends BaseAsset
 {
-    private $sourceUrl;
-    private $ignoreErrors;
+    protected $sourceUrl;
+    protected $ignoreErrors;
 
     /**
      * Constructor.

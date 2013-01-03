@@ -23,10 +23,10 @@ use Assetic\Asset\AssetCollectionInterface;
  */
 class AssetCollectionIterator implements \RecursiveIterator
 {
-    private $assets;
-    private $filters;
-    private $output;
-    private $clones;
+    protected $assets;
+    protected $filters;
+    protected $output;
+    protected $clones;
 
     public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones)
     {

@@ -22,8 +22,8 @@ use Assetic\Filter\HashableInterface;
  */
 class AssetCache implements AssetInterface
 {
-    private $asset;
-    private $cache;
+    protected $asset;
+    protected $cache;
 
     public function __construct(AssetInterface $asset, CacheInterface $cache)
     {

@@ -22,8 +22,8 @@ use Assetic\Filter\FilterInterface;
  */
 class GlobAsset extends AssetCollection
 {
-    private $globs;
-    private $initialized;
+    protected $globs;
+    protected $initialized;
 
     /**
      * Constructor.

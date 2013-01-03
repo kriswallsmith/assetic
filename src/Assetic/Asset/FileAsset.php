@@ -21,7 +21,7 @@ use Assetic\Filter\FilterInterface;
  */
 class FileAsset extends BaseAsset
 {
-    private $source;
+    protected $source;
 
     /**
      * Constructor.
