@@ -106,8 +106,8 @@ class UglifyJsFilter extends BaseNodeFilter
             $pb->add('--unsafe');
         }
 
-        if ($this->mangle) {
-            $pb->add('--mangle');
+        if (false === $this->mangle) {
+            $pb->add('--no-mangle');
         }
 
         // input and output files
