@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Loads STYL files.
@@ -21,10 +20,9 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://learnboost.github.com/stylus/
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class StylusFilter implements FilterInterface
+class StylusFilter extends BaseNodeFilter
 {
     private $nodeBin;
-    private $nodePaths;
     private $compress;
 
     /**
@@ -36,7 +34,7 @@ class StylusFilter implements FilterInterface
     public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
     {
         $this->nodeBin = $nodeBin;
-        $this->nodePaths = $nodePaths;
+        $this->setNodePaths($nodePaths);
     }
 
     /**
@@ -83,13 +81,8 @@ EOF;
             $parserOptions['compress'] = $this->compress;
         }
 
-        $pb = new ProcessBuilder();
+        $pb = $this->createProcessBuilder();
         $pb->inheritEnvironmentVariables();
-
-        // node.js configuration
-        if (0 < count($this->nodePaths)) {
-            $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
-        }
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
         file_put_contents($input, sprintf($format,
