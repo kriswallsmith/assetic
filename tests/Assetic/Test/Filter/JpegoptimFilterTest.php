@@ -17,7 +17,7 @@ use Assetic\Filter\JpegoptimFilter;
 /**
  * @group integration
  */
-class JpegoptimFilterTest extends BaseImageFilterTest
+class JpegoptimFilterTest extends FilterTestCase
 {
     private $filter;
 

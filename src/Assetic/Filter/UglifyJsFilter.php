@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * UglifyJs filter.
@@ -21,10 +20,10 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link https://github.com/mishoo/UglifyJS
  * @author André Roaldseth <andre@roaldseth.net>
  */
-class UglifyJsFilter implements FilterInterface
+class UglifyJsFilter extends BaseNodeFilter
 {
-    private $uglifyJsPath;
-    private $nodeJsPath;
+    private $uglifyjsBin;
+    private $nodeBin;
 
     private $noCopyright;
     private $beautify;
@@ -32,13 +31,13 @@ class UglifyJsFilter implements FilterInterface
     private $mangle;
 
     /**
-     * @param string $uglifyJsPath Absolute path to the uglifyjs executable
-     * @param string $nodeJsPath   Absolute path to the folder containg node.js executable
+     * @param string $uglifyjsBin Absolute path to the uglifyjs executable
+     * @param string $nodeBin      Absolute path to the folder containg node.js executable
      */
-    public function __construct($uglifyJsPath, $nodeJsPath = null)
+    public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
-        $this->uglifyJsPath = $uglifyJsPath;
-        $this->nodeJsPath = $nodeJsPath;
+        $this->uglifyjsBin = $uglifyjsBin;
+        $this->nodeBin = $nodeBin;
     }
 
     /**
@@ -91,15 +90,9 @@ class UglifyJsFilter implements FilterInterface
      */
     public function filterDump(AssetInterface $asset)
     {
-        $executables = array();
-
-        if ($this->nodeJsPath !== null) {
-            $executables[] = $this->nodeJsPath;
-        }
-
-        $executables[] = $this->uglifyJsPath;
-
-        $pb = new ProcessBuilder($executables);
+        $pb = $this->createProcessBuilder($this->nodeBin
+            ? array($this->nodeBin, $this->uglifyjsBin)
+            : array($this->uglifyjsBin));
 
         if ($this->noCopyright) {
             $pb->add('--no-copyright');
@@ -113,8 +106,8 @@ class UglifyJsFilter implements FilterInterface
             $pb->add('--unsafe');
         }
 
-        if ($this->mangle) {
-            $pb->add('--mangle');
+        if (false === $this->mangle) {
+            $pb->add('--no-mangle');
         }
 
         // input and output files
