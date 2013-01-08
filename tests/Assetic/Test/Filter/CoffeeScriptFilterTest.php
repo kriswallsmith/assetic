@@ -17,17 +17,20 @@ use Assetic\Filter\CoffeeScriptFilter;
 /**
  * @group integration
  */
-class CoffeeScriptFilterTest extends \PHPUnit_Framework_TestCase
+class CoffeeScriptFilterTest extends FilterTestCase
 {
     private $filter;
 
     protected function setUp()
     {
-        if (!isset($_SERVER['COFFEE_BIN']) || !isset($_SERVER['NODE_BIN'])) {
-            $this->markTestSkipped('There is no COFFEE_BIN or NODE_BIN environment variable.');
+        $coffeeBin = $this->findExecutable('coffee', 'COFFEE_BIN');
+        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
+
+        if (!$coffeeBin) {
+            $this->markTestSkipped('Unable to find `coffee` executable.');
         }
 
-        $this->filter = new CoffeeScriptFilter($_SERVER['COFFEE_BIN'], $_SERVER['NODE_BIN']);
+        $this->filter = new CoffeeScriptFilter($coffeeBin, $nodeBin);
     }
 
     public function testFilterLoad()
@@ -49,7 +52,7 @@ JAVASCRIPT;
 
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals($expected, $asset->getContent());
+        $this->assertEquals($expected, $this->clean($asset->getContent()));
     }
 
     public function testBare()
@@ -68,6 +71,11 @@ JAVASCRIPT;
         $this->filter->setBare(true);
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals($expected, $asset->getContent());
+        $this->assertEquals($expected, $this->clean($asset->getContent()));
+    }
+
+    private function clean($js)
+    {
+        return preg_replace('~^//.*\n\s*~m', '', $js);
     }
 }

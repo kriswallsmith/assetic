@@ -17,25 +17,23 @@ use Assetic\Filter\UglifyJsFilter;
 /**
  * @group integration
  */
-class UglifyJsFilterTest extends \PHPUnit_Framework_TestCase
+class UglifyJsFilterTest extends FilterTestCase
 {
     private $asset;
     private $filter;
 
     protected function setUp()
     {
-        if (!isset($_SERVER['UGLIFYJS_BIN'])) {
-            $this->markTestSkipped('There is no uglifyJs configuration.');
+        $uglifyjsBin = $this->findExecutable('uglifyjs', 'UGLIFYJS_BIN');
+        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
+        if (!$uglifyjsBin) {
+            $this->markTestSkipped('Unable to find `uglifyjs` executable.');
         }
 
         $this->asset = new FileAsset(__DIR__.'/fixtures/uglifyjs/script.js');
         $this->asset->load();
 
-        if (isset($_SERVER['NODE_BIN'])) {
-            $this->filter = new UglifyJsFilter($_SERVER['UGLIFYJS_BIN'], $_SERVER['NODE_BIN']);
-        } else {
-            $this->filter = new UglifyJsFilter($_SERVER['UGLIFYJS_BIN']);
-        }
+        $this->filter = new UglifyJsFilter($uglifyjsBin, $nodeBin);
     }
 
     protected function tearDown()
@@ -51,7 +49,7 @@ class UglifyJsFilterTest extends \PHPUnit_Framework_TestCase
         $expected = <<<JS
 /**
  * Copyright
- */function bar(a){return var2.push(a),a}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(a){return a};
+ */function bar(e){return var2.push(e),e}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(e){return e};
 JS;
         $this->assertSame($expected, $this->asset->getContent());
     }
@@ -64,7 +62,7 @@ JS;
         $expected = <<<JS
 /**
  * Copyright
- */function bar(a){return var2.push(a),a}var foo=[1,2,3,4],bar=[a,b,c],var1=Array(5),var2=Array(a),foo=function(a){return a};
+ */function bar(e){return var2.push(e),e}var foo=[1,2,3,4],bar=[a,b,c],var1=Array(5),var2=Array(a),foo=function(e){return e};
 JS;
         $this->assertSame($expected, $this->asset->getContent());
     }
@@ -77,12 +75,12 @@ JS;
         $expected = <<<JS
 /**
  * Copyright
- */function bar(a) {
-    return var2.push(a), a;
+ */function bar(e) {
+    return var2.push(e), e;
 }
 
-var foo = new Array(1, 2, 3, 4), bar = Array(a, b, c), var1 = new Array(5), var2 = new Array(a), foo = function(a) {
-    return a;
+var foo = new Array(1, 2, 3, 4), bar = Array(a, b, c), var1 = new Array(5), var2 = new Array(a), foo = function(e) {
+    return e;
 };
 JS;
 
@@ -97,7 +95,7 @@ JS;
         $expected = <<<JS
 /**
  * Copyright
- */function bar(e){return var2.push(e),e}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(e){return e};%
+ */function bar(e){return var2.push(e),e}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(e){return e};
 JS;
 
         $this->assertSame($expected, $this->asset->getContent());
@@ -108,7 +106,7 @@ JS;
         $this->filter->setNoCopyright(true);
         $this->filter->filterDump($this->asset);
 
-        $expected = 'function bar(a){return var2.push(a),a}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(a){return a};';
+        $expected = 'function bar(e){return var2.push(e),e}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(e){return e};';
         $this->assertSame($expected, $this->asset->getContent());
     }
 }

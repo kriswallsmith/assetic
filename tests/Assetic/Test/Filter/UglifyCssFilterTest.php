@@ -17,25 +17,23 @@ use Assetic\Filter\UglifyCssFilter;
 /**
  * @group integration
  */
-class UglifyCssFilterTest extends \PHPUnit_Framework_TestCase
+class UglifyCssFilterTest extends FilterTestCase
 {
     private $asset;
     private $filter;
 
     protected function setUp()
     {
-        if (!isset($_SERVER['UGLIFYCSS_BIN'])) {
-            $this->markTestSkipped('There is no uglifyCss configuration.');
+        $uglifycssBin = $this->findExecutable('uglifycss', 'UGLIFYCSS_BIN');
+        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
+        if (!$uglifycssBin) {
+            $this->markTestSkipped('Unable to find `uglifycss` executable.');
         }
 
         $this->asset = new FileAsset(__DIR__.'/fixtures/uglifycss/main.css');
         $this->asset->load();
 
-        if (isset($_SERVER['NODE_BIN'])) {
-            $this->filter = new UglifyCssFilter($_SERVER['UGLIFYCSS_BIN'], $_SERVER['NODE_BIN']);
-        } else {
-            $this->filter = new UglifyCssFilter($_SERVER['UGLIFYCSS_BIN']);
-        }
+        $this->filter = new UglifyCssFilter($uglifycssBin, $nodeBin);
     }
 
     protected function tearDown()

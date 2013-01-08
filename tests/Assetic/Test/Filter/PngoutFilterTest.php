@@ -17,7 +17,7 @@ use Assetic\Filter\PngoutFilter;
 /**
  * @group integration
  */
-class PngoutFilterTest extends BaseImageFilterTest
+class PngoutFilterTest extends FilterTestCase
 {
     private $filter;
 
