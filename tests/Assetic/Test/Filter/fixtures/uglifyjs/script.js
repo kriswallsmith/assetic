@@ -2,6 +2,8 @@
  * Copyright
  */
 
+(function() {
+
 var foo = new Array(1, 2, 3, 4);
 var bar = Array(a, b, c);
 var var1 = new Array(5);
@@ -16,3 +18,8 @@ function bar(foo) {
 var foo = function (var1) {
     return var1;
 }
+
+foo('abc123')
+bar('abc123')
+
+})()
