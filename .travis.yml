@@ -12,4 +12,4 @@ before_script:
     - svn checkout http://cssmin.googlecode.com/svn/trunk/ vendor/cssmin --quiet
     - wget --quiet -O javascript-packer.zip "http://joliclic.free.fr/php/javascript-packer/telechargement.php?id=2&action=telecharger" && mkdir -p vendor/packer && unzip -qq javascript-packer.zip -d vendor/packer; rm javascript-packer.zip
 
-script: phpunit --configuration phpunit.travis.xml
+script: phpunit --configuration phpunit.travis.xml --verbose
