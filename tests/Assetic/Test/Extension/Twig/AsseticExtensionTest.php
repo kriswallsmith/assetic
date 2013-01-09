@@ -218,7 +218,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Twig_Error
+     * @expectedException \Twig_Error_Syntax
      */
     public function testUnclosedTag()
     {
