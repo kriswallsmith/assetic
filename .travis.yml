@@ -14,4 +14,4 @@ before_script:
     - npm install --quiet uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
     - npm install --quiet coffee-script handlebars less stylus uglifycss uglify-js
 
-script: phpunit --configuration phpunit.travis.xml --verbose
+script: phpunit --configuration .travis.phpunit.xml --verbose
