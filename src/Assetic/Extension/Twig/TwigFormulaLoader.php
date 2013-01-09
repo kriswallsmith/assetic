@@ -11,7 +11,9 @@
 
 namespace Assetic\Extension\Twig;
 
+use Assetic\Cache\ConfigCache;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Factory\Resource\IteratorResourceInterface;
 use Assetic\Factory\Resource\ResourceInterface;
 
 /**
@@ -28,72 +30,42 @@ class TwigFormulaLoader implements FormulaLoaderInterface
         $this->twig = $twig;
     }
 
-    public function load(ResourceInterface $resource)
+    public function load(ResourceInterface $resources)
     {
-        try {
-            $tokens = $this->twig->tokenize($resource->getContent(), (string) $resource);
-            $nodes  = $this->twig->parse($tokens);
-        } catch (\Exception $e) {
-            return array();
+        $cache = $this->twig->getExtension('assetic')->getConfigCache();
+
+        if (!$resources instanceof IteratorResourceInterface) {
+            $resources = array($resources);
         }
 
-        return $this->loadNode($nodes);
-    }
-
-    /**
-     * Loads assets from the supplied node.
-     *
-     * @param \Twig_Node $node
-     *
-     * @return array An array of asset formulae indexed by name
-     */
-    private function loadNode(\Twig_Node $node)
-    {
         $formulae = array();
+        foreach ($resources as $resource) {
+            $name = (string) $resource;
 
-        if ($node instanceof AsseticNode) {
-            $formulae[$node->getAttribute('name')] = array(
-                $node->getAttribute('inputs'),
-                $node->getAttribute('filters'),
-                array(
-                    'output'  => $node->getAttribute('asset')->getTargetPath(),
-                    'name'    => $node->getAttribute('name'),
-                    'debug'   => $node->getAttribute('debug'),
-                    'combine' => $node->getAttribute('combine'),
-                    'vars'    => $node->getAttribute('vars'),
-                ),
-            );
-        } elseif ($node instanceof \Twig_Node_Expression_Function) {
-            $name = version_compare(\Twig_Environment::VERSION, '1.2.0-DEV', '<')
-                ? $node->getNode('name')->getAttribute('name')
-                : $node->getAttribute('name');
-
-            if ($this->twig->getFunction($name) instanceof AsseticFilterFunction) {
-                $arguments = array();
-                foreach ($node->getNode('arguments') as $argument) {
-                    $arguments[] = eval('return '.$this->twig->compile($argument).';');
-                }
-
-                $invoker = $this->twig->getExtension('assetic')->getFilterInvoker($name);
-
-                $inputs  = isset($arguments[0]) ? (array) $arguments[0] : array();
-                $filters = $invoker->getFilters();
-                $options = array_replace($invoker->getOptions(), isset($arguments[1]) ? $arguments[1] : array());
-
-                if (!isset($options['name'])) {
-                    $options['name'] = $invoker->getFactory()->generateAssetName($inputs, $filters, $options);
-                }
-
-                $formulae[$options['name']] = array($inputs, $filters, $options);
+            try {
+                $this->loadTemplate($name, $cache);
+            } catch (\Exception $e) {
+                // ignore twig errors (none of our business)
+                continue;
             }
-        }
 
-        foreach ($node as $child) {
-            if ($child instanceof \Twig_Node) {
-                $formulae += $this->loadNode($child);
-            }
+            // fetch the formulae from the config cache
+            $formulae += $cache->get($name);
         }
 
         return $formulae;
+    }
+
+    private function loadTemplate($name, ConfigCache $cache)
+    {
+        // load the template to ensure what's in the cache is fresh
+        $this->twig->loadTemplate($name);
+
+        // force a parse if necessary
+        if (!$cache->has($name)) {
+            $source = $this->twig->getLoader()->getSource($name);
+            $tokens = $this->twig->tokenize($source, $name);
+            $nodes  = $this->twig->parse($tokens);
+        }
     }
 }

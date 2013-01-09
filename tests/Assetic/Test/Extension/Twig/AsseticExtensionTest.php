@@ -11,8 +11,9 @@
 
 namespace Assetic\Test\Extension\Twig;
 
-use Assetic\Factory\AssetFactory;
+use Assetic\Cache\ConfigCache;
 use Assetic\Extension\Twig\AsseticExtension;
+use Assetic\Factory\AssetFactory;
 
 class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,6 +31,11 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
      * @var AssetFactory
      */
     private $factory;
+
+    /**
+     * @var ConfigCache
+     */
+    private $cache;
 
     /**
      * @var \Twig_Environment
@@ -56,9 +62,13 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
 
+        $this->cache = $this->getMockBuilder('Assetic\Cache\ConfigCache')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->twig = new \Twig_Environment();
         $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
+        $this->twig->addExtension(new AsseticExtension($this->factory, $this->cache, array(), $this->valueSupplier));
     }
 
     public function testReference()
@@ -193,7 +203,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
             ->with('some_filter')
             ->will($this->returnValue($filter));
 
-        $this->twig->addExtension(new AsseticExtension($this->factory, array(
+        $this->twig->addExtension(new AsseticExtension($this->factory, $this->cache, array(
             'some_func' => array(
                 'filter' => 'some_filter',
                 'options' => array('output' => 'css/*.css'),
