@@ -19,6 +19,13 @@ use Assetic\Filter\PhpCssEmbedFilter;
  */
 class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        if (!class_exists('CssEmbed\CssEmbed')) {
+            $this->markTestSkipped('PhpCssEmbed is not installed');
+        }
+    }
+
     public function testCssEmbedDataUri()
     {
         $data = base64_encode(file_get_contents(__DIR__.'/fixtures/home.png'));

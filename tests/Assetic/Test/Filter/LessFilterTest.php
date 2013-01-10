@@ -14,7 +14,6 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\LessFilter;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * @group integration
