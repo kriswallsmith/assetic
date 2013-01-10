@@ -73,7 +73,7 @@ class CssRewriteFilter extends BaseCssFilter
                 return $matches[0];
             }
 
-            if ('/' == $matches['url'][0]) {
+            if (isset($matches['url'][0]) && '/' == $matches['url'][0]) {
                 // root relative
                 return str_replace($matches['url'], $host.$matches['url'], $matches[0]);
             }
