@@ -13,44 +13,52 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Compiles Dart into Javascript.
  *
  * @link http://dartlang.org/
  */
-class DartFilter implements FilterInterface
+class DartFilter extends BaseProcessFilter
 {
-    private $dartPath;
+    private $dartBin;
 
-    public function __construct($dartPath = '/usr/bin/dart2js')
+    public function __construct($dartBin = '/usr/bin/dart2js')
     {
-        $this->dartPath = $dartPath;
+        $this->dartBin = $dartBin;
     }
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = tempnam(sys_get_temp_dir(), 'assetic_dart');
+        $input  = tempnam(sys_get_temp_dir(), 'assetic_dart');
+        $output = tempnam(sys_get_temp_dir(), 'assetic_dart');
+
         file_put_contents($input, $asset->getContent());
 
-        $output = tempnam(sys_get_temp_dir(), 'assetic_dart_output');
+        $pb = $this->createProcessBuilder()
+            ->add($this->dartBin)
+            ->add('-o'.$output)
+            ->add($input)
+        ;
 
-        $pb = new ProcessBuilder(array(
-            $this->dartPath,
-            '-o'.$output
-        ));
-
-        $pb->add($input);
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
         if (0 < $code) {
+            if (file_exists($output)) {
+                unlink($output);
+            }
+
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
+        if (!file_exists($output)) {
+            throw new \RuntimeException('Error creating output file.');
+        }
+
         $asset->setContent(file_get_contents($output));
+        unlink($output);
     }
 
     public function filterDump(AssetInterface $asset)
