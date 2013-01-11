@@ -28,6 +28,7 @@
         <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
         <!-- <server name="TWIG_LIB" value="/path/to/twig/lib" /> -->
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+        <!-- <server name="DART2JS" value="/path/to/dart2js" /> -->
     </php>
 
     <filter>
