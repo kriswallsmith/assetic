@@ -17,7 +17,7 @@ use Assetic\Filter\JpegtranFilter;
 /**
  * @group integration
  */
-class JpegtranFilterTest extends BaseImageFilterTest
+class JpegtranFilterTest extends FilterTestCase
 {
     private $filter;
 

@@ -17,25 +17,24 @@ use Assetic\Filter\HandlebarsFilter;
 /**
  * @group integration
  */
-class HandlebarsFilterTest extends \PHPUnit_Framework_TestCase
+class HandlebarsFilterTest extends FilterTestCase
 {
     private $asset;
     private $filter;
 
     protected function setUp()
     {
-        if (!isset($_SERVER['HANDLEBARS_BIN'])) {
-            $this->markTestSkipped('There is no handlebars configuration.');
+        $handlebarsBin = $this->findExecutable('handlebars', 'HANDLEBARS_BIN');
+        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
+
+        if (!$handlebarsBin) {
+            $this->markTestSkipped('Unable to find `handlebars` executable.');
         }
 
         $this->asset = new FileAsset(__DIR__.'/fixtures/handlebars/template.handlebars');
         $this->asset->load();
 
-        if (isset($_SERVER['NODE_BIN'])) {
-            $this->filter = new HandlebarsFilter($_SERVER['HANDLEBARS_BIN'], $_SERVER['NODE_BIN']);
-        } else {
-            $this->filter = new HandlebarsFilter($_SERVER['HANDLEBARS_BIN']);
-        }
+        $this->filter = new HandlebarsFilter($handlebarsBin, $nodeBin);
     }
 
     protected function tearDown()

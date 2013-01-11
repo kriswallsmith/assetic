@@ -15,99 +15,60 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 
 /**
- * UglifyJs filter.
+ * UglifyJs2 filter.
  *
- * @link https://github.com/mishoo/UglifyJS
- * @author André Roaldseth <andre@roaldseth.net>
+ * @link http://lisperator.net/uglifyjs
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class UglifyJsFilter extends BaseNodeFilter
+class UglifyJs2Filter extends BaseNodeFilter
 {
     private $uglifyjsBin;
     private $nodeBin;
-
-    private $noCopyright;
+    private $compress;
     private $beautify;
-    private $unsafe;
     private $mangle;
 
-    /**
-     * @param string $uglifyjsBin Absolute path to the uglifyjs executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
-     */
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
         $this->uglifyjsBin = $uglifyjsBin;
         $this->nodeBin = $nodeBin;
     }
 
-    /**
-     * Removes the first block of comments as well
-     * @param bool $noCopyright True to enable
-     */
-    public function setNoCopyright($noCopyright)
+    public function setCompress($compress)
     {
-        $this->noCopyright = $noCopyright;
+        $this->compress = $compress;
     }
 
-    /**
-     * Output indented code
-     * @param bool $beautify True to enable
-     */
     public function setBeautify($beautify)
     {
         $this->beautify = $beautify;
     }
 
-    /**
-     * Enable additional optimizations that are known to be unsafe in some situations.
-     * @param bool $unsafe True to enable
-     */
-    public function setUnsafe($unsafe)
-    {
-        $this->unsafe = $unsafe;
-    }
-
-    /**
-     * Safely mangle variable and function names for greater file compress.
-     * @param bool $mangle True to enable
-     */
     public function setMangle($mangle)
     {
         $this->mangle = $mangle;
     }
 
-    /**
-     * @see Assetic\Filter\FilterInterface::filterLoad()
-     */
     public function filterLoad(AssetInterface $asset)
     {
     }
 
-    /**
-     * Run the asset through UglifyJs
-     *
-     * @see Assetic\Filter\FilterInterface::filterDump()
-     */
     public function filterDump(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
             : array($this->uglifyjsBin));
 
-        if ($this->noCopyright) {
-            $pb->add('--no-copyright');
+        if ($this->compress) {
+            $pb->add('--compress');
         }
 
         if ($this->beautify) {
             $pb->add('--beautify');
         }
 
-        if ($this->unsafe) {
-            $pb->add('--unsafe');
-        }
-
-        if (false === $this->mangle) {
-            $pb->add('--no-mangle');
+        if ($this->mangle) {
+            $pb->add('--mangle');
         }
 
         // input and output files
@@ -137,9 +98,8 @@ class UglifyJsFilter extends BaseNodeFilter
             throw new \RuntimeException('Error creating output file.');
         }
 
-        $uglifiedJs = file_get_contents($output);
-        unlink($output);
+        $asset->setContent(file_get_contents($output));
 
-        $asset->setContent($uglifiedJs);
+        unlink($output);
     }
 }

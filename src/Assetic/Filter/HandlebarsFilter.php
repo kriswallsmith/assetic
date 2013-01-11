@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Compiles Handlebars templates into Javascript.
@@ -21,18 +20,18 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://handlebarsjs.com/
  * @author Keyvan Akbary <keyvan@funddy.com>
  */
-class HandlebarsFilter implements FilterInterface
+class HandlebarsFilter extends BaseNodeFilter
 {
-    private $handlebarsPath;
-    private $nodePath;
+    private $handlebarsBin;
+    private $nodeBin;
 
     private $minimize = false;
     private $simple = false;
 
-    public function __construct($handlebarsPath = '/usr/bin/handlebars', $nodePath = null)
+    public function __construct($handlebarsBin = '/usr/bin/handlebars', $nodeBin = null)
     {
-        $this->handlebarsPath = $handlebarsPath;
-        $this->nodePath = $nodePath;
+        $this->handlebarsBin = $handlebarsBin;
+        $this->nodeBin = $nodeBin;
     }
 
     public function setMinimize($minimize)
@@ -47,15 +46,9 @@ class HandlebarsFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $executables = array();
-
-        if ($this->nodePath !== null) {
-            $executables[] = $this->nodePath;
-        }
-
-        $executables[] = $this->handlebarsPath;
-
-        $processBuilder = new ProcessBuilder($executables);
+        $pb = $this->createProcessBuilder($this->nodeBin
+            ? array($this->nodeBin, $this->handlebarsBin)
+            : array($this->handlebarsBin));
 
         $templateName = basename($asset->getSourcePath());
 
@@ -66,17 +59,17 @@ class HandlebarsFilter implements FilterInterface
         mkdir($inputDirPath);
         file_put_contents($inputPath, $asset->getContent());
 
-        $processBuilder->add($inputPath)->add('-f')->add($outputPath);
+        $pb->add($inputPath)->add('-f')->add($outputPath);
 
         if ($this->minimize) {
-            $processBuilder->add('--min');
+            $pb->add('--min');
         }
 
         if ($this->simple) {
-            $processBuilder->add('--simple');
+            $pb->add('--simple');
         }
 
-        $process = $processBuilder->getProcess();
+        $process = $pb->getProcess();
         $returnCode = $process->run();
 
         unlink($inputPath);

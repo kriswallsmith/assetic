@@ -17,7 +17,7 @@ use Assetic\Filter\OptiPngFilter;
 /**
  * @group integration
  */
-class OptiPngFilterTest extends BaseImageFilterTest
+class OptiPngFilterTest extends FilterTestCase
 {
     private $filter;
 

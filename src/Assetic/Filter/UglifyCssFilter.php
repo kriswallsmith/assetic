@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * UglifyCss filter.
@@ -21,23 +20,23 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link https://github.com/fmarcia/UglifyCSS
  * @author Franck Marcia <franck.marcia@gmail.com>
  */
-class UglifyCssFilter implements FilterInterface
+class UglifyCssFilter extends BaseNodeFilter
 {
-    private $uglifyCssPath;
-    private $nodeJsPath;
+    private $uglifycssBin;
+    private $nodeBin;
 
     private $expandVars;
     private $uglyComments;
     private $cuteComments;
 
     /**
-     * @param string $uglifyCssPath Absolute path to the uglifycss executable
-     * @param string $nodeJsPath Absolute path to the folder containg node.js executable
+     * @param string $uglifycssBin Absolute path to the uglifycss executable
+     * @param string $nodeBin       Absolute path to the folder containg node.js executable
      */
-    public function __construct($uglifyCssPath, $nodeJsPath = null)
+    public function __construct($uglifycssBin = '/usr/bin/uglifycss', $nodeBin = null)
     {
-        $this->uglifyCssPath = $uglifyCssPath;
-        $this->nodeJsPath = $nodeJsPath;
+        $this->uglifycssBin = $uglifycssBin;
+        $this->nodeBin = $nodeBin;
     }
 
     /**
@@ -81,15 +80,9 @@ class UglifyCssFilter implements FilterInterface
      */
     public function filterDump(AssetInterface $asset)
     {
-        $executables = array();
-
-        if ($this->nodeJsPath !== null) {
-            $executables[] = $this->nodeJsPath;
-        }
-
-        $executables[] = $this->uglifyCssPath;
-
-        $pb = new ProcessBuilder($executables);
+        $pb = $this->createProcessBuilder($this->nodeBin
+            ? array($this->nodeBin, $this->uglifycssBin)
+            : array($this->uglifycssBin));
 
         if ($this->expandVars) {
             $pb->add('--expand-vars');

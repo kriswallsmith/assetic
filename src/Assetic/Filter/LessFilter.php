@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Loads LESS files.
@@ -21,10 +20,9 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessFilter implements FilterInterface
+class LessFilter extends BaseNodeFilter
 {
     private $nodeBin;
-    private $nodePaths;
     private $compress;
 
     /**
@@ -45,7 +43,7 @@ class LessFilter implements FilterInterface
     public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
     {
         $this->nodeBin = $nodeBin;
-        $this->nodePaths = $nodePaths;
+        $this->setNodePaths($nodePaths);
     }
 
     public function setCompress($compress)
@@ -104,13 +102,8 @@ EOF;
             $treeOptions['compress'] = $this->compress;
         }
 
-        $pb = new ProcessBuilder();
+        $pb = $this->createProcessBuilder();
         $pb->inheritEnvironmentVariables();
-
-        // node.js configuration
-        if (0 < count($this->nodePaths)) {
-            $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
-        }
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_less'));
         file_put_contents($input, sprintf($format,

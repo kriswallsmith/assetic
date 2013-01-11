@@ -21,6 +21,10 @@ class LessphpFilterTest extends LessFilterTest
 {
     protected function setUp()
     {
+        if (!class_exists('lessc')) {
+            $this->markTestSkipped('LessPHP is not installed');
+        }
+
         $this->filter = new LessphpFilter();
     }
 

@@ -12,9 +12,8 @@
 namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
+use Assetic\Filter\BaseProcessFilter;
 
 /**
  * Base YUI compressor filter.
@@ -22,7 +21,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://developer.yahoo.com/yui/compressor/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompressorFilter implements FilterInterface
+abstract class BaseCompressorFilter extends BaseProcessFilter
 {
     private $jarPath;
     private $javaPath;
@@ -60,7 +59,7 @@ abstract class BaseCompressorFilter implements FilterInterface
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = new ProcessBuilder(array(
+        $pb = $this->createProcessBuilder(array(
             $this->javaPath,
             '-jar',
             $this->jarPath,

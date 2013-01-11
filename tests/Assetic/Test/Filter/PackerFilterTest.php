@@ -14,6 +14,9 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\PackerFilter;
 
+/**
+ * @group integration
+ */
 class PackerFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
