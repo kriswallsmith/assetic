@@ -23,11 +23,16 @@ class JpegoptimFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        if (!isset($_SERVER['JPEGOPTIM_BIN'])) {
-            $this->markTestSkipped('No jpegoptim configuration.');
+        if (!$jpegoptimBin = $this->findExecutable('jpegoptim', 'JPEGOPTIM_BIN')) {
+            $this->markTestSkipped('Unable to find `jpegoptim` executable.');
         }
 
-        $this->filter = new JpegoptimFilter($_SERVER['JPEGOPTIM_BIN']);
+        $this->filter = new JpegoptimFilter($jpegoptimBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     public function testFilter()

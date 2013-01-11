@@ -13,8 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Exception\FilterException;
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Loads Compass files.
@@ -22,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://compass-style.org/
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
-class CompassFilter implements FilterInterface
+class CompassFilter extends BaseProcessFilter
 {
     private $compassPath;
     private $rubyPath;
@@ -211,7 +209,7 @@ class CompassFilter implements FilterInterface
             $compassProcessArgs = array_merge(explode(' ', $this->rubyPath), $compassProcessArgs);
         }
 
-        $pb = new ProcessBuilder($compassProcessArgs);
+        $pb = $this->createProcessBuilder($compassProcessArgs);
         $pb->inheritEnvironmentVariables();
 
         if ($this->force) {

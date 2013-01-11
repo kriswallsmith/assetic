@@ -17,13 +17,26 @@ use Assetic\Filter\CssEmbedFilter;
 /**
  * @group integration
  */
-class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
+class CssEmbedFilterTest extends FilterTestCase
 {
+    private $filter;
+
     protected function setUp()
     {
+        if (!$javaBin = $this->findExecutable('java', 'JAVA_BIN')) {
+            $this->markTestSkipped('Unable to find `java` executable.');
+        }
+
         if (!isset($_SERVER['CSSEMBED_JAR'])) {
             $this->markTestSkipped('There is no CSSEMBED_JAR environment variable.');
         }
+
+        $this->filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR'], $javaBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     public function testCssEmbedDataUri()
@@ -33,8 +46,7 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
         $asset->load();
 
-        $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
-        $filter->filterDump($asset);
+        $this->filter->filterDump($asset);
 
         $this->assertContains('url(data:image/png;base64,'.$data, $asset->getContent());
     }
@@ -44,10 +56,9 @@ class CssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
         $asset->load();
 
-        $filter = new CssEmbedFilter($_SERVER['CSSEMBED_JAR']);
-        $filter->setMhtml(true);
-        $filter->setMhtmlRoot('/test');
-        $filter->filterDump($asset);
+        $this->filter->setMhtml(true);
+        $this->filter->setMhtmlRoot('/test');
+        $this->filter->filterDump($asset);
 
         $this->assertContains('url(mhtml:/test/!', $asset->getContent());
     }

@@ -23,11 +23,16 @@ class JpegtranFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        if (!isset($_SERVER['JPEGTRAN_BIN'])) {
-            $this->markTestSkipped('No jpegtran configuration.');
+        if (!$jpegtranBin = $this->findExecutable('jpegtran', 'JPEGTRAN_BIN')) {
+            $this->markTestSkipped('Unable to find `jpegtran` executable.');
         }
 
-        $this->filter = new JpegtranFilter($_SERVER['JPEGTRAN_BIN']);
+        $this->filter = new JpegtranFilter($jpegtranBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     public function testFilter()

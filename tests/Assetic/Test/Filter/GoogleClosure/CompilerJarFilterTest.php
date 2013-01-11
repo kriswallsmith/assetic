@@ -13,18 +13,35 @@ namespace Assetic\Test\Filter\GoogleClosure;
 
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerJarFilter;
+use Assetic\Test\Filter\FilterTestCase;
 
 /**
  * @group integration
  */
-class CompilerJarFilterTest extends \PHPUnit_Framework_TestCase
+class CompilerJarFilterTest extends FilterTestCase
 {
-    public function testCompile()
+    private $filter;
+
+    protected function setUp()
     {
+        if (!$javaBin = $this->findExecutable('java', 'JAVA_BIN')) {
+            $this->markTestSkipped('Unable to find `java` executable.');
+        }
+
         if (!isset($_SERVER['CLOSURE_JAR'])) {
             $this->markTestSkipped('There is no CLOSURE_JAR environment variable.');
         }
 
+        $this->filter = new CompilerJarFilter($_SERVER['CLOSURE_JAR'], $javaBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
+    }
+
+    public function testCompile()
+    {
         $input = <<<EOF
 (function() {
 function unused(){}
@@ -46,13 +63,13 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter = new CompilerJarFilter($_SERVER['CLOSURE_JAR']);
-        $filter->filterLoad($asset);
-        $filter->filterDump($asset);
+        $this->filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getContent());
+    }
 
-
+    public function testCompileEcma5()
+    {
         $input = <<<EOF
 (function() {
     var int = 123;
@@ -68,10 +85,8 @@ EOF;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $filter->setLanguage(CompilerJarFilter::LANGUAGE_ECMASCRIPT5);
-
-        $filter->filterLoad($asset);
-        $filter->filterDump($asset);
+        $this->filter->setLanguage(CompilerJarFilter::LANGUAGE_ECMASCRIPT5);
+        $this->filter->filterDump($asset);
 
         $this->assertEquals($expected, $asset->getContent());
     }

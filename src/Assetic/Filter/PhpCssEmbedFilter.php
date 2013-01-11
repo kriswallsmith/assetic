@@ -11,8 +11,8 @@
 
 namespace Assetic\Filter;
 
-use CssEmbed\CssEmbed;
 use Assetic\Asset\AssetInterface;
+use CssEmbed\CssEmbed;
 
 /**
  * A filter that embed url directly into css

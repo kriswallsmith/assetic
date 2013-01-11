@@ -24,7 +24,7 @@ class DartFilterTest extends FilterTestCase
     protected function setUp()
     {
         if (!$dartBin = $this->findExecutable('dart2js', 'DART_BIN')) {
-            $this->markTestSkipped('Unable to find `dart2js` executable');
+            $this->markTestSkipped('Unable to find `dart2js` executable.');
         }
 
         $this->filter = new DartFilter($dartBin);

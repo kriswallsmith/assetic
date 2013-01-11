@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * CSSEmbed filter
@@ -21,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link https://github.com/nzakas/cssembed
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
-class CssEmbedFilter implements FilterInterface
+class CssEmbedFilter extends BaseProcessFilter
 {
     private $jarPath;
     private $javaPath;
@@ -80,7 +79,7 @@ class CssEmbedFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder(array(
+        $pb = $this->createProcessBuilder(array(
             $this->javaPath,
             '-jar',
             $this->jarPath,

@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through jpegtran.
@@ -21,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://jpegclub.org/jpegtran/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JpegtranFilter implements FilterInterface
+class JpegtranFilter extends BaseProcessFilter
 {
     const COPY_NONE = 'none';
     const COPY_COMMENTS = 'comments';
@@ -69,7 +68,7 @@ class JpegtranFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder(array($this->jpegtranBin));
+        $pb = $this->createProcessBuilder(array($this->jpegtranBin));
 
         if ($this->optimize) {
             $pb->add('-optimize');

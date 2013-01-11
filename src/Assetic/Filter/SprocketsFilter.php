@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through Sprockets.
@@ -25,7 +24,7 @@ use Symfony\Component\Process\ProcessBuilder;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SprocketsFilter implements FilterInterface
+class SprocketsFilter extends BaseProcessFilter
 {
     private $sprocketsLib;
     private $rubyBin;
@@ -102,7 +101,7 @@ EOF;
             $more
         ));
 
-        $pb = new ProcessBuilder(array(
+        $pb = $this->createProcessBuilder(array(
             $this->rubyBin,
             $input,
         ));

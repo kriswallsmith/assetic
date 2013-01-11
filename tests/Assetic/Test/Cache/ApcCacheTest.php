@@ -21,7 +21,7 @@ class ApcCacheTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         if (!extension_loaded('apc') || !ini_get('apc.enable_cli')) {
-            $this->markTestSkipped('APC must be installed and enabled.');
+            $this->markTestSkipped('APC must be installed and the apc.enable_cli setting must be enabled.');
         }
     }
 

@@ -21,7 +21,7 @@ class PackagerFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        if (!class_exists('Packager', false)) {
+        if (!class_exists('Packager')) {
             $this->markTestSkipped('Packager is not available.');
         }
     }

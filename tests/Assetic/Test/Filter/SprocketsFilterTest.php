@@ -17,15 +17,22 @@ use Assetic\Filter\SprocketsFilter;
 /**
  * @group integration
  */
-class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
+class SprocketsFilterTest extends FilterTestCase
 {
+    private $filter;
     private $assetRoot;
 
     protected function setUp()
     {
-        if (!isset($_SERVER['SPROCKETS_LIB']) || !isset($_SERVER['RUBY_BIN'])) {
-            $this->markTestSkipped('There is no sprockets configuration.');
+        if (!$rubyBin = $this->findExecutable('ruby', 'RUBY_BIN')) {
+            $this->markTestSkipped('Unable to locate `ruby` executable.');
         }
+
+        if (!isset($_SERVER['SPROCKETS_LIB'])) {
+            $this->markTestSkipped('There is no SPROCKETS_LIB environment variable.');
+        }
+
+        $this->filter = new SprocketsFilter($_SERVER['SPROCKETS_LIB'], $rubyBin);
 
         $this->assetRoot = sys_get_temp_dir().'/assetic_sprockets';
         if (is_dir($this->assetRoot)) {
@@ -37,7 +44,24 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
+        $this->filter = null;
         $this->cleanup();
+    }
+
+    public function testFilterLoad()
+    {
+        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js');
+        $asset->load();
+
+        $this->filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib1');
+        $this->filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib2');
+        $this->filter->setAssetRoot($this->assetRoot);
+        $this->filter->filterLoad($asset);
+
+        $this->assertContains('/* header.js */', $asset->getContent());
+        $this->assertContains('/* include.js */', $asset->getContent());
+        $this->assertContains('/* footer.js */', $asset->getContent());
+        $this->assertFileExists($this->assetRoot.'/images/image.gif');
     }
 
     private function cleanup()
@@ -48,22 +72,5 @@ class SprocketsFilterTest extends \PHPUnit_Framework_TestCase
                 unlink($path);
             }
         }
-    }
-
-    public function testFilterLoad()
-    {
-        $asset = new FileAsset(__DIR__.'/fixtures/sprockets/main.js');
-        $asset->load();
-
-        $filter = new SprocketsFilter($_SERVER['SPROCKETS_LIB'], $_SERVER['RUBY_BIN']);
-        $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib1');
-        $filter->addIncludeDir(__DIR__.'/fixtures/sprockets/lib2');
-        $filter->setAssetRoot($this->assetRoot);
-        $filter->filterLoad($asset);
-
-        $this->assertContains('/* header.js */', $asset->getContent());
-        $this->assertContains('/* include.js */', $asset->getContent());
-        $this->assertContains('/* footer.js */', $asset->getContent());
-        $this->assertFileExists($this->assetRoot.'/images/image.gif');
     }
 }

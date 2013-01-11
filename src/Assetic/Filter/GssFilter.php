@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Filter for the Google Closure Stylesheets Compiler JAR.
@@ -21,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://code.google.com/p/closure-stylesheets/
  * @author Matthias Krauser <matthias@krauser.eu>
  */
-class GssFilter implements FilterInterface
+class GssFilter extends BaseProcessFilter
 {
     private $jarPath;
     private $javaPath;
@@ -84,7 +83,7 @@ class GssFilter implements FilterInterface
     {
         $cleanup = array();
 
-        $pb = new ProcessBuilder(array(
+        $pb = $this->createProcessBuilder(array(
             $this->javaPath,
             '-jar',
             $this->jarPath,

@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through pngout.
@@ -21,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://advsys.net/ken/utils.htm#pngout
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class PngoutFilter implements FilterInterface
+class PngoutFilter extends BaseProcessFilter
 {
     // -c#
     const COLOR_GREY       = '0';
@@ -87,7 +86,7 @@ class PngoutFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder(array($this->pngoutBin));
+        $pb = $this->createProcessBuilder(array($this->pngoutBin));
 
         if (null !== $this->color) {
             $pb->add('-c'.$this->color);
