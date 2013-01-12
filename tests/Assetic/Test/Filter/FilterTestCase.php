@@ -19,10 +19,7 @@ abstract class FilterTestCase extends \PHPUnit_Framework_TestCase
     protected function assertMimeType($expected, $data, $message = null)
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-
-        $actual = file_exists($data) ? $finfo->file($data) : $finfo->buffer($data);
-
-        $this->assertEquals($expected, $actual, $message);
+        $this->assertEquals($expected, $finfo->buffer($data), $message);
     }
 
     protected function findExecutable($name, $serverKey = null)
