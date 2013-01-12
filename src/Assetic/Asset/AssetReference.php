@@ -21,9 +21,9 @@ use Assetic\Filter\FilterInterface;
  */
 class AssetReference implements AssetInterface
 {
-    private $am;
-    private $name;
-    private $filters = array();
+    protected $am;
+    protected $name;
+    protected $filters = array();
 
     public function __construct(AssetManager $am, $name)
     {
@@ -113,7 +113,7 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($values));
     }
 
-    // private
+    // protected
 
     private function callAsset($method, $arguments = array())
     {

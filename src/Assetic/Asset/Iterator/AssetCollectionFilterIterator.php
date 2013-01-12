@@ -21,8 +21,8 @@ namespace Assetic\Asset\Iterator;
  */
 class AssetCollectionFilterIterator extends \RecursiveFilterIterator
 {
-    private $visited;
-    private $sources;
+    protected $visited;
+    protected $sources;
 
     /**
      * Constructor.

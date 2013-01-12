@@ -23,14 +23,14 @@ use Assetic\Filter\FilterInterface;
  */
 class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
 {
-    private $assets;
-    private $filters;
-    private $sourceRoot;
-    private $targetPath;
-    private $content;
-    private $clones;
-    private $vars;
-    private $values;
+    protected $assets;
+    protected $filters;
+    protected $sourceRoot;
+    protected $targetPath;
+    protected $content;
+    protected $clones;
+    protected $vars;
+    protected $values;
 
     /**
      * Constructor.

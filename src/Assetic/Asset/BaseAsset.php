@@ -24,14 +24,14 @@ use Assetic\Filter\FilterInterface;
  */
 abstract class BaseAsset implements AssetInterface
 {
-    private $filters;
-    private $sourceRoot;
-    private $sourcePath;
-    private $targetPath;
-    private $content;
-    private $loaded;
-    private $vars;
-    private $values;
+    protected $filters;
+    protected $sourceRoot;
+    protected $sourcePath;
+    protected $targetPath;
+    protected $content;
+    protected $loaded;
+    protected $vars;
+    protected $values;
 
     /**
      * Constructor.
