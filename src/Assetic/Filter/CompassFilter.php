@@ -194,7 +194,7 @@ class CompassFilter extends BaseProcessFilter
 
         $loadPaths = $this->loadPaths;
         if ($root && $path) {
-            $loadPaths[] = dirname($root.'/'.$path);
+            $loadPaths[] = realpath(dirname($root.'/'.$path));
         }
 
         // compass does not seems to handle symlink, so we use realpath()
