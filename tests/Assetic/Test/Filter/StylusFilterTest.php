@@ -23,16 +23,15 @@ class StylusFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
-        if (!$nodeBin || !isset($_SERVER['NODE_PATH'])) {
-            $this->markTestSkipped('No node.js configuration.');
+        if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
+            $this->markTestSkipped('Unable to find `node` executable.');
         }
 
-        if (!$this->checkNodeModule($nodeBin, $_SERVER['NODE_PATH'], 'stylus')) {
+        if (!$this->checkNodeModule('stylus', $nodeBin)) {
             $this->markTestSkipped('The "stylus" module is not installed.');
         }
 
-        $this->filter = new StylusFilter($nodeBin, array($_SERVER['NODE_PATH']));
+        $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
     }
 
     public function testFilterLoad()

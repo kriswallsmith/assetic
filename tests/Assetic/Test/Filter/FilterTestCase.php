@@ -16,18 +16,18 @@ use Symfony\Component\Process\ProcessBuilder;
 
 abstract class FilterTestCase extends \PHPUnit_Framework_TestCase
 {
-    public static function assertMimeType($expected, $data, $message = null)
+    protected function assertMimeType($expected, $data, $message = null)
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
         $actual = file_exists($data) ? $finfo->file($data) : $finfo->buffer($data);
 
-        self::assertEquals($expected, $actual, $message);
+        $this->assertEquals($expected, $actual, $message);
     }
 
     protected function findExecutable($name, $serverKey = null)
     {
-        if (isset($_SERVER[$serverKey])) {
+        if ($serverKey && isset($_SERVER[$serverKey])) {
             return $_SERVER[$serverKey];
         }
 
@@ -36,10 +36,17 @@ abstract class FilterTestCase extends \PHPUnit_Framework_TestCase
         return $finder->find($name);
     }
 
-    protected function checkNodeModule($bin, $path, $module)
+    protected function checkNodeModule($module, $bin = null)
     {
+        if (!$bin && !$bin = $this->findExecutable('node', 'NODE_BIN')) {
+            $this->markTestSkipped('Unable to find `node` executable.');
+        }
+
         $pb = new ProcessBuilder(array($bin, '-e', 'require(\''.$module.'\')'));
-        $pb->setEnv('NODE_PATH', $path);
+
+        if (isset($_SERVER['NODE_PATH'])) {
+            $pb->setEnv('NODE_PATH', $_SERVER['NODE_PATH']);
+        }
 
         return 0 === $pb->getProcess()->run();
     }

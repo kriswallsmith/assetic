@@ -5,8 +5,35 @@ php:
     - 5.4
 
 before_script:
+    # php deps
     - composer install --dev
-    - npm install --quiet uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
-    - npm install --quiet coffee-script handlebars less stylus uglifycss uglify-js
 
-script: phpunit -vc .travis.phpunit.xml
+    # node deps
+    - npm install -q uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
+    - npm install -q coffee-script handlebars less stylus uglifycss uglify-js
+    - export NODE_PATH=node_modules
+    - export UGLIFYJS_BIN=vendor/uglifyjs/node_modules/uglify-js/bin/uglifyjs
+
+    # java deps
+    - mkdir -p vendor/java
+    - wget -q http://closure-compiler.googlecode.com/files/compiler-latest.zip && unzip -q compiler-latest.zip -d vendor/java/compiler
+    - export CLOSURE_JAR=vendor/java/compiler/compiler.jar
+    - wget -q http://closure-stylesheets.googlecode.com/files/closure-stylesheets-20111230.jar && mv closure-stylesheets-20111230.jar vendor/java
+    - export GSS_JAR=vendor/java/closure-stylesheets-20111230.jar
+    - wget -q https://github.com/downloads/nzakas/cssembed/cssembed-0.4.5.jar && mv cssembed-0.4.5.jar vendor/java
+    - export CSSEMBED_JAR=vendor/java/cssembed-0.4.5.jar
+    - wget -q http://yui.zenfs.com/releases/yuicompressor/yuicompressor-2.4.7.zip && unzip -q yuicompressor-2.4.7.zip -d vendor/java
+    - export YUI_COMPRESSOR_JAR=vendor/java/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar
+
+    # # ruby deps (why doesn't this work?)
+    # - gem install sprockets --version '< 2'
+    # - gem install compass sass
+
+    # other deps
+    - sudo apt-get install -q jpegoptim libjpeg-progs optipng
+    - wget -q https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-32.tar.gz && tar -xzf dartsdk-linux-32.tar.gz && mv dart-sdk vendor
+    - export DART_BIN=vendor/dart-sdk/bin/dart2js
+    - wget -q http://static.jonof.id.au/dl/kenutils/pngout-20120530-linux.tar.gz && tar -xzf pngout-20120530-linux.tar.gz && mv pngout-20120530-linux vendor
+    - export PNGOUT_BIN=vendor/pngout-20120530-linux/i386/pngout
+
+script: phpunit -v
