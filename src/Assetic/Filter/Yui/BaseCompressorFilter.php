@@ -87,7 +87,7 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         if (null !== $this->lineBreak) {
             $pb->add('--line-break')->add($this->lineBreak);
         }
-	
+
         // input and output files
         $tempDir = realpath(sys_get_temp_dir());
         $input = tempnam($tempDir, 'YUI-IN-');
