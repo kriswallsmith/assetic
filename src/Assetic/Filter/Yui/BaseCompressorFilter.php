@@ -68,7 +68,7 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $command = array($this->javaPath);
 
         if (null !== $this->stackSize) {
-	    $command[] = '-Xss'.$this->stackSize;
+            $command[] = '-Xss'.$this->stackSize;
         }		
 
         $command[] = '-jar';
