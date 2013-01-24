@@ -65,17 +65,17 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
      */
     protected function compress($content, $type, $options = array())
     {
-		$command = array($this->javaPath);
+        $command = array($this->javaPath);
 
-		if (null !== $this->stackSize) {
-			$command[] = '-Xss'.$this->stackSize;
-		}		
-		
-		$command[] = '-jar';
-		$command[] = $this->jarPath;
-	
+        if (null !== $this->stackSize) {
+	    $command[] = '-Xss'.$this->stackSize;
+        }		
+
+        $command[] = '-jar';
+        $command[] = $this->jarPath;
+
         $pb = $this->createProcessBuilder($command);
-		
+	
         foreach ($options as $option) {
             $pb->add($option);
         }
