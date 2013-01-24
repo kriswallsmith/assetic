@@ -27,7 +27,7 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
     private $javaPath;
     private $charset;
     private $lineBreak;
-	private $stackSize;
+    private $stackSize;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -45,10 +45,10 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $this->lineBreak = $lineBreak;
     }
 
-	public function setStackSize($stackSize)
-	{
-		$this->stackSize = $stackSize;
-	}
+    public function setStackSize($stackSize)
+    {
+        $this->stackSize = $stackSize;
+    }
 	
     public function filterLoad(AssetInterface $asset)
     {
