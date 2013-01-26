@@ -17,11 +17,11 @@ use Stylecow\Parser;
 /**
  * Filters assets through Stylecow.
  * @link https://github.com/oscarotero/stylecow
- * 
+ *
  * @author Luke Mills <luke@lukemills.net>
  */
-class StylecowFilter implements FilterInterface {
-
+class StylecowFilter implements FilterInterface
+{
     /**
      *
      * @var string[]
@@ -30,29 +30,32 @@ class StylecowFilter implements FilterInterface {
 
     /**
      * Clears and sets filters to the array passed in.
-     * 
-     * @param string[] $filters  An array of Stylecow plugins (@see https://github.com/oscarotero/stylecow#plugins).
+     *
+     * @param string[] $filters An array of Stylecow plugins (@see https://github.com/oscarotero/stylecow#plugins).
      */
-    public function setFilters(array $filters) {
+    public function setFilters(array $filters)
+    {
         $this->filters = $filters;
     }
 
     /**
      * Adds a Stylecow plugin to the list of plugins to apply.
-     * 
-     * @param string $name  A Stylecow plugins (@see https://github.com/oscarotero/stylecow#plugins).
+     *
+     * @param string $name A Stylecow plugins (@see https://github.com/oscarotero/stylecow#plugins).
      */
-    public function setFilter($name) {
+    public function setFilter($name)
+    {
         if (!in_array($name, $this->filters)) {
             $this->filters[] = $name;
         }
     }
 
-    public function filterDump(AssetInterface $asset) {
-        
+    public function filterDump(AssetInterface $asset)
+    {
     }
 
-    public function filterLoad(AssetInterface $asset) {
+    public function filterLoad(AssetInterface $asset)
+    {
         $css = Parser::parseString($asset->getContent());
         $css->applyPlugins($this->filters);
         $asset->setContent($css->__toString());

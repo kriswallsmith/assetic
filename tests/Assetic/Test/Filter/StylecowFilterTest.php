@@ -27,11 +27,12 @@ class StylecowFilterTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testVendorPrefixPlugin() {
+    public function testVendorPrefixPlugin()
+    {
         $expectation = file_get_contents(__DIR__ . '/expectations/stylecow/vendor-prefixes.css');
         $asset = new FileAsset(__DIR__ . '/fixtures/stylecow/vendor-prefixes.css');
         $asset->load();
-        
+
         $filter = new StylecowFilter();
         $filter->setFilter('VendorPrefixes');
         $filter->filterLoad($asset);
