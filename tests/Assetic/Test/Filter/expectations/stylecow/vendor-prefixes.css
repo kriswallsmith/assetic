@@ -1,0 +1,16 @@
+
+div {
+	background-image: -o-linear-gradient(top, #70d900, #57a900);
+	background-image: -webkit-linear-gradient(top, #70d900, #57a900);
+	background-image: -moz-linear-gradient(top, #70d900, #57a900);
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#70d900), to(#57a900));
+	background-image: linear-gradient(to bottom, #70d900, #57a900);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	-o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
