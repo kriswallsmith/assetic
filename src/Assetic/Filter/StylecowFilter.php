@@ -58,7 +58,7 @@ class StylecowFilter implements FilterInterface
     {
         $css = Parser::parseString($asset->getContent());
         $css->applyPlugins($this->filters);
-        $asset->setContent($css->__toString());
+        $asset->setContent((string) $css);
     }
 
 }
