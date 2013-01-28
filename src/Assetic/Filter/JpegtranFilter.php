@@ -22,81 +22,81 @@ use Assetic\Exception\FilterException;
  */
 class JpegtranFilter extends BaseProcessFilter
 {
-    const COPY_NONE = 'none';
-    const COPY_COMMENTS = 'comments';
-    const COPY_ALL = 'all';
+		const COPY_NONE = 'none';
+		const COPY_COMMENTS = 'comments';
+		const COPY_ALL = 'all';
 
-    private $jpegtranBin;
-    private $optimize;
-    private $copy;
-    private $progressive;
-    private $restart;
+		private $jpegtranBin;
+		private $optimize;
+		private $copy;
+		private $progressive;
+		private $restart;
 
-    /**
-     * Constructor.
-     *
-     * @param string $jpegtranBin Path to the jpegtran binary
-     */
-    public function __construct($jpegtranBin = '/usr/bin/jpegtran')
-    {
-        $this->jpegtranBin = $jpegtranBin;
-    }
+		/**
+		 * Constructor.
+		 *
+		 * @param string $jpegtranBin Path to the jpegtran binary
+		 */
+		public function __construct($jpegtranBin = '/usr/bin/jpegtran')
+		{
+				$this->jpegtranBin = $jpegtranBin;
+		}
 
-    public function setOptimize($optimize)
-    {
-        $this->optimize = $optimize;
-    }
+		public function setOptimize($optimize)
+		{
+				$this->optimize = $optimize;
+		}
 
-    public function setCopy($copy)
-    {
-        $this->copy = $copy;
-    }
+		public function setCopy($copy)
+		{
+				$this->copy = $copy;
+		}
 
-    public function setProgressive($progressive)
-    {
-        $this->progressive = $progressive;
-    }
+		public function setProgressive($progressive)
+		{
+				$this->progressive = $progressive;
+		}
 
-    public function setRestart($restart)
-    {
-        $this->restart = $restart;
-    }
+		public function setRestart($restart)
+		{
+				$this->restart = $restart;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
+		public function filterLoad(AssetInterface $asset)
+		{
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-        $pb = $this->createProcessBuilder(array($this->jpegtranBin));
+		public function filterDump(AssetInterface $asset)
+		{
+				$pb = $this->createProcessBuilder(array($this->jpegtranBin));
 
-        if ($this->optimize) {
-            $pb->add('-optimize');
-        }
+				if ($this->optimize) {
+						$pb->add('-optimize');
+				}
 
-        if ($this->copy) {
-            $pb->add('-copy')->add($this->copy);
-        }
+				if ($this->copy) {
+						$pb->add('-copy')->add($this->copy);
+				}
 
-        if ($this->progressive) {
-            $pb->add('-progressive');
-        }
+				if ($this->progressive) {
+						$pb->add('-progressive');
+				}
 
-        if (null !== $this->restart) {
-            $pb->add('-restart')->add($this->restart);
-        }
+				if (null !== $this->restart) {
+						$pb->add('-restart')->add($this->restart);
+				}
 
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegtran'));
-        file_put_contents($input, $asset->getContent());
+				$pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegtran'));
+				file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
+				$proc = $pb->getProcess();
+				$code = $proc->run();
+				unlink($input);
 
-        if (0 < $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
+				if (0 < $code) {
+						throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+				}
 
-        $asset->setContent($proc->getOutput());
-    }
+				$asset->setContent($proc->getOutput());
+		}
 }

@@ -18,18 +18,18 @@ use Assetic\Cache\ArrayCache;
  */
 class ArrayCacheTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCache()
-    {
-        $cache = new ArrayCache();
+		public function testCache()
+		{
+				$cache = new ArrayCache();
 
-        $this->assertFalse($cache->has('foo'));
+				$this->assertFalse($cache->has('foo'));
 
-        $cache->set('foo', 'bar');
-        $this->assertEquals('bar', $cache->get('foo'));
+				$cache->set('foo', 'bar');
+				$this->assertEquals('bar', $cache->get('foo'));
 
-        $this->assertTrue($cache->has('foo'));
+				$this->assertTrue($cache->has('foo'));
 
-        $cache->remove('foo');
-        $this->assertFalse($cache->has('foo'));
-    }
+				$cache->remove('foo');
+				$this->assertFalse($cache->has('foo'));
+		}
 }

@@ -20,54 +20,54 @@ use Symfony\Component\Process\Process;
  */
 class FilterException extends \RuntimeException implements Exception
 {
-    private $originalMessage;
-    private $input;
+		private $originalMessage;
+		private $input;
 
-    public static function fromProcess(Process $proc)
-    {
-        $message = sprintf("An error occurred while running:\n%s", $proc->getCommandLine());
+		public static function fromProcess(Process $proc)
+		{
+				$message = sprintf("An error occurred while running:\n%s", $proc->getCommandLine());
 
-        $errorOutput = $proc->getErrorOutput();
-        if (!empty($errorOutput)) {
-            $message .= "\n\nError Output:\n".str_replace("\r", '', $errorOutput);
-        }
+				$errorOutput = $proc->getErrorOutput();
+				if (!empty($errorOutput)) {
+						$message .= "\n\nError Output:\n".str_replace("\r", '', $errorOutput);
+				}
 
-        $output = $proc->getOutput();
-        if (!empty($output)) {
-            $message .= "\n\nOutput:\n".str_replace("\r", '', $output);
-        }
+				$output = $proc->getOutput();
+				if (!empty($output)) {
+						$message .= "\n\nOutput:\n".str_replace("\r", '', $output);
+				}
 
-        return new self($message);
-    }
+				return new self($message);
+		}
 
-    public function __construct($message, $code = 0, \Exception $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
+		public function __construct($message, $code = 0, \Exception $previous = null)
+		{
+				parent::__construct($message, $code, $previous);
 
-        $this->originalMessage = $message;
-    }
+				$this->originalMessage = $message;
+		}
 
-    public function setInput($input)
-    {
-        $this->input = $input;
-        $this->updateMessage();
+		public function setInput($input)
+		{
+				$this->input = $input;
+				$this->updateMessage();
 
-        return $this;
-    }
+				return $this;
+		}
 
-    public function getInput()
-    {
-        return $this->input;
-    }
+		public function getInput()
+		{
+				return $this->input;
+		}
 
-    private function updateMessage()
-    {
-        $message = $this->originalMessage;
+		private function updateMessage()
+		{
+				$message = $this->originalMessage;
 
-        if (!empty($this->input)) {
-            $message .= "\n\nInput:\n".$this->input;
-        }
+				if (!empty($this->input)) {
+						$message .= "\n\nInput:\n".$this->input;
+				}
 
-        $this->message = $message;
-    }
+				$this->message = $message;
+		}
 }

@@ -19,32 +19,32 @@ use Assetic\Filter\JpegtranFilter;
  */
 class JpegtranFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        if (!$jpegtranBin = $this->findExecutable('jpegtran', 'JPEGTRAN_BIN')) {
-            $this->markTestSkipped('Unable to find `jpegtran` executable.');
-        }
+		protected function setUp()
+		{
+				if (!$jpegtranBin = $this->findExecutable('jpegtran', 'JPEGTRAN_BIN')) {
+						$this->markTestSkipped('Unable to find `jpegtran` executable.');
+				}
 
-        $this->filter = new JpegtranFilter($jpegtranBin);
-    }
+				$this->filter = new JpegtranFilter($jpegtranBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->filter = null;
+		}
 
-    public function testFilter()
-    {
-        $asset = new FileAsset(__DIR__.'/fixtures/home.jpg');
-        $asset->load();
+		public function testFilter()
+		{
+				$asset = new FileAsset(__DIR__.'/fixtures/home.jpg');
+				$asset->load();
 
-        $before = $asset->getContent();
-        $this->filter->filterDump($asset);
+				$before = $asset->getContent();
+				$this->filter->filterDump($asset);
 
-        $this->assertNotEmpty($asset->getContent(), '->filterLoad() sets content');
-        $this->assertNotEquals($before, $asset->getContent(), '->filterDump() changes the content');
-        $this->assertMimeType('image/jpeg', $asset->getContent(), '->filterDump() creates JPEG data');
-    }
+				$this->assertNotEmpty($asset->getContent(), '->filterLoad() sets content');
+				$this->assertNotEquals($before, $asset->getContent(), '->filterDump() changes the content');
+				$this->assertMimeType('image/jpeg', $asset->getContent(), '->filterDump() creates JPEG data');
+		}
 }

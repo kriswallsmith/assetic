@@ -22,89 +22,89 @@ use Assetic\Exception\FilterException;
  */
 class StylusFilter extends BaseNodeFilter
 {
-    private $nodeBin;
-    private $compress;
+		private $nodeBin;
+		private $compress;
 
-    /**
-     * Constructs filter.
-     *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
-     */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
-    {
-        $this->nodeBin = $nodeBin;
-        $this->setNodePaths($nodePaths);
-    }
+		/**
+		 * Constructs filter.
+		 *
+		 * @param string $nodeBin	 The path to the node binary
+		 * @param array	$nodePaths An array of node paths
+		 */
+		public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+		{
+				$this->nodeBin = $nodeBin;
+				$this->setNodePaths($nodePaths);
+		}
 
-    /**
-     * Enable output compression.
-     *
-     * @param boolean $compress
-     */
-    public function setCompress($compress)
-    {
-        $this->compress = $compress;
-    }
+		/**
+		 * Enable output compression.
+		 *
+		 * @param boolean $compress
+		 */
+		public function setCompress($compress)
+		{
+				$this->compress = $compress;
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function filterLoad(AssetInterface $asset)
-    {
-        static $format = <<<'EOF'
+		/**
+		 * {@inheritdoc}
+		 */
+		public function filterLoad(AssetInterface $asset)
+		{
+				static $format = <<<'EOF'
 var stylus = require('stylus');
-var sys    = require(process.binding('natives').util ? 'util' : 'sys');
+var sys		= require(process.binding('natives').util ? 'util' : 'sys');
 
 stylus(%s, %s).render(function(e, css){
-    if (e) {
-        throw e;
-    }
+		if (e) {
+				throw e;
+		}
 
-    sys.print(css);
-    process.exit(0);
+		sys.print(css);
+		process.exit(0);
 });
 
 EOF;
 
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
+				$root = $asset->getSourceRoot();
+				$path = $asset->getSourcePath();
 
-        // parser options
-        $parserOptions = array();
-        if ($root && $path) {
-            $parserOptions['paths'] = array(dirname($root.'/'.$path));
-            $parserOptions['filename'] = basename($path);
-        }
+				// parser options
+				$parserOptions = array();
+				if ($root && $path) {
+						$parserOptions['paths'] = array(dirname($root.'/'.$path));
+						$parserOptions['filename'] = basename($path);
+				}
 
-        if (null !== $this->compress) {
-            $parserOptions['compress'] = $this->compress;
-        }
+				if (null !== $this->compress) {
+						$parserOptions['compress'] = $this->compress;
+				}
 
-        $pb = $this->createProcessBuilder();
-        $pb->inheritEnvironmentVariables();
+				$pb = $this->createProcessBuilder();
+				$pb->inheritEnvironmentVariables();
 
-        $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
-        file_put_contents($input, sprintf($format,
-            json_encode($asset->getContent()),
-            json_encode($parserOptions)
-        ));
+				$pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
+				file_put_contents($input, sprintf($format,
+						json_encode($asset->getContent()),
+						json_encode($parserOptions)
+				));
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
+				$proc = $pb->getProcess();
+				$code = $proc->run();
+				unlink($input);
 
-        if (0 < $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
+				if (0 < $code) {
+						throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+				}
 
-        $asset->setContent($proc->getOutput());
-    }
+				$asset->setContent($proc->getOutput());
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		/**
+		 * {@inheritdoc}
+		 */
+		public function filterDump(AssetInterface $asset)
+		{
+		}
 }

@@ -13,17 +13,17 @@ namespace Assetic\Extension\Twig;
 
 class AsseticFilterFunction extends \Twig_Function
 {
-    private $filter;
+		private $filter;
 
-    public function __construct($filter, $options = array())
-    {
-        $this->filter = $filter;
+		public function __construct($filter, $options = array())
+		{
+				$this->filter = $filter;
 
-        parent::__construct($options);
-    }
+				parent::__construct($options);
+		}
 
-    public function compile()
-    {
-        return sprintf('$this->env->getExtension(\'assetic\')->getFilterInvoker(\'%s\')->invoke', $this->filter);
-    }
+		public function compile()
+		{
+				return sprintf('$this->env->getExtension(\'assetic\')->getFilterInvoker(\'%s\')->invoke', $this->filter);
+		}
 }

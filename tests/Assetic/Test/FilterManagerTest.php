@@ -15,44 +15,44 @@ use Assetic\FilterManager;
 
 class FilterManagerTest extends \PHPUnit_Framework_TestCase
 {
-    private $fm;
+		private $fm;
 
-    protected function setUp()
-    {
-        $this->fm = new FilterManager();
-    }
+		protected function setUp()
+		{
+				$this->fm = new FilterManager();
+		}
 
-    public function testInvalidName()
-    {
-        $this->setExpectedException('InvalidArgumentException');
+		public function testInvalidName()
+		{
+				$this->setExpectedException('InvalidArgumentException');
 
-        $this->fm->get('foo');
-    }
+				$this->fm->get('foo');
+		}
 
-    public function testGetFilter()
-    {
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
-        $name = 'foo';
+		public function testGetFilter()
+		{
+				$filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+				$name = 'foo';
 
-        $this->fm->set($name, $filter);
+				$this->fm->set($name, $filter);
 
-        $this->assertSame($filter, $this->fm->get($name), '->set() sets a filter');
-    }
+				$this->assertSame($filter, $this->fm->get($name), '->set() sets a filter');
+		}
 
-    public function testHas()
-    {
-        $this->fm->set('foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
-        $this->assertTrue($this->fm->has('foo'), '->has() returns true if the filter is set');
-    }
+		public function testHas()
+		{
+				$this->fm->set('foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
+				$this->assertTrue($this->fm->has('foo'), '->has() returns true if the filter is set');
+		}
 
-    public function testHasInvalid()
-    {
-        $this->assertFalse($this->fm->has('foo'), '->has() returns false if the filter is not set');
-    }
+		public function testHasInvalid()
+		{
+				$this->assertFalse($this->fm->has('foo'), '->has() returns false if the filter is not set');
+		}
 
-    public function testInvalidAlias()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-        $this->fm->set('@foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
-    }
+		public function testInvalidAlias()
+		{
+				$this->setExpectedException('InvalidArgumentException');
+				$this->fm->set('@foo', $this->getMock('Assetic\\Filter\\FilterInterface'));
+		}
 }

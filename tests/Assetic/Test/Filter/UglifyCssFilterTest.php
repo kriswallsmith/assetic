@@ -19,37 +19,37 @@ use Assetic\Filter\UglifyCssFilter;
  */
 class UglifyCssFilterTest extends FilterTestCase
 {
-    private $asset;
-    private $filter;
+		private $asset;
+		private $filter;
 
-    protected function setUp()
-    {
-        $uglifycssBin = $this->findExecutable('uglifycss', 'UGLIFYCSS_BIN');
-        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
-        if (!$uglifycssBin) {
-            $this->markTestSkipped('Unable to find `uglifycss` executable.');
-        }
+		protected function setUp()
+		{
+				$uglifycssBin = $this->findExecutable('uglifycss', 'UGLIFYCSS_BIN');
+				$nodeBin = $this->findExecutable('node', 'NODE_BIN');
+				if (!$uglifycssBin) {
+						$this->markTestSkipped('Unable to find `uglifycss` executable.');
+				}
 
-        $this->asset = new FileAsset(__DIR__.'/fixtures/uglifycss/main.css');
-        $this->asset->load();
+				$this->asset = new FileAsset(__DIR__.'/fixtures/uglifycss/main.css');
+				$this->asset->load();
 
-        $this->filter = new UglifyCssFilter($uglifycssBin, $nodeBin);
-    }
+				$this->filter = new UglifyCssFilter($uglifycssBin, $nodeBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->asset = null;
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->asset = null;
+				$this->filter = null;
+		}
 
-    public function testUglify()
-    {
-        $this->filter->filterDump($this->asset);
+		public function testUglify()
+		{
+				$this->filter->filterDump($this->asset);
 
-        $expected = <<<CSS
+				$expected = <<<CSS
 @import url("fonts.css");body{background:black}
 CSS;
-        $this->assertSame($expected, $this->asset->getContent());
-    }
+				$this->assertSame($expected, $this->asset->getContent());
+		}
 
 }

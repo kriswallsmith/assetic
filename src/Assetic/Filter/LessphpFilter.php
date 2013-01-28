@@ -25,47 +25,47 @@ use Assetic\Asset\AssetInterface;
  */
 class LessphpFilter implements FilterInterface
 {
-    private $presets = array();
+		private $presets = array();
 
-    /**
-     * Lessphp Load Paths
-     * 
-     * @var array
-     */
-    protected $loadPaths = array();
+		/**
+		 * Lessphp Load Paths
+		 *
+		 * @var array
+		 */
+		protected $loadPaths = array();
 
-    /**
-     * Adds a load path to the paths used by lessphp
-     * 
-     * @param string $path Load Path
-     */
-    public function addLoadPath($path)
-    {
-        $this->loadPaths[] = $path;
-    }
+		/**
+		 * Adds a load path to the paths used by lessphp
+		 *
+		 * @param string $path Load Path
+		 */
+		public function addLoadPath($path)
+		{
+				$this->loadPaths[] = $path;
+		}
 
-    public function setPresets(array $presets)
-    {
-        $this->presets = $presets;
-    }
+		public function setPresets(array $presets)
+		{
+				$this->presets = $presets;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
+		public function filterLoad(AssetInterface $asset)
+		{
+				$root = $asset->getSourceRoot();
+				$path = $asset->getSourcePath();
 
-        $lc = new \lessc();
-        if ($root && $path) {
-            $lc->importDir = dirname($root.'/'.$path);
-        }
-        foreach ($this->loadPaths as $loadPath) {
-            $lc->addImportDir($loadPath);
-        }
+				$lc = new \lessc();
+				if ($root && $path) {
+						$lc->importDir = dirname($root.'/'.$path);
+				}
+				foreach ($this->loadPaths as $loadPath) {
+						$lc->addImportDir($loadPath);
+				}
 
-        $asset->setContent($lc->parse($asset->getContent(), $this->presets));
-    }
+				$asset->setContent($lc->parse($asset->getContent(), $this->presets));
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		public function filterDump(AssetInterface $asset)
+		{
+		}
 }

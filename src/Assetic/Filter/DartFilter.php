@@ -21,47 +21,47 @@ use Assetic\Exception\FilterException;
  */
 class DartFilter extends BaseProcessFilter
 {
-    private $dartBin;
+		private $dartBin;
 
-    public function __construct($dartBin = '/usr/bin/dart2js')
-    {
-        $this->dartBin = $dartBin;
-    }
+		public function __construct($dartBin = '/usr/bin/dart2js')
+		{
+				$this->dartBin = $dartBin;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $input  = tempnam(sys_get_temp_dir(), 'assetic_dart');
-        $output = tempnam(sys_get_temp_dir(), 'assetic_dart');
+		public function filterLoad(AssetInterface $asset)
+		{
+				$input	= tempnam(sys_get_temp_dir(), 'assetic_dart');
+				$output = tempnam(sys_get_temp_dir(), 'assetic_dart');
 
-        file_put_contents($input, $asset->getContent());
+				file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder()
-            ->add($this->dartBin)
-            ->add('-o'.$output)
-            ->add($input)
-        ;
+				$pb = $this->createProcessBuilder()
+						->add($this->dartBin)
+						->add('-o'.$output)
+						->add($input)
+				;
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
+				$proc = $pb->getProcess();
+				$code = $proc->run();
+				unlink($input);
 
-        if (0 < $code) {
-            if (file_exists($output)) {
-                unlink($output);
-            }
+				if (0 < $code) {
+						if (file_exists($output)) {
+								unlink($output);
+						}
 
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
+						throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+				}
 
-        if (!file_exists($output)) {
-            throw new \RuntimeException('Error creating output file.');
-        }
+				if (!file_exists($output)) {
+						throw new \RuntimeException('Error creating output file.');
+				}
 
-        $asset->setContent(file_get_contents($output));
-        unlink($output);
-    }
+				$asset->setContent(file_get_contents($output));
+				unlink($output);
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		public function filterDump(AssetInterface $asset)
+		{
+		}
 }

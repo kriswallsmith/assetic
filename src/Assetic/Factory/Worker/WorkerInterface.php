@@ -20,12 +20,12 @@ use Assetic\Asset\AssetInterface;
  */
 interface WorkerInterface
 {
-    /**
-     * Processes an asset.
-     *
-     * @param AssetInterface $asset An asset
-     *
-     * @return AssetInterface|null May optionally return a replacement asset
-     */
-    public function process(AssetInterface $asset);
+		/**
+		 * Processes an asset.
+		 *
+		 * @param AssetInterface $asset An asset
+		 *
+		 * @return AssetInterface|null May optionally return a replacement asset
+		 */
+		public function process(AssetInterface $asset);
 }

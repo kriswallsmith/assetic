@@ -21,58 +21,58 @@ use Assetic\Filter\FilterInterface;
  */
 class FileAsset extends BaseAsset
 {
-    private $source;
+		private $source;
 
-    /**
-     * Constructor.
-     *
-     * @param string $source     An absolute path
-     * @param array  $filters    An array of filters
-     * @param string $sourceRoot The source asset root directory
-     * @param string $sourcePath The source asset path
-     * @param array  $vars
-     *
-     * @throws \InvalidArgumentException If the supplied root doesn't match the source when guessing the path
-     */
-    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
-    {
-        if (null === $sourceRoot) {
-            $sourceRoot = dirname($source);
-            if (null === $sourcePath) {
-                $sourcePath = basename($source);
-            }
-        } elseif (null === $sourcePath) {
-            if (0 !== strpos($source, $sourceRoot)) {
-                throw new \InvalidArgumentException(sprintf('The source "%s" is not in the root directory "%s"', $source, $sourceRoot));
-            }
+		/**
+		 * Constructor.
+		 *
+		 * @param string $source		 An absolute path
+		 * @param array	$filters		An array of filters
+		 * @param string $sourceRoot The source asset root directory
+		 * @param string $sourcePath The source asset path
+		 * @param array	$vars
+		 *
+		 * @throws \InvalidArgumentException If the supplied root doesn't match the source when guessing the path
+		 */
+		public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
+		{
+				if (null === $sourceRoot) {
+						$sourceRoot = dirname($source);
+						if (null === $sourcePath) {
+								$sourcePath = basename($source);
+						}
+				} elseif (null === $sourcePath) {
+						if (0 !== strpos($source, $sourceRoot)) {
+								throw new \InvalidArgumentException(sprintf('The source "%s" is not in the root directory "%s"', $source, $sourceRoot));
+						}
 
-            $sourcePath = substr($source, strlen($sourceRoot) + 1);
-        }
+						$sourcePath = substr($source, strlen($sourceRoot) + 1);
+				}
 
-        $this->source = $source;
+				$this->source = $source;
 
-        parent::__construct($filters, $sourceRoot, $sourcePath, $vars);
-    }
+				parent::__construct($filters, $sourceRoot, $sourcePath, $vars);
+		}
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
-        $source = PathUtils::resolvePath($this->source, $this->getVars(), $this->getValues());
+		public function load(FilterInterface $additionalFilter = null)
+		{
+				$source = PathUtils::resolvePath($this->source, $this->getVars(), $this->getValues());
 
-        if (!is_file($source)) {
-            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
-        }
+				if (!is_file($source)) {
+						throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
+				}
 
-        $this->doLoad(file_get_contents($source), $additionalFilter);
-    }
+				$this->doLoad(file_get_contents($source), $additionalFilter);
+		}
 
-    public function getLastModified()
-    {
-        $source = PathUtils::resolvePath($this->source, $this->getVars(), $this->getValues());
+		public function getLastModified()
+		{
+				$source = PathUtils::resolvePath($this->source, $this->getVars(), $this->getValues());
 
-        if (!is_file($source)) {
-            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
-        }
+				if (!is_file($source)) {
+						throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
+				}
 
-        return filemtime($source);
-    }
+				return filemtime($source);
+		}
 }

@@ -19,33 +19,33 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 abstract class BaseProcessFilter implements FilterInterface
 {
-    private $timeout;
+		private $timeout;
 
-    /**
-     * Set the process timeout.
-     *
-     * @param int $timeout The timeout for the process
-     */
-    public function setTimeout($timeout)
-    {
-        $this->timeout = $timeout;
-    }
+		/**
+		 * Set the process timeout.
+		 *
+		 * @param int $timeout The timeout for the process
+		 */
+		public function setTimeout($timeout)
+		{
+				$this->timeout = $timeout;
+		}
 
-    /**
-     * Creates a new process builder.
-     *
-     * @param array $arguments An optional array of arguments
-     *
-     * @return ProcessBuilder A new process builder
-     */
-    protected function createProcessBuilder(array $arguments = array())
-    {
-        $pb = new ProcessBuilder($arguments);
+		/**
+		 * Creates a new process builder.
+		 *
+		 * @param array $arguments An optional array of arguments
+		 *
+		 * @return ProcessBuilder A new process builder
+		 */
+		protected function createProcessBuilder(array $arguments = array())
+		{
+				$pb = new ProcessBuilder($arguments);
 
-        if (null !== $this->timeout) {
-            $pb->setTimeout($this->timeout);
-        }
+				if (null !== $this->timeout) {
+						$pb->setTimeout($this->timeout);
+				}
 
-        return $pb;
-    }
+				return $pb;
+		}
 }

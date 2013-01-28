@@ -20,38 +20,38 @@ use Assetic\Test\Filter\FilterTestCase;
  */
 class ScssFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        $rubyBin = $this->findExecutable('ruby', 'RUBY_BIN');
-        if (!$sassBin = $this->findExecutable('sass', 'SASS_BIN')) {
-            $this->markTestSkipped('Unable to locate `sass` executable.');
-        }
+		protected function setUp()
+		{
+				$rubyBin = $this->findExecutable('ruby', 'RUBY_BIN');
+				if (!$sassBin = $this->findExecutable('sass', 'SASS_BIN')) {
+						$this->markTestSkipped('Unable to locate `sass` executable.');
+				}
 
-        $this->filter = new ScssFilter($sassBin, $rubyBin);
-    }
+				$this->filter = new ScssFilter($sassBin, $rubyBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->filter = null;
+		}
 
-    public function testImport()
-    {
-        $asset = new FileAsset(__DIR__.'/../fixtures/sass/main.scss');
-        $asset->load();
+		public function testImport()
+		{
+				$asset = new FileAsset(__DIR__.'/../fixtures/sass/main.scss');
+				$asset->load();
 
-        $this->filter->setStyle(ScssFilter::STYLE_COMPACT);
-        $this->filter->filterLoad($asset);
+				$this->filter->setStyle(ScssFilter::STYLE_COMPACT);
+				$this->filter->filterLoad($asset);
 
-        $expected = <<<EOF
+				$expected = <<<EOF
 .foo { color: blue; }
 
 .foo { color: red; }
 
 EOF;
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() loads imports');
-    }
+				$this->assertEquals($expected, $asset->getContent(), '->filterLoad() loads imports');
+		}
 }

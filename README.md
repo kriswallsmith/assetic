@@ -10,8 +10,8 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
 
 $js = new AssetCollection(array(
-    new GlobAsset('/path/to/js/*'),
-    new FileAsset('/path/to/another.js'),
+		new GlobAsset('/path/to/js/*'),
+		new FileAsset('/path/to/another.js'),
 ));
 
 // the code is merged when the asset is dumped
@@ -25,13 +25,13 @@ An Assetic asset is something with filterable content that can be loaded and
 dumped. An asset also includes metadata, some of which can be manipulated and
 some of which is immutable.
 
-| **Property** | **Accessor**    | **Mutator**   |
+| **Property** | **Accessor**		| **Mutator**	 |
 |--------------|-----------------|---------------|
-| content      | getContent      | setContent    |
-| mtime        | getLastModified | n/a           |
-| source root  | getSourceRoot   | n/a           |
-| source path  | getSourcePath   | n/a           |
-| target path  | getTargetPath   | setTargetPath |
+| content			| getContent			| setContent		|
+| mtime				| getLastModified | n/a					 |
+| source root	| getSourceRoot	 | n/a					 |
+| source path	| getSourcePath	 | n/a					 |
+| target path	| getTargetPath	 | setTargetPath |
 
 Filters
 -------
@@ -48,10 +48,10 @@ use Assetic\Filter\LessFilter;
 use Assetic\Filter\Yui;
 
 $css = new AssetCollection(array(
-    new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
-    new GlobAsset('/path/to/css/*'),
+		new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
+		new GlobAsset('/path/to/css/*'),
 ), array(
-    new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'),
+		new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'),
 ));
 
 // this will echo CSS compiled by LESS and compressed by YUI
@@ -65,8 +65,8 @@ iterate over it.
 <?php
 
 foreach ($css as $leaf) {
-    // each leaf is compressed by YUI
-    echo $leaf->dump();
+		// each leaf is compressed by YUI
+		echo $leaf->dump();
 }
 ```
 
@@ -122,8 +122,8 @@ use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
 
 $am->set('my_plugin', new AssetCollection(array(
-    new AssetReference($am, 'jquery'),
-    new FileAsset('/path/to/jquery.plugin.js'),
+		new AssetReference($am, 'jquery'),
+		new FileAsset('/path/to/jquery.plugin.js'),
 )));
 ```
 
@@ -161,11 +161,11 @@ $factory->setFilterManager($fm);
 $factory->setDebug(true);
 
 $css = $factory->createAsset(array(
-    '@reset',         // load the asset manager's "reset" asset
-    'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
+		'@reset',				 // load the asset manager's "reset" asset
+		'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
 ), array(
-    'scss',           // filter through the filter manager's "scss" filter
-    '?yui_css',       // don't use this filter in debug mode
+		'scss',					 // filter through the filter manager's "scss" filter
+		'?yui_css',			 // don't use this filter in debug mode
 ));
 
 echo $css->dump();
@@ -189,8 +189,8 @@ use Assetic\Filter\Yui;
 
 $yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
 $js = new AssetCache(
-    new FileAsset('/path/to/some.js', array($yui)),
-    new FilesystemCache('/path/to/cache')
+		new FileAsset('/path/to/some.js', array($yui)),
+		new FilesystemCache('/path/to/cache')
 );
 
 // the YUI compressor will only run on the first call
@@ -219,11 +219,11 @@ $factory->setDebug(true);
 $factory->addWorker(new CacheBustingWorker(CacheBustingWorker::STRATEGY_CONTENT));
 
 $css = $factory->createAsset(array(
-    '@reset',         // load the asset manager's "reset" asset
-    'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
+		'@reset',				 // load the asset manager's "reset" asset
+		'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
 ), array(
-    'scss',           // filter through the filter manager's "scss" filter
-    '?yui_css',       // don't use this filter in debug mode
+		'scss',					 // filter through the filter manager's "scss" filter
+		'?yui_css',			 // don't use this filter in debug mode
 ));
 
 echo $css->dump();
@@ -261,7 +261,7 @@ to what the asset factory uses:
 
 ``` html+jinja
 {% stylesheets '/path/to/sass/main.sass' filter='sass,?yui_css' output='css/all.css' %}
-    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+		<link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
 {% endstylesheets %}
 ```
 
@@ -297,8 +297,8 @@ $am->setLoader('twig', new TwigFormulaLoader($twig));
 
 // loop through all your templates
 foreach ($templates as $template) {
-    $resource = new TwigResource($twigLoader, $template);
-    $am->addResource($resource, 'twig');
+		$resource = new TwigResource($twigLoader, $template);
+		$am->addResource($resource, 'twig');
 }
 
 $writer = new AssetWriter('/path/to/web');

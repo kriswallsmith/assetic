@@ -20,45 +20,45 @@ use Assetic\Filter\FilterInterface;
  */
 class FilterManager
 {
-    private $filters = array();
+		private $filters = array();
 
-    public function set($alias, FilterInterface $filter)
-    {
-        $this->checkName($alias);
+		public function set($alias, FilterInterface $filter)
+		{
+				$this->checkName($alias);
 
-        $this->filters[$alias] = $filter;
-    }
+				$this->filters[$alias] = $filter;
+		}
 
-    public function get($alias)
-    {
-        if (!isset($this->filters[$alias])) {
-            throw new \InvalidArgumentException(sprintf('There is no "%s" filter.', $alias));
-        }
+		public function get($alias)
+		{
+				if (!isset($this->filters[$alias])) {
+						throw new \InvalidArgumentException(sprintf('There is no "%s" filter.', $alias));
+				}
 
-        return $this->filters[$alias];
-    }
+				return $this->filters[$alias];
+		}
 
-    public function has($alias)
-    {
-        return isset($this->filters[$alias]);
-    }
+		public function has($alias)
+		{
+				return isset($this->filters[$alias]);
+		}
 
-    public function getNames()
-    {
-        return array_keys($this->filters);
-    }
+		public function getNames()
+		{
+				return array_keys($this->filters);
+		}
 
-    /**
-     * Checks that a name is valid.
-     *
-     * @param string $name An asset name candidate
-     *
-     * @throws \InvalidArgumentException If the asset name is invalid
-     */
-    protected function checkName($name)
-    {
-        if (!ctype_alnum(str_replace('_', '', $name))) {
-            throw new \InvalidArgumentException(sprintf('The name "%s" is invalid.', $name));
-        }
-    }
+		/**
+		 * Checks that a name is valid.
+		 *
+		 * @param string $name An asset name candidate
+		 *
+		 * @throws \InvalidArgumentException If the asset name is invalid
+		 */
+		protected function checkName($name)
+		{
+				if (!ctype_alnum(str_replace('_', '', $name))) {
+						throw new \InvalidArgumentException(sprintf('The name "%s" is invalid.', $name));
+				}
+		}
 }

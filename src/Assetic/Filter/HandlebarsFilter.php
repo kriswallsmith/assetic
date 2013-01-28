@@ -22,81 +22,81 @@ use Assetic\Exception\FilterException;
  */
 class HandlebarsFilter extends BaseNodeFilter
 {
-    private $handlebarsBin;
-    private $nodeBin;
+		private $handlebarsBin;
+		private $nodeBin;
 
-    private $minimize = false;
-    private $simple = false;
+		private $minimize = false;
+		private $simple = false;
 
-    public function __construct($handlebarsBin = '/usr/bin/handlebars', $nodeBin = null)
-    {
-        $this->handlebarsBin = $handlebarsBin;
-        $this->nodeBin = $nodeBin;
-    }
+		public function __construct($handlebarsBin = '/usr/bin/handlebars', $nodeBin = null)
+		{
+				$this->handlebarsBin = $handlebarsBin;
+				$this->nodeBin = $nodeBin;
+		}
 
-    public function setMinimize($minimize)
-    {
-        $this->minimize = $minimize;
-    }
+		public function setMinimize($minimize)
+		{
+				$this->minimize = $minimize;
+		}
 
-    public function setSimple($simple)
-    {
-        $this->simple = $simple;
-    }
+		public function setSimple($simple)
+		{
+				$this->simple = $simple;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->handlebarsBin)
-            : array($this->handlebarsBin));
+		public function filterLoad(AssetInterface $asset)
+		{
+				$pb = $this->createProcessBuilder($this->nodeBin
+						? array($this->nodeBin, $this->handlebarsBin)
+						: array($this->handlebarsBin));
 
-        $templateName = basename($asset->getSourcePath());
+				$templateName = basename($asset->getSourcePath());
 
-        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;
-        $outputPath = tempnam(sys_get_temp_dir(), 'output');
+				$inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
+				$inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;
+				$outputPath = tempnam(sys_get_temp_dir(), 'output');
 
-        mkdir($inputDirPath);
-        file_put_contents($inputPath, $asset->getContent());
+				mkdir($inputDirPath);
+				file_put_contents($inputPath, $asset->getContent());
 
-        $pb->add($inputPath)->add('-f')->add($outputPath);
+				$pb->add($inputPath)->add('-f')->add($outputPath);
 
-        if ($this->minimize) {
-            $pb->add('--min');
-        }
+				if ($this->minimize) {
+						$pb->add('--min');
+				}
 
-        if ($this->simple) {
-            $pb->add('--simple');
-        }
+				if ($this->simple) {
+						$pb->add('--simple');
+				}
 
-        $process = $pb->getProcess();
-        $returnCode = $process->run();
+				$process = $pb->getProcess();
+				$returnCode = $process->run();
 
-        unlink($inputPath);
-        rmdir($inputDirPath);
+				unlink($inputPath);
+				rmdir($inputDirPath);
 
-        if (127 === $returnCode) {
-            throw new \RuntimeException('Path to node executable could not be resolved.');
-        }
+				if (127 === $returnCode) {
+						throw new \RuntimeException('Path to node executable could not be resolved.');
+				}
 
-        if (0 < $returnCode) {
-            if (file_exists($outputPath)) {
-                unlink($outputPath);
-            }
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
-        }
+				if (0 < $returnCode) {
+						if (file_exists($outputPath)) {
+								unlink($outputPath);
+						}
+						throw FilterException::fromProcess($process)->setInput($asset->getContent());
+				}
 
-        if (!file_exists($outputPath)) {
-            throw new \RuntimeException('Error creating output file.');
-        }
+				if (!file_exists($outputPath)) {
+						throw new \RuntimeException('Error creating output file.');
+				}
 
-        $compiledJs = file_get_contents($outputPath);
-        unlink($outputPath);
+				$compiledJs = file_get_contents($outputPath);
+				unlink($outputPath);
 
-        $asset->setContent($compiledJs);
-    }
+				$asset->setContent($compiledJs);
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		public function filterDump(AssetInterface $asset)
+		{
+		}
 }

@@ -24,50 +24,50 @@ use Assetic\Asset\AssetInterface;
  */
 class ScssphpFilter implements FilterInterface
 {
-    private $compass = false;
+		private $compass = false;
 
-    private $importPaths = array();
+		private $importPaths = array();
 
-    public function enableCompass($enable = true)
-    {
-        $this->compass = (Boolean) $enable;
-    }
+		public function enableCompass($enable = true)
+		{
+				$this->compass = (Boolean) $enable;
+		}
 
-    public function isCompassEnabled()
-    {
-        return $this->compass;
-    }
+		public function isCompassEnabled()
+		{
+				return $this->compass;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
+		public function filterLoad(AssetInterface $asset)
+		{
+				$root = $asset->getSourceRoot();
+				$path = $asset->getSourcePath();
 
-        $lc = new \scssc();
-        if ($this->compass) {
-            new \scss_compass($lc);
-        }
-        if ($root && $path) {
-            $lc->addImportPath(dirname($root.'/'.$path));
-        }
-        foreach ($this->importPaths as $path) {
-            $lc->addImportPath($path);
-        }
+				$lc = new \scssc();
+				if ($this->compass) {
+						new \scss_compass($lc);
+				}
+				if ($root && $path) {
+						$lc->addImportPath(dirname($root.'/'.$path));
+				}
+				foreach ($this->importPaths as $path) {
+						$lc->addImportPath($path);
+				}
 
-        $asset->setContent($lc->compile($asset->getContent()));
-    }
+				$asset->setContent($lc->compile($asset->getContent()));
+		}
 
-    public function setImportPaths(array $paths)
-    {
-        $this->importPaths = $paths;
-    }
+		public function setImportPaths(array $paths)
+		{
+				$this->importPaths = $paths;
+		}
 
-    public function addImportPath($path)
-    {
-        $this->importPaths[] = $path;
-    }
+		public function addImportPath($path)
+		{
+				$this->importPaths[] = $path;
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		public function filterDump(AssetInterface $asset)
+		{
+		}
 }

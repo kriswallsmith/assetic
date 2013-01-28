@@ -20,74 +20,74 @@ use Assetic\Test\Filter\FilterTestCase;
  */
 class CompilerJarFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        if (!$javaBin = $this->findExecutable('java', 'JAVA_BIN')) {
-            $this->markTestSkipped('Unable to find `java` executable.');
-        }
+		protected function setUp()
+		{
+				if (!$javaBin = $this->findExecutable('java', 'JAVA_BIN')) {
+						$this->markTestSkipped('Unable to find `java` executable.');
+				}
 
-        if (!isset($_SERVER['CLOSURE_JAR'])) {
-            $this->markTestSkipped('There is no CLOSURE_JAR environment variable.');
-        }
+				if (!isset($_SERVER['CLOSURE_JAR'])) {
+						$this->markTestSkipped('There is no CLOSURE_JAR environment variable.');
+				}
 
-        $this->filter = new CompilerJarFilter($_SERVER['CLOSURE_JAR'], $javaBin);
-    }
+				$this->filter = new CompilerJarFilter($_SERVER['CLOSURE_JAR'], $javaBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->filter = null;
+		}
 
-    public function testCompile()
-    {
-        $input = <<<EOF
+		public function testCompile()
+		{
+				$input = <<<EOF
 (function() {
 function unused(){}
 function foo(bar)
 {
-    var foo = 'foo';
+		var foo = 'foo';
 
-    return foo + bar;
+		return foo + bar;
 }
 alert(foo("bar"));
 })();
 EOF;
 
-        $expected = <<<EOF
+				$expected = <<<EOF
 (function(){alert("foobar")})();
 
 EOF;
 
-        $asset = new StringAsset($input);
-        $asset->load();
+				$asset = new StringAsset($input);
+				$asset->load();
 
-        $this->filter->filterDump($asset);
+				$this->filter->filterDump($asset);
 
-        $this->assertEquals($expected, $asset->getContent());
-    }
+				$this->assertEquals($expected, $asset->getContent());
+		}
 
-    public function testCompileEcma5()
-    {
-        $input = <<<EOF
+		public function testCompileEcma5()
+		{
+				$input = <<<EOF
 (function() {
-    var int = 123;
-    console.log(int);
+		var int = 123;
+		console.log(int);
 })();
 EOF;
 
-        $expected = <<<EOF
+				$expected = <<<EOF
 (function(){console.log(123)})();
 
 EOF;
 
-        $asset = new StringAsset($input);
-        $asset->load();
+				$asset = new StringAsset($input);
+				$asset->load();
 
-        $this->filter->setLanguage(CompilerJarFilter::LANGUAGE_ECMASCRIPT5);
-        $this->filter->filterDump($asset);
+				$this->filter->setLanguage(CompilerJarFilter::LANGUAGE_ECMASCRIPT5);
+				$this->filter->filterDump($asset);
 
-        $this->assertEquals($expected, $asset->getContent());
-    }
+				$this->assertEquals($expected, $asset->getContent());
+		}
 }

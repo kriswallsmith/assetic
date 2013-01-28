@@ -19,39 +19,39 @@ use Assetic\Filter\StylusFilter;
  */
 class StylusFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
-            $this->markTestSkipped('Unable to find `node` executable.');
-        }
+		protected function setUp()
+		{
+				if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
+						$this->markTestSkipped('Unable to find `node` executable.');
+				}
 
-        if (!$this->checkNodeModule('stylus', $nodeBin)) {
-            $this->markTestSkipped('The "stylus" module is not installed.');
-        }
+				if (!$this->checkNodeModule('stylus', $nodeBin)) {
+						$this->markTestSkipped('The "stylus" module is not installed.');
+				}
 
-        $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
-    }
+				$this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+		}
 
-    public function testFilterLoad()
-    {
-        $asset = new StringAsset("body\n  font 12px Helvetica, Arial, sans-serif\n  color black");
-        $asset->load();
+		public function testFilterLoad()
+		{
+				$asset = new StringAsset("body\n	font 12px Helvetica, Arial, sans-serif\n	color black");
+				$asset->load();
 
-        $this->filter->filterLoad($asset);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals("body {\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
-    }
+				$this->assertEquals("body {\n	font: 12px Helvetica, Arial, sans-serif;\n	color: #000;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+		}
 
-    public function testFilterLoadWithCompression()
-    {
-        $asset = new StringAsset("body\n  font 12px Helvetica, Arial, sans-serif\n  color black;");
-        $asset->load();
+		public function testFilterLoadWithCompression()
+		{
+				$asset = new StringAsset("body\n	font 12px Helvetica, Arial, sans-serif\n	color black;");
+				$asset->load();
 
-        $this->filter->setCompress(true);
-        $this->filter->filterLoad($asset);
+				$this->filter->setCompress(true);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}\n", $asset->getContent(), '->filterLoad() parses the content and compress it');
-    }
+				$this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}\n", $asset->getContent(), '->filterLoad() parses the content and compress it');
+		}
 }

@@ -18,10 +18,10 @@ namespace Assetic\Filter;
  */
 interface HashableInterface
 {
-    /**
-     * Generates a hash for the object
-     *
-     * @return string Object hash
-     */
-    public function hash();
+		/**
+		 * Generates a hash for the object
+		 *
+		 * @return string Object hash
+		 */
+		public function hash();
 }

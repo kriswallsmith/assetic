@@ -19,44 +19,44 @@ use Assetic\Filter\PngoutFilter;
  */
 class PngoutFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        if (!$pngoutBin = $this->findExecutable('pngout', 'PNGOUT_BIN')) {
-            $this->markTestSkipped('Unable to locate `pngout` executable.');
-        }
+		protected function setUp()
+		{
+				if (!$pngoutBin = $this->findExecutable('pngout', 'PNGOUT_BIN')) {
+						$this->markTestSkipped('Unable to locate `pngout` executable.');
+				}
 
-        $this->filter = new PngoutFilter($pngoutBin);
-    }
+				$this->filter = new PngoutFilter($pngoutBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->filter = null;
+		}
 
-    /**
-     * @dataProvider getImages
-     */
-    public function testFilter($image)
-    {
-        $asset = new FileAsset($image);
-        $asset->load();
+		/**
+		 * @dataProvider getImages
+		 */
+		public function testFilter($image)
+		{
+				$asset = new FileAsset($image);
+				$asset->load();
 
-        $before = $asset->getContent();
-        $this->filter->filterDump($asset);
+				$before = $asset->getContent();
+				$this->filter->filterDump($asset);
 
-        $this->assertNotEmpty($asset->getContent(), '->filterLoad() sets content');
-        $this->assertNotEquals($before, $asset->getContent(), '->filterLoad() changes the content');
-        $this->assertMimeType('image/png', $asset->getContent(), '->filterLoad() creates PNG data');
-    }
+				$this->assertNotEmpty($asset->getContent(), '->filterLoad() sets content');
+				$this->assertNotEquals($before, $asset->getContent(), '->filterLoad() changes the content');
+				$this->assertMimeType('image/png', $asset->getContent(), '->filterLoad() creates PNG data');
+		}
 
-    public function getImages()
-    {
-        return array(
-            array(__DIR__.'/fixtures/home.gif'),
-            array(__DIR__.'/fixtures/home.jpg'),
-            array(__DIR__.'/fixtures/home.png'),
-        );
-    }
+		public function getImages()
+		{
+				return array(
+						array(__DIR__.'/fixtures/home.gif'),
+						array(__DIR__.'/fixtures/home.jpg'),
+						array(__DIR__.'/fixtures/home.png'),
+				);
+		}
 }

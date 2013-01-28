@@ -17,47 +17,47 @@ use Assetic\Test\Filter\FilterTestCase;
 
 class JsCompressorFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterface()
-    {
-        $filter = new JsCompressorFilter('/path/to/jar');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'JsCompressorFilter implements FilterInterface');
-    }
+		public function testInterface()
+		{
+				$filter = new JsCompressorFilter('/path/to/jar');
+				$this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'JsCompressorFilter implements FilterInterface');
+		}
 
-    /**
-     * @group integration
-     */
-    public function testFilterDump()
-    {
-        if (!isset($_SERVER['YUI_COMPRESSOR_JAR'])) {
-            $this->markTestSkipped('There is no YUI_COMPRESSOR_JAR environment variable.');
-        }
+		/**
+		 * @group integration
+		 */
+		public function testFilterDump()
+		{
+				if (!isset($_SERVER['YUI_COMPRESSOR_JAR'])) {
+						$this->markTestSkipped('There is no YUI_COMPRESSOR_JAR environment variable.');
+				}
 
-        $source = <<<JAVASCRIPT
+				$source = <<<JAVASCRIPT
 (function() {
 
 var asdf = 'asdf';
 var qwer = 'qwer';
 
 if (asdf.indexOf(qwer)) {
-    alert("That's not possible!");
+		alert("That's not possible!");
 } else {
-    alert("Boom.");
+		alert("Boom.");
 }
 
 })();
 
 JAVASCRIPT;
 
-        $expected = <<<JAVASCRIPT
+				$expected = <<<JAVASCRIPT
 (function(){var a="asdf";var b="qwer";if(a.indexOf(b)){alert("That's not possible!")}else{alert("Boom.")}})();
 JAVASCRIPT;
 
-        $asset = new StringAsset($source);
-        $asset->load();
+				$asset = new StringAsset($source);
+				$asset->load();
 
-        $filter = new JsCompressorFilter($_SERVER['YUI_COMPRESSOR_JAR']);
-        $filter->filterDump($asset);
+				$filter = new JsCompressorFilter($_SERVER['YUI_COMPRESSOR_JAR']);
+				$filter->filterDump($asset);
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterDump()');
-    }
+				$this->assertEquals($expected, $asset->getContent(), '->filterDump()');
+		}
 }

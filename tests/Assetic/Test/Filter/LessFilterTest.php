@@ -20,70 +20,70 @@ use Assetic\Filter\LessFilter;
  */
 class LessFilterTest extends FilterTestCase
 {
-    protected $filter;
+		protected $filter;
 
-    protected function setUp()
-    {
-        if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
-            $this->markTestSkipped('Unable to find `node` executable.');
-        }
+		protected function setUp()
+		{
+				if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
+						$this->markTestSkipped('Unable to find `node` executable.');
+				}
 
-        if (!$this->checkNodeModule('less', $nodeBin)) {
-            $this->markTestSkipped('The "less" module is not installed.');
-        }
+				if (!$this->checkNodeModule('less', $nodeBin)) {
+						$this->markTestSkipped('The "less" module is not installed.');
+				}
 
-        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
-    }
+				$this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+		}
 
-    public function testFilterLoad()
-    {
-        $asset = new StringAsset('.foo{.bar{width:1+1;}}');
-        $asset->load();
+		public function testFilterLoad()
+		{
+				$asset = new StringAsset('.foo{.bar{width:1+1;}}');
+				$asset->load();
 
-        $this->filter->filterLoad($asset);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
-    }
+				$this->assertEquals(".foo .bar {\n	width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+		}
 
-    public function testImport()
-    {
-        $expected = <<<EOF
+		public function testImport()
+		{
+				$expected = <<<EOF
 .foo {
-  color: blue;
+	color: blue;
 }
 .foo {
-  color: red;
-}
-
-EOF;
-
-        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
-        $asset->load();
-
-        $this->filter->filterLoad($asset);
-
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
-    }
-
-    public function testLoadPath()
-    {
-        $expected = <<<EOF
-.foo {
-  color: blue;
-}
-.foo {
-  color: red;
+	color: red;
 }
 
 EOF;
 
-        $this->filter->addLoadPath(__DIR__.'/fixtures/less');
+				$asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
+				$asset->load();
 
-        $asset = new StringAsset('@import "main";');
-        $asset->load();
+				$this->filter->filterLoad($asset);
 
-        $this->filter->filterLoad($asset);
+				$this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
+		}
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
-    }
+		public function testLoadPath()
+		{
+				$expected = <<<EOF
+.foo {
+	color: blue;
+}
+.foo {
+	color: red;
+}
+
+EOF;
+
+				$this->filter->addLoadPath(__DIR__.'/fixtures/less');
+
+				$asset = new StringAsset('@import "main";');
+				$asset->load();
+
+				$this->filter->filterLoad($asset);
+
+				$this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
+		}
 }

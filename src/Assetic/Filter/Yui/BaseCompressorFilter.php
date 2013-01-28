@@ -23,86 +23,86 @@ use Assetic\Filter\BaseProcessFilter;
  */
 abstract class BaseCompressorFilter extends BaseProcessFilter
 {
-    private $jarPath;
-    private $javaPath;
-    private $charset;
-    private $lineBreak;
+		private $jarPath;
+		private $javaPath;
+		private $charset;
+		private $lineBreak;
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
-    {
-        $this->jarPath = $jarPath;
-        $this->javaPath = $javaPath;
-    }
+		public function __construct($jarPath, $javaPath = '/usr/bin/java')
+		{
+				$this->jarPath = $jarPath;
+				$this->javaPath = $javaPath;
+		}
 
-    public function setCharset($charset)
-    {
-        $this->charset = $charset;
-    }
+		public function setCharset($charset)
+		{
+				$this->charset = $charset;
+		}
 
-    public function setLineBreak($lineBreak)
-    {
-        $this->lineBreak = $lineBreak;
-    }
+		public function setLineBreak($lineBreak)
+		{
+				$this->lineBreak = $lineBreak;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
+		public function filterLoad(AssetInterface $asset)
+		{
+		}
 
-    /**
-     * Compresses a string.
-     *
-     * @param string $content The content to compress
-     * @param string $type    The type of content, either "js" or "css"
-     * @param array  $options An indexed array of additional options
-     *
-     * @return string The compressed content
-     */
-    protected function compress($content, $type, $options = array())
-    {
-        $pb = $this->createProcessBuilder(array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
-        ));
+		/**
+		 * Compresses a string.
+		 *
+		 * @param string $content The content to compress
+		 * @param string $type		The type of content, either "js" or "css"
+		 * @param array	$options An indexed array of additional options
+		 *
+		 * @return string The compressed content
+		 */
+		protected function compress($content, $type, $options = array())
+		{
+				$pb = $this->createProcessBuilder(array(
+						$this->javaPath,
+						'-jar',
+						$this->jarPath,
+				));
 
-        foreach ($options as $option) {
-            $pb->add($option);
-        }
+				foreach ($options as $option) {
+						$pb->add($option);
+				}
 
-        if (null !== $this->charset) {
-            $pb->add('--charset')->add($this->charset);
-        }
+				if (null !== $this->charset) {
+						$pb->add('--charset')->add($this->charset);
+				}
 
-        if (null !== $this->lineBreak) {
-            $pb->add('--line-break')->add($this->lineBreak);
-        }
+				if (null !== $this->lineBreak) {
+						$pb->add('--line-break')->add($this->lineBreak);
+				}
 
-        // input and output files
-        $tempDir = realpath(sys_get_temp_dir());
-        $input = tempnam($tempDir, 'YUI-IN-');
-        $output = tempnam($tempDir, 'YUI-OUT-');
-        file_put_contents($input, $content);
-        $pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
+				// input and output files
+				$tempDir = realpath(sys_get_temp_dir());
+				$input = tempnam($tempDir, 'YUI-IN-');
+				$output = tempnam($tempDir, 'YUI-OUT-');
+				file_put_contents($input, $content);
+				$pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
+				$proc = $pb->getProcess();
+				$code = $proc->run();
+				unlink($input);
 
-        if (0 < $code) {
-            if (file_exists($output)) {
-                unlink($output);
-            }
+				if (0 < $code) {
+						if (file_exists($output)) {
+								unlink($output);
+						}
 
-            throw FilterException::fromProcess($proc)->setInput($content);
-        }
+						throw FilterException::fromProcess($proc)->setInput($content);
+				}
 
-        if (!file_exists($output)) {
-            throw new \RuntimeException('Error creating output file.');
-        }
+				if (!file_exists($output)) {
+						throw new \RuntimeException('Error creating output file.');
+				}
 
-        $retval = file_get_contents($output);
-        unlink($output);
+				$retval = file_get_contents($output);
+				unlink($output);
 
-        return $retval;
-    }
+				return $retval;
+		}
 }

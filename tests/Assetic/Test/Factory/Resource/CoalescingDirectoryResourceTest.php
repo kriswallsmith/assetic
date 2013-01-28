@@ -16,27 +16,27 @@ use Assetic\Factory\Resource\DirectoryResource;
 
 class CoalescingDirectoryResourceTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldFilterFiles()
-    {
-        // notice only one directory has a trailing slash
-        $resource = new CoalescingDirectoryResource(array(
-            new DirectoryResource(__DIR__.'/Fixtures/dir1/', '/\.txt$/'),
-            new DirectoryResource(__DIR__.'/Fixtures/dir2', '/\.txt$/'),
-        ));
+		/**
+		 * @test
+		 */
+		public function shouldFilterFiles()
+		{
+				// notice only one directory has a trailing slash
+				$resource = new CoalescingDirectoryResource(array(
+						new DirectoryResource(__DIR__.'/Fixtures/dir1/', '/\.txt$/'),
+						new DirectoryResource(__DIR__.'/Fixtures/dir2', '/\.txt$/'),
+				));
 
-        $paths = array();
-        foreach ($resource as $file) {
-            $paths[] = realpath((string) $file);
-        }
-        sort($paths);
+				$paths = array();
+				foreach ($resource as $file) {
+						$paths[] = realpath((string) $file);
+				}
+				sort($paths);
 
-        $this->assertEquals(array(
-            realpath(__DIR__.'/Fixtures/dir1/file1.txt'),
-            realpath(__DIR__.'/Fixtures/dir1/file2.txt'),
-            realpath(__DIR__.'/Fixtures/dir2/file3.txt'),
-        ), $paths, 'files from multiple directories are merged');
-    }
+				$this->assertEquals(array(
+						realpath(__DIR__.'/Fixtures/dir1/file1.txt'),
+						realpath(__DIR__.'/Fixtures/dir1/file2.txt'),
+						realpath(__DIR__.'/Fixtures/dir2/file3.txt'),
+				), $paths, 'files from multiple directories are merged');
+		}
 }
