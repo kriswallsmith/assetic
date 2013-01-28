@@ -20,95 +20,95 @@ use Assetic\Filter\ScssphpFilter;
  */
 class ScssphpFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('scssc')) {
-            $this->markTestSkipped('scssphp is not installed');
-        }
-    }
+		protected function setUp()
+		{
+				if (!class_exists('scssc')) {
+						$this->markTestSkipped('scssphp is not installed');
+				}
+		}
 
-    public function testFilterLoad()
-    {
-        $expected = <<<EOF
+		public function testFilterLoad()
+		{
+				$expected = <<<EOF
 .foo .bar {
-  width: 2; }
+	width: 2; }
 
 EOF;
 
-        $asset = new StringAsset('.foo{.bar{width:1+ 1;}}');
-        $asset->load();
+				$asset = new StringAsset('.foo{.bar{width:1+ 1;}}');
+				$asset->load();
 
-        $this->getFilter()->filterLoad($asset);
+				$this->getFilter()->filterLoad($asset);
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() parses the content');
-    }
+				$this->assertEquals($expected, $asset->getContent(), '->filterLoad() parses the content');
+		}
 
-    public function testImport()
-    {
-        $expected = <<<EOF
+		public function testImport()
+		{
+				$expected = <<<EOF
 .foo {
-  color: blue; }
+	color: blue; }
 
 .foo {
-  color: red; }
+	color: red; }
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/sass/main.scss');
-        $asset->load();
+				$asset = new FileAsset(__DIR__.'/fixtures/sass/main.scss');
+				$asset->load();
 
-        $this->getFilter()->filterLoad($asset);
+				$this->getFilter()->filterLoad($asset);
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
-    }
+				$this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
+		}
 
-    public function testCompassExtension()
-    {
-        $this->markTestIncomplete('Someone fix this, SVP? (Undefined mixin "box-shadow")');
+		public function testCompassExtension()
+		{
+				$this->markTestIncomplete('Someone fix this, SVP? (Undefined mixin "box-shadow")');
 
-        $expected = <<<EOF
+				$expected = <<<EOF
 .shadow {
-  -webkit-box-shadow : 10px 10px 8px red;
-  -moz-box-shadow : 10px 10px 8px red;
-  box-shadow : 10px 10px 8px red; }
+	-webkit-box-shadow : 10px 10px 8px red;
+	-moz-box-shadow : 10px 10px 8px red;
+	box-shadow : 10px 10px 8px red; }
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
-        $asset->load();
+				$asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
+				$asset->load();
 
-        $this->getFilter(true)->filterLoad($asset);
-        $this->assertEquals($expected, $asset->getContent(), 'compass plugin can be enabled');
+				$this->getFilter(true)->filterLoad($asset);
+				$this->assertEquals($expected, $asset->getContent(), 'compass plugin can be enabled');
 
-        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
-        $asset->load();
+				$asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
+				$asset->load();
 
-        $this->getFilter(false)->filterLoad($asset);
-        $this->assertEquals("@import \"compass\";\n", $asset->getContent(), 'compass plugin can be disabled');
-    }
+				$this->getFilter(false)->filterLoad($asset);
+				$this->assertEquals("@import \"compass\";\n", $asset->getContent(), 'compass plugin can be disabled');
+		}
 
-    public function testSetImportPath()
-    {
-        $filter = $this->getFilter();
-        $filter->addImportPath(__DIR__.'/fixtures/sass/import_path');
+		public function testSetImportPath()
+		{
+				$filter = $this->getFilter();
+				$filter->addImportPath(__DIR__.'/fixtures/sass/import_path');
 
-        $asset = new StringAsset("@import 'import';\n#test { color: \$red }");
-        $asset->load();
-        $filter->filterLoad($asset);
+				$asset = new StringAsset("@import 'import';\n#test { color: \$red }");
+				$asset->load();
+				$filter->filterLoad($asset);
 
-        $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), 'Import paths are correctly used');
-    }
+				$this->assertEquals("#test {\n	color: red; }\n", $asset->getContent(), 'Import paths are correctly used');
+		}
 
-    // private
+		// private
 
-    private function getFilter($compass = false)
-    {
-        $filter = new ScssphpFilter();
+		private function getFilter($compass = false)
+		{
+				$filter = new ScssphpFilter();
 
-        if ($compass) {
-            $filter->enableCompass();
-        }
+				if ($compass) {
+						$filter->enableCompass();
+				}
 
-        return $filter;
-    }
+				return $filter;
+		}
 }

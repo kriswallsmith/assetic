@@ -19,63 +19,63 @@ use Assetic\Filter\CoffeeScriptFilter;
  */
 class CoffeeScriptFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        $coffeeBin = $this->findExecutable('coffee', 'COFFEE_BIN');
-        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
+		protected function setUp()
+		{
+				$coffeeBin = $this->findExecutable('coffee', 'COFFEE_BIN');
+				$nodeBin = $this->findExecutable('node', 'NODE_BIN');
 
-        if (!$coffeeBin) {
-            $this->markTestSkipped('Unable to find `coffee` executable.');
-        }
+				if (!$coffeeBin) {
+						$this->markTestSkipped('Unable to find `coffee` executable.');
+				}
 
-        $this->filter = new CoffeeScriptFilter($coffeeBin, $nodeBin);
-    }
+				$this->filter = new CoffeeScriptFilter($coffeeBin, $nodeBin);
+		}
 
-    public function testFilterLoad()
-    {
-        $expected = <<<JAVASCRIPT
+		public function testFilterLoad()
+		{
+				$expected = <<<JAVASCRIPT
 (function() {
-  var square;
+	var square;
 
-  square = function(x) {
-    return x * x;
-  };
+	square = function(x) {
+		return x * x;
+	};
 
 }).call(this);
 
 JAVASCRIPT;
 
-        $asset = new StringAsset('square = (x) -> x * x');
-        $asset->load();
+				$asset = new StringAsset('square = (x) -> x * x');
+				$asset->load();
 
-        $this->filter->filterLoad($asset);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals($expected, $this->clean($asset->getContent()));
-    }
+				$this->assertEquals($expected, $this->clean($asset->getContent()));
+		}
 
-    public function testBare()
-    {
-        $expected = <<<JAVASCRIPT
+		public function testBare()
+		{
+				$expected = <<<JAVASCRIPT
 var square;
 
 square = function(x) {
-  return x * x;
+	return x * x;
 };
 
 JAVASCRIPT;
-        $asset = new StringAsset('square = (x) -> x * x');
-        $asset->load();
+				$asset = new StringAsset('square = (x) -> x * x');
+				$asset->load();
 
-        $this->filter->setBare(true);
-        $this->filter->filterLoad($asset);
+				$this->filter->setBare(true);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals($expected, $this->clean($asset->getContent()));
-    }
+				$this->assertEquals($expected, $this->clean($asset->getContent()));
+		}
 
-    private function clean($js)
-    {
-        return preg_replace('~^//.*\n\s*~m', '', $js);
-    }
+		private function clean($js)
+		{
+				return preg_replace('~^//.*\n\s*~m', '', $js);
+		}
 }

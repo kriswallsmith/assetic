@@ -1,5 +1,5 @@
 @import "compass";
 
 .shadow {
-    @include box-shadow(10px 10px 8px red);
+		@include box-shadow(10px 10px 8px red);
 }

@@ -19,21 +19,21 @@ use Assetic\Filter\JSMinPlusFilter;
  */
 class JSMinPlusFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('JSMinPlus')) {
-            $this->markTestSkipped('JSMinPlus is not installed.');
-        }
-    }
+		protected function setUp()
+		{
+				if (!class_exists('JSMinPlus')) {
+						$this->markTestSkipped('JSMinPlus is not installed.');
+				}
+		}
 
-    public function testRelativeSourceUrlImportImports()
-    {
-        $asset = new FileAsset(__DIR__.'/fixtures/jsmin/js.js');
-        $asset->load();
+		public function testRelativeSourceUrlImportImports()
+		{
+				$asset = new FileAsset(__DIR__.'/fixtures/jsmin/js.js');
+				$asset->load();
 
-        $filter = new JSMinPlusFilter();
-        $filter->filterDump($asset);
+				$filter = new JSMinPlusFilter();
+				$filter->filterDump($asset);
 
-        $this->assertEquals('var a="abc",bbb="u"', $asset->getContent());
-    }
+				$this->assertEquals('var a="abc",bbb="u"', $asset->getContent());
+		}
 }

@@ -18,49 +18,49 @@ namespace Assetic\Cache;
  */
 class ApcCache implements CacheInterface
 {
-    public $ttl = 0;
+		public $ttl = 0;
 
-    /**
-     * @see CacheInterface::has()
-     */
-    public function has($key)
-    {
-        return apc_exists($key);
-    }
+		/**
+		 * @see CacheInterface::has()
+		 */
+		public function has($key)
+		{
+				return apc_exists($key);
+		}
 
-    /**
-     * @see CacheInterface::get()
-     */
-    public function get($key)
-    {
-        $value = apc_fetch($key, $success);
+		/**
+		 * @see CacheInterface::get()
+		 */
+		public function get($key)
+		{
+				$value = apc_fetch($key, $success);
 
-        if (!$success) {
-            throw new \RuntimeException('There is no cached value for ' . $key);
-        }
+				if (!$success) {
+						throw new \RuntimeException('There is no cached value for ' . $key);
+				}
 
-        return $value;
-    }
+				return $value;
+		}
 
-    /**
-     * @see CacheInterface::set()
-     */
-    public function set($key, $value)
-    {
-        $store = apc_store($key, $value, $this->ttl);
+		/**
+		 * @see CacheInterface::set()
+		 */
+		public function set($key, $value)
+		{
+				$store = apc_store($key, $value, $this->ttl);
 
-        if (!$store) {
-            throw new \RuntimeException('Unable to store "' . $key . '" for ' . $this->ttl . ' seconds.');
-        }
+				if (!$store) {
+						throw new \RuntimeException('Unable to store "' . $key . '" for ' . $this->ttl . ' seconds.');
+				}
 
-        return $store;
-    }
+				return $store;
+		}
 
-    /**
-     * @see CacheInterface::remove()
-     */
-    public function remove($key)
-    {
-        return apc_delete($key);
-    }
+		/**
+		 * @see CacheInterface::remove()
+		 */
+		public function remove($key)
+		{
+				return apc_delete($key);
+		}
 }

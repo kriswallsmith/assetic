@@ -19,33 +19,33 @@ use Assetic\Filter\LessphpFilter;
  */
 class LessphpFilterTest extends LessFilterTest
 {
-    protected function setUp()
-    {
-        if (!class_exists('lessc')) {
-            $this->markTestSkipped('LessPHP is not installed');
-        }
+		protected function setUp()
+		{
+				if (!class_exists('lessc')) {
+						$this->markTestSkipped('LessPHP is not installed');
+				}
 
-        $this->filter = new LessphpFilter();
-    }
+				$this->filter = new LessphpFilter();
+		}
 
-    public function testPresets()
-    {
-        $expected = <<<EOF
+		public function testPresets()
+		{
+				$expected = <<<EOF
 .foo {
-  color: green;
+	color: green;
 }
 
 EOF;
 
-        $asset = new StringAsset('.foo { color: @bar }');
-        $asset->load();
+				$asset = new StringAsset('.foo { color: @bar }');
+				$asset->load();
 
-        $this->filter->setPresets(array(
-            'bar' => 'green'
-        ));
+				$this->filter->setPresets(array(
+						'bar' => 'green'
+				));
 
-        $this->filter->filterLoad($asset);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals($expected, $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
-    }
+				$this->assertEquals($expected, $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+		}
 }

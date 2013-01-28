@@ -23,88 +23,88 @@ use Assetic\Asset\AssetCollectionInterface;
  */
 class AssetCollectionIterator implements \RecursiveIterator
 {
-    private $assets;
-    private $filters;
-    private $output;
-    private $clones;
+		private $assets;
+		private $filters;
+		private $output;
+		private $clones;
 
-    public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones)
-    {
-        $this->assets  = $coll->all();
-        $this->filters = $coll->getFilters();
-        $this->output  = $coll->getTargetPath();
-        $this->clones  = $clones;
+		public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones)
+		{
+				$this->assets	= $coll->all();
+				$this->filters = $coll->getFilters();
+				$this->output	= $coll->getTargetPath();
+				$this->clones	= $clones;
 
-        if (false === $pos = strrpos($this->output, '.')) {
-            $this->output .= '_*';
-        } else {
-            $this->output = substr($this->output, 0, $pos).'_*'.substr($this->output, $pos);
-        }
-    }
+				if (false === $pos = strrpos($this->output, '.')) {
+						$this->output .= '_*';
+				} else {
+						$this->output = substr($this->output, 0, $pos).'_*'.substr($this->output, $pos);
+				}
+		}
 
-    /**
-     * Returns a copy of the current asset with filters and a target URL applied.
-     *
-     * @param Boolean $raw Returns the unmodified asset if true
-     * @return \Assetic\Asset\AssetInterface
-     */
-    public function current($raw = false)
-    {
-        $asset = current($this->assets);
+		/**
+		 * Returns a copy of the current asset with filters and a target URL applied.
+		 *
+		 * @param Boolean $raw Returns the unmodified asset if true
+		 * @return \Assetic\Asset\AssetInterface
+		 */
+		public function current($raw = false)
+		{
+				$asset = current($this->assets);
 
-        if ($raw) {
-            return $asset;
-        }
+				if ($raw) {
+						return $asset;
+				}
 
-        // clone once
-        if (!isset($this->clones[$asset])) {
-            $clone = $this->clones[$asset] = clone $asset;
+				// clone once
+				if (!isset($this->clones[$asset])) {
+						$clone = $this->clones[$asset] = clone $asset;
 
-            // generate a target path based on asset name
-            $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
-            $clone->setTargetPath(str_replace('*', $name, $this->output));
-        } else {
-            $clone = $this->clones[$asset];
-        }
+						// generate a target path based on asset name
+						$name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
+						$clone->setTargetPath(str_replace('*', $name, $this->output));
+				} else {
+						$clone = $this->clones[$asset];
+				}
 
-        // cascade filters
-        foreach ($this->filters as $filter) {
-            $clone->ensureFilter($filter);
-        }
+				// cascade filters
+				foreach ($this->filters as $filter) {
+						$clone->ensureFilter($filter);
+				}
 
-        return $clone;
-    }
+				return $clone;
+		}
 
-    public function key()
-    {
-        return key($this->assets);
-    }
+		public function key()
+		{
+				return key($this->assets);
+		}
 
-    public function next()
-    {
-        return next($this->assets);
-    }
+		public function next()
+		{
+				return next($this->assets);
+		}
 
-    public function rewind()
-    {
-        return reset($this->assets);
-    }
+		public function rewind()
+		{
+				return reset($this->assets);
+		}
 
-    public function valid()
-    {
-        return false !== current($this->assets);
-    }
+		public function valid()
+		{
+				return false !== current($this->assets);
+		}
 
-    public function hasChildren()
-    {
-        return current($this->assets) instanceof AssetCollectionInterface;
-    }
+		public function hasChildren()
+		{
+				return current($this->assets) instanceof AssetCollectionInterface;
+		}
 
-    /**
-     * @uses current()
-     */
-    public function getChildren()
-    {
-        return new self($this->current(), $this->clones);
-    }
+		/**
+		 * @uses current()
+		 */
+		public function getChildren()
+		{
+				return new self($this->current(), $this->clones);
+		}
 }

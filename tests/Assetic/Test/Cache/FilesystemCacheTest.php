@@ -15,37 +15,37 @@ use Assetic\Cache\FilesystemCache;
 
 class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCache()
-    {
-        $cache = new FilesystemCache(sys_get_temp_dir());
+		public function testCache()
+		{
+				$cache = new FilesystemCache(sys_get_temp_dir());
 
-        $this->assertFalse($cache->has('foo'));
+				$this->assertFalse($cache->has('foo'));
 
-        $cache->set('foo', 'bar');
-        $this->assertEquals('bar', $cache->get('foo'));
+				$cache->set('foo', 'bar');
+				$this->assertEquals('bar', $cache->get('foo'));
 
-        $this->assertTrue($cache->has('foo'));
+				$this->assertTrue($cache->has('foo'));
 
-        $cache->remove('foo');
-        $this->assertFalse($cache->has('foo'));
-    }
+				$cache->remove('foo');
+				$this->assertFalse($cache->has('foo'));
+		}
 
-    public function testSetCreatesDir()
-    {
-        $dir = sys_get_temp_dir().'/assetic/fscachetest';
+		public function testSetCreatesDir()
+		{
+				$dir = sys_get_temp_dir().'/assetic/fscachetest';
 
-        $tearDown = function() use ($dir) {
-            array_map('unlink', glob($dir.'/*'));
-            @rmdir($dir);
-        };
+				$tearDown = function() use ($dir) {
+						array_map('unlink', glob($dir.'/*'));
+						@rmdir($dir);
+				};
 
-        $tearDown();
+				$tearDown();
 
-        $cache = new FilesystemCache($dir);
-        $cache->set('foo', 'bar');
+				$cache = new FilesystemCache($dir);
+				$cache->set('foo', 'bar');
 
-        $this->assertFileExists($dir.'/foo');
+				$this->assertFileExists($dir.'/foo');
 
-        $tearDown();
-    }
+				$tearDown();
+		}
 }

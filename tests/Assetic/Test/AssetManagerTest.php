@@ -15,39 +15,39 @@ use Assetic\AssetManager;
 
 class AssetManagerTest extends \PHPUnit_Framework_TestCase
 {
-    private $am;
+		private $am;
 
-    protected function setUp()
-    {
-        $this->am = new AssetManager();
-    }
+		protected function setUp()
+		{
+				$this->am = new AssetManager();
+		}
 
-    public function testGetAsset()
-    {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $this->am->set('foo', $asset);
-        $this->assertSame($asset, $this->am->get('foo'), '->get() returns an asset');
-    }
+		public function testGetAsset()
+		{
+				$asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+				$this->am->set('foo', $asset);
+				$this->assertSame($asset, $this->am->get('foo'), '->get() returns an asset');
+		}
 
-    public function testGetInvalidAsset()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-        $this->am->get('foo');
-    }
+		public function testGetInvalidAsset()
+		{
+				$this->setExpectedException('InvalidArgumentException');
+				$this->am->get('foo');
+		}
 
-    public function testHas()
-    {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $this->am->set('foo', $asset);
+		public function testHas()
+		{
+				$asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+				$this->am->set('foo', $asset);
 
-        $this->assertTrue($this->am->has('foo'), '->has() returns true if the asset is set');
-        $this->assertFalse($this->am->has('bar'), '->has() returns false if the asset is not set');
-    }
+				$this->assertTrue($this->am->has('foo'), '->has() returns true if the asset is set');
+				$this->assertFalse($this->am->has('bar'), '->has() returns false if the asset is not set');
+		}
 
-    public function testInvalidName()
-    {
-        $this->setExpectedException('InvalidArgumentException');
+		public function testInvalidName()
+		{
+				$this->setExpectedException('InvalidArgumentException');
 
-        $this->am->set('@foo', $this->getMock('Assetic\\Asset\\AssetInterface'));
-    }
+				$this->am->set('@foo', $this->getMock('Assetic\\Asset\\AssetInterface'));
+		}
 }

@@ -22,51 +22,51 @@ use Assetic\Filter\CompassFilter;
  */
 class CompassFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        if (!$compassBin = $this->findExecutable('compass', 'COMPASS_BIN')) {
-            $this->markTestSkipped('Unable to find `compass` executable.');
-        }
+		protected function setUp()
+		{
+				if (!$compassBin = $this->findExecutable('compass', 'COMPASS_BIN')) {
+						$this->markTestSkipped('Unable to find `compass` executable.');
+				}
 
-        $this->filter = new CompassFilter($compassBin);
-    }
+				$this->filter = new CompassFilter($compassBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->filter = null;
+		}
 
-    public function testFilterLoadWithScss()
-    {
-        $asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.scss');
-        $asset->load();
+		public function testFilterLoadWithScss()
+		{
+				$asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.scss');
+				$asset->load();
 
-        $this->filter->filterLoad($asset);
+				$this->filter->filterLoad($asset);
 
-        $this->assertContains('.test-class', $asset->getContent());
-        $this->assertContains('font-size: 2em;', $asset->getContent());
-    }
+				$this->assertContains('.test-class', $asset->getContent());
+				$this->assertContains('font-size: 2em;', $asset->getContent());
+		}
 
-    public function testFilterLoadWithSass()
-    {
-        $asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.sass');
-        $asset->load();
+		public function testFilterLoadWithSass()
+		{
+				$asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.sass');
+				$asset->load();
 
-        $this->filter->filterLoad($asset);
+				$this->filter->filterLoad($asset);
 
-        $this->assertContains('.test-class', $asset->getContent());
-        $this->assertContains('font-size: 2em;', $asset->getContent());
-    }
+				$this->assertContains('.test-class', $asset->getContent());
+				$this->assertContains('font-size: 2em;', $asset->getContent());
+		}
 
-    public function testCompassMixin()
-    {
-        $asset = new FileAsset(__DIR__.'/fixtures/compass/compass.sass');
-        $asset->load();
+		public function testCompassMixin()
+		{
+				$asset = new FileAsset(__DIR__.'/fixtures/compass/compass.sass');
+				$asset->load();
 
-        $this->filter->filterLoad($asset);
+				$this->filter->filterLoad($asset);
 
-        $this->assertContains('text-decoration', $asset->getContent());
-    }
+				$this->assertContains('text-decoration', $asset->getContent());
+		}
 }

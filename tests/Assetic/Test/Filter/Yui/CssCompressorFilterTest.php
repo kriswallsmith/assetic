@@ -15,9 +15,9 @@ use Assetic\Filter\Yui\CssCompressorFilter;
 
 class CssCompressorFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterface()
-    {
-        $filter = new CssCompressorFilter('/path/to/jar');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CssCompressorFilter implements FilterInterface');
-    }
+		public function testInterface()
+		{
+				$filter = new CssCompressorFilter('/path/to/jar');
+				$this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CssCompressorFilter implements FilterInterface');
+		}
 }

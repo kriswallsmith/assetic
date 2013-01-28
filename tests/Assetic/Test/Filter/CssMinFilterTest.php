@@ -19,22 +19,22 @@ use Assetic\Filter\CssMinFilter;
  */
 class CssMinFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('CssMin')) {
-            $this->markTestSkipped('CssMin is not installed.');
-        }
-    }
+		protected function setUp()
+		{
+				if (!class_exists('CssMin')) {
+						$this->markTestSkipped('CssMin is not installed.');
+				}
+		}
 
-    public function testRelativeSourceUrlImportImports()
-    {
-        $asset = new FileAsset(__DIR__.'/fixtures/cssmin/main.css');
-        $asset->load();
+		public function testRelativeSourceUrlImportImports()
+		{
+				$asset = new FileAsset(__DIR__.'/fixtures/cssmin/main.css');
+				$asset->load();
 
-        $filter = new CssMinFilter(__DIR__.'/fixtures/cssmin');
-        $filter->setFilter('ImportImports', true);
-        $filter->filterDump($asset);
+				$filter = new CssMinFilter(__DIR__.'/fixtures/cssmin');
+				$filter->setFilter('ImportImports', true);
+				$filter->filterDump($asset);
 
-        $this->assertEquals('body{color:white}body{background:black}', $asset->getContent());
-    }
+				$this->assertEquals('body{color:white}body{background:black}', $asset->getContent());
+		}
 }

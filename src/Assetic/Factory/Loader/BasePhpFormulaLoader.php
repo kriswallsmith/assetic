@@ -21,139 +21,139 @@ use Assetic\Factory\Resource\ResourceInterface;
  */
 abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
 {
-    protected $factory;
-    protected $prototypes;
+		protected $factory;
+		protected $prototypes;
 
-    public function __construct(AssetFactory $factory)
-    {
-        $this->factory = $factory;
-        $this->prototypes = array();
+		public function __construct(AssetFactory $factory)
+		{
+				$this->factory = $factory;
+				$this->prototypes = array();
 
-        foreach ($this->registerPrototypes() as $prototype => $options) {
-            $this->addPrototype($prototype, $options);
-        }
-    }
+				foreach ($this->registerPrototypes() as $prototype => $options) {
+						$this->addPrototype($prototype, $options);
+				}
+		}
 
-    public function addPrototype($prototype, array $options = array())
-    {
-        $tokens = token_get_all('<?php '.$prototype);
-        array_shift($tokens);
+		public function addPrototype($prototype, array $options = array())
+		{
+				$tokens = token_get_all('<?php '.$prototype);
+				array_shift($tokens);
 
-        $this->prototypes[$prototype] = array($tokens, $options);
-    }
+				$this->prototypes[$prototype] = array($tokens, $options);
+		}
 
-    public function load(ResourceInterface $resource)
-    {
-        if (!$nbProtos = count($this->prototypes)) {
-            throw new \LogicException('There are no prototypes registered.');
-        }
+		public function load(ResourceInterface $resource)
+		{
+				if (!$nbProtos = count($this->prototypes)) {
+						throw new \LogicException('There are no prototypes registered.');
+				}
 
-        $buffers = array_fill(0, $nbProtos, '');
-        $bufferLevels = array_fill(0, $nbProtos, 0);
-        $buffersInWildcard = array();
+				$buffers = array_fill(0, $nbProtos, '');
+				$bufferLevels = array_fill(0, $nbProtos, 0);
+				$buffersInWildcard = array();
 
-        $tokens = token_get_all($resource->getContent());
-        $calls = array();
+				$tokens = token_get_all($resource->getContent());
+				$calls = array();
 
-        while ($token = array_shift($tokens)) {
-            $current = self::tokenToString($token);
-            // loop through each prototype (by reference)
-            foreach (array_keys($this->prototypes) as $i) {
-                $prototype =& $this->prototypes[$i][0];
-                $options = $this->prototypes[$i][1];
-                $buffer =& $buffers[$i];
-                $level =& $bufferLevels[$i];
+				while ($token = array_shift($tokens)) {
+						$current = self::tokenToString($token);
+						// loop through each prototype (by reference)
+						foreach (array_keys($this->prototypes) as $i) {
+								$prototype =& $this->prototypes[$i][0];
+								$options = $this->prototypes[$i][1];
+								$buffer =& $buffers[$i];
+								$level =& $bufferLevels[$i];
 
-                if (isset($buffersInWildcard[$i])) {
-                    switch ($current) {
-                        case '(': ++$level; break;
-                        case ')': --$level; break;
-                    }
+								if (isset($buffersInWildcard[$i])) {
+										switch ($current) {
+												case '(': ++$level; break;
+												case ')': --$level; break;
+										}
 
-                    $buffer .= $current;
+										$buffer .= $current;
 
-                    if (!$level) {
-                        $calls[] = array($buffer.';', $options);
-                        $buffer = '';
-                        unset($buffersInWildcard[$i]);
-                    }
-                } elseif ($current == self::tokenToString(current($prototype))) {
-                    $buffer .= $current;
-                    if ('*' == self::tokenToString(next($prototype))) {
-                        $buffersInWildcard[$i] = true;
-                        ++$level;
-                    }
-                } else {
-                    reset($prototype);
-                    unset($buffersInWildcard[$i]);
-                    $buffer = '';
-                }
-            }
-        }
+										if (!$level) {
+												$calls[] = array($buffer.';', $options);
+												$buffer = '';
+												unset($buffersInWildcard[$i]);
+										}
+								} elseif ($current == self::tokenToString(current($prototype))) {
+										$buffer .= $current;
+										if ('*' == self::tokenToString(next($prototype))) {
+												$buffersInWildcard[$i] = true;
+												++$level;
+										}
+								} else {
+										reset($prototype);
+										unset($buffersInWildcard[$i]);
+										$buffer = '';
+								}
+						}
+				}
 
-        $formulae = array();
-        foreach ($calls as $call) {
-            $formulae += call_user_func_array(array($this, 'processCall'), $call);
-        }
+				$formulae = array();
+				foreach ($calls as $call) {
+						$formulae += call_user_func_array(array($this, 'processCall'), $call);
+				}
 
-        return $formulae;
-    }
+				return $formulae;
+		}
 
-    private function processCall($call, array $protoOptions = array())
-    {
-        $tmp = tempnam(sys_get_temp_dir(), 'assetic');
-        file_put_contents($tmp, implode("\n", array(
-            '<?php',
-            $this->registerSetupCode(),
-            $call,
-            'echo serialize($_call);',
-        )));
-        $args = unserialize(shell_exec('php '.escapeshellarg($tmp)));
-        unlink($tmp);
+		private function processCall($call, array $protoOptions = array())
+		{
+				$tmp = tempnam(sys_get_temp_dir(), 'assetic');
+				file_put_contents($tmp, implode("\n", array(
+						'<?php',
+						$this->registerSetupCode(),
+						$call,
+						'echo serialize($_call);',
+				)));
+				$args = unserialize(shell_exec('php '.escapeshellarg($tmp)));
+				unlink($tmp);
 
-        $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : array();
-        $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
-        $options = isset($args[2]) ? $args[2] : array();
+				$inputs	= isset($args[0]) ? self::argumentToArray($args[0]) : array();
+				$filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
+				$options = isset($args[2]) ? $args[2] : array();
 
-        if (!isset($options['debug'])) {
-            $options['debug'] = $this->factory->isDebug();
-        }
+				if (!isset($options['debug'])) {
+						$options['debug'] = $this->factory->isDebug();
+				}
 
-        if (!is_array($options)) {
-            throw new \RuntimeException('The third argument must be omitted, null or an array.');
-        }
+				if (!is_array($options)) {
+						throw new \RuntimeException('The third argument must be omitted, null or an array.');
+				}
 
-        // apply the prototype options
-        $options += $protoOptions;
+				// apply the prototype options
+				$options += $protoOptions;
 
-        if (!isset($options['name'])) {
-            $options['name'] = $this->factory->generateAssetName($inputs, $filters, $options);
-        }
+				if (!isset($options['name'])) {
+						$options['name'] = $this->factory->generateAssetName($inputs, $filters, $options);
+				}
 
-        return array($options['name'] => array($inputs, $filters, $options));
-    }
+				return array($options['name'] => array($inputs, $filters, $options));
+		}
 
-    /**
-     * Returns an array of prototypical calls and options.
-     *
-     * @return array Prototypes and options
-     */
-    abstract protected function registerPrototypes();
+		/**
+		 * Returns an array of prototypical calls and options.
+		 *
+		 * @return array Prototypes and options
+		 */
+		abstract protected function registerPrototypes();
 
-    /**
-     * Returns setup code for the reflection scriptlet.
-     *
-     * @return string Some PHP setup code
-     */
-    abstract protected function registerSetupCode();
+		/**
+		 * Returns setup code for the reflection scriptlet.
+		 *
+		 * @return string Some PHP setup code
+		 */
+		abstract protected function registerSetupCode();
 
-    protected static function tokenToString($token)
-    {
-        return is_array($token) ? $token[1] : $token;
-    }
+		protected static function tokenToString($token)
+		{
+				return is_array($token) ? $token[1] : $token;
+		}
 
-    protected static function argumentToArray($argument)
-    {
-        return is_array($argument) ? $argument : array_filter(array_map('trim', explode(',', $argument)));
-    }
+		protected static function argumentToArray($argument)
+		{
+				return is_array($argument) ? $argument : array_filter(array_map('trim', explode(',', $argument)));
+		}
 }

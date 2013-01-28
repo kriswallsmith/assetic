@@ -22,27 +22,27 @@ use CssEmbed\CssEmbed;
  */
 class PhpCssEmbedFilter implements FilterInterface
 {
-    private $presets = array();
+		private $presets = array();
 
-    public function setPresets(array $presets)
-    {
-        $this->presets = $presets;
-    }
+		public function setPresets(array $presets)
+		{
+				$this->presets = $presets;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
+		public function filterLoad(AssetInterface $asset)
+		{
+				$root = $asset->getSourceRoot();
+				$path = $asset->getSourcePath();
 
-        $pce = new CssEmbed();
-        if ($root && $path) {
-            $pce->setRootDir(dirname($root.'/'.$path));
-        }
+				$pce = new CssEmbed();
+				if ($root && $path) {
+						$pce->setRootDir(dirname($root.'/'.$path));
+				}
 
-        $asset->setContent($pce->embedString($asset->getContent()));
-    }
+				$asset->setContent($pce->embedString($asset->getContent()));
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		public function filterDump(AssetInterface $asset)
+		{
+		}
 }

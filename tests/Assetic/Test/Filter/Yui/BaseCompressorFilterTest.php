@@ -16,16 +16,16 @@ use Assetic\Filter\Yui\BaseCompressorFilter;
 
 class BaseCompressorFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterface()
-    {
-        $filter = new YuiCompressorFilterForTest('/path/to/jar');
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'BaseCompressorFilter implements FilterInterface');
-    }
+		public function testInterface()
+		{
+				$filter = new YuiCompressorFilterForTest('/path/to/jar');
+				$this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'BaseCompressorFilter implements FilterInterface');
+		}
 }
 
 class YuiCompressorFilterForTest extends BaseCompressorFilter
 {
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		public function filterDump(AssetInterface $asset)
+		{
+		}
 }

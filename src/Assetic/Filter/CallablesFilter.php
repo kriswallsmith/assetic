@@ -20,30 +20,30 @@ use Assetic\Asset\AssetInterface;
  */
 class CallablesFilter implements FilterInterface
 {
-    private $loader;
-    private $dumper;
+		private $loader;
+		private $dumper;
 
-    /**
-     * @param callable|null $loader
-     * @param callable|null $dumper
-     */
-    public function __construct($loader = null, $dumper = null)
-    {
-        $this->loader = $loader;
-        $this->dumper = $dumper;
-    }
+		/**
+		 * @param callable|null $loader
+		 * @param callable|null $dumper
+		 */
+		public function __construct($loader = null, $dumper = null)
+		{
+				$this->loader = $loader;
+				$this->dumper = $dumper;
+		}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        if (null !== $callable = $this->loader) {
-            $callable($asset);
-        }
-    }
+		public function filterLoad(AssetInterface $asset)
+		{
+				if (null !== $callable = $this->loader) {
+						$callable($asset);
+				}
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-        if (null !== $callable = $this->dumper) {
-            $callable($asset);
-        }
-    }
+		public function filterDump(AssetInterface $asset)
+		{
+				if (null !== $callable = $this->dumper) {
+						$callable($asset);
+				}
+		}
 }

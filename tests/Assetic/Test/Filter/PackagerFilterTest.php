@@ -19,16 +19,16 @@ use Assetic\Filter\PackagerFilter;
  */
 class PackagerFilterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('Packager')) {
-            $this->markTestSkipped('Packager is not available.');
-        }
-    }
+		protected function setUp()
+		{
+				if (!class_exists('Packager')) {
+						$this->markTestSkipped('Packager is not available.');
+				}
+		}
 
-    public function testPackager()
-    {
-        $expected = <<<EOF
+		public function testPackager()
+		{
+				$expected = <<<EOF
 /*
 ---
 
@@ -57,13 +57,13 @@ var bar = foo();
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/packager/app/application.js', array(), __DIR__.'/fixtures/packager/app', 'application.js');
-        $asset->load();
+				$asset = new FileAsset(__DIR__.'/fixtures/packager/app/application.js', array(), __DIR__.'/fixtures/packager/app', 'application.js');
+				$asset->load();
 
-        $filter = new PackagerFilter();
-        $filter->addPackage(__DIR__.'/fixtures/packager/lib');
-        $filter->filterLoad($asset);
+				$filter = new PackagerFilter();
+				$filter->addPackage(__DIR__.'/fixtures/packager/lib');
+				$filter->filterLoad($asset);
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() runs packager');
-    }
+				$this->assertEquals($expected, $asset->getContent(), '->filterLoad() runs packager');
+		}
 }

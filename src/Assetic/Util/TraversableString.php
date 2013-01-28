@@ -18,27 +18,27 @@ namespace Assetic\Util;
  */
 class TraversableString implements \IteratorAggregate, \Countable
 {
-    private $one;
-    private $many;
+		private $one;
+		private $many;
 
-    public function __construct($one, array $many)
-    {
-        $this->one = $one;
-        $this->many = $many;
-    }
+		public function __construct($one, array $many)
+		{
+				$this->one = $one;
+				$this->many = $many;
+		}
 
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->many);
-    }
+		public function getIterator()
+		{
+				return new \ArrayIterator($this->many);
+		}
 
-    public function count()
-    {
-        return count($this->many);
-    }
+		public function count()
+		{
+				return count($this->many);
+		}
 
-    public function __toString()
-    {
-        return (string) $this->one;
-    }
+		public function __toString()
+		{
+				return (string) $this->one;
+		}
 }

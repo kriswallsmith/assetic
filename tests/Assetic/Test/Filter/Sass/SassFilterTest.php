@@ -20,58 +20,58 @@ use Assetic\Test\Filter\FilterTestCase;
  */
 class SassFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        $rubyBin = $this->findExecutable('ruby', 'RUBY_BIN');
-        if (!$sassBin = $this->findExecutable('sass', 'SASS_BIN')) {
-            $this->markTestSkipped('Unable to locate `sass` executable.');
-        }
+		protected function setUp()
+		{
+				$rubyBin = $this->findExecutable('ruby', 'RUBY_BIN');
+				if (!$sassBin = $this->findExecutable('sass', 'SASS_BIN')) {
+						$this->markTestSkipped('Unable to locate `sass` executable.');
+				}
 
-        $this->filter = new SassFilter($sassBin, $rubyBin);
-    }
+				$this->filter = new SassFilter($sassBin, $rubyBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->filter = null;
+		}
 
-    public function testSass()
-    {
-        $input = <<<EOF
+		public function testSass()
+		{
+				$input = <<<EOF
 body
-  color: #F00
+	color: #F00
 EOF;
 
-        $asset = new StringAsset($input);
-        $asset->load();
+				$asset = new StringAsset($input);
+				$asset->load();
 
-        $this->filter->setStyle(SassFilter::STYLE_COMPACT);
-        $this->filter->filterLoad($asset);
+				$this->filter->setStyle(SassFilter::STYLE_COMPACT);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the sass');
-    }
+				$this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the sass');
+		}
 
-    public function testScssGuess()
-    {
-        $input = <<<'EOF'
+		public function testScssGuess()
+		{
+				$input = <<<'EOF'
 $red: #F00;
 
 .foo {
-    color: $red;
+		color: $red;
 }
 
 EOF;
 
-        $expected = '.foo { color: red; }';
+				$expected = '.foo { color: red; }';
 
-        $asset = new StringAsset($input, array(), null, 'foo.scss');
-        $asset->load();
+				$asset = new StringAsset($input, array(), null, 'foo.scss');
+				$asset->load();
 
-        $this->filter->setStyle(SassFilter::STYLE_COMPACT);
-        $this->filter->filterLoad($asset);
+				$this->filter->setStyle(SassFilter::STYLE_COMPACT);
+				$this->filter->filterLoad($asset);
 
-        $this->assertEquals(".foo { color: red; }\n", $asset->getContent(), '->filterLoad() detects SCSS based on source path extension');
-    }
+				$this->assertEquals(".foo { color: red; }\n", $asset->getContent(), '->filterLoad() detects SCSS based on source path extension');
+		}
 }

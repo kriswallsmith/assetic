@@ -19,43 +19,43 @@ use Assetic\Filter\OptiPngFilter;
  */
 class OptiPngFilterTest extends FilterTestCase
 {
-    private $filter;
+		private $filter;
 
-    protected function setUp()
-    {
-        if (!$optipngBin = $this->findExecutable('optipng', 'OPTIPNG_BIN')) {
-            $this->markTestSkipped('Unable to find `optipng` executable.');
-        }
+		protected function setUp()
+		{
+				if (!$optipngBin = $this->findExecutable('optipng', 'OPTIPNG_BIN')) {
+						$this->markTestSkipped('Unable to find `optipng` executable.');
+				}
 
-        $this->filter = new OptiPngFilter($optipngBin);
-    }
+				$this->filter = new OptiPngFilter($optipngBin);
+		}
 
-    protected function tearDown()
-    {
-        $this->filter = null;
-    }
+		protected function tearDown()
+		{
+				$this->filter = null;
+		}
 
-    /**
-     * @dataProvider getImages
-     */
-    public function testFilter($image)
-    {
-        $asset = new FileAsset($image);
-        $asset->load();
+		/**
+		 * @dataProvider getImages
+		 */
+		public function testFilter($image)
+		{
+				$asset = new FileAsset($image);
+				$asset->load();
 
-        $before = $asset->getContent();
-        $this->filter->filterDump($asset);
+				$before = $asset->getContent();
+				$this->filter->filterDump($asset);
 
-        $this->assertNotEmpty($asset->getContent(), '->filterDump() sets content');
-        $this->assertNotEquals($before, $asset->getContent(), '->filterDump() changes the content');
-        $this->assertMimeType('image/png', $asset->getContent(), '->filterDump() creates PNG data');
-    }
+				$this->assertNotEmpty($asset->getContent(), '->filterDump() sets content');
+				$this->assertNotEquals($before, $asset->getContent(), '->filterDump() changes the content');
+				$this->assertMimeType('image/png', $asset->getContent(), '->filterDump() creates PNG data');
+		}
 
-    public function getImages()
-    {
-        return array(
-            array(__DIR__.'/fixtures/home.gif'),
-            array(__DIR__.'/fixtures/home.png'),
-        );
-    }
+		public function getImages()
+		{
+				return array(
+						array(__DIR__.'/fixtures/home.gif'),
+						array(__DIR__.'/fixtures/home.png'),
+				);
+		}
 }

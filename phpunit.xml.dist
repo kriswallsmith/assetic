@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
-    <testsuites>
-        <testsuite name="Assetic Test Suite">
-            <directory suffix="Test.php">./tests/Assetic/Test/</directory>
-        </testsuite>
-    </testsuites>
+		<testsuites>
+				<testsuite name="Assetic Test Suite">
+						<directory suffix="Test.php">./tests/Assetic/Test/</directory>
+				</testsuite>
+		</testsuites>
 
-    <php>
-        <!-- <server name="CLOSURE_JAR" value="/path/to/google-closure/compiler.jar" /> -->
-        <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
-        <!-- <server name="GSS_JAR" value="/path/to/closure-stylesheets.jar" /> -->
-        <!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
-        <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
-        <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
-    </php>
+		<php>
+				<!-- <server name="CLOSURE_JAR" value="/path/to/google-closure/compiler.jar" /> -->
+				<!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
+				<!-- <server name="GSS_JAR" value="/path/to/closure-stylesheets.jar" /> -->
+				<!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
+				<!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
+				<!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+		</php>
 
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src/Assetic/</directory>
-        </whitelist>
-    </filter>
+		<filter>
+				<whitelist>
+						<directory suffix=".php">./src/Assetic/</directory>
+				</whitelist>
+		</filter>
 </phpunit>

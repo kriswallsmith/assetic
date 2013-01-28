@@ -18,25 +18,25 @@ use Assetic\Cache\ApcCache;
  */
 class ApcCacheTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!extension_loaded('apc') || !ini_get('apc.enable_cli')) {
-            $this->markTestSkipped('APC must be installed and the apc.enable_cli setting must be enabled.');
-        }
-    }
+		protected function setUp()
+		{
+				if (!extension_loaded('apc') || !ini_get('apc.enable_cli')) {
+						$this->markTestSkipped('APC must be installed and the apc.enable_cli setting must be enabled.');
+				}
+		}
 
-    public function testCache()
-    {
-        $cache = new ApcCache();
+		public function testCache()
+		{
+				$cache = new ApcCache();
 
-        $this->assertFalse($cache->has('foo'));
+				$this->assertFalse($cache->has('foo'));
 
-        $cache->set('foo', 'bar');
-        $this->assertEquals('bar', $cache->get('foo'));
+				$cache->set('foo', 'bar');
+				$this->assertEquals('bar', $cache->get('foo'));
 
-        $this->assertTrue($cache->has('foo'));
+				$this->assertTrue($cache->has('foo'));
 
-        $cache->remove('foo');
-        $this->assertFalse($cache->has('foo'));
-    }
+				$cache->remove('foo');
+				$this->assertFalse($cache->has('foo'));
+		}
 }

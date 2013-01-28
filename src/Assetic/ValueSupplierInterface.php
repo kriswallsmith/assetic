@@ -20,10 +20,10 @@ namespace Assetic;
  */
 interface ValueSupplierInterface
 {
-    /**
-     * Returns a map of values.
-     *
-     * @return array
-     */
-    public function getValues();
+		/**
+		 * Returns a map of values.
+		 *
+		 * @return array
+		 */
+		public function getValues();
 }

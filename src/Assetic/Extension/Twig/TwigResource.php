@@ -20,35 +20,35 @@ use Assetic\Factory\Resource\ResourceInterface;
  */
 class TwigResource implements ResourceInterface
 {
-    private $loader;
-    private $name;
+		private $loader;
+		private $name;
 
-    public function __construct(\Twig_LoaderInterface $loader, $name)
-    {
-        $this->loader = $loader;
-        $this->name = $name;
-    }
+		public function __construct(\Twig_LoaderInterface $loader, $name)
+		{
+				$this->loader = $loader;
+				$this->name = $name;
+		}
 
-    public function getContent()
-    {
-        try {
-            return $this->loader->getSource($this->name);
-        } catch (\Twig_Error_Loader $e) {
-            return '';
-        }
-    }
+		public function getContent()
+		{
+				try {
+						return $this->loader->getSource($this->name);
+				} catch (\Twig_Error_Loader $e) {
+						return '';
+				}
+		}
 
-    public function isFresh($timestamp)
-    {
-        try {
-            return $this->loader->isFresh($this->name, $timestamp);
-        } catch (\Twig_Error_Loader $e) {
-            return false;
-        }
-    }
+		public function isFresh($timestamp)
+		{
+				try {
+						return $this->loader->isFresh($this->name, $timestamp);
+				} catch (\Twig_Error_Loader $e) {
+						return false;
+				}
+		}
 
-    public function __toString()
-    {
-        return $this->name;
-    }
+		public function __toString()
+		{
+				return $this->name;
+		}
 }
