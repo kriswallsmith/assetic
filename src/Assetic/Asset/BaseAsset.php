@@ -90,11 +90,6 @@ abstract class BaseAsset implements AssetInterface
         $filter->filterLoad($asset);
         $this->content = $asset->getContent();
         $this->loaded = true;
-
-        if (empty($this->content)) {
-            throw new \RuntimeException('A asset file is empty : '.$_SERVER['REQUEST_URI']);
-        }
-        
     }
 
     public function dump(FilterInterface $additionalFilter = null)
