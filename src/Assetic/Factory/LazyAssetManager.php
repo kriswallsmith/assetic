@@ -11,9 +11,11 @@
 
 namespace Assetic\Factory;
 
+use Assetic\Asset\AssetInterface;
 use Assetic\AssetManager;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
 use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Filter\DependencyExtractorInterface;
 
 /**
  * A lazy asset manager is a composition of a factory and many formula loaders.
@@ -200,5 +202,22 @@ class LazyAssetManager extends AssetManager
     public function isDebug()
     {
         return $this->factory->isDebug();
+    }
+
+    public function getLastModified(AssetInterface $asset)
+    {
+        $mtime = $asset->getLastModified();
+
+        foreach ($asset->getFilters() as $filter) {
+            if (!$filter instanceof DependencyExtractorInterface) {
+                continue;
+            }
+
+            foreach ($filter->getChildren($asset, $this->factory) as $child) {
+                $mtime = max($mtime, $this->getLastModified($child));
+            }
+        }
+
+        return $mtime;
     }
 }

@@ -93,4 +93,31 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(false, $this->am->isDebug(), '->isDebug() proxies the factory');
     }
+
+    public function testGetLastModified()
+    {
+        $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $child = $this->getMock('Assetic\Asset\AssetInterface');
+        $filter1 = $this->getMock('Assetic\Filter\FilterInterface');
+        $filter2 = $this->getMock('Assetic\Filter\DependencyExtractorInterface');
+
+        $asset->expects($this->any())
+            ->method('getLastModified')
+            ->will($this->returnValue(123));
+        $asset->expects($this->any())
+            ->method('getFilters')
+            ->will($this->returnValue(array($filter1, $filter2)));
+        $filter2->expects($this->once())
+            ->method('getChildren')
+            ->with($asset, $this->factory)
+            ->will($this->returnValue(array($child)));
+        $child->expects($this->any())
+            ->method('getLastModified')
+            ->will($this->returnValue(456));
+        $child->expects($this->any())
+            ->method('getFilters')
+            ->will($this->returnValue(array()));
+
+        $this->assertEquals(456, $this->am->getLastModified($asset));
+    }
 }
