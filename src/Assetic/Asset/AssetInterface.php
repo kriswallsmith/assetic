@@ -81,6 +81,13 @@ interface AssetInterface
     public function setContent($content);
 
     /**
+     * Returns the source content of the current asset.
+     *
+     * @return string $content The source content
+     */
+    public function getSourceContent();
+
+    /**
      * Returns an absolute path or URL to the source asset's root directory.
      *
      * This value should be an absolute path to a directory in the filesystem,

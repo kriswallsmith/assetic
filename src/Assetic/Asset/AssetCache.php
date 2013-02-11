@@ -82,6 +82,11 @@ class AssetCache implements AssetInterface
         $this->asset->setContent($content);
     }
 
+    public function getSourceContent()
+    {
+        return $this->asset->getSourceContent();
+    }
+
     public function getSourceRoot()
     {
         return $this->asset->getSourceRoot();

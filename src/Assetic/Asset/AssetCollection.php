@@ -157,6 +157,17 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->content = $content;
     }
 
+    public function getSourceContent()
+    {
+        // combine the source content of all leaves
+        $parts = array();
+        foreach ($this as $asset) {
+            $parts[] = $asset->getSourceContent();
+        }
+
+        return implode("\n", $parts);
+    }
+
     public function getSourceRoot()
     {
         return $this->sourceRoot;

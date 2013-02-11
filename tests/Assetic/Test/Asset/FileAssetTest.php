@@ -30,6 +30,12 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($asset->getContent(), 'The asset content is not empty after load');
     }
 
+    public function testGetSourceContent()
+    {
+        $asset = new FileAsset(__FILE__);
+        $this->assertNotEmpty($asset->getSourceContent(), '->getSourceContent() returns the source content');
+    }
+
     public function testGetLastModifiedType()
     {
         $asset = new FileAsset(__FILE__);

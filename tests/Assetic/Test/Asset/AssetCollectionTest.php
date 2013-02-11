@@ -146,6 +146,12 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('asdf', $coll->getContent(), '->setContent() sets the content');
     }
 
+    public function testGetSourceContent()
+    {
+        $coll = new AssetCollection(array(new StringAsset('asset1'), new StringAsset('asset2')));
+        $this->assertEquals("asset1\nasset2", $coll->getSourceContent(), '->getSourceContent() combines children');
+    }
+
     /**
      * @dataProvider getTimestampsAndExpected
      */

@@ -11,9 +11,8 @@
 
 namespace Assetic\Asset;
 
-use Assetic\Util\PathUtils;
-
 use Assetic\Filter\FilterInterface;
+use Assetic\Util\PathUtils;
 
 /**
  * A collection of assets loaded by glob.
@@ -66,6 +65,15 @@ class GlobAsset extends AssetCollection
         }
 
         return parent::dump($additionalFilter);
+    }
+
+    public function getSourceContent()
+    {
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+
+        return parent::getSourceContent();
     }
 
     public function getLastModified()
