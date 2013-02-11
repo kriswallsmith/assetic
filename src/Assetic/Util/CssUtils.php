@@ -18,6 +18,11 @@ namespace Assetic\Util;
  */
 abstract class CssUtils
 {
+    const REGEX_URLS            = '/url\((["\']?)(?P<url>.*?)(\\1)\)/';
+    const REGEX_IMPORTS         = '/@import (?:url\()?(\'|"|)(?P<url>[^\'"\)\n\r]*)\1\)?;?/';
+    const REGEX_IMPORTS_NO_URLS = '/@import (?!url\()(\'|"|)(?P<url>[^\'"\)\n\r]*)\1;?/';
+    const REGEX_IE_FILTERS      = '/src=(["\']?)(?P<url>.*?)\\1/';
+
     /**
      * Filters all references -- url() and "@import" -- through a callable.
      *
@@ -49,7 +54,7 @@ abstract class CssUtils
      */
     public static function filterUrls($content, $callback, $limit = -1, &$count = 0)
     {
-        return preg_replace_callback('/url\((["\']?)(?P<url>.*?)(\\1)\)/', $callback, $content, $limit, $count);
+        return preg_replace_callback(self::REGEX_URLS, $callback, $content, $limit, $count);
     }
 
     /**
@@ -65,9 +70,7 @@ abstract class CssUtils
      */
     public static function filterImports($content, $callback, $limit = -1, &$count = 0, $includeUrl = true)
     {
-        $pattern = $includeUrl
-            ? '/@import (?:url\()?(\'|"|)(?P<url>[^\'"\)\n\r]*)\1\)?;?/'
-            : '/@import (?!url\()(\'|"|)(?P<url>[^\'"\)\n\r]*)\1;?/';
+        $pattern = $includeUrl ? self::REGEX_IMPORTS : self::REGEX_IMPORTS_NO_URLS;
 
         return preg_replace_callback($pattern, $callback, $content, $limit, $count);
     }
@@ -84,7 +87,7 @@ abstract class CssUtils
      */
     public static function filterIEFilters($content, $callback, $limit = -1, &$count = 0)
     {
-        return preg_replace_callback('/src=(["\']?)(?P<url>.*?)\\1/', $callback, $content, $limit, $count);
+        return preg_replace_callback(self::REGEX_IE_FILTERS, $callback, $content, $limit, $count);
     }
 
     final private function __construct() { }
