@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -255,14 +255,14 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count(array_unique($urls)), 'iterator prevents basename collisions');
     }
-    
+
     public function testTargetNameGeneration()
     {
         $path = '/testing/dir.ectory/path/file.ext';
-        
+
         $coll = new AssetCollection(array(new StringAsset('asset1'), new StringAsset('asset2')));
         $coll->setTargetPath($path);
-        
+
         foreach ($coll as $asset) {
             $this->assertEquals(dirname($path), dirname($asset->getTargetPath()));
         }
