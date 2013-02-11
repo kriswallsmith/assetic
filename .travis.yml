@@ -37,4 +37,4 @@ before_script:
     - wget -q http://static.jonof.id.au/dl/kenutils/pngout-20120530-linux.tar.gz && tar -xzf pngout-20120530-linux.tar.gz && mv pngout-20120530-linux vendor
     - export PNGOUT_BIN=vendor/pngout-20120530-linux/i386/pngout
 
-script: phpunit -v
+script: ./bin/phpunit -v
