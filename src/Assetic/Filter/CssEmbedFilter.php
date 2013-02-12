@@ -129,7 +129,7 @@ class CssEmbedFilter extends BaseProcessFilter
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 

@@ -121,7 +121,7 @@ class UglifyJsFilter extends BaseNodeFilter
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             if (file_exists($output)) {
                 unlink($output);
             }

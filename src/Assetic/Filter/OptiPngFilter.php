@@ -61,7 +61,7 @@ class OptiPngFilter extends BaseProcessFilter
         $proc = $pb->getProcess();
         $code = $proc->run();
 
-        if (0 < $code) {
+        if (0 !== $code) {
             unlink($input);
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }

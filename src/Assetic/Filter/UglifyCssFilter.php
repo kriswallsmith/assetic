@@ -110,7 +110,7 @@ class UglifyCssFilter extends BaseNodeFilter
             throw new \RuntimeException('Path to node executable could not be resolved.');
         }
 
-        if (0 < $code) {
+        if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 

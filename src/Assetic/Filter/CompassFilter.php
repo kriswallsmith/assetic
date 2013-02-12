@@ -350,7 +350,7 @@ class CompassFilter extends BaseProcessFilter
         $proc = $pb->getProcess();
         $code = $proc->run();
 
-        if (0 < $code) {
+        if (0 !== $code) {
             unlink($input);
             if (isset($configFile)) {
                 unlink($configFile);
