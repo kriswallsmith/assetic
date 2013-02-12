@@ -111,7 +111,7 @@ EOF;
         unlink($tmpAsset);
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
