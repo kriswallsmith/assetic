@@ -31,7 +31,7 @@ class StylusFilter extends BaseNodeFilter
      * @param string $nodeBin   The path to the node binary
      * @param array  $nodePaths An array of node paths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct($nodeBin = '/usr/local/bin/node', array $nodePaths = array())
     {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
