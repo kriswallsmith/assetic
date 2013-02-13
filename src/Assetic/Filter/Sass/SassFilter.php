@@ -13,7 +13,10 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\BaseProcessFilter;
+use Assetic\Filter\DependencyExtractorInterface;
+use Assetic\Util\CssUtils;
 
 /**
  * Loads SASS files.
@@ -21,7 +24,7 @@ use Assetic\Filter\BaseProcessFilter;
  * @link http://sass-lang.com/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SassFilter extends BaseProcessFilter
+class SassFilter extends BaseProcessFilter implements DependencyExtractorInterface
 {
     const STYLE_NESTED     = 'nested';
     const STYLE_EXPANDED   = 'expanded';
@@ -171,5 +174,53 @@ class SassFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    public function getChildren(AssetInterface $asset, AssetFactory $factory)
+    {
+        $loadPaths = $this->loadPaths;
+
+        $sourceRoot = $asset->getSourceRoot();
+        $sourcePath = $asset->getSourcePath();
+        if ($sourceRoot && $sourcePath) {
+            // prepend "."
+            $loadPaths = array_merge(array(dirname($sourceRoot.'/'.$sourcePath)), $loadPaths);
+        }
+
+        if (!$loadPaths) {
+            return array();
+        }
+
+        $children = array();
+        $references = CssUtils::extractImports($asset->getSourceContent());
+        foreach ($references as $reference) {
+            if ('.css' === substr($reference, -4)) {
+                // skip normal css imports
+                // todo: skip imports with media queries
+                continue;
+            }
+
+            // the reference may or may not have an extension
+            $needles = pathinfo($reference, PATHINFO_EXTENSION)
+                ? array($reference)
+                : array($reference.'.scss', $reference.'.sass');
+
+            foreach ($loadPaths as $loadPath) {
+                foreach ($needles as $needle) {
+                    if (file_exists($file = $loadPath.'/'.$needle)) {
+                        $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
+                        foreach ($coll as $leaf) {
+                            $leaf->ensureFilter($this);
+                            $children[] = $leaf;
+                            goto next_reference;
+                        }
+                    }
+                }
+            }
+
+            next_reference:
+        }
+
+        return $children;
     }
 }

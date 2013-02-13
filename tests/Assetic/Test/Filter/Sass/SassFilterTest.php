@@ -11,7 +11,9 @@
 
 namespace Assetic\Test\Filter\Sass;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\Sass\SassFilter;
 use Assetic\Test\Filter\FilterTestCase;
 
@@ -73,5 +75,36 @@ EOF;
         $this->filter->filterLoad($asset);
 
         $this->assertEquals(".foo { color: red; }\n", $asset->getContent(), '->filterLoad() detects SCSS based on source path extension');
+    }
+
+    public function testGetChildrenCatchesSassImports()
+    {
+        $asset = new StringAsset('@import "main";', array(), __DIR__.'/../fixtures/sass', 'test.sass');
+        $factory = new AssetFactory('/'); // the factory root isn't used
+
+        $children = $this->filter->getChildren($asset, $factory);
+        $this->assertCount(1, $children);
+        $this->assertEquals(__DIR__.'/../fixtures/sass', $children[0]->getSourceRoot());
+        $this->assertEquals('main.scss', $children[0]->getSourcePath());
+
+        $filters = $children[0]->getFilters();
+        $this->assertCount(1, $filters);
+        $this->assertInstanceOf('Assetic\Filter\Sass\SassFilter', $filters[0]);
+    }
+
+    public function testGetChildrenIgnoresCssImports()
+    {
+        // These aren't ignored yet (todo):
+        // @import url(main);
+        // @import "main" screen;
+        $imports = <<<CSS
+@import "main.css";
+@import "http://foo.com/bar";
+CSS;
+
+        $asset = new StringAsset($imports, array(), __DIR__.'/../fixtures/sass', 'test.sass');
+        $factory = new AssetFactory(__DIR__); // the factory root isn't used
+
+        $this->assertEquals(array(), $this->filter->getChildren($asset, $factory));
     }
 }
