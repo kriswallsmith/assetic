@@ -32,9 +32,11 @@ before_script:
 
     # other deps
     - sudo apt-get install -q jpegoptim libjpeg-progs optipng
-    - wget -q https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-32.tar.gz && tar -xzf dartsdk-linux-32.tar.gz && mv dart-sdk vendor
-    - export DART_BIN=vendor/dart-sdk/bin/dart2js
-    - wget -q http://static.jonof.id.au/dl/kenutils/pngout-20120530-linux.tar.gz && tar -xzf pngout-20120530-linux.tar.gz && mv pngout-20120530-linux vendor
-    - export PNGOUT_BIN=vendor/pngout-20120530-linux/i386/pngout
+
+    # (why don't these work?)
+    # - wget -q https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-32.tar.gz && tar -xzf dartsdk-linux-32.tar.gz && mv dart-sdk vendor
+    # - export DART_BIN=vendor/dart-sdk/bin/dart2js
+    # - wget -q http://static.jonof.id.au/dl/kenutils/pngout-20120530-linux.tar.gz && tar -xzf pngout-20120530-linux.tar.gz && mv pngout-20120530-linux vendor
+    # - export PNGOUT_BIN=vendor/pngout-20120530-linux/i386/pngout
 
 script: ./bin/phpunit -v
