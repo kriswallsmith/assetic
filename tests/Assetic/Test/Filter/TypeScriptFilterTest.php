@@ -29,11 +29,16 @@ class TypeScriptFilterTest extends FilterTestCase
         $tscBin = $this->findExecutable('tsc', 'TSC_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
 
-        if(!$tscBin) {
+        if (!$tscBin) {
             $this->markTestSkipped('Unable to find `tsc` executable.');
         }
 
         $this->filter = new TypeScriptFilter($tscBin, $nodeBin);
+    }
+
+    protected function tearDown()
+    {
+        unset($this->filter);
     }
 
     public function testFilterLoad()
@@ -54,36 +59,12 @@ document.body.innerHTML = greeter(user);
 
 TYPESCRIPT;
 
-        $expected = <<<JAVASCRIPT
-function greeter(person) {
-    return "Hello, " + person.firstname + " " + person.lastname;
-}
-var user = {
-    firstname: "Jane",
-    lastname: "User"
-};
-document.body.innerHTML = greeter(user);
-
-JAVASCRIPT;
-
         $asset = new StringAsset($typescript);
         $asset->load();
 
         $this->filter->filterLoad($asset);
-        $this->assertSame($this->clean($expected), $this->clean($asset->getContent()));
-    }
 
-    /**
-     * Fixes issue with line-endings being incorrect.
-     * @param $js
-     * @return string
-     */
-    private function clean($js)
-    {
-        $js = str_replace("\r\n", "\n", $js);
-        $js = str_replace("\r", "\n", $js);
-        $js = preg_replace("/\n{2,}/", "\n\n", $js);
-
-        return $js;
+        $this->assertContains('function greeter(person)', $asset->getContent());
+        $this->assertNotContains('interface Person', $asset->getContent());
     }
 }

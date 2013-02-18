@@ -53,11 +53,14 @@ class TypeScriptFilter extends BaseNodeFilter
         unlink($inputPath);
         rmdir($inputDirPath);
 
-        if(0 < $code) {
+        if (0 !== $code) {
+            if (file_exists($outputPath)) {
+                unlink($outputPath);
+            }
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
-        if(!file_exists($outputPath)) {
+        if (!file_exists($outputPath)) {
             throw new \RuntimeException('Error creating output file.');
         }
 
