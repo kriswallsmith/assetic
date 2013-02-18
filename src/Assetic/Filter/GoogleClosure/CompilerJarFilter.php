@@ -85,7 +85,7 @@ class CompilerJarFilter extends BaseCompilerFilter
         $code = $proc->run();
         array_map('unlink', $cleanup);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
