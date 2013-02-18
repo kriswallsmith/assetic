@@ -21,7 +21,7 @@ use Assetic\Filter\BaseCssFilter;
  * Occupies the csso filter to minify css.
  * @author Mario Mueller <mario.mueller@trivago.com>
  */
-class CssoFilter extends BaseProcessFilter
+class CssoFilter extends BaseNodeFilter
 {
     private $cssoPath;
     private $noRestructure;
