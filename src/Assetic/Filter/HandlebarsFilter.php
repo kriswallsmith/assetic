@@ -79,7 +79,7 @@ class HandlebarsFilter extends BaseNodeFilter
             throw new \RuntimeException('Path to node executable could not be resolved.');
         }
 
-        if (0 < $returnCode) {
+        if (0 !== $returnCode) {
             if (file_exists($outputPath)) {
                 unlink($outputPath);
             }
