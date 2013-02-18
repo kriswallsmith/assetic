@@ -26,10 +26,8 @@ use Assetic\Asset\AssetInterface;
 class LessphpFilter implements FilterInterface
 {
     private $presets = array();
-
     private $formatter;
-
-    private $preserveComments = false;
+    private $preserveComments;
 
     /**
      * Lessphp Load Paths
@@ -66,7 +64,7 @@ class LessphpFilter implements FilterInterface
      */
     public function setPreserveComments($preserveComments)
     {
-        $this->preserveComments = (bool) $preserveComments;
+        $this->preserveComments = $preserveComments;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -78,14 +76,18 @@ class LessphpFilter implements FilterInterface
         if ($root && $path) {
             $lc->importDir = dirname($root.'/'.$path);
         }
+
         foreach ($this->loadPaths as $loadPath) {
             $lc->addImportDir($loadPath);
         }
 
-        if (!empty($this->formatter)) {
+        if ($this->formatter) {
             $lc->setFormatter($this->formatter);
         }
-        $lc->setPreserveComments($this->preserveComments);
+
+        if (null !== $this->preserveComments) {
+            $lc->setPreserveComments($this->preserveComments);
+        }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
     }
