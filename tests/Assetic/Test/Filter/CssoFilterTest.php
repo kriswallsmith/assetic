@@ -11,10 +11,10 @@
 
 namespace Assetic\Test\Filter;
 
-use \Assetic\Asset\FileAsset;
-use \Assetic\Filter\CssoFilter;
+use Assetic\Asset\FileAsset;
+use Assetic\Filter\CssoFilter;
 
-class CssoFilterTest extends \PHPUnit_Framework_TestCase
+class CssoFilterTest extends FilterTestCase
 {
     /**
      * @var string
@@ -23,9 +23,9 @@ class CssoFilterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cssoPath = trim(`which csso`);
-        if ($this->cssoPath == '') {
-            $this->markTestSkipped('CssMin is not installed.');
+        $this->cssoPath = $this->findExecutable('csso', 'CSSO_BIN');
+        if (!$this->cssoPath) {
+            $this->markTestSkipped('csso is not installed.');
         }
     }
 

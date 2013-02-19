@@ -13,12 +13,10 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Assetic\Filter\BaseCssFilter;
 
 /**
- * Class CssoFilter
  *
- * Occupies the csso filter to minify css.
+ * Uses the csso tool to minify css.
  * @author Mario Mueller <mario.mueller@trivago.com>
  */
 class CssoFilter extends BaseNodeFilter
@@ -71,7 +69,7 @@ class CssoFilter extends BaseNodeFilter
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             if (file_exists($output)) {
                 unlink($output);
             }
