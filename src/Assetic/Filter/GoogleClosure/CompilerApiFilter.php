@@ -23,6 +23,11 @@ class CompilerApiFilter extends BaseCompilerFilter
 {
     protected $proxySettings;
 
+    /**
+     * @param \Assetic\Asset\AssetInterface $asset
+     *
+     * @throws \RuntimeException
+     */
     public function filterDump(AssetInterface $asset)
     {
         $query = array(
@@ -69,7 +74,7 @@ class CompilerApiFilter extends BaseCompilerFilter
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => http_build_query($query),
             ));
-            if (isset($this->proxySettings['enabled']) && $this->proxySettings['enabled']) {
+            if (isset($this->proxySettings['enabled'])) {
                 $contextOptions['http']['proxy'] = $this->proxySettings['proxy'];
                 $contextOptions['http']['request_fulluri'] = $this->proxySettings['request_fulluri'];
             }
@@ -86,7 +91,7 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-            if (isset($this->proxySettings['enabled']) && $this->proxySettings['enabled']) {
+            if (isset($this->proxySettings['enabled'])) {
                 curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
                 curl_setopt($ch, CURLOPT_PROXY, $this->proxySettings['proxy']);
             }
@@ -113,8 +118,24 @@ class CompilerApiFilter extends BaseCompilerFilter
         $asset->setContent($data->compiledCode);
     }
 
-    public function setProxySettings($settings)
+    /**
+     * @param array $settings
+     *
+     * @throws \RuntimeException
+     */
+    public function setProxySettings(array $settings)
     {
+        if (!isset($settings['enabled'])) {
+            $settings['enabled'] = false;
+        }
+        if (!isset($settings['proxy'])) {
+            // @codeCoverageIgnoreStart
+            throw new \RuntimeException("You should specify 'proxy'");
+            // @codeCoverageIgnoreEnd
+        }
+        if (!isset($settings['request_fulluri'])) {
+            $settings['request_fulluri'] = true;
+        }
         $this->proxySettings = $settings;
     }
 }
