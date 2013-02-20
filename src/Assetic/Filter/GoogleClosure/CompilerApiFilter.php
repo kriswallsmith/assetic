@@ -21,6 +21,8 @@ use Assetic\Asset\AssetInterface;
  */
 class CompilerApiFilter extends BaseCompilerFilter
 {
+    protected $proxySettings;
+
     public function filterDump(AssetInterface $asset)
     {
         $query = array(
@@ -62,16 +64,21 @@ class CompilerApiFilter extends BaseCompilerFilter
         }
 
         if (preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))) {
-            $context = stream_context_create(array('http' => array(
+            $contextOptions = array('http' => array(
                 'method'  => 'POST',
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => http_build_query($query),
-            )));
+            ));
+            if (isset($this->proxySettings['enabled']) && $this->proxySettings['enabled']) {
+                $contextOptions['http']['proxy'] = $this->proxySettings['proxy'];
+                $contextOptions['http']['request_fulluri'] = $this->proxySettings['request_fulluri'];
+            }
+            $context = stream_context_create($contextOptions);
 
             $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
             $data = json_decode($response);
 
-         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
+        } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
 
             $ch = curl_init('http://closure-compiler.appspot.com/compile');
             curl_setopt($ch, CURLOPT_POST, true);
@@ -79,6 +86,10 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+            if (isset($this->proxySettings['enabled']) && $this->proxySettings['enabled']) {
+                curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
+                curl_setopt($ch, CURLOPT_PROXY, $this->proxySettings['proxy']);
+            }
             $response = curl_exec($ch);
             curl_close($ch);
 
@@ -100,5 +111,10 @@ class CompilerApiFilter extends BaseCompilerFilter
         }
 
         $asset->setContent($data->compiledCode);
+    }
+
+    public function setProxySettings($settings)
+    {
+        $this->proxySettings = $settings;
     }
 }
