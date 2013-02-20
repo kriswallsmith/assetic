@@ -129,9 +129,7 @@ class CompilerApiFilter extends BaseCompilerFilter
             $settings['enabled'] = false;
         }
         if (!isset($settings['proxy'])) {
-            // @codeCoverageIgnoreStart
             throw new \RuntimeException("You should specify 'proxy'");
-            // @codeCoverageIgnoreEnd
         }
         if (!isset($settings['request_fulluri'])) {
             $settings['request_fulluri'] = true;
