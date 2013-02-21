@@ -74,9 +74,9 @@ class CompilerApiFilter extends BaseCompilerFilter
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => http_build_query($query),
             ));
-            if (isset($this->proxySettings['enabled'])) {
-                $contextOptions['http']['proxy'] = $this->proxySettings['proxy'];
-                $contextOptions['http']['request_fulluri'] = $this->proxySettings['request_fulluri'];
+            if ($this->isProxyEnabled()) {
+                $contextOptions['http']['proxy'] = $this->getProxy();
+                $contextOptions['http']['request_fulluri'] = $this->getRequestFulluri();
             }
             $context = stream_context_create($contextOptions);
 
@@ -91,9 +91,9 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-            if (isset($this->proxySettings['enabled'])) {
+            if ($this->isProxyEnabled()) {
                 curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-                curl_setopt($ch, CURLOPT_PROXY, $this->proxySettings['proxy']);
+                curl_setopt($ch, CURLOPT_PROXY, $this->getProxy());
             }
             $response = curl_exec($ch);
             curl_close($ch);
@@ -125,15 +125,68 @@ class CompilerApiFilter extends BaseCompilerFilter
      */
     public function setProxySettings(array $settings)
     {
-        if (!isset($settings['enabled'])) {
-            $settings['enabled'] = false;
-        }
-        if (!isset($settings['proxy'])) {
+        $this->enableProxy($settings['enabled']);
+        $this->setProxy($settings['proxy']);
+        $this->setRequestFulluri($settings['request_fulluri']);
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function enableProxy($enabled = true)
+    {
+        $this->proxySettings['enabled'] = $enabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProxyEnabled()
+    {
+        return isset($this->proxySettings['enabled']);
+    }
+
+    /**
+     * @param $proxy
+     *
+     * @throws \RuntimeException
+     */
+    public function setProxy($proxy)
+    {
+        if (!$proxy) {
             throw new \RuntimeException("You should specify 'proxy'");
         }
-        if (!isset($settings['request_fulluri'])) {
-            $settings['request_fulluri'] = true;
+        $this->proxySettings['proxy'] = $proxy;
+    }
+
+    /**
+     * @return mixed
+     * @throws \RuntimeException
+     */
+    public function getProxy()
+    {
+        if (!isset($this->proxySettings['proxy'])) {
+            throw new \RuntimeException("You should specify 'proxy'");
         }
-        $this->proxySettings = $settings;
+        return $this->proxySettings['proxy'];
+    }
+
+    /**
+     * @param bool $requestFulluri
+     */
+    public function setRequestFulluri($requestFulluri = true)
+    {
+        $this->proxySettings['request_fulluri'] = $requestFulluri;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestFulluri()
+    {
+        if (!isset($this->proxySettings['request_fulluri'])) {
+            $this->setRequestFulluri();
+        }
+        return $this->proxySettings['request_fulluri'];
     }
 }
