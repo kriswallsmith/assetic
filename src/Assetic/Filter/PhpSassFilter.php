@@ -107,26 +107,24 @@ class PhpSassFilter implements FilterInterface
      *
      * @return array
      */
-    private function prepareFunctions($extensions)
+    private function prepareFunctions(array $extensions)
     {
         $output = array();
 
         $reflection = new \ReflectionClass('SassParser');
-        $directory  = dirname($reflection->getFileName()) . DIRECTORY_SEPARATOR . 'Extensions';
+        $directory = dirname($reflection->getFileName()) . DIRECTORY_SEPARATOR . 'Extensions';
 
-        if (!empty($extensions)) {
-            foreach ($extensions as $extension) {
-                $name = explode('/', $extension, 2);
-                $namespace = ucwords(preg_replace('/[^0-9a-z]+/', '_', strtolower(array_shift($name))));
-                $extensionPath = $directory . DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR . $namespace . '.php';
+        foreach ($extensions as $extension) {
+            $name = explode('/', $extension, 2);
+            $namespace = ucwords(preg_replace('/[^0-9a-z]+/', '_', strtolower(array_shift($name))));
+            $extensionPath = $directory . DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR . $namespace . '.php';
 
-                if (file_exists($extensionPath)) {
-                    require_once($extensionPath);
+            if (file_exists($extensionPath)) {
+                require_once($extensionPath);
 
-                    $namespace = $namespace . '::';
-                    $function = 'getFunctions';
-                    $output = array_merge($output, call_user_func($namespace . $function, $namespace));
-                }
+                $namespace = $namespace . '::';
+                $function = 'getFunctions';
+                $output = array_merge($output, call_user_func($namespace . $function, $namespace));
             }
         }
 
@@ -147,13 +145,8 @@ class PhpSassFilter implements FilterInterface
             );
         }
 
-        if (!isset($this->options['load_paths'])) {
-            $this->options['load_paths'] = array($asset->getSourceRoot());
-        } else {
-            $this->options['load_paths'][] = $asset->getSourceRoot();
-        }
-
-        $this->options['load_paths'] += $this->loadPaths;
+        $this->options['load_paths'][] = $asset->getSourceRoot();
+        $this->options['load_paths']  += $this->loadPaths;
 
         if ($this->compass) {
             // $this->options['extensions'] not yet supported by SassParser
