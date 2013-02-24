@@ -42,6 +42,10 @@ class CompilerJarFilter extends BaseCompilerFilter
             $this->jarPath,
         ));
 
+        if (null !== $this->timeout) {
+            $pb->setTimeout($this->timeout);
+        }
+
         if (null !== $this->compilationLevel) {
             $pb->add('--compilation_level')->add($this->compilationLevel);
         }

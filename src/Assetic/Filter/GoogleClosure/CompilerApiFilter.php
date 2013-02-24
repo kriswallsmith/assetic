@@ -80,6 +80,9 @@ class CompilerApiFilter extends BaseCompilerFilter
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => http_build_query($query),
             ));
+            if (null !== $this->timeout) {
+                $contextOptions['http']['timeout'] = $this->timeout;
+            }
             if ($this->proxy) {
                 $contextOptions['http']['proxy'] = $this->proxy;
                 $contextOptions['http']['request_fulluri'] = (Boolean) $this->proxyFullUri;
@@ -97,6 +100,9 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+            if (null !== $this->timeout) {
+                curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
+            }
             if ($this->proxy) {
                 curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
                 curl_setopt($ch, CURLOPT_PROXY, $this->proxy);

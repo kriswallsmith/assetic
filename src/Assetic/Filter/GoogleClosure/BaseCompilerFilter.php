@@ -40,6 +40,7 @@ abstract class BaseCompilerFilter implements FilterInterface
     const LANGUAGE_ECMASCRIPT5 = 'ECMASCRIPT5';
     const LANGUAGE_ECMASCRIPT5_STRICT = 'ECMASCRIPT5_STRICT';
 
+    protected $timeout;
     protected $compilationLevel;
     protected $jsExterns;
     protected $externsUrl;
@@ -48,6 +49,11 @@ abstract class BaseCompilerFilter implements FilterInterface
     protected $useClosureLibrary;
     protected $warningLevel;
     protected $language;
+
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+    }
 
     public function setCompilationLevel($compilationLevel)
     {
