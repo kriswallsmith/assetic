@@ -21,13 +21,19 @@ use Assetic\Asset\AssetInterface;
  */
 class CompilerApiFilter extends BaseCompilerFilter
 {
-    protected $proxySettings;
+    private $proxy;
+    private $proxyFullUri;
 
-    /**
-     * @param \Assetic\Asset\AssetInterface $asset
-     *
-     * @throws \RuntimeException
-     */
+    public function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
+    }
+
+    public function setProxyFullUri($proxyFullUri)
+    {
+        $this->proxyFullUri = $proxyFullUri;
+    }
+
     public function filterDump(AssetInterface $asset)
     {
         $query = array(
@@ -74,9 +80,9 @@ class CompilerApiFilter extends BaseCompilerFilter
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => http_build_query($query),
             ));
-            if ($this->isProxyEnabled()) {
-                $contextOptions['http']['proxy'] = $this->getProxy();
-                $contextOptions['http']['request_fulluri'] = $this->getRequestFulluri();
+            if ($this->proxy) {
+                $contextOptions['http']['proxy'] = $this->proxy;
+                $contextOptions['http']['request_fulluri'] = (Boolean) $this->proxyFullUri;
             }
             $context = stream_context_create($contextOptions);
 
@@ -91,9 +97,9 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-            if ($this->isProxyEnabled()) {
+            if ($this->proxy) {
                 curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-                curl_setopt($ch, CURLOPT_PROXY, $this->getProxy());
+                curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
             }
             $response = curl_exec($ch);
             curl_close($ch);
@@ -116,77 +122,5 @@ class CompilerApiFilter extends BaseCompilerFilter
         }
 
         $asset->setContent($data->compiledCode);
-    }
-
-    /**
-     * @param array $settings
-     *
-     * @throws \RuntimeException
-     */
-    public function setProxySettings(array $settings)
-    {
-        $this->enableProxy($settings['enabled']);
-        $this->setProxy($settings['proxy']);
-        $this->setRequestFulluri($settings['request_fulluri']);
-    }
-
-    /**
-     * @param bool $enabled
-     */
-    public function enableProxy($enabled = true)
-    {
-        $this->proxySettings['enabled'] = $enabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isProxyEnabled()
-    {
-        return isset($this->proxySettings['enabled']);
-    }
-
-    /**
-     * @param $proxy
-     *
-     * @throws \RuntimeException
-     */
-    public function setProxy($proxy)
-    {
-        if (!$proxy) {
-            throw new \RuntimeException("You should specify 'proxy'");
-        }
-        $this->proxySettings['proxy'] = $proxy;
-    }
-
-    /**
-     * @return mixed
-     * @throws \RuntimeException
-     */
-    public function getProxy()
-    {
-        if (!isset($this->proxySettings['proxy'])) {
-            throw new \RuntimeException("You should specify 'proxy'");
-        }
-        return $this->proxySettings['proxy'];
-    }
-
-    /**
-     * @param bool $requestFulluri
-     */
-    public function setRequestFulluri($requestFulluri = true)
-    {
-        $this->proxySettings['request_fulluri'] = $requestFulluri;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRequestFulluri()
-    {
-        if (!isset($this->proxySettings['request_fulluri'])) {
-            $this->setRequestFulluri();
-        }
-        return $this->proxySettings['request_fulluri'];
     }
 }
