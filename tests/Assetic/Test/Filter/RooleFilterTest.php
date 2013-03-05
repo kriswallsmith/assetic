@@ -52,9 +52,4 @@ ROOLE;
         $this->assertNotContains('$margin', $content);
         $this->assertContains('margin: 30px;', $content);
     }
-
-    private function fixIndent($js)
-    {
-        return str_replace("\t", '    ', $js);
-    }
 }
