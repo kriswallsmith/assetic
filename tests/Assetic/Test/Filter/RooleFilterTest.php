@@ -43,19 +43,14 @@ body
 
 ROOLE;
 
-        $expected = <<<CSS
-body {
-    margin: 30px;
-}
-
-CSS;
-
         $asset = new StringAsset($source);
         $asset->load();
 
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals($expected, $this->fixIndent($asset->getContent()));
+        $content = $asset->getContent();
+        $this->assertNotContains('$margin', $content);
+        $this->assertContains('margin: 30px;', $content);
     }
 
     private function fixIndent($js)
