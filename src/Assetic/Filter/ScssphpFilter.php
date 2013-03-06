@@ -22,11 +22,13 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssphpFilter implements FilterInterface
+class ScssphpFilter implements FilterInterface, HashableInterface
 {
     private $compass = false;
 
     private $importPaths = array();
+
+    private $compiled = array();
 
     public function enableCompass($enable = true)
     {
@@ -40,6 +42,15 @@ class ScssphpFilter implements FilterInterface
 
     public function filterLoad(AssetInterface $asset)
     {
+        $asset->setContent($this->compile($asset));
+    }
+
+    private function compile(AssetInterface $asset)
+    {
+        if (isset($this->compiled[$asset->getSourcePath()])) {
+            return $this->compiled[$asset->getSourcePath()];
+        }
+
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
 
@@ -54,7 +65,7 @@ class ScssphpFilter implements FilterInterface
             $lc->addImportPath($path);
         }
 
-        $asset->setContent($lc->compile($asset->getContent()));
+        return $this->compiled[$asset->getSourcePath()] = $lc->compile($asset->getContent());
     }
 
     public function setImportPaths(array $paths)
@@ -69,5 +80,10 @@ class ScssphpFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    public function hash(AssetInterface $asset)
+    {
+        return md5($asset->dump($this));
     }
 }
