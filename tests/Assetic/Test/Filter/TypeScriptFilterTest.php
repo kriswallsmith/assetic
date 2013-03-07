@@ -84,6 +84,6 @@ TYPESCRIPT;
         $this->assertNotContains('interface Person', $asset->getContent());
 
         unlink($inputPath);
-        rmdir($inputPathDir);
+        rmdir($inputDirPath);
     }
 }
