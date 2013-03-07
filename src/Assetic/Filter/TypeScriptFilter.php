@@ -37,21 +37,26 @@ class TypeScriptFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->tscBin)
             : array($this->tscBin));
 
-        $templateName = basename($asset->getSourcePath());
+        if (null === $asset->getSourcePath()) {
+            $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
+            $inputPath = tempnam($inputDirPath, 'ts').'.ts';
 
-        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
+            mkdir($inputDirPath);
+            file_put_contents($inputPath, $asset->getContent());
+        } else {
+            $inputPath = ($asset->getSourceRoot() ? $asset->getSourceRoot() . DIRECTORY_SEPARATOR : '') . $asset->getSourcePath();
+        }
+
         $outputPath = tempnam(sys_get_temp_dir(), 'output');
-
-        mkdir($inputDirPath);
-        file_put_contents($inputPath, $asset->getContent());
-
         $pb->add($inputPath)->add('--out')->add($outputPath);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
-        unlink($inputPath);
-        rmdir($inputDirPath);
+
+        if (null === $asset->getSourcePath()) {
+            unlink($inputPath);
+            rmdir($inputDirPath);
+        }
 
         if (0 !== $code) {
             if (file_exists($outputPath)) {
