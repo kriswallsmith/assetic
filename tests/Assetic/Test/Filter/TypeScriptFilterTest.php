@@ -12,6 +12,7 @@
 namespace Assetic\Test\Filter;
 
 use Assetic\Asset\StringAsset;
+use Assetic\Asset\FileAsset;
 use Assetic\Filter\TypeScriptFilter;
 
 /**
@@ -66,5 +67,23 @@ TYPESCRIPT;
 
         $this->assertContains('function greeter(person)', $asset->getContent());
         $this->assertNotContains('interface Person', $asset->getContent());
+
+        // Test it as a file.
+        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
+        $inputPath = tempnam($inputDirPath, 'ts').'.ts';
+
+        mkdir($inputDirPath);
+        file_put_contents($inputPath, $typescript);
+
+        $asset = new FileAsset($inputPath);
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertContains('function greeter(person)', $asset->getContent());
+        $this->assertNotContains('interface Person', $asset->getContent());
+
+        unlink($inputPath);
+        rmdir($inputDirPath);
     }
 }
