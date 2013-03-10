@@ -22,7 +22,7 @@ use Assetic\Factory\LazyAssetManager;
  */
 class CacheBustingWorker implements WorkerInterface
 {
-    private $am;
+    protected $am;
     private $separator;
 
     public function __construct(LazyAssetManager $am, $separator = '-')
@@ -54,7 +54,7 @@ class CacheBustingWorker implements WorkerInterface
         );
     }
 
-    private function getHash(AssetInterface $asset)
+    protected function getHash(AssetInterface $asset)
     {
         $hash = hash_init('sha1');
 
