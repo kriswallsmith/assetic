@@ -30,7 +30,8 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        unset($this->am, $this->worker);
+        $this->am = null;
+        $this->worker = null;
     }
 
     /**
