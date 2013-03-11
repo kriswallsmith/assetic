@@ -78,4 +78,12 @@ class AssetManager
     {
         return array_keys($this->assets);
     }
+
+    /**
+     * Clears all assets.
+     */
+    public function clear()
+    {
+        $this->assets = array();
+    }
 }
