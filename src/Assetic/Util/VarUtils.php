@@ -47,5 +47,36 @@ abstract class VarUtils
         return strtr($template, $map);
     }
 
+    public static function getCombinations(array $vars, array $values)
+    {
+        if (!$vars) {
+            return array(array());
+        }
+
+        $combinations = array();
+        $nbValues = array();
+        foreach ($values as $var => $vals) {
+            if (!in_array($var, $vars, true)) {
+                continue;
+            }
+
+            $nbValues[$var] = count($vals);
+        }
+
+        for ($i = array_product($nbValues), $c = $i * 2; $i < $c; $i++) {
+            $k = $i;
+            $combination = array();
+
+            foreach ($vars as $var) {
+                $combination[$var] = $values[$var][$k % $nbValues[$var]];
+                $k = intval($k / $nbValues[$var]);
+            }
+
+            $combinations[] = $combination;
+        }
+
+        return $combinations;
+    }
+
     final private function __construct() { }
 }
