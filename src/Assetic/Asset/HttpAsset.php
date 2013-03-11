@@ -12,7 +12,7 @@
 namespace Assetic\Asset;
 
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\PathUtils;
+use Assetic\Util\VarUtils;
 
 /**
  * Represents an asset loaded via an HTTP request.
@@ -59,7 +59,7 @@ class HttpAsset extends BaseAsset
     public function getSourceContent()
     {
         $content = @file_get_contents(
-            PathUtils::resolvePath($this->sourceUrl, $this->getVars(), $this->getValues())
+            VarUtils::resolve($this->sourceUrl, $this->getVars(), $this->getValues())
         );
 
         if (false === $content && !$this->ignoreErrors) {

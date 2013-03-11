@@ -12,7 +12,7 @@
 namespace Assetic;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Util\PathUtils;
+use Assetic\Util\VarUtils;
 
 /**
  * Writes assets to the filesystem.
@@ -60,7 +60,7 @@ class AssetWriter
             $asset->setValues($combination);
 
             static::write(
-                $this->dir.'/'.PathUtils::resolvePath(
+                $this->dir.'/'.VarUtils::resolve(
                     $asset->getTargetPath(),
                     $asset->getVars(),
                     $asset->getValues()

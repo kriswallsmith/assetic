@@ -12,7 +12,7 @@
 namespace Assetic\Asset;
 
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\PathUtils;
+use Assetic\Util\VarUtils;
 
 /**
  * Represents an asset loaded from a file.
@@ -61,7 +61,7 @@ class FileAsset extends BaseAsset
 
     public function getSourceContent()
     {
-        $source = PathUtils::resolvePath($this->source, $this->getVars(), $this->getValues());
+        $source = VarUtils::resolve($this->source, $this->getVars(), $this->getValues());
 
         if (!is_file($source)) {
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
@@ -72,7 +72,7 @@ class FileAsset extends BaseAsset
 
     public function getLastModified()
     {
-        $source = PathUtils::resolvePath($this->source, $this->getVars(), $this->getValues());
+        $source = VarUtils::resolve($this->source, $this->getVars(), $this->getValues());
 
         if (!is_file($source)) {
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
