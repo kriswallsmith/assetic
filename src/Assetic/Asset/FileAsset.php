@@ -11,8 +11,8 @@
 
 namespace Assetic\Asset;
 
-use Assetic\Util\PathUtils;
 use Assetic\Filter\FilterInterface;
+use Assetic\Util\PathUtils;
 
 /**
  * Represents an asset loaded from a file.

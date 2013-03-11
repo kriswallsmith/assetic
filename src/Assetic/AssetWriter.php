@@ -11,9 +11,8 @@
 
 namespace Assetic;
 
-use Assetic\Util\PathUtils;
-
 use Assetic\Asset\AssetInterface;
+use Assetic\Util\PathUtils;
 
 /**
  * Writes assets to the filesystem.
