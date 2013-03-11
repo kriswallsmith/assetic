@@ -58,7 +58,7 @@ class AssetManager
      * @param string         $name  The asset name
      * @param AssetInterface $asset The asset
      *
-     * @throws \InvalidArgumentException If tthe asset name is invalid
+     * @throws \InvalidArgumentException If the asset name is invalid
      */
     public function set($name, AssetInterface $asset)
     {
