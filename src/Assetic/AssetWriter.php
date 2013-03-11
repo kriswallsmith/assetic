@@ -59,9 +59,14 @@ class AssetWriter
         foreach ($this->getCombinations($asset->getVars()) as $combination) {
             $asset->setValues($combination);
 
-            static::write($this->dir.'/'.PathUtils::resolvePath(
-                $asset->getTargetPath(), $asset->getVars(), $asset->getValues()),
-                $asset->dump());
+            static::write(
+                $this->dir.'/'.PathUtils::resolvePath(
+                    $asset->getTargetPath(),
+                    $asset->getVars(),
+                    $asset->getValues()
+                ),
+                $asset->dump()
+            );
         }
     }
 
@@ -81,13 +86,13 @@ class AssetWriter
             $nbValues[$var] = count($values);
         }
 
-        for ($i=array_product($nbValues),$c=$i*2; $i<$c; $i++) {
+        for ($i = array_product($nbValues), $c = $i * 2; $i < $c; $i++) {
             $k = $i;
             $combination = array();
 
             foreach ($vars as $var) {
                 $combination[$var] = $this->varValues[$var][$k % $nbValues[$var]];
-                $k = intval($k/$nbValues[$var]);
+                $k = intval($k / $nbValues[$var]);
             }
 
             $combinations[] = $combination;
