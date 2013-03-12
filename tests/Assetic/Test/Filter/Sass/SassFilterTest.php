@@ -79,13 +79,13 @@ EOF;
 
     public function testGetChildrenCatchesSassImports()
     {
-        $asset = new StringAsset('@import "main";', array(), __DIR__.'/../fixtures/sass', 'test.sass');
+        $asset = new StringAsset('@import "include";', array(), __DIR__.'/../fixtures/sass', 'test.sass');
         $factory = new AssetFactory('/'); // the factory root isn't used
 
         $children = $this->filter->getChildren($asset, $factory);
         $this->assertCount(1, $children);
         $this->assertEquals(__DIR__.'/../fixtures/sass', $children[0]->getSourceRoot());
-        $this->assertEquals('main.scss', $children[0]->getSourcePath());
+        $this->assertEquals('_include.scss', $children[0]->getSourcePath());
 
         $filters = $children[0]->getFilters();
         $this->assertCount(1, $filters);
@@ -103,7 +103,7 @@ EOF;
 CSS;
 
         $asset = new StringAsset($imports, array(), __DIR__.'/../fixtures/sass', 'test.sass');
-        $factory = new AssetFactory(__DIR__); // the factory root isn't used
+        $factory = new AssetFactory('/'); // the factory root isn't used
 
         $this->assertEquals(array(), $this->filter->getChildren($asset, $factory));
     }

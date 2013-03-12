@@ -200,10 +200,20 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
                 continue;
             }
 
-            // the reference may or may not have an extension
-            $needles = pathinfo($reference, PATHINFO_EXTENSION)
-                ? array($reference)
-                : array($reference.'.scss', $reference.'.sass');
+            // the reference may or may not have an extension or be a partial
+            if (pathinfo($reference, PATHINFO_EXTENSION)) {
+                $needles = array(
+                    $reference,
+                    '_'.$reference,
+                );
+            } else {
+                $needles = array(
+                    $reference.'.scss',
+                    $reference.'.sass',
+                    '_'.$reference.'.scss',
+                    '_'.$reference.'.sass',
+                );
+            }
 
             foreach ($loadPaths as $loadPath) {
                 foreach ($needles as $needle) {
