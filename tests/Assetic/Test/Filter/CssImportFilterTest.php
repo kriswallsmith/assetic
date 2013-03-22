@@ -36,6 +36,10 @@ body { color: red; }
 body {
     background: url(../more/evenmore/bg.gif);
 }
+/* advanced.css */
+.someClass {
+    color: #adadad;
+}
 body { color: black; }
 CSS;
 
