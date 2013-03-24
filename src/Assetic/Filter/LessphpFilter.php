@@ -71,6 +71,11 @@ class LessphpFilter implements FilterInterface
     {
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
+        
+        // touch the file for forcing the filter to be launched. Solve the @import less statement
+        if (file_exists($root.'/'.$path)){
+            touch($root.'/'.$path);
+        }
 
         $lc = new \lessc();
         if ($root && $path) {
