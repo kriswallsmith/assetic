@@ -46,6 +46,18 @@ class LessphpFilter implements FilterInterface
         $this->loadPaths[] = $path;
     }
 
+    /**
+     * Sets load paths used by lessphp
+     *
+     * @param array $loadPaths Load paths
+     */
+    public function setLoadPaths($loadPaths = array())
+    {
+        $this->loadPaths = $loadPaths;
+
+        return $this;
+    }
+
     public function setPresets(array $presets)
     {
         $this->presets = $presets;
