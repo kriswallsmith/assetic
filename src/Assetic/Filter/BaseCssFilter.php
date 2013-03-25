@@ -66,7 +66,7 @@ abstract class BaseCssFilter implements FilterInterface
     protected function filterImports($content, $callback, $limit = -1, &$count = 0, $includeUrl = true)
     {
         $pattern = $includeUrl
-            ? '/@import (?:url\()?(\'|"|)(?P<url>[^\'"\)\n\r]*)\1\)?;?/'
+            ? '/@import (?:url\()?(\s|\'|"|)+(?P<url>[^\'"\)\n\r]*)?.*\1\)?;?/'
             : '/@import (?!url\()(\'|"|)(?P<url>[^\'"\)\n\r]*)\1;?/';
 
         return preg_replace_callback($pattern, $callback, $content, $limit, $count);
