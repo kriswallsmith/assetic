@@ -63,15 +63,6 @@
         {
             "type": "package",
             "package": {
-                "name": "mrclay/minify",
-                "version": "2.1.5",
-                "dist": { "url": "http://minify.googlecode.com/files/minify-2.1.5.zip", "type": "zip" },
-                "autoload": { "classmap": [ "min/lib/" ] }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
                 "name": "kamicane/packager",
                 "version": "1.0",
                 "dist": { "url": "https://github.com/kamicane/packager/archive/1.0.zip", "type": "zip" },
