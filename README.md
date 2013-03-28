@@ -77,6 +77,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
+ * `EmberPrecompileFilter`: precompiles Handlebars templates into Javascript for use in the Ember.js framework
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
  * `HandlebarsFilter`: compiles Handlebars templates into Javascript
@@ -92,6 +93,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `Sass\ScssFilter`: parses SCSS into CSS
  * `SprocketsFilter`: Sprockets Javascript dependency management
  * `StylusFilter`: parses STYL into CSS
+ * `TypeScriptFilter`: compiles TypeScript files into Javascript
  * `Yui\CssCompressorFilter`: compresses CSS using the YUI compressor
  * `Yui\JsCompressorFilter`: compresses Javascript using the YUI compressor
 
