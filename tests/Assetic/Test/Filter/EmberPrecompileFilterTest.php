@@ -24,7 +24,7 @@ class EmberPrecompileFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        $emberBin = $this->findExecutable('ember-precompile', 'HANDLEBARS_BIN');
+        $emberBin = $this->findExecutable('ember-precompile', 'EMBERPRECOMPILE_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
 
         if (!$emberBin) {
