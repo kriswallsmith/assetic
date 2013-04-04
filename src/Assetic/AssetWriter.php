@@ -24,6 +24,7 @@ use Assetic\Asset\AssetInterface;
 class AssetWriter
 {
     private $dir;
+    private $overwrite;
     private $varValues;
 
     /**
@@ -34,7 +35,7 @@ class AssetWriter
      *
      * @throws \InvalidArgumentException if a variable value is not a string
      */
-    public function __construct($dir, array $varValues = array())
+    public function __construct($dir, array $varValues = array(), $overwrite = true)
     {
         foreach ($varValues as $var => $values) {
             foreach ($values as $value) {
@@ -45,6 +46,7 @@ class AssetWriter
         }
 
         $this->dir = $dir;
+        $this->overwrite = $overwrite;
         $this->varValues = $varValues;
     }
 
@@ -60,9 +62,14 @@ class AssetWriter
         foreach ($this->getCombinations($asset->getVars()) as $combination) {
             $asset->setValues($combination);
 
-            static::write($this->dir.'/'.PathUtils::resolvePath(
-                $asset->getTargetPath(), $asset->getVars(), $asset->getValues()),
-                $asset->dump());
+            $target_path = $this->dir.'/'.PathUtils::resolvePath(
+                $asset->getTargetPath(), $asset->getVars(), $asset->getValues());
+
+            if (!$this->overwrite && file_exists($target_path)) {
+                continue;
+            }
+
+            static::write($target_path, $asset->dump());
         }
     }
 
