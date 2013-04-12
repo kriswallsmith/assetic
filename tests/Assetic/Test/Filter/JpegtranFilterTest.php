@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,11 +23,16 @@ class JpegtranFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        if (!isset($_SERVER['JPEGTRAN_BIN'])) {
-            $this->markTestSkipped('No jpegtran configuration.');
+        if (!$jpegtranBin = $this->findExecutable('jpegtran', 'JPEGTRAN_BIN')) {
+            $this->markTestSkipped('Unable to find `jpegtran` executable.');
         }
 
-        $this->filter = new JpegtranFilter($_SERVER['JPEGTRAN_BIN']);
+        $this->filter = new JpegtranFilter($jpegtranBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     public function testFilter()

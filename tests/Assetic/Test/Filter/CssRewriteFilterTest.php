@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -123,5 +123,29 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $filter->filterDump($asset);
 
         $this->assertContains('http://www.example.com/images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
+    }
+
+    public function testEmptySrcAttributeSelector()
+    {
+        $asset = new StringAsset('img[src=""] { border: red; }', array(), 'http://www.example.com', 'css/main.css');
+        $asset->setTargetPath('css/packed/main.css');
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterDump($asset);
+
+        // no error is thrown
+    }
+
+    public function testEmptyUrl()
+    {
+        $asset = new StringAsset('body { background: url(); }', array(), 'http://www.example.com', 'css/main.css');
+        $asset->setTargetPath('css/packed/main.css');
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterDump($asset);
+
+        // no error is thrown
     }
 }

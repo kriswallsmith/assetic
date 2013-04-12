@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,11 +23,16 @@ class OptiPngFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        if (!isset($_SERVER['OPTIPNG_BIN'])) {
-            $this->markTestSkipped('No OptiPNG configuration.');
+        if (!$optipngBin = $this->findExecutable('optipng', 'OPTIPNG_BIN')) {
+            $this->markTestSkipped('Unable to find `optipng` executable.');
         }
 
-        $this->filter = new OptiPngFilter($_SERVER['OPTIPNG_BIN']);
+        $this->filter = new OptiPngFilter($optipngBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     /**

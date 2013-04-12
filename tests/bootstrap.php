@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,31 +16,3 @@ if (!$loader = @include __DIR__.'/../vendor/autoload.php') {
 }
 
 $loader->add('Assetic\Test', __DIR__);
-
-if (isset($_SERVER['TWIG_LIB'])) {
-    $loader->add('Twig_', $_SERVER['TWIG_LIB']);
-}
-
-if (isset($_SERVER['LESSPHP'])) {
-    require_once $_SERVER['LESSPHP'];
-}
-
-if (isset($_SERVER['CSSMIN'])) {
-    require_once $_SERVER['CSSMIN'];
-}
-
-if (isset($_SERVER['JSMIN'])) {
-    require_once $_SERVER['JSMIN'];
-}
-
-if (isset($_SERVER['JSMINPLUS'])) {
-    require_once $_SERVER['JSMINPLUS'];
-}
-
-if (isset($_SERVER['PACKAGER'])) {
-    require_once $_SERVER['PACKAGER'];
-}
-
-if (isset($_SERVER['PACKER'])) {
-    require_once $_SERVER['PACKER'];
-}

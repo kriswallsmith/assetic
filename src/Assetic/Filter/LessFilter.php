@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,7 +29,7 @@ class LessFilter extends BaseNodeFilter
      * Load Paths
      *
      * A list of paths which less will search for includes.
-     * 
+     *
      * @var array
      */
     protected $loadPaths = array();
@@ -53,7 +53,7 @@ class LessFilter extends BaseNodeFilter
 
     /**
      * Adds a path where less will search for includes
-     * 
+     *
      * @param string $path Load path (absolute)
      */
     public function addLoadPath($path)
@@ -116,7 +116,7 @@ EOF;
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 

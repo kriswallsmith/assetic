@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,11 +23,16 @@ class JpegoptimFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        if (!isset($_SERVER['JPEGOPTIM_BIN'])) {
-            $this->markTestSkipped('No jpegoptim configuration.');
+        if (!$jpegoptimBin = $this->findExecutable('jpegoptim', 'JPEGOPTIM_BIN')) {
+            $this->markTestSkipped('Unable to find `jpegoptim` executable.');
         }
 
-        $this->filter = new JpegoptimFilter($_SERVER['JPEGOPTIM_BIN']);
+        $this->filter = new JpegoptimFilter($jpegoptimBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     public function testFilter()

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,6 +27,7 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
     private $javaPath;
     private $charset;
     private $lineBreak;
+    private $stackSize;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -44,6 +45,11 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $this->lineBreak = $lineBreak;
     }
 
+    public function setStackSize($stackSize)
+    {
+        $this->stackSize = $stackSize;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -59,11 +65,13 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = $this->createProcessBuilder(array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
-        ));
+        $pb = $this->createProcessBuilder(array($this->javaPath));
+
+        if (null !== $this->stackSize) {
+            $pb->add('-Xss'.$this->stackSize);
+        }
+
+        $pb->add('-jar')->add($this->jarPath);
 
         foreach ($options as $option) {
             $pb->add($option);
@@ -88,7 +96,7 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             if (file_exists($output)) {
                 unlink($output);
             }

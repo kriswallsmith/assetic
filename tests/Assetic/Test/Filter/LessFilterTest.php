@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,16 +24,15 @@ class LessFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
-        if (!$nodeBin || !isset($_SERVER['NODE_PATH'])) {
-            $this->markTestSkipped('No node.js configuration.');
+        if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
+            $this->markTestSkipped('Unable to find `node` executable.');
         }
 
-        if (!$this->checkNodeModule($nodeBin, $_SERVER['NODE_PATH'], 'less')) {
+        if (!$this->checkNodeModule('less', $nodeBin)) {
             $this->markTestSkipped('The "less" module is not installed.');
         }
 
-        $this->filter = new LessFilter($nodeBin, array($_SERVER['NODE_PATH']));
+        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
     }
 
     public function testFilterLoad()
