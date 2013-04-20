@@ -23,7 +23,11 @@ use Assetic\Exception\FilterException;
 class LessFilter extends BaseNodeFilter
 {
     private $nodeBin;
-    private $compress;
+
+    /**
+     * @var array
+     */
+    private $treeOptions;
 
     /**
      * Load Paths
@@ -44,11 +48,15 @@ class LessFilter extends BaseNodeFilter
     {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
+        $this->treeOptions = array();
     }
 
+    /**
+     * @param bool $compress
+     */
     public function setCompress($compress)
     {
-        $this->compress = $compress;
+        $this->addTreeOption('compress', $compress);
     }
 
     /**
@@ -59,6 +67,15 @@ class LessFilter extends BaseNodeFilter
     public function addLoadPath($path)
     {
         $this->loadPaths[] = $path;
+    }
+
+    /**
+     * @param string $code
+     * @param string $value
+     */
+    public function addTreeOption($code, $value)
+    {
+        $this->treeOptions[$code] = $value;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -96,12 +113,6 @@ EOF;
             $parserOptions['paths'][] = $loadPath;
         }
 
-        // tree options
-        $treeOptions = array();
-        if (null !== $this->compress) {
-            $treeOptions['compress'] = $this->compress;
-        }
-
         $pb = $this->createProcessBuilder();
         $pb->inheritEnvironmentVariables();
 
@@ -109,7 +120,7 @@ EOF;
         file_put_contents($input, sprintf($format,
             json_encode($parserOptions),
             json_encode($asset->getContent()),
-            json_encode($treeOptions)
+            json_encode($this->treeOptions)
         ));
 
         $proc = $pb->getProcess();
