@@ -37,7 +37,7 @@ class LessFilterTest extends FilterTestCase
 
     public function testFilterLoad()
     {
-        $asset = new StringAsset('.foo{.bar{width:1+1;}}');
+        $asset = new StringAsset('.foo{.bar{width:(1+1);}}');
         $asset->load();
 
         $this->filter->filterLoad($asset);
