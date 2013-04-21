@@ -51,6 +51,11 @@ class LessFilter extends BaseNodeFilter
         $this->compress = $compress;
     }
 
+    public function setLoadPaths(array $loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+
     /**
      * Adds a path where less will search for includes
      *

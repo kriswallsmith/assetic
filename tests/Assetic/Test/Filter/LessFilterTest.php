@@ -86,4 +86,32 @@ EOF;
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
     }
+
+    public function testSettingLoadPaths()
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue;
+}
+.foo {
+  color: red;
+}
+.bar {
+  color: #ff0000;
+}
+
+EOF;
+
+        $this->filter->setLoadPaths(array(
+            __DIR__.'/fixtures/less',
+            __DIR__.'/fixtures/less/import_path',
+        ));
+
+        $asset = new StringAsset('@import "main"; @import "_import"; .bar {color: @red}');
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets load paths to include paths');
+    }
 }
