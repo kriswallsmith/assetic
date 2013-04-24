@@ -59,8 +59,6 @@ class CjsDeliveryFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0, strpos($asset->getContent(), 'Vendor module'), '->filterLoad() compiles a module with dependencies in include path');
     }
 
-    // private
-
     private function getFilter()
     {
         $filter = new CjsDeliveryFilter();

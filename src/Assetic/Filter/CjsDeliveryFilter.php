@@ -24,22 +24,16 @@ use MattCG\cjsDelivery\DeliveryFactory;
  */
 class CjsDeliveryFilter implements FilterInterface
 {
-    const EXT_JS = 'js';
 
-    private $minifyidentifiers = false;
-    private $includes = null;
-    private $parsepragmas = false;
-    private $pragmaformat = null;
-    private $pragmas = null;
+    private $minifyIdentifiers = false;
+    private $includes;
+    private $parsePragmas = false;
+    private $pragmaFormat;
+    private $pragmas = array();
 
-    private function stripExtension($filepath)
+    public function setMinifyIdentifiers($minifyIdentifiers)
     {
-        return preg_replace('/\.' . self::EXT_JS . '$/', '', $filepath);
-    }
-
-    public function setMinifyIdentifiers($minifyidentifiers)
-    {
-        $this->minifyidentifiers = $minifyidentifiers;
+        $this->minifyIdentifiers = $minifyIdentifiers;
     }
 
     public function setIncludes($includes)
@@ -47,14 +41,14 @@ class CjsDeliveryFilter implements FilterInterface
         $this->includes = $includes;
     }
 
-    public function setPragmaFormat($pragmaformat)
+    public function setPragmaFormat($pragmaFormat)
     {
-        $this->pragmaformat = $pragmaformat;
+        $this->pragmaFormat = $pragmaFormat;
     }
 
-    public function setParsePragmas($parsepragmas)
+    public function setParsePragmas($parsePragmas)
     {
-        $this->parsepragmas = $parsepragmas;
+        $this->parsePragmas = $parsePragmas;
     }
 
     public function setPragmas($pragmas)
@@ -68,10 +62,10 @@ class CjsDeliveryFilter implements FilterInterface
 
         $options = array();
         $options['includes'] = $this->includes;
-        $options['minifyIdentifiers'] = $this->minifyidentifiers;
-        $options['parsePragmas'] = $this->parsepragmas;
+        $options['minifyIdentifiers'] = $this->minifyIdentifiers;
+        $options['parsePragmas'] = $this->parsePragmas;
         $options['pragmas'] = $this->pragmas;
-        $options['pragmaFormat'] = $this->pragmaformat;
+        $options['pragmaFormat'] = $this->pragmaFormat;
 
         $delivery = DeliveryFactory::create($options);
         $delivery->addModule($moduleidentifier, $asset->getContent());
@@ -83,5 +77,10 @@ class CjsDeliveryFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    private function stripExtension($filepath)
+    {
+        return preg_replace('/\.js$/', '', $filepath);
     }
 }
