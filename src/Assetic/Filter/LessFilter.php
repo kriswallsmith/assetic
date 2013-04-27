@@ -30,6 +30,11 @@ class LessFilter extends BaseNodeFilter
     private $treeOptions;
 
     /**
+     * @var array
+     */
+    private $parserOptions;
+
+    /**
      * Load Paths
      *
      * A list of paths which less will search for includes.
@@ -49,6 +54,7 @@ class LessFilter extends BaseNodeFilter
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
         $this->treeOptions = array();
+        $this->parserOptions = array();
     }
 
     /**
@@ -78,9 +84,18 @@ class LessFilter extends BaseNodeFilter
         $this->treeOptions[$code] = $value;
     }
 
+    /**
+     * @param string $code
+     * @param string $value
+     */
+    public function addParserOption($code, $value)
+    {
+        $this->parserOptions[$code] = $value;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<'EOF'
+        $format = <<<'EOF'
 var less = require('less');
 var sys  = require(process.binding('natives').util ? 'util' : 'sys');
 
@@ -104,13 +119,12 @@ EOF;
         $path = $asset->getSourcePath();
 
         // parser options
-        $parserOptions = array();
         if ($root && $path) {
-            $parserOptions['paths'] = array(dirname($root.'/'.$path));
-            $parserOptions['filename'] = basename($path);
+            $this->parserOptions['paths'] = array(dirname($root.'/'.$path));
+            $this->parserOptions['filename'] = basename($path);
         }
         foreach ($this->loadPaths as $loadPath) {
-            $parserOptions['paths'][] = $loadPath;
+            $this->parserOptions['paths'][] = $loadPath;
         }
 
         $pb = $this->createProcessBuilder();
@@ -118,7 +132,7 @@ EOF;
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_less'));
         file_put_contents($input, sprintf($format,
-            json_encode($parserOptions),
+            json_encode($this->parserOptions),
             json_encode($asset->getContent()),
             json_encode($this->treeOptions)
         ));

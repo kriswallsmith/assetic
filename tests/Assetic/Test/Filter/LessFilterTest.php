@@ -20,6 +20,9 @@ use Assetic\Filter\LessFilter;
  */
 class LessFilterTest extends FilterTestCase
 {
+    /**
+     * @var LessFilter
+     */
     protected $filter;
 
     protected function setUp()
