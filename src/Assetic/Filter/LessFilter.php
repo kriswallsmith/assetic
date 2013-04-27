@@ -95,7 +95,7 @@ class LessFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $format = <<<'EOF'
+        static $format = <<<'EOF'
 var less = require('less');
 var sys  = require(process.binding('natives').util ? 'util' : 'sys');
 
@@ -119,12 +119,14 @@ EOF;
         $path = $asset->getSourcePath();
 
         // parser options
+        $parserOptions = $this->parserOptions;
         if ($root && $path) {
-            $this->parserOptions['paths'] = array(dirname($root.'/'.$path));
-            $this->parserOptions['filename'] = basename($path);
+            $parserOptions['paths'] = array(dirname($root.'/'.$path));
+            $parserOptions['filename'] = basename($path);
         }
+
         foreach ($this->loadPaths as $loadPath) {
-            $this->parserOptions['paths'][] = $loadPath;
+            $parserOptions['paths'][] = $loadPath;
         }
 
         $pb = $this->createProcessBuilder();
@@ -132,7 +134,7 @@ EOF;
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_less'));
         file_put_contents($input, sprintf($format,
-            json_encode($this->parserOptions),
+            json_encode($parserOptions),
             json_encode($asset->getContent()),
             json_encode($this->treeOptions)
         ));
