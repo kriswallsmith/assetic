@@ -27,6 +27,8 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $compress;
     private $beautify;
     private $mangle;
+    private $screwIe8;
+    private $comments;
 
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -49,6 +51,16 @@ class UglifyJs2Filter extends BaseNodeFilter
         $this->mangle = $mangle;
     }
 
+    public function setScrewIe8($screwIe8)
+    {
+        $this->screwIe8 = $screwIe8;
+    }
+
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -69,6 +81,14 @@ class UglifyJs2Filter extends BaseNodeFilter
 
         if ($this->mangle) {
             $pb->add('--mangle');
+        }
+
+        if ($this->screwIe8) {
+            $pb->add('--screw-ie8');
+        }
+
+        if ($this->comments) {
+            $pb->add('--comments')->add(true === $this->comments ? 'all' : $this->comments);
         }
 
         // input and output files
