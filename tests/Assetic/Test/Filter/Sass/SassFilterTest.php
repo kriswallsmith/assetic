@@ -17,9 +17,6 @@ use Assetic\Factory\AssetFactory;
 use Assetic\Filter\Sass\SassFilter;
 use Assetic\Test\Filter\FilterTestCase;
 
-/**
- * @group integration
- */
 class SassFilterTest extends FilterTestCase
 {
     private $filter;
@@ -39,6 +36,9 @@ class SassFilterTest extends FilterTestCase
         $this->filter = null;
     }
 
+    /**
+     * @group integration
+     */
     public function testSass()
     {
         $input = <<<EOF
@@ -55,6 +55,9 @@ EOF;
         $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the sass');
     }
 
+    /**
+     * @group integration
+     */
     public function testScssGuess()
     {
         $input = <<<'EOF'
