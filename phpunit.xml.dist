@@ -8,10 +8,11 @@
     </testsuites>
 
     <php>
+        <server name="NODE_PATH" value="./node_modules/" />
+
         <!-- <server name="CLOSURE_JAR" value="/path/to/google-closure/compiler.jar" /> -->
         <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
         <!-- <server name="GSS_JAR" value="/path/to/closure-stylesheets.jar" /> -->
-        <!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
         <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
         <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
     </php>
