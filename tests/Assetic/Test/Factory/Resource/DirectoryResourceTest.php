@@ -123,7 +123,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(7, $count);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         if (is_dir(__DIR__.'/Fixtures/dir3') && is_link(__DIR__.'/Fixtures/dir3')) {
             if (defined('PHP_WINDOWS_VERSION_MAJOR')) {

@@ -18,8 +18,8 @@
         "symfony/process": "~2.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-        "twig/twig": ">=1.6.0,<2.0",
+        "phpunit/phpunit": "~3.7",
+        "twig/twig": "~1.6",
         "leafo/lessphp": "*",
         "leafo/scssphp": "*",
         "ptachoire/cssembed": "*",
@@ -30,7 +30,6 @@
         "kamicane/packager": "*",
         "joliclic/javascript-packer": "*"
     },
-    "minimum-stability": "dev",
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",

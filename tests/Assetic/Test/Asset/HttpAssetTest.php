@@ -15,21 +15,17 @@ use Assetic\Asset\HttpAsset;
 
 class HttpAssetTest extends \PHPUnit_Framework_TestCase
 {
-    const JQUERY = 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js';
+    const JQUERY = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js';
 
     public function testGetLastModified()
     {
-        if (!extension_loaded('openssl')) {
-            $this->markTestSkipped('The OpenSSL extension is not loaded.');
-        }
-
         $asset = new HttpAsset(self::JQUERY);
         $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
     public function testProtocolRelativeUrl()
     {
-        $asset = new HttpAsset(substr(self::JQUERY, 6));
+        $asset = new HttpAsset(substr(self::JQUERY, 5));
         $asset->load();
         $this->assertNotEmpty($asset->getContent());
     }
@@ -52,7 +48,7 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
     public function testSourceMetadata()
     {
         $asset = new HttpAsset(self::JQUERY);
-        $this->assertEquals('https://ajax.googleapis.com', $asset->getSourceRoot(), '->__construct() set the source root');
+        $this->assertEquals('http://ajax.googleapis.com', $asset->getSourceRoot(), '->__construct() set the source root');
         $this->assertEquals('ajax/libs/jquery/1.6.1/jquery.min.js', $asset->getSourcePath(), '->__construct() set the source path');
     }
 }

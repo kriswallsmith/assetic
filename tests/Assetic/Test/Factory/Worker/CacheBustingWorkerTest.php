@@ -16,61 +16,97 @@ use Assetic\Factory\Worker\CacheBustingWorker;
 
 class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 {
+    private $am;
     private $worker;
-    private $factory;
 
     protected function setUp()
     {
-        $am = $this->getMock('Assetic\\AssetManager');
-        $fm = $this->getMock('Assetic\\FilterManager');
+        $this->am = $this->getMockBuilder('Assetic\Factory\LazyAssetManager')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->worker = new CacheBustingWorker();
-
-        $this->factory = new AssetFactory(__DIR__ . '/..');
-        $this->factory->setAssetManager($am);
-        $this->factory->setFilterManager($fm);
-        $this->factory->addWorker($this->worker);
+        $this->worker = new CacheBustingWorker($this->am);
     }
 
-
-    public function testGenerateUniqueAssetNameByContent()
+    protected function tearDown()
     {
-        $this->worker->setStrategy(CacheBustingWorker::STRATEGY_CONTENT);
-
-        $filename = 'Resource/Fixtures/css/style.css';
-        $filepath = __DIR__ . '/../' . $filename;
-
-        $originalContent = file_get_contents($filepath);
-
-        file_put_contents($filepath, 'body{color:#444;background:#eee;}');
-        $asset = $this->factory->createAsset(array($filename));
-        $targetPath1 = $asset->getTargetPath();
-
-        file_put_contents($filepath, $originalContent);
-        $asset = $this->factory->createAsset(array($filename));
-        $targetPath2 = $asset->getTargetPath();
-
-        $this->assertNotEquals($targetPath2, $targetPath1);
+        $this->am = null;
+        $this->worker = null;
     }
 
-    public function testGenerateUniqueAssetNameByModificationTime()
+    /**
+     * @test
+     */
+    public function shouldApplyHash()
     {
-        $this->worker->setStrategy(CacheBustingWorker::STRATEGY_MODIFICATION);
+        $asset = $this->getMock('Assetic\Asset\AssetInterface');
 
-        $filename = 'Resource/Fixtures/css/style.css';
-        $filepath = __DIR__ . '/../' . $filename;
+        $asset->expects($this->any())
+            ->method('getTargetPath')
+            ->will($this->returnValue('css/main.css'));
+        $this->am->expects($this->any())
+            ->method('getLastModified')
+            ->will($this->returnValue(1234));
+        $asset->expects($this->once())
+            ->method('setTargetPath')
+            ->with($this->logicalAnd(
+                $this->stringStartsWith('css/main-'),
+                $this->stringEndsWith('.css')
+            ));
 
-        $asset = $this->factory->createAsset(array($filename));
-        $this->factory->addWorker(new CacheBustingWorker('modification'));
-        $targetPath1 = $asset->getTargetPath();
+        $this->worker->process($asset);
+    }
 
-        sleep(1);
-        touch($filepath);
-        clearstatcache();
+    /**
+     * @test
+     */
+    public function shouldApplyConsistentHash()
+    {
+        $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $paths = array();
 
-        $asset = $this->factory->createAsset(array($filename));
-        $targetPath2 = $asset->getTargetPath();
+        $asset->expects($this->any())
+            ->method('getTargetPath')
+            ->will($this->returnValue('css/main.css'));
+        $this->am->expects($this->any())
+            ->method('getLastModified')
+            ->will($this->returnValue(1234));
+        $asset->expects($this->exactly(2))
+            ->method('setTargetPath')
+            ->will($this->returnCallback(function($path) use(& $paths) {
+                $paths[] = $path;
+            }));
 
-        $this->assertNotEquals($targetPath2, $targetPath1);
+        $this->worker->process($asset);
+        $this->worker->process($asset);
+
+        $this->assertCount(2, $paths);
+        $this->assertCount(1, array_unique($paths));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotReapplyHash()
+    {
+        $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $path = null;
+
+        $asset->expects($this->any())
+            ->method('getTargetPath')
+            ->will($this->returnCallback(function() use(& $path) {
+                return $path ?: 'css/main.css';
+            }));
+        $this->am->expects($this->any())
+            ->method('getLastModified')
+            ->will($this->returnValue(1234));
+        $asset->expects($this->once())
+            ->method('setTargetPath')
+            ->will($this->returnCallback(function($arg) use(& $path) {
+                $path = $arg;
+            }));
+
+        $this->worker->process($asset);
+        $this->worker->process($asset);
     }
 }

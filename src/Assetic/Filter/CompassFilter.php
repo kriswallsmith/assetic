@@ -11,8 +11,8 @@
 
 namespace Assetic\Filter;
 
-use Assetic\Exception\FilterException;
 use Assetic\Asset\AssetInterface;
+use Assetic\Exception\FilterException;
 
 /**
  * Loads Compass files.

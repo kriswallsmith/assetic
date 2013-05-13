@@ -50,4 +50,12 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->am->set('@foo', $this->getMock('Assetic\\Asset\\AssetInterface'));
     }
+
+    public function testClear()
+    {
+        $this->am->set('foo', $this->getMock('Assetic\Asset\AssetInterface'));
+        $this->am->clear();
+
+        $this->assertFalse($this->am->has('foo'));
+    }
 }
