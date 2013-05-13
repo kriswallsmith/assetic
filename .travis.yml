@@ -25,8 +25,8 @@ before_script:
     - wget http://yui.zenfs.com/releases/yuicompressor/yuicompressor-2.4.7.zip && unzip yuicompressor-2.4.7.zip -d vendor/java
     - export YUI_COMPRESSOR_JAR=vendor/java/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar
 
-    # ruby deps
-    - bundle install
+    # # ruby deps (why doesn't this work?)
+    # - bundle install
 
     # other deps
     - sudo apt-get install jpegoptim libjpeg-progs optipng
