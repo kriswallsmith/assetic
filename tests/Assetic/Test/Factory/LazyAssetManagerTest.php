@@ -107,6 +107,9 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $asset->expects($this->any())
             ->method('getFilters')
             ->will($this->returnValue(array($filter1, $filter2)));
+        $asset->expects($this->once())
+            ->method('ensureFilter')
+            ->with($filter1);
         $filter2->expects($this->once())
             ->method('getChildren')
             ->with($this->factory)
