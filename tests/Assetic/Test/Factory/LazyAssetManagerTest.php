@@ -109,7 +109,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array($filter1, $filter2)));
         $filter2->expects($this->once())
             ->method('getChildren')
-            ->with($asset, $this->factory)
+            ->with($this->factory)
             ->will($this->returnValue(array($child)));
         $child->expects($this->any())
             ->method('getLastModified')

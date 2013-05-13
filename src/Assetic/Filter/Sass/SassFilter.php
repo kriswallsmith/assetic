@@ -176,15 +176,11 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
     {
     }
 
-    public function getChildren(AssetInterface $asset, AssetFactory $factory)
+    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         $loadPaths = $this->loadPaths;
-
-        $sourceRoot = $asset->getSourceRoot();
-        $sourcePath = $asset->getSourcePath();
-        if ($sourceRoot && $sourcePath) {
-            // prepend "."
-            $loadPaths = array_merge(array(dirname($sourceRoot.'/'.$sourcePath)), $loadPaths);
+        if ($loadPath) {
+            $loadPaths[] = $loadPath;
         }
 
         if (!$loadPaths) {
@@ -192,8 +188,7 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         }
 
         $children = array();
-        $references = CssUtils::extractImports($asset->getSourceContent());
-        foreach ($references as $reference) {
+        foreach (CssUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
                 // todo: skip imports with media queries

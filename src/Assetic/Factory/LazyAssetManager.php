@@ -206,14 +206,31 @@ class LazyAssetManager extends AssetManager
 
     public function getLastModified(AssetInterface $asset)
     {
+        $sourceRoot = $asset->getSourceRoot();
+        $sourcePath = $asset->getSourcePath();
+        $loadPath = $sourceRoot && $sourcePath ? dirname($sourceRoot.'/'.$sourcePath) : null;
+
         $mtime = $asset->getLastModified();
 
+        $buffer = array();
         foreach ($asset->getFilters() as $filter) {
+            $buffer[] = $filter;
+
             if (!$filter instanceof DependencyExtractorInterface) {
                 continue;
             }
 
-            foreach ($filter->getChildren($asset, $this->factory) as $child) {
+            if (!isset($clone)) {
+                $clone = clone $asset;
+            }
+
+            // run preceeding filters
+            while (1 < count($buffer)) {
+                $prevFilter = array_shift($buffer);
+                $prevFilter->filterLoad($clone);
+            }
+
+            foreach ($filter->getChildren($this->factory, $clone->getContent(), $loadPath) as $child) {
                 $mtime = max($mtime, $this->getLastModified($child));
             }
         }
