@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\CssUtils;
 
 /**
  * Loads LESS files using the PHP implementation of less, lessphp.
@@ -109,7 +110,62 @@ class LessphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        // todo
-        return array();
+        $loadPaths = $this->loadPaths;
+        if (null !== $loadPath) {
+            $loadPaths[] = $loadPath;
+        }
+
+        if (empty($loadPaths)) {
+            return array();
+        }
+
+        $importExpressions = array(
+            '/@import \'(.*)\';/',
+            '/@import "(.*)";/',
+            '/@import url\(\'(.*)\'\);/',
+            '/@import url\("(.*)"\);/',
+            '/@import url\(([^\'"]"*)\);/',
+        );
+
+        $nodes = array();
+        foreach ($importExpressions as $ie) {
+            if (preg_match_all($ie, $content, $matches)) {
+                foreach ($matches[1] as $node) {
+                    if ('.less' !== substr($node, -5)) {
+                        $node .= '.less';
+                    }
+
+                    if (!in_array($node, $nodes)) {
+                        $nodes[] = $node;
+                    }
+                }
+            }
+        }
+
+        $children = array();
+
+        foreach ($nodes as $node) {
+            $foundNode = false;
+
+            foreach ($loadPaths as $loadPath) {
+                if ($foundNode) {
+                    continue;
+                }
+
+                if (file_exists($file = $loadPath . '/' . $node)) {
+                    $child = $factory->createAsset($file, array(), array('root' => $loadPath));
+
+                    foreach ($child as $leaf)
+                    {
+                        $leaf->ensureFilter($this);
+                        $children[] = $leaf;
+                    }
+
+                    $foundNode = true;
+                }
+            }
+        }
+
+        return $children;
     }
 }
