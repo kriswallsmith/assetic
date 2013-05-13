@@ -24,7 +24,7 @@ use Assetic\Factory\AssetFactory;
  * @author David Buchmann <david@liip.ch>
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessphpFilter implements DependencyExtractorInterface
+class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $presets = array();
     private $formatter;

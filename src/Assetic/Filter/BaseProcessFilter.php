@@ -17,7 +17,7 @@ use Symfony\Component\Process\ProcessBuilder;
 /**
  * An external process based filter which provides a way to set a timeout on the process.
  */
-abstract class BaseProcessFilter implements FilterInterface
+abstract class BaseProcessFilter extends BaseFilter
 {
     private $timeout;
 

@@ -28,10 +28,24 @@ class HandlebarsFilter extends BaseNodeFilter
     private $minimize = false;
     private $simple = false;
 
-    public function __construct($handlebarsBin = '/usr/bin/handlebars', $nodeBin = null)
+    public function setHandlebarsBin($handlebarsBin)
     {
         $this->handlebarsBin = $handlebarsBin;
+    }
+
+    public function getHandlebarsBin()
+    {
+        return $this->handlebarsBin;
+    }
+
+    public function setNodeBin($nodeBin)
+    {
         $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
     }
 
     public function setMinimize($minimize)

@@ -18,7 +18,7 @@ use Assetic\Util\CssUtils;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCssFilter implements FilterInterface
+abstract class BaseCssFilter extends BaseFilter
 {
     /**
      * @see CssUtils::filterReferences()

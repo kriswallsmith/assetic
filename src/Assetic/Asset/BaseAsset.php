@@ -43,7 +43,9 @@ abstract class BaseAsset implements AssetInterface
      */
     public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
     {
-        $this->filters = new FilterCollection($filters);
+        $this->filters = new FilterCollection(array(
+            'filters' => $filters
+        ));
         $this->sourceRoot = $sourceRoot;
         $this->sourcePath = $sourcePath;
         $this->vars = $vars;

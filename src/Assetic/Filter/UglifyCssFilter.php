@@ -29,14 +29,24 @@ class UglifyCssFilter extends BaseNodeFilter
     private $uglyComments;
     private $cuteComments;
 
-    /**
-     * @param string $uglifycssBin Absolute path to the uglifycss executable
-     * @param string $nodeBin       Absolute path to the folder containg node.js executable
-     */
-    public function __construct($uglifycssBin = '/usr/bin/uglifycss', $nodeBin = null)
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
+    }
+
+    public function setUglifycssBin($uglifycssBin)
     {
         $this->uglifycssBin = $uglifycssBin;
-        $this->nodeBin = $nodeBin;
+    }
+
+    public function getUglifycssBin()
+    {
+        return $this->uglifycssBin;
     }
 
     /**

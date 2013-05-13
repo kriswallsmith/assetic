@@ -23,9 +23,14 @@ class DartFilter extends BaseProcessFilter
 {
     private $dartBin;
 
-    public function __construct($dartBin = '/usr/bin/dart2js')
+    public function setDartBin($dartBin)
     {
         $this->dartBin = $dartBin;
+    }
+
+    public function getDartBin()
+    {
+        return $this->dartBin;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -36,7 +41,7 @@ class DartFilter extends BaseProcessFilter
         file_put_contents($input, $asset->getContent());
 
         $pb = $this->createProcessBuilder()
-            ->add($this->dartBin)
+            ->add($this->getDartBin())
             ->add('-o'.$output)
             ->add($input)
         ;

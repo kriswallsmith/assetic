@@ -31,7 +31,7 @@ class CssMinFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__DIR__.'/fixtures/cssmin/main.css');
         $asset->load();
 
-        $filter = new CssMinFilter(__DIR__.'/fixtures/cssmin');
+        $filter = new CssMinFilter();
         $filter->setFilter('ImportImports', true);
         $filter->filterDump($asset);
 

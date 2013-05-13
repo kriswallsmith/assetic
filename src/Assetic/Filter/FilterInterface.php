@@ -21,6 +21,13 @@ use Assetic\Asset\AssetInterface;
 interface FilterInterface
 {
     /**
+     * Array of key-value pairs of options
+     *
+     * @param array $options Key-value options
+     */
+    public function __construct(array $options = array());
+
+    /**
      * Filters an asset after it has been loaded.
      *
      * @param AssetInterface $asset An asset

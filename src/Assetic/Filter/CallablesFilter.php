@@ -18,19 +18,29 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CallablesFilter implements FilterInterface
+class CallablesFilter extends BaseFilter implements FilterInterface
 {
     private $loader;
     private $dumper;
 
-    /**
-     * @param callable|null $loader
-     * @param callable|null $dumper
-     */
-    public function __construct($loader = null, $dumper = null)
+    public function setDumper($dumper)
+    {
+        $this->dumper = $dumper;
+    }
+
+    public function getDumper()
+    {
+        return $this->dumper;
+    }
+
+    public function setLoader($loader)
     {
         $this->loader = $loader;
-        $this->dumper = $dumper;
+    }
+
+    public function getLoader()
+    {
+        return $this->loader;
     }
 
     public function filterLoad(AssetInterface $asset)

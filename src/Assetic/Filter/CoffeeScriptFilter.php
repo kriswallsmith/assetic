@@ -28,10 +28,24 @@ class CoffeeScriptFilter extends BaseNodeFilter
     // coffee options
     private $bare;
 
-    public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null)
+    public function setCoffeeBin($coffeeBin)
     {
         $this->coffeeBin = $coffeeBin;
+    }
+
+    public function getCoffeeBin()
+    {
+        return $this->coffeeBin;
+    }
+
+    public function setNodeBin($nodeBin)
+    {
         $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
     }
 
     public function setBare($bare)

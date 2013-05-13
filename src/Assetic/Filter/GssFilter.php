@@ -33,10 +33,24 @@ class GssFilter extends BaseProcessFilter
     private $outputOrientation;
     private $prettyPrint;
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
+    public function setJarPath($jarPath)
     {
         $this->jarPath = $jarPath;
+    }
+
+    public function getJarPath()
+    {
+        return $this->jarPath;
+    }
+
+    public function setJavaPath($javaPath)
+    {
         $this->javaPath = $javaPath;
+    }
+
+    public function getJavaPath()
+    {
+        return $this->javaPath;
     }
 
     public function setAllowUnrecognizedFunctions($allowUnrecognizedFunctions)

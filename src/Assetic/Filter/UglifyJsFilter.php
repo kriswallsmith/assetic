@@ -30,14 +30,24 @@ class UglifyJsFilter extends BaseNodeFilter
     private $unsafe;
     private $mangle;
 
-    /**
-     * @param string $uglifyjsBin Absolute path to the uglifyjs executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
-     */
-    public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
+    }
+
+    public function setUglifyjsBin($uglifyjsBin)
     {
         $this->uglifyjsBin = $uglifyjsBin;
-        $this->nodeBin = $nodeBin;
+    }
+
+    public function getUglifyjsBin()
+    {
+        return $this->uglifyjsBin;
     }
 
     /**

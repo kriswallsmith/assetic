@@ -27,7 +27,9 @@ class JpegtranFilterTest extends FilterTestCase
             $this->markTestSkipped('Unable to find `jpegtran` executable.');
         }
 
-        $this->filter = new JpegtranFilter($jpegtranBin);
+        $this->filter = new JpegtranFilter(array(
+            'jpegtran_bin' => $jpegtranBin
+        ));
     }
 
     protected function tearDown()

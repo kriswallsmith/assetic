@@ -54,15 +54,34 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $httpJavascriptsPath;
     private $homeEnv = true;
 
-    public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
+    public function __construct(array $options = array())
+    {
+        parent::__construct($options);
+
+        $this->setCacheLocation(sys_get_temp_dir());
+        if ('cli' !== php_sapi_name()) {
+            $this->setBoring(true);
+        }
+    }
+
+    public function setCompassPath($compassPath)
     {
         $this->compassPath = $compassPath;
-        $this->rubyPath = $rubyPath;
-        $this->cacheLocation = sys_get_temp_dir();
+    }
 
-        if ('cli' !== php_sapi_name()) {
-            $this->boring = true;
-        }
+    public function getCompassPath()
+    {
+        return $this->compassPath;
+    }
+
+    public function setRubyPath($rubyPath)
+    {
+        $this->rubyPath = $rubyPath;
+    }
+
+    public function getRubyPath()
+    {
+        return $this->rubyPath;
     }
 
     public function setScss($scss)

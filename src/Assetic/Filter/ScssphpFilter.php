@@ -23,20 +23,20 @@ use Assetic\Factory\AssetFactory;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssphpFilter implements DependencyExtractorInterface
+class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
-    private $compass = false;
+    private $compassEnabled = false;
 
     private $importPaths = array();
 
-    public function enableCompass($enable = true)
+    public function setCompassEnabled($compassEnabled)
     {
-        $this->compass = (Boolean) $enable;
+        $this->compassEnabled = $compassEnabled;
     }
 
-    public function isCompassEnabled()
+    public function getCompassEnabled()
     {
-        return $this->compass;
+        return $this->compassEnabled;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -45,17 +45,22 @@ class ScssphpFilter implements DependencyExtractorInterface
         $path = $asset->getSourcePath();
 
         $lc = new \scssc();
-        if ($this->compass) {
+        if ($this->compassEnabled) {
             new \scss_compass($lc);
         }
         if ($root && $path) {
             $lc->addImportPath(dirname($root.'/'.$path));
         }
-        foreach ($this->importPaths as $path) {
+        foreach ($this->getImportPaths() as $path) {
             $lc->addImportPath($path);
         }
 
         $asset->setContent($lc->compile($asset->getContent()));
+    }
+
+    public function getImportPaths()
+    {
+        return $this->importPaths;
     }
 
     public function setImportPaths(array $paths)

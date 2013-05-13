@@ -25,14 +25,14 @@ class OptiPngFilter extends BaseProcessFilter
     private $optipngBin;
     private $level;
 
-    /**
-     * Constructor.
-     *
-     * @param string $optipngBin Path to the optipng binary
-     */
-    public function __construct($optipngBin = '/usr/bin/optipng')
+    public function setOptipngBin($optipngBin)
     {
         $this->optipngBin = $optipngBin;
+    }
+
+    public function getOptipngBin()
+    {
+        return $this->optipngBin;
     }
 
     public function setLevel($level)

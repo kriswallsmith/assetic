@@ -29,10 +29,24 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
     private $lineBreak;
     private $stackSize;
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
+    public function setJarPath($jarPath)
     {
         $this->jarPath = $jarPath;
+    }
+
+    public function getJarPath()
+    {
+        return $this->jarPath;
+    }
+
+    public function setJavaPath($javaPath)
+    {
         $this->javaPath = $javaPath;
+    }
+
+    public function getJavaPath()
+    {
+        return $this->javaPath;
     }
 
     public function setCharset($charset)

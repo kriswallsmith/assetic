@@ -32,17 +32,34 @@ class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorIn
     private $includeDirs;
     private $assetRoot;
 
-    /**
-     * Constructor.
-     *
-     * @param string $sprocketsLib Path to the Sprockets lib/ directory
-     * @param string $rubyBin      Path to the ruby binary
-     */
-    public function __construct($sprocketsLib = null, $rubyBin = '/usr/bin/ruby')
+    public function setIncludeDirs($includeDirs)
+    {
+        $this->includeDirs = $includeDirs;
+    }
+
+    public function getIncludeDirs()
+    {
+        return $this->includeDirs;
+    }
+
+    public function setRubyBin($rubyBin)
+    {
+        $this->rubyBin = $rubyBin;
+    }
+
+    public function getRubyBin()
+    {
+        return $this->rubyBin;
+    }
+
+    public function setSprocketsLib($sprocketsLib)
     {
         $this->sprocketsLib = $sprocketsLib;
-        $this->rubyBin = $rubyBin;
-        $this->includeDirs = array();
+    }
+
+    public function getSprocketsLib()
+    {
+        return $this->sprocketsLib;
     }
 
     public function addIncludeDir($directory)

@@ -30,10 +30,24 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $screwIe8;
     private $comments;
 
-    public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
+    }
+
+    public function setUglifyjsBin($uglifyjsBin)
     {
         $this->uglifyjsBin = $uglifyjsBin;
-        $this->nodeBin = $nodeBin;
+    }
+
+    public function getUglifyjsBin()
+    {
+        return $this->uglifyjsBin;
     }
 
     public function setCompress($compress)

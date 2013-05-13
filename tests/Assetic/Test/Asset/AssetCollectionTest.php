@@ -48,12 +48,14 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $count = 0;
         $matches = array();
-        $filter = new CallablesFilter(function($asset) use ($content, &$matches, &$count) {
-            ++$count;
-            if ($content == $asset->getContent()) {
-                $matches[] = $asset;
+        $filter = new CallablesFilter(array(
+            'loader' => function($asset) use ($content, &$matches, &$count) {
+                ++$count;
+                if ($content == $asset->getContent()) {
+                    $matches[] = $asset;
+                }
             }
-        });
+        ));
 
         $innerColl = new AssetCollection(array(new StringAsset($content)));
         $outerColl = new AssetCollection(array($innerColl), array($filter));
@@ -70,9 +72,11 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $innerColl = new AssetCollection(array($nestedAsset));
 
         $contents = array();
-        $filter = new CallablesFilter(function($asset) use (&$contents) {
-            $contents[] = $asset->getContent();
-        });
+        $filter = new CallablesFilter(array(
+            'loader' => function($asset) use (&$contents) {
+                $contents[] = $asset->getContent();
+            }
+        ));
 
         $coll = new AssetCollection(array($asset, $innerColl), array($filter));
         $coll->load();
@@ -125,7 +129,9 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
     public function testIterationFilters()
     {
         $count = 0;
-        $filter = new CallablesFilter(function() use (&$count) { ++$count; });
+        $filter = new CallablesFilter(array(
+            'loader' => function() use (&$count) { ++$count; }
+        ));
 
         $coll = new AssetCollection();
         $coll->add(new StringAsset(''));

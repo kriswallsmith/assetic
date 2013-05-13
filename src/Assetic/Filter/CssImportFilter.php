@@ -23,21 +23,39 @@ use Assetic\Factory\AssetFactory;
  */
 class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterface
 {
+    /**
+     * @var FilterInterface
+     */
     private $importFilter;
 
     /**
-     * Constructor.
+     * Sets filter for each imported asset
      *
-     * @param FilterInterface $importFilter Filter for each imported asset
+     * @param \Assetic\Filter\FilterInterface $importFilter
      */
-    public function __construct(FilterInterface $importFilter = null)
+    public function setImportFilter(FilterInterface $importFilter)
     {
-        $this->importFilter = $importFilter ?: new CssRewriteFilter();
+        $this->importFilter = $importFilter;
+    }
+
+    /**
+     * Gets filter
+     *
+     * If there is no filter set before, it will set CssRewriteFilter by default
+     *
+     * @return \Assetic\Filter\FilterInterface
+     */
+    public function getImportFilter()
+    {
+        if (!isset($this->importFilter)) {
+            $this->importFilter = new CssRewriteFilter();
+        }
+        return $this->importFilter;
     }
 
     public function filterLoad(AssetInterface $asset)
     {
-        $importFilter = $this->importFilter;
+        $importFilter = $this->getImportFilter();
         $sourceRoot = $asset->getSourceRoot();
         $sourcePath = $asset->getSourcePath();
 

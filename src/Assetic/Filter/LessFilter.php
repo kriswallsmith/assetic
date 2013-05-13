@@ -36,15 +36,29 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     protected $loadPaths = array();
 
     /**
-     * Constructor.
-     *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
+     * @param array $loadPaths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function setLoadPaths($loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLoadPaths()
+    {
+        return $this->loadPaths;
+    }
+
+    public function setNodeBin($nodeBin)
     {
         $this->nodeBin = $nodeBin;
-        $this->setNodePaths($nodePaths);
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
     }
 
     public function setCompress($compress)
