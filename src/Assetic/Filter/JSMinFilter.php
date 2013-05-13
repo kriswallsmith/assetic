@@ -21,7 +21,7 @@ use Assetic\Asset\AssetInterface;
  * @link https://raw.github.com/mrclay/minify/master/min/lib/JSMin.php
  * @author Brunoais <brunoaiss@gmail.com>
  */
-class JSMinFilter implements FilterInterface
+class JSMinFilter extends BaseFilter
 {
     public function filterLoad(AssetInterface $asset)
     {

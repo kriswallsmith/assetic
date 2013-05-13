@@ -26,14 +26,14 @@ class JpegoptimFilter extends BaseProcessFilter
     private $stripAll;
     private $max;
 
-    /**
-     * Constructor.
-     *
-     * @param string $jpegoptimBin Path to the jpegoptim binary
-     */
-    public function __construct($jpegoptimBin = '/usr/bin/jpegoptim')
+    public function setJpegoptimBin($jpegoptimBin)
     {
         $this->jpegoptimBin = $jpegoptimBin;
+    }
+
+    public function getJpegoptimBin()
+    {
+        return $this->jpegoptimBin;
     }
 
     public function setStripAll($stripAll)

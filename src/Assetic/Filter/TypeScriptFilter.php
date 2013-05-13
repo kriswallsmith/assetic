@@ -25,10 +25,24 @@ class TypeScriptFilter extends BaseNodeFilter
     private $tscBin;
     private $nodeBin;
 
-    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null)
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
+    }
+
+    public function setTscBin($tscBin)
     {
         $this->tscBin = $tscBin;
-        $this->nodeBin = $nodeBin;
+    }
+
+    public function getTscBin()
+    {
+        return $this->tscBin;
     }
 
     public function filterLoad(AssetInterface $asset)

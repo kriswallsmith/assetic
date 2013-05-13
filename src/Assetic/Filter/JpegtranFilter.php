@@ -32,14 +32,14 @@ class JpegtranFilter extends BaseProcessFilter
     private $progressive;
     private $restart;
 
-    /**
-     * Constructor.
-     *
-     * @param string $jpegtranBin Path to the jpegtran binary
-     */
-    public function __construct($jpegtranBin = '/usr/bin/jpegtran')
+    public function setJpegtranBin($jpegtranBin)
     {
         $this->jpegtranBin = $jpegtranBin;
+    }
+
+    public function getJpegtranBin()
+    {
+        return $this->jpegtranBin;
     }
 
     public function setOptimize($optimize)

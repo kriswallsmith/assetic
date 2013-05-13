@@ -19,13 +19,18 @@ use Assetic\Asset\AssetInterface;
  * @link https://github.com/kamicane/packager
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class PackagerFilter implements FilterInterface
+class PackagerFilter extends BaseFilter implements FilterInterface
 {
     private $packages;
 
-    public function __construct(array $packages = array())
+    public function setPackages($packages)
     {
         $this->packages = $packages;
+    }
+
+    public function getPackages()
+    {
+        return $this->packages;
     }
 
     public function addPackage($package)

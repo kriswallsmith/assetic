@@ -33,12 +33,6 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
     private $maxUriLength; // Maximum length for a data URI. Defaults to 32768.
     private $maxImageSize; // Maximum image size (in bytes) to convert.
 
-    public function __construct($jarPath, $javaPath = '/usr/bin/java')
-    {
-        $this->jarPath = $jarPath;
-        $this->javaPath = $javaPath;
-    }
-
     public function setCharset($charset)
     {
         $this->charset = $charset;

@@ -26,16 +26,24 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
     private $rooleBin;
     private $nodeBin;
 
-    /**
-     * Constructor
-     *
-     * @param string $rooleBin The path to the roole binary
-     * @param string $nodeBin  The path to the node binary
-     */
-    public function __construct($rooleBin = '/usr/bin/roole', $nodeBin = null)
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
+    }
+
+    public function setRooleBin($rooleBin)
     {
         $this->rooleBin = $rooleBin;
-        $this->nodeBin = $nodeBin;
+    }
+
+    public function getRooleBin()
+    {
+        return $this->rooleBin;
     }
 
     public function filterLoad(AssetInterface $asset)

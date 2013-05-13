@@ -27,10 +27,24 @@ class EmberPrecompileFilter extends BaseNodeFilter
     private $emberBin;
     private $nodeBin;
 
-    public function __construct($handlebarsBin = '/usr/bin/ember-precompile', $nodeBin = null)
+    public function setEmberBin($emberBin)
     {
-        $this->emberBin = $handlebarsBin;
+        $this->emberBin = $emberBin;
+    }
+
+    public function getEmberBin()
+    {
+        return $this->emberBin;
+    }
+
+    public function setNodeBin($nodeBin)
+    {
         $this->nodeBin = $nodeBin;
+    }
+
+    public function getNodeBin()
+    {
+        return $this->nodeBin;
     }
 
     public function filterLoad(AssetInterface $asset)

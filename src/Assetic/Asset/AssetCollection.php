@@ -47,7 +47,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             $this->add($asset);
         }
 
-        $this->filters = new FilterCollection($filters);
+        $this->filters = new FilterCollection(array(
+            'filters' => $filters
+        ));
         $this->sourceRoot = $sourceRoot;
         $this->clones = new \SplObjectStorage();
         $this->vars = $vars;

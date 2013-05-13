@@ -50,14 +50,14 @@ class PngoutFilter extends BaseProcessFilter
     private $strategy;
     private $blockSplitThreshold;
 
-    /**
-     * Constructor.
-     *
-     * @param string $pngoutBin Path to the pngout binary
-     */
-    public function __construct($pngoutBin = '/usr/bin/pngout')
+    public function setPngoutBin($pngoutBin)
     {
         $this->pngoutBin = $pngoutBin;
+    }
+
+    public function getPngoutBin()
+    {
+        return $this->pngoutBin;
     }
 
     public function setColor($color)

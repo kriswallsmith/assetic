@@ -19,16 +19,10 @@ use Assetic\Asset\AssetInterface;
  * @link http://code.google.com/p/cssmin
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CssMinFilter implements FilterInterface
+class CssMinFilter extends BaseFilter implements FilterInterface
 {
-    private $filters;
-    private $plugins;
-
-    public function __construct()
-    {
-        $this->filters = array();
-        $this->plugins = array();
-    }
+    private $filters = array();
+    private $plugins = array();
 
     public function setFilters(array $filters)
     {

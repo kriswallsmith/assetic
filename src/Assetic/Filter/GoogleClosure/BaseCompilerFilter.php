@@ -50,6 +50,28 @@ abstract class BaseCompilerFilter implements FilterInterface
     protected $warningLevel;
     protected $language;
 
+    /**
+     * @see FitlerInterface::__construct()
+     * @param array $options
+     */
+    public function __construct(array $options = array())
+    {
+        $this->setOptions($options);
+    }
+
+    /**
+     * Automatically calls setter methods based on key of option
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options = array())
+    {
+        foreach ($options as $option => $value) {
+            $option = preg_replace('/(?:^|_)(.?)/e', "strtoupper('$1')", $option);
+            $this->{'set' . $option}($value);
+        }
+    }
+
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
