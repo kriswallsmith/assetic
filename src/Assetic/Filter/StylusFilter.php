@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Factory\AssetFactory;
 
 /**
  * Loads STYL files.
@@ -20,7 +21,7 @@ use Assetic\Exception\FilterException;
  * @link http://learnboost.github.com/stylus/
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class StylusFilter extends BaseNodeFilter
+class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
     private $nodeBin;
     private $compress;
@@ -106,5 +107,11 @@ EOF;
      */
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    {
+        // todo
+        return array();
     }
 }

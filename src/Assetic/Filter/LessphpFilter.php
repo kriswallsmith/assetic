@@ -12,6 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 
 /**
  * Loads LESS files using the PHP implementation of less, lessphp.
@@ -23,7 +24,7 @@ use Assetic\Asset\AssetInterface;
  * @author David Buchmann <david@liip.ch>
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessphpFilter implements FilterInterface
+class LessphpFilter implements DependencyExtractorInterface
 {
     private $presets = array();
     private $formatter;
@@ -104,5 +105,11 @@ class LessphpFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    {
+        // todo
+        return array();
     }
 }

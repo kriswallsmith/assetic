@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Factory\AssetFactory;
 
 /**
  * Loads LESS files.
@@ -20,7 +21,7 @@ use Assetic\Exception\FilterException;
  * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessFilter extends BaseNodeFilter
+class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
     private $nodeBin;
     private $compress;
@@ -125,5 +126,11 @@ EOF;
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    {
+        // todo
+        return array();
     }
 }

@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Factory\AssetFactory;
 
 /**
  * Loads Roole files.
@@ -20,7 +21,7 @@ use Assetic\Exception\FilterException;
  * @link http://roole.org
  * @author Marcin Chwedziak <tiraeth@gmail.com>
  */
-class RooleFilter extends BaseNodeFilter
+class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
     private $rooleBin;
     private $nodeBin;
@@ -62,5 +63,11 @@ class RooleFilter extends BaseNodeFilter
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    {
+        // todo
+        return array();
     }
 }
