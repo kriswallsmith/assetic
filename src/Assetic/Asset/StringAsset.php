@@ -43,11 +43,6 @@ class StringAsset extends BaseAsset
         $this->doLoad($this->content, $additionalFilter);
     }
 
-    public function getSourceContent()
-    {
-        return $this->content;
-    }
-
     public function setLastModified($lastModified)
     {
         $this->lastModified = $lastModified;

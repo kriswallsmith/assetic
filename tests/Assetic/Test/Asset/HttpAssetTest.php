@@ -23,12 +23,6 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
-    public function testGetSourceContent()
-    {
-        $asset = new HttpAsset(self::JQUERY);
-        $this->assertNotEmpty($asset->getSourceContent(), '->getSourceContent() returns the source content');
-    }
-
     public function testProtocolRelativeUrl()
     {
         $asset = new HttpAsset(substr(self::JQUERY, 5));

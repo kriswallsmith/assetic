@@ -73,11 +73,6 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($content));
     }
 
-    public function getSourceContent()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
-
     public function getSourceRoot()
     {
         return $this->callAsset(__FUNCTION__);

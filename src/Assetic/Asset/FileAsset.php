@@ -56,18 +56,13 @@ class FileAsset extends BaseAsset
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad($this->getSourceContent(), $additionalFilter);
-    }
-
-    public function getSourceContent()
-    {
         $source = VarUtils::resolve($this->source, $this->getVars(), $this->getValues());
 
         if (!is_file($source)) {
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
 
-        return file_get_contents($source);
+        $this->doLoad(file_get_contents($source), $additionalFilter);
     }
 
     public function getLastModified()

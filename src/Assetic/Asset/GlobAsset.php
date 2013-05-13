@@ -67,15 +67,6 @@ class GlobAsset extends AssetCollection
         return parent::dump($additionalFilter);
     }
 
-    public function getSourceContent()
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        return parent::getSourceContent();
-    }
-
     public function getLastModified()
     {
         if (!$this->initialized) {

@@ -53,11 +53,6 @@ class HttpAsset extends BaseAsset
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad($this->getSourceContent(), $additionalFilter);
-    }
-
-    public function getSourceContent()
-    {
         $content = @file_get_contents(
             VarUtils::resolve($this->sourceUrl, $this->getVars(), $this->getValues())
         );
@@ -66,7 +61,7 @@ class HttpAsset extends BaseAsset
             throw new \RuntimeException(sprintf('Unable to load asset from URL "%s"', $this->sourceUrl));
         }
 
-        return $content;
+        $this->doLoad($content, $additionalFilter);
     }
 
     public function getLastModified()
