@@ -180,7 +180,7 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
     {
         $loadPaths = $this->loadPaths;
         if ($loadPath) {
-            $loadPaths[] = $loadPath;
+            array_unshift($loadPaths, $loadPath);
         }
 
         if (!$loadPaths) {
