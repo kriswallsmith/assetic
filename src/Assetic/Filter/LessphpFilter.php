@@ -119,26 +119,14 @@ class LessphpFilter implements DependencyExtractorInterface
             return array();
         }
 
-        $importExpressions = array(
-            '/@import \'(.*)\';/',
-            '/@import "(.*)";/',
-            '/@import url\(\'(.*)\'\);/',
-            '/@import url\("(.*)"\);/',
-            '/@import url\(([^\'"]"*)\);/',
-        );
-
         $nodes = array();
-        foreach ($importExpressions as $ie) {
-            if (preg_match_all($ie, $content, $matches)) {
-                foreach ($matches[1] as $node) {
-                    if ('.less' !== substr($node, -5)) {
-                        $node .= '.less';
-                    }
+        foreach (CssUtils::extractImports($content) as $node) {
+            if ('.less' !== substr($node, -5)) {
+                $node .= '.less';
+            }
 
-                    if (!in_array($node, $nodes)) {
-                        $nodes[] = $node;
-                    }
-                }
+            if (!in_array($node, $nodes)) {
+                $nodes[] = $node;
             }
         }
 
