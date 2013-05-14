@@ -38,6 +38,11 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
         $this->setNodePaths($nodePaths);
     }
 
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
     /**
      * Enable output compression.
      *

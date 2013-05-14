@@ -23,11 +23,16 @@ use Assetic\Factory\AssetFactory;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssphpFilter implements DependencyExtractorInterface
+class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $compass = false;
 
     private $importPaths = array();
+
+    public function setCompass($compass)
+    {
+        $this->compass = $compass;
+    }
 
     public function enableCompass($enable = true)
     {

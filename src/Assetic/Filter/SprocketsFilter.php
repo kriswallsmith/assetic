@@ -45,6 +45,21 @@ class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorIn
         $this->includeDirs = array();
     }
 
+    public function setIncludeDirs($includeDirs)
+    {
+        $this->includeDirs = $includeDirs;
+    }
+
+    public function setRubyBin($rubyBin)
+    {
+        $this->rubyBin = $rubyBin;
+    }
+
+    public function setSprocketsLib($sprocketsLib)
+    {
+        $this->sprocketsLib = $sprocketsLib;
+    }
+
     public function addIncludeDir($directory)
     {
         $this->includeDirs[] = $directory;

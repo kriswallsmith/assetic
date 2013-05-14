@@ -42,6 +42,11 @@ class JpegtranFilter extends BaseProcessFilter
         $this->jpegtranBin = $jpegtranBin;
     }
 
+    public function setJpegtranBin($jpegtranBin)
+    {
+        $this->jpegtranBin = $jpegtranBin;
+    }
+
     public function setOptimize($optimize)
     {
         $this->optimize = $optimize;

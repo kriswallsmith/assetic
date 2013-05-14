@@ -60,6 +60,11 @@ class PngoutFilter extends BaseProcessFilter
         $this->pngoutBin = $pngoutBin;
     }
 
+    public function setPngoutBin($pngoutBin)
+    {
+        $this->pngoutBin = $pngoutBin;
+    }
+
     public function setColor($color)
     {
         $this->color = $color;

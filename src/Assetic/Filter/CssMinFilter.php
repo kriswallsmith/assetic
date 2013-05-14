@@ -19,7 +19,7 @@ use Assetic\Asset\AssetInterface;
  * @link http://code.google.com/p/cssmin
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CssMinFilter implements FilterInterface
+class CssMinFilter extends BaseFilter
 {
     private $filters;
     private $plugins;

@@ -40,6 +40,16 @@ class UglifyJsFilter extends BaseNodeFilter
         $this->nodeBin = $nodeBin;
     }
 
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function setUglifyjsBin($uglifyjsBin)
+    {
+        $this->uglifyjsBin = $uglifyjsBin;
+    }
+
     /**
      * Removes the first block of comments as well
      * @param bool $noCopyright True to enable

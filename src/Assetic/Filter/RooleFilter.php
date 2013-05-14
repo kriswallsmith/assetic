@@ -38,6 +38,16 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $this->nodeBin = $nodeBin;
     }
 
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function setRooleBin($rooleBin)
+    {
+        $this->rooleBin = $rooleBin;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $input = tempnam(sys_get_temp_dir(), 'assetic_roole');

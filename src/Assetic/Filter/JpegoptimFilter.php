@@ -36,6 +36,11 @@ class JpegoptimFilter extends BaseProcessFilter
         $this->jpegoptimBin = $jpegoptimBin;
     }
 
+    public function setJpegoptimBin($jpegoptimBin)
+    {
+        $this->jpegoptimBin = $jpegoptimBin;
+    }
+
     public function setStripAll($stripAll)
     {
         $this->stripAll = $stripAll;

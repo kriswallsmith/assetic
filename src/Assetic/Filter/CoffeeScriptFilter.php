@@ -34,6 +34,16 @@ class CoffeeScriptFilter extends BaseNodeFilter
         $this->nodeBin = $nodeBin;
     }
 
+    public function setCoffeeBin($coffeeBin)
+    {
+        $this->coffeeBin = $coffeeBin;
+    }
+
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
     public function setBare($bare)
     {
         $this->bare = $bare;

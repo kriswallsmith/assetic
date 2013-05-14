@@ -39,6 +39,16 @@ class GssFilter extends BaseProcessFilter
         $this->javaPath = $javaPath;
     }
 
+    public function setJarPath($jarPath)
+    {
+        $this->jarPath = $jarPath;
+    }
+
+    public function setJavaPath($javaPath)
+    {
+        $this->javaPath = $javaPath;
+    }
+
     public function setAllowUnrecognizedFunctions($allowUnrecognizedFunctions)
     {
         $this->allowUnrecognizedFunctions = $allowUnrecognizedFunctions;
