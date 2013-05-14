@@ -3,7 +3,6 @@
 namespace Assetic\Filter;
 
 use Assetic\Exception\FilterException;
-use Symfony\Component\OptionsResolver;
 
 abstract class BaseFilter implements FilterInterface
 {
