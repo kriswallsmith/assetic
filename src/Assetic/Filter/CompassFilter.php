@@ -211,7 +211,6 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         }
 
         $pb = $this->createProcessBuilder($compassProcessArgs);
-        $pb->inheritEnvironmentVariables();
 
         if ($this->force) {
             $pb->add('--force');

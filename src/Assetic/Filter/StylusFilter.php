@@ -83,7 +83,6 @@ EOF;
         }
 
         $pb = $this->createProcessBuilder();
-        $pb->inheritEnvironmentVariables();
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
         file_put_contents($input, sprintf($format,
