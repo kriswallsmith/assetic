@@ -24,7 +24,16 @@ use Assetic\Factory\AssetFactory;
 class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
     private $nodeBin;
-    private $compress;
+
+    /**
+     * @var array
+     */
+    private $treeOptions;
+
+    /**
+     * @var array
+     */
+    private $parserOptions;
 
     /**
      * Load Paths
@@ -45,11 +54,16 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
+        $this->treeOptions = array();
+        $this->parserOptions = array();
     }
 
+    /**
+     * @param bool $compress
+     */
     public function setCompress($compress)
     {
-        $this->compress = $compress;
+        $this->addTreeOption('compress', $compress);
     }
 
     public function setLoadPaths(array $loadPaths)
@@ -65,6 +79,24 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     public function addLoadPath($path)
     {
         $this->loadPaths[] = $path;
+    }
+
+    /**
+     * @param string $code
+     * @param string $value
+     */
+    public function addTreeOption($code, $value)
+    {
+        $this->treeOptions[$code] = $value;
+    }
+
+    /**
+     * @param string $code
+     * @param string $value
+     */
+    public function addParserOption($code, $value)
+    {
+        $this->parserOptions[$code] = $value;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -93,19 +125,14 @@ EOF;
         $path = $asset->getSourcePath();
 
         // parser options
-        $parserOptions = array();
+        $parserOptions = $this->parserOptions;
         if ($root && $path) {
             $parserOptions['paths'] = array(dirname($root.'/'.$path));
             $parserOptions['filename'] = basename($path);
         }
+
         foreach ($this->loadPaths as $loadPath) {
             $parserOptions['paths'][] = $loadPath;
-        }
-
-        // tree options
-        $treeOptions = array();
-        if (null !== $this->compress) {
-            $treeOptions['compress'] = $this->compress;
         }
 
         $pb = $this->createProcessBuilder();
@@ -115,7 +142,7 @@ EOF;
         file_put_contents($input, sprintf($format,
             json_encode($parserOptions),
             json_encode($asset->getContent()),
-            json_encode($treeOptions)
+            json_encode($this->treeOptions)
         ));
 
         $proc = $pb->getProcess();
