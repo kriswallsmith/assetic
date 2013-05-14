@@ -17,12 +17,18 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
 {
     const JQUERY = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js';
 
+    /**
+     * @group http
+     */
     public function testGetLastModified()
     {
         $asset = new HttpAsset(self::JQUERY);
         $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
+    /**
+     * @group http
+     */
     public function testProtocolRelativeUrl()
     {
         $asset = new HttpAsset(substr(self::JQUERY, 5));

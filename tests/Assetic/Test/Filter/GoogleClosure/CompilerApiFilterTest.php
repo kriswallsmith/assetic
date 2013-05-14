@@ -16,6 +16,7 @@ use Assetic\Filter\GoogleClosure\CompilerApiFilter;
 
 /**
  * @group integration
+ * @group http
  */
 class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
 {
