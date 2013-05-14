@@ -133,4 +133,16 @@ EOF;
         $this->assertEquals('d.less', $children[3]->getSourcePath());
         $this->assertEquals('e.less', $children[4]->getSourcePath());
     }
+
+    public function testGetChildrenDoesNotReturnDuplicates()
+    {
+        $file = <<<EOF
+@import 'a';
+@import "a";
+EOF;
+
+        $children = $this->filter->getChildren(new AssetFactory('/'), $file, __DIR__.'/fixtures/lessphp');
+        $this->assertCount(1, $children);
+        $this->assertEquals('a.less', $children[0]->getSourcePath());
+    }
 }
