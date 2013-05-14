@@ -20,6 +20,9 @@ use Assetic\Filter\LessFilter;
  */
 class LessFilterTest extends FilterTestCase
 {
+    /**
+     * @var LessFilter
+     */
     protected $filter;
 
     protected function setUp()
@@ -60,6 +63,23 @@ EOF;
         $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
         $asset->load();
 
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
+    }
+
+    public function testCompressImport()
+    {
+        $expected = <<<EOF
+.foo{color:blue;}
+.foo{color:red;}
+
+EOF;
+
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
+        $asset->load();
+
+        $this->filter->addTreeOption('compress', true);
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');

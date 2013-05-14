@@ -11,6 +11,7 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\LessphpFilter;
 
@@ -18,8 +19,10 @@ use Assetic\Filter\LessphpFilter;
  * @group integration
  * @property LessphpFilter $filter
  */
-class LessphpFilterTest extends LessFilterTest
+class LessphpFilterTest extends FilterTestCase
 {
+    protected $filter;
+
     protected function setUp()
     {
         if (!class_exists('lessc')) {
@@ -27,6 +30,58 @@ class LessphpFilterTest extends LessFilterTest
         }
 
         $this->filter = new LessphpFilter();
+    }
+
+    public function testFilterLoad()
+    {
+        $asset = new StringAsset('.foo{.bar{width:1+1;}}');
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+    }
+
+    public function testImport()
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue;
+}
+.foo {
+  color: red;
+}
+
+EOF;
+
+        $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
+    }
+
+    public function testLoadPath()
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue;
+}
+.foo {
+  color: red;
+}
+
+EOF;
+
+        $this->filter->addLoadPath(__DIR__.'/fixtures/less');
+
+        $asset = new StringAsset('@import "main";');
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
     }
 
     public function testPresets()
