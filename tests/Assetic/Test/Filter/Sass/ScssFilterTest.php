@@ -12,6 +12,7 @@
 namespace Assetic\Test\Filter\Sass;
 
 use Assetic\Asset\FileAsset;
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\Sass\ScssFilter;
 use Assetic\Test\Filter\FilterTestCase;
 
@@ -53,5 +54,53 @@ class ScssFilterTest extends FilterTestCase
 EOF;
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() loads imports');
+    }
+
+    public function testLoadPath()
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue; }
+
+.foo {
+  color: red; }
+
+EOF;
+
+        $this->filter->addLoadPath(__DIR__.'/../fixtures/sass');
+
+        $asset = new StringAsset('@import "main";');
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
+    }
+
+    public function testSettingLoadPaths()
+    {
+        $expected = <<<EOF
+.foo {
+  color: blue; }
+
+.foo {
+  color: red; }
+
+.bar {
+  color: red; }
+
+EOF;
+
+        $this->filter->setLoadPaths(array(
+            __DIR__.'/../fixtures/sass',
+            __DIR__.'/../fixtures/sass/import_path',
+        ));
+
+        $asset = new StringAsset('@import "main"; @import "import"; .bar {color: $red}');
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets load paths to include paths');
     }
 }

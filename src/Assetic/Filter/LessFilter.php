@@ -52,6 +52,11 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $this->compress = $compress;
     }
 
+    public function setLoadPaths(array $loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+
     /**
      * Adds a path where less will search for includes
      *
