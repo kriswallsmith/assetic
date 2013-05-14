@@ -47,6 +47,19 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $this->setNodePaths($nodePaths);
     }
 
+    /**
+     * @param array $loadPaths
+     */
+    public function setLoadPaths($loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
     public function setCompress($compress)
     {
         $this->compress = $compress;

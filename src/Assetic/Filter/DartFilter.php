@@ -28,6 +28,11 @@ class DartFilter extends BaseProcessFilter
         $this->dartBin = $dartBin;
     }
 
+    public function setDartBin($dartBin)
+    {
+        $this->dartBin = $dartBin;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $input  = tempnam(sys_get_temp_dir(), 'assetic_dart');

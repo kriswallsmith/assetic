@@ -21,7 +21,7 @@ use Assetic\Asset\AssetInterface;
  * @link http://joliclic.free.fr/php/javascript-packer/en/
  * @author Maximilian Walter <github@max-walter.net>
  */
-class PackerFilter implements FilterInterface
+class PackerFilter extends BaseFilter
 {
     protected $encoding = 'None';
 

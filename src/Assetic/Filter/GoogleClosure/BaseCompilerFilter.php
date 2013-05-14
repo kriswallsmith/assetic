@@ -12,6 +12,7 @@
 namespace Assetic\Filter\GoogleClosure;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Filter\BaseFilter;
 use Assetic\Filter\FilterInterface;
 
 /**
@@ -19,7 +20,7 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompilerFilter implements FilterInterface
+abstract class BaseCompilerFilter extends BaseFilter
 {
     // compilation levels
     const COMPILE_WHITESPACE_ONLY = 'WHITESPACE_ONLY';

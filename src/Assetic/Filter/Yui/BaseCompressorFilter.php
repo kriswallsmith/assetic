@@ -35,6 +35,16 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $this->javaPath = $javaPath;
     }
 
+    public function setJarPath($jarPath)
+    {
+        $this->jarPath = $jarPath;
+    }
+
+    public function setJavaPath($javaPath)
+    {
+        $this->javaPath = $javaPath;
+    }
+
     public function setCharset($charset)
     {
         $this->charset = $charset;

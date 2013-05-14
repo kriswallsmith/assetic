@@ -32,6 +32,16 @@ class CompilerJarFilter extends BaseCompilerFilter
         $this->javaPath = $javaPath;
     }
 
+    public function setJarPath($jarPath)
+    {
+        $this->jarPath = $jarPath;
+    }
+
+    public function setJavaPath($javaPath)
+    {
+        $this->javaPath = $javaPath;
+    }
+
     public function filterDump(AssetInterface $asset)
     {
         $cleanup = array();

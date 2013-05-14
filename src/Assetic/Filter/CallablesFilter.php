@@ -18,7 +18,7 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CallablesFilter implements FilterInterface
+class CallablesFilter extends BaseFilter
 {
     private $loader;
     private $dumper;
@@ -31,6 +31,16 @@ class CallablesFilter implements FilterInterface
     {
         $this->loader = $loader;
         $this->dumper = $dumper;
+    }
+
+    public function setDumper($dumper)
+    {
+        $this->dumper = $dumper;
+    }
+
+    public function setLoader($loader)
+    {
+        $this->loader = $loader;
     }
 
     public function filterLoad(AssetInterface $asset)

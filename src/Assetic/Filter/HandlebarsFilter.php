@@ -34,6 +34,16 @@ class HandlebarsFilter extends BaseNodeFilter
         $this->nodeBin = $nodeBin;
     }
 
+    public function setHandlebarsBin($handlebarsBin)
+    {
+        $this->handlebarsBin = $handlebarsBin;
+    }
+
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
     public function setMinimize($minimize)
     {
         $this->minimize = $minimize;

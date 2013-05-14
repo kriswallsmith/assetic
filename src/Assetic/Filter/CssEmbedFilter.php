@@ -39,6 +39,16 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
         $this->javaPath = $javaPath;
     }
 
+    public function setJarPath($jarPath)
+    {
+        $this->jarPath = $jarPath;
+    }
+
+    public function setJavaPath($javaPath)
+    {
+        $this->javaPath = $javaPath;
+    }
+
     public function setCharset($charset)
     {
         $this->charset = $charset;

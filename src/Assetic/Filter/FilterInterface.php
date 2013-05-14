@@ -21,6 +21,22 @@ use Assetic\Asset\AssetInterface;
 interface FilterInterface
 {
     /**
+     * Automatically calls setter methods based on name of option
+     *
+     * @throws FilterException If $options contains invalid/unsupported option name
+     * @param array $options
+     */
+    public function setOptions(array $options);
+
+    /**
+     * Checks if this filter has setter method for the provided option
+     *
+     * @param $option
+     * @return bool
+     */
+    public function isOptionSupported($option);
+
+    /**
      * Filters an asset after it has been loaded.
      *
      * @param AssetInterface $asset An asset

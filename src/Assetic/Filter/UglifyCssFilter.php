@@ -39,6 +39,16 @@ class UglifyCssFilter extends BaseNodeFilter
         $this->nodeBin = $nodeBin;
     }
 
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function setUglifycssBin($uglifycssBin)
+    {
+        $this->uglifycssBin = $uglifycssBin;
+    }
+
     /**
      * Expand variables
      * @param bool $expandVars True to enable

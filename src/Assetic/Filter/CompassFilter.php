@@ -65,6 +65,16 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         }
     }
 
+    public function setCompassPath($compassPath)
+    {
+        $this->compassPath = $compassPath;
+    }
+
+    public function setRubyPath($rubyPath)
+    {
+        $this->rubyPath = $rubyPath;
+    }
+
     public function setScss($scss)
     {
         $this->scss = $scss;

@@ -21,7 +21,7 @@ use CssEmbed\CssEmbed;
  * @author Pierre Tachoire <pierre.tachoire@gmail.com>
  * @link https://github.com/krichprollsch/phpCssEmbed
  */
-class PhpCssEmbedFilter implements DependencyExtractorInterface
+class PhpCssEmbedFilter extends BaseFilter
 {
     private $presets = array();
 

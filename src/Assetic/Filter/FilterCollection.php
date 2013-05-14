@@ -18,11 +18,16 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class FilterCollection implements FilterInterface, \IteratorAggregate, \Countable
+class FilterCollection extends BaseFilter implements \IteratorAggregate, \Countable
 {
     private $filters = array();
 
     public function __construct($filters = array())
+    {
+        $this->setFilters($filters);
+    }
+
+    public function setFilters($filters)
     {
         foreach ($filters as $filter) {
             $this->ensure($filter);

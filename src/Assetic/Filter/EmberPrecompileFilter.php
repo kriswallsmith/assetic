@@ -33,6 +33,16 @@ class EmberPrecompileFilter extends BaseNodeFilter
         $this->nodeBin = $nodeBin;
     }
 
+    public function setEmberBin($emberBin)
+    {
+        $this->emberBin = $emberBin;
+    }
+
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder($this->nodeBin

@@ -35,6 +35,11 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
         $this->importFilter = $importFilter ?: new CssRewriteFilter();
     }
 
+    public function setImportFilter($importFilter)
+    {
+        $this->importFilter = $importFilter;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $importFilter = $this->importFilter;

@@ -51,6 +51,21 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         $this->cacheLocation = realpath(sys_get_temp_dir());
     }
 
+    public function setLoadPaths($loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+
+    public function setRubyPath($rubyPath)
+    {
+        $this->rubyPath = $rubyPath;
+    }
+
+    public function setSassPath($sassPath)
+    {
+        $this->sassPath = $sassPath;
+    }
+
     public function setUnixNewlines($unixNewlines)
     {
         $this->unixNewlines = $unixNewlines;

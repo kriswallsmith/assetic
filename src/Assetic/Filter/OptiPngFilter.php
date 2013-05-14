@@ -35,6 +35,11 @@ class OptiPngFilter extends BaseProcessFilter
         $this->optipngBin = $optipngBin;
     }
 
+    public function setOptipngBin($optipngBin)
+    {
+        $this->optipngBin = $optipngBin;
+    }
+
     public function setLevel($level)
     {
         $this->level = $level;

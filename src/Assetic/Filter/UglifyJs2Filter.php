@@ -37,6 +37,16 @@ class UglifyJs2Filter extends BaseNodeFilter
         $this->nodeBin = $nodeBin;
     }
 
+    public function setNodeBin($nodeBin)
+    {
+        $this->nodeBin = $nodeBin;
+    }
+
+    public function setUglifyjsBin($uglifyjsBin)
+    {
+        $this->uglifyjsBin = $uglifyjsBin;
+    }
+
     public function setCompress($compress)
     {
         $this->compress = $compress;
