@@ -48,7 +48,7 @@ class BaseFilterTest extends \PHPUnit_Framework_TestCase
             array(123 => 'asd')
         );
         $filter = new BaseFilterFilter();
-        $this->setExpectedException('\Assetic\Exception\FilterException', 'Assetic\Test\Filter\BaseFilterFilter::setOptions() expects option name to be string, "integer" is given');
+        $this->setExpectedException('\InvalidArgumentException', 'Assetic\Test\Filter\BaseFilterFilter::setOptions() expects option name to be string, "integer" is given');
         $filter->setOptions($options);
     }
 
