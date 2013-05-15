@@ -13,6 +13,7 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\LessphpFilter;
 
 /**
@@ -148,5 +149,55 @@ EOF;
         $this->filter->filterLoad($asset);
 
         $this->assertNotContains('/* Line 1 */', $asset->getContent(), '->setPreserveComments(false)');
+    }
+
+    public function testGetChildrenWithFileEnding()
+    {
+        $file = <<<EOF
+@import 'a.less';
+@import "b.less";
+@import url('c.less');
+@import url("d.less");
+@import url(e.less);
+EOF;
+
+        $children = $this->filter->getChildren(new AssetFactory('/'), $file, __DIR__.'/fixtures/lessphp');
+        $this->assertCount(5, $children);
+        $this->assertEquals('a.less', $children[0]->getSourcePath());
+        $this->assertEquals('b.less', $children[1]->getSourcePath());
+        $this->assertEquals('c.less', $children[2]->getSourcePath());
+        $this->assertEquals('d.less', $children[3]->getSourcePath());
+        $this->assertEquals('e.less', $children[4]->getSourcePath());
+    }
+
+    public function testGetChildrenWithoutFileEnding()
+    {
+        $file = <<<EOF
+@import 'a';
+@import "b";
+@import url('c');
+@import url("d");
+@import url(e);
+EOF;
+
+        $children = $this->filter->getChildren(new AssetFactory('/'), $file, __DIR__.'/fixtures/lessphp');
+        $this->assertCount(5, $children);
+        $this->assertEquals('a.less', $children[0]->getSourcePath());
+        $this->assertEquals('b.less', $children[1]->getSourcePath());
+        $this->assertEquals('c.less', $children[2]->getSourcePath());
+        $this->assertEquals('d.less', $children[3]->getSourcePath());
+        $this->assertEquals('e.less', $children[4]->getSourcePath());
+    }
+
+    public function testGetChildrenDoesNotReturnDuplicates()
+    {
+        $file = <<<EOF
+@import 'a';
+@import "a";
+EOF;
+
+        $children = $this->filter->getChildren(new AssetFactory('/'), $file, __DIR__.'/fixtures/lessphp');
+        $this->assertCount(1, $children);
+        $this->assertEquals('a.less', $children[0]->getSourcePath());
     }
 }

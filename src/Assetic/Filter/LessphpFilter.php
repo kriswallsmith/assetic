@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\CssUtils;
 
 /**
  * Loads LESS files using the PHP implementation of less, lessphp.
@@ -109,7 +110,42 @@ class LessphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        // todo
-        return array();
+        $loadPaths = $this->loadPaths;
+        if (null !== $loadPath) {
+            $loadPaths[] = $loadPath;
+        }
+
+        if (empty($loadPaths)) {
+            return array();
+        }
+
+        $children = array();
+        $nodes    = array();
+        foreach (CssUtils::extractImports($content) as $node) {
+            if ('.less' !== substr($node, -5)) {
+                $node .= '.less';
+            }
+
+            if (in_array($node, $nodes)) {
+                continue;
+            }
+
+            $nodes[] = $node;
+
+            foreach ($loadPaths as $loadPath) {
+                if (file_exists($file = $loadPath . '/' . $node)) {
+                    $child = $factory->createAsset($file, array(), array('root' => $loadPath));
+
+                    foreach ($child as $leaf) {
+                        $leaf->ensureFilter($this);
+                        $children[] = $leaf;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return $children;
     }
 }
