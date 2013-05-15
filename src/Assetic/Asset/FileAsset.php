@@ -75,4 +75,5 @@ class FileAsset extends BaseAsset
 
         return filemtime($source);
     }
+
 }

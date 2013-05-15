@@ -31,6 +31,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     private $clones;
     private $vars;
     private $values;
+    private $weight;
 
     /**
      * Constructor.
@@ -52,10 +53,14 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->clones = new \SplObjectStorage();
         $this->vars = $vars;
         $this->values = array();
+        $this->weight = 0;
     }
 
     public function all()
     {
+        usort($this->assets, function(AssetInterface $a, AssetInterface $b) {
+            return $a->getWeight() < $b->getWeight() ? -1 : 1;
+        });
         return $this->assets;
     }
 
@@ -224,4 +229,16 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     {
         return $this->values;
     }
+
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+    }
+
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+
 }
