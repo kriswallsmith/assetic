@@ -48,4 +48,11 @@ abstract class BaseProcessFilter implements FilterInterface
 
         return $pb;
     }
+
+    protected function mergeEnv(ProcessBuilder $pb)
+    {
+        foreach ($_SERVER as $key => $value) {
+            $pb->setEnv($key, $value);
+        }
+    }
 }
