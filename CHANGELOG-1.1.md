@@ -1,6 +1,13 @@
 1.1.0
 -----
 
+ * Added LazyAssetManager::getLastModified() for determining "deep" mtime
+ * Added DartFilter
+ * Added EmberPrecompile
+ * Added GssFilter
+ * Added PhpCssEmbedFilter
+ * Added RooleFilter
+ * Added TypeScriptFilter
  * Added the possibility to configure additional load paths for less and lessphp
  * Added the UglifyCssFilter
  * Fixed the handling of directories in the GlobAsset. #256
