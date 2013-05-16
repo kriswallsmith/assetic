@@ -13,8 +13,8 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\LessFilter;
-
 /**
  * @group integration
  */
@@ -133,5 +133,32 @@ EOF;
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets load paths to include paths');
+    }
+
+    /**
+     * @dataProvider provideImports
+     */
+    public function testGetChildren($import)
+    {
+        $children = $this->filter->getChildren(new AssetFactory('/'), $import, __DIR__.'/fixtures/less');
+
+        $this->assertCount(1, $children);
+        $this->assertEquals('main.less', $children[0]->getSourcePath());
+    }
+
+    public function provideImports()
+    {
+        return array(
+            array('@import \'main.less\';'),
+            array('@import "main.less";'),
+            array('@import url(\'main.less\');'),
+            array('@import url("main.less");'),
+            array('@import url(main.less);'),
+            array('@import \'main\';'),
+            array('@import "main";'),
+            array('@import url(\'main\');'),
+            array('@import url("main");'),
+            array('@import url(main);'),
+        );
     }
 }

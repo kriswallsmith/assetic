@@ -17,7 +17,6 @@ use Assetic\Factory\AssetFactory;
 use Assetic\Filter\LessphpFilter;
 
 /**
- * @group integration
  * @property LessphpFilter $filter
  */
 class LessphpFilterTest extends FilterTestCase
@@ -33,6 +32,9 @@ class LessphpFilterTest extends FilterTestCase
         $this->filter = new LessphpFilter();
     }
 
+    /**
+     * @group integration
+     */
     public function testFilterLoad()
     {
         $asset = new StringAsset('.foo{.bar{width:1+1;}}');
@@ -43,6 +45,9 @@ class LessphpFilterTest extends FilterTestCase
         $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
     }
 
+    /**
+     * @group integration
+     */
     public function testImport()
     {
         $expected = <<<EOF
@@ -63,6 +68,9 @@ EOF;
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
 
+    /**
+     * @group integration
+     */
     public function testLoadPath()
     {
         $expected = <<<EOF
@@ -85,6 +93,9 @@ EOF;
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
     }
 
+    /**
+     * @group integration
+     */
     public function testPresets()
     {
         $asset = new StringAsset('.foo { color: @bar }');
@@ -96,6 +107,9 @@ EOF;
         $this->assertContains('green', $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
     }
 
+    /**
+     * @group integration
+     */
     public function testFormatterLessjs()
     {
         $asset = new StringAsset('.foo { color: green; }');
@@ -107,6 +121,9 @@ EOF;
         $this->assertContains("\n  color", $asset->getContent(), '->setFormatter("lessjs")');
     }
 
+    /**
+     * @group integration
+     */
     public function testFormatterCompressed()
     {
         $asset = new StringAsset('.foo { color: green; }');
@@ -118,6 +135,9 @@ EOF;
         $this->assertContains('color:green', $asset->getContent(), '->setFormatter("compressed")');
     }
 
+    /**
+     * @group integration
+     */
     public function testFormatterClassic()
     {
         $asset = new StringAsset('.foo { color: green; }');
@@ -129,6 +149,9 @@ EOF;
         $this->assertContains('{ color:green; }', $asset->getContent(), '->setFormatter("classic")');
     }
 
+    /**
+     * @group integration
+     */
     public function testPreserveCommentsTrue()
     {
         $asset = new StringAsset("/* Line 1 */\n.foo { color: green }");
@@ -140,6 +163,9 @@ EOF;
         $this->assertContains('/* Line 1 */', $asset->getContent(), '->setPreserveComments(true)');
     }
 
+    /**
+     * @group integration
+     */
     public function testPreserveCommentsFalse()
     {
         $asset = new StringAsset("/* Line 1 */\n.foo { color: green }");
@@ -151,53 +177,30 @@ EOF;
         $this->assertNotContains('/* Line 1 */', $asset->getContent(), '->setPreserveComments(false)');
     }
 
-    public function testGetChildrenWithFileEnding()
+    /**
+     * @dataProvider provideImports
+     */
+    public function testGetChildren($import)
     {
-        $file = <<<EOF
-@import 'a.less';
-@import "b.less";
-@import url('c.less');
-@import url("d.less");
-@import url(e.less);
-EOF;
+        $children = $this->filter->getChildren(new AssetFactory('/'), $import, __DIR__.'/fixtures/less');
 
-        $children = $this->filter->getChildren(new AssetFactory('/'), $file, __DIR__.'/fixtures/lessphp');
-        $this->assertCount(5, $children);
-        $this->assertEquals('a.less', $children[0]->getSourcePath());
-        $this->assertEquals('b.less', $children[1]->getSourcePath());
-        $this->assertEquals('c.less', $children[2]->getSourcePath());
-        $this->assertEquals('d.less', $children[3]->getSourcePath());
-        $this->assertEquals('e.less', $children[4]->getSourcePath());
-    }
-
-    public function testGetChildrenWithoutFileEnding()
-    {
-        $file = <<<EOF
-@import 'a';
-@import "b";
-@import url('c');
-@import url("d");
-@import url(e);
-EOF;
-
-        $children = $this->filter->getChildren(new AssetFactory('/'), $file, __DIR__.'/fixtures/lessphp');
-        $this->assertCount(5, $children);
-        $this->assertEquals('a.less', $children[0]->getSourcePath());
-        $this->assertEquals('b.less', $children[1]->getSourcePath());
-        $this->assertEquals('c.less', $children[2]->getSourcePath());
-        $this->assertEquals('d.less', $children[3]->getSourcePath());
-        $this->assertEquals('e.less', $children[4]->getSourcePath());
-    }
-
-    public function testGetChildrenDoesNotReturnDuplicates()
-    {
-        $file = <<<EOF
-@import 'a';
-@import "a";
-EOF;
-
-        $children = $this->filter->getChildren(new AssetFactory('/'), $file, __DIR__.'/fixtures/lessphp');
         $this->assertCount(1, $children);
-        $this->assertEquals('a.less', $children[0]->getSourcePath());
+        $this->assertEquals('main.less', $children[0]->getSourcePath());
+    }
+
+    public function provideImports()
+    {
+        return array(
+            array('@import \'main.less\';'),
+            array('@import "main.less";'),
+            array('@import url(\'main.less\');'),
+            array('@import url("main.less");'),
+            array('@import url(main.less);'),
+            array('@import \'main\';'),
+            array('@import "main";'),
+            array('@import url(\'main\');'),
+            array('@import url("main");'),
+            array('@import url(main);'),
+        );
     }
 }

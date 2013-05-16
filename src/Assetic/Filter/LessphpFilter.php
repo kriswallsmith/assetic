@@ -120,30 +120,29 @@ class LessphpFilter implements DependencyExtractorInterface
         }
 
         $children = array();
-        $nodes    = array();
-        foreach (CssUtils::extractImports($content) as $node) {
-            if ('.less' !== substr($node, -5)) {
-                $node .= '.less';
-            }
-
-            if (in_array($node, $nodes)) {
+        foreach (CssUtils::extractImports($content) as $reference) {
+            if ('.css' === substr($reference, -4)) {
+                // skip normal css imports
+                // todo: skip imports with media queries
                 continue;
             }
 
-            $nodes[] = $node;
+            if ('.less' !== substr($reference, -5)) {
+                $reference .= '.less';
+            }
 
             foreach ($loadPaths as $loadPath) {
-                if (file_exists($file = $loadPath . '/' . $node)) {
-                    $child = $factory->createAsset($file, array(), array('root' => $loadPath));
-
-                    foreach ($child as $leaf) {
+                if (file_exists($file = $loadPath.'/'.$reference)) {
+                    $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
+                    foreach ($coll as $leaf) {
                         $leaf->ensureFilter($this);
                         $children[] = $leaf;
+                        goto next_reference;
                     }
-
-                    break;
                 }
             }
+
+            next_reference:
         }
 
         return $children;
