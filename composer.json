@@ -28,14 +28,16 @@
         "cssmin/cssmin": "*",
         "mrclay/minify": "*",
         "kamicane/packager": "*",
-        "joliclic/javascript-packer": "*"
+        "joliclic/javascript-packer": "*",
+        "mattcg/cjsdelivery": "*"
     },
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
         "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
-        "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin"
+        "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
+        "mattcg/cjsdelivery": "Assetic provides the integration with the cjsDelivery CommonJS compiler"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
