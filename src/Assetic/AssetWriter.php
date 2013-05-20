@@ -80,4 +80,15 @@ class AssetWriter
             throw new \RuntimeException('Unable to write file '.$path);
         }
     }
+
+    /**
+     * Not used.
+     *
+     * This method is provided for backward compatibility with certain versions
+     * of AsseticBundle.
+     */
+    private function getCombinations(array $vars)
+    {
+        return VarUtils::getCombinations($vars, $this->values);
+    }
 }
