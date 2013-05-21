@@ -193,36 +193,29 @@ that filter to be omitted when the factory is in debug mode.
 You can also register [Workers](src/Assetic/Factory/Worker/WorkerInterface.php) on the factory and all assets created 
 by it will be passed to the worker's `process()` method before being returned. See _Cache Busting_ below for an example.
 
-Caching
--------
+Dumping Assets to static files
+------------------------------
 
-A simple caching mechanism is provided to avoid unnecessary work.
+You can dump all the assets an AssetManager holds to files in a directory. This will probably be below your webserver's document root
+so the files can be served statically.
 
 ``` php
 <?php
 
-use Assetic\Asset\AssetCache;
-use Assetic\Asset\FileAsset;
-use Assetic\Cache\FilesystemCache;
-use Assetic\Filter\Yui;
+use Assetic\AssetWriter;
 
-$yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
-$js = new AssetCache(
-    new FileAsset('/path/to/some.js', array($yui)),
-    new FilesystemCache('/path/to/cache')
-);
-
-// the YUI compressor will only run on the first call
-$js->dump();
-$js->dump();
-$js->dump();
+$writer = new AssetWriter('/path/to/web');
+$writer->writeManagerAssets($am);
 ```
+
+This will make use of the assets' target path.
 
 Cache Busting
 -------------
 
-You can use the CacheBustingWorker to rewrite the target paths for assets. It will insert an identifier before the filename
-extension that is unique for a particular version of the asset.
+If you serve your assets from static files as just described, you can use the CacheBustingWorker to rewrite the target
+paths for assets. It will insert an identifier before the filename extension that is unique for a particular version
+of the asset.
 
 Two strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
 
@@ -249,19 +242,29 @@ $css = $factory->createAsset(array(
 echo $css->dump();
 ```
 
-Static Assets
--------------
+Internal caching
+-------
 
-Alternatively you can just write filtered assets to your web directory and be
-done with it.
+A simple caching mechanism is provided to avoid unnecessary work.
 
 ``` php
 <?php
 
-use Assetic\AssetWriter;
+use Assetic\Asset\AssetCache;
+use Assetic\Asset\FileAsset;
+use Assetic\Cache\FilesystemCache;
+use Assetic\Filter\Yui;
 
-$writer = new AssetWriter('/path/to/web');
-$writer->writeManagerAssets($am);
+$yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
+$js = new AssetCache(
+    new FileAsset('/path/to/some.js', array($yui)),
+    new FilesystemCache('/path/to/cache')
+);
+
+// the YUI compressor will only run on the first call
+$js->dump();
+$js->dump();
+$js->dump();
 ```
 
 Twig
