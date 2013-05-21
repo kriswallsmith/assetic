@@ -33,6 +33,8 @@ some of which is immutable.
 | source path  | getSourcePath   | n/a           |
 | target path  | getTargetPath   | setTargetPath |
 
+The "target path" property denotes where an asset (or an collection of assets) should be dumped. 
+
 Filters
 -------
 
@@ -219,7 +221,8 @@ $js->dump();
 Cache Busting
 -------------
 
-You can use the CacheBustingWorker to provide unique names.
+You can use the CacheBustingWorker to rewrite the target paths for assets. It will insert an identifier before the filename
+extension that is unique for a particular version of the asset.
 
 Two strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
 
