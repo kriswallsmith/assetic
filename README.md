@@ -183,6 +183,8 @@ $css = $factory->createAsset(array(
 echo $css->dump();
 ```
 
+The `AssetFactory` is constructed with a root directory which is used as the base directory for relative asset paths.
+
 Prefixing a filter name with a question mark, as `yui_css` is here, will cause
 that filter to be omitted when the factory is in debug mode.
 
