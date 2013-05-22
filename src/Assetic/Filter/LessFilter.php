@@ -14,7 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
-use Assetic\Util\CssUtils;
+use Assetic\Util\LessUtils;
 
 /**
  * Loads LESS files.
@@ -176,7 +176,7 @@ EOF;
         }
 
         $children = array();
-        foreach (CssUtils::extractImports($content) as $reference) {
+        foreach (LessUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
                 // todo: skip imports with media queries

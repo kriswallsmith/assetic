@@ -51,7 +51,7 @@ abstract class BaseProcessFilter implements FilterInterface
 
     protected function mergeEnv(ProcessBuilder $pb)
     {
-        foreach ($_SERVER as $key => $value) {
+        foreach (array_filter($_SERVER, 'is_scalar') as $key => $value) {
             $pb->setEnv($key, $value);
         }
     }

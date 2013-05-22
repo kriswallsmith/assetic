@@ -201,6 +201,16 @@ EOF;
             array('@import url(\'main\');'),
             array('@import url("main");'),
             array('@import url(main);'),
+            array('@import-once \'main.less\';'),
+            array('@import-once "main.less";'),
+            array('@import-once url(\'main.less\');'),
+            array('@import-once url("main.less");'),
+            array('@import-once url(main.less);'),
+            array('@import-once \'main\';'),
+            array('@import-once "main";'),
+            array('@import-once url(\'main\');'),
+            array('@import-once url("main");'),
+            array('@import-once url(main);'),
         );
     }
 }

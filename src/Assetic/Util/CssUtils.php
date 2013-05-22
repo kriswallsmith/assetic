@@ -35,9 +35,9 @@ abstract class CssUtils
      */
     public static function filterReferences($content, $callback, $limit = -1, &$count = 0)
     {
-        $content = self::filterUrls($content, $callback, $limit, $count);
-        $content = self::filterImports($content, $callback, $limit, $count, false);
-        $content = self::filterIEFilters($content, $callback, $limit, $count);
+        $content = static::filterUrls($content, $callback, $limit, $count);
+        $content = static::filterImports($content, $callback, $limit, $count, false);
+        $content = static::filterIEFilters($content, $callback, $limit, $count);
 
         return $content;
     }
@@ -54,7 +54,7 @@ abstract class CssUtils
      */
     public static function filterUrls($content, $callback, $limit = -1, &$count = 0)
     {
-        return preg_replace_callback(self::REGEX_URLS, $callback, $content, $limit, $count);
+        return preg_replace_callback(static::REGEX_URLS, $callback, $content, $limit, $count);
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class CssUtils
      */
     public static function filterImports($content, $callback, $limit = -1, &$count = 0, $includeUrl = true)
     {
-        $pattern = $includeUrl ? self::REGEX_IMPORTS : self::REGEX_IMPORTS_NO_URLS;
+        $pattern = $includeUrl ? static::REGEX_IMPORTS : static::REGEX_IMPORTS_NO_URLS;
 
         return preg_replace_callback($pattern, $callback, $content, $limit, $count);
     }
@@ -87,7 +87,7 @@ abstract class CssUtils
      */
     public static function filterIEFilters($content, $callback, $limit = -1, &$count = 0)
     {
-        return preg_replace_callback(self::REGEX_IE_FILTERS, $callback, $content, $limit, $count);
+        return preg_replace_callback(static::REGEX_IE_FILTERS, $callback, $content, $limit, $count);
     }
 
     /**
@@ -100,7 +100,7 @@ abstract class CssUtils
     public static function extractImports($content)
     {
         $imports = array();
-        self::filterImports($content, function($matches) use(& $imports) {
+        static::filterImports($content, function($matches) use(& $imports) {
             $imports[] = $matches['url'];
         });
 
