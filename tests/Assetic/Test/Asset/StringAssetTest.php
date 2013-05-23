@@ -76,4 +76,15 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $asset->setLastModified(123);
         $this->assertEquals(123, $asset->getLastModified(), '->getLastModified() return the set last modified value');
     }
+
+    public function testGetContentNullUnlessLoaded()
+    {
+        // see https://github.com/kriswallsmith/assetic/pull/432
+        $asset = new StringAsset("test");
+        $this->assertNull($asset->getContent(), '->getContent() returns null unless load() has been called.');
+
+        $asset->load();
+
+        $this->assertEquals("test", $asset->getContent(), '->getContent() returns the content after load()');
+    }
 }
