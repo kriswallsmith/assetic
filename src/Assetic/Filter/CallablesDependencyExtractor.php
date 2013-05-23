@@ -31,7 +31,9 @@ class CallablesDependencyExtractor extends CallablesFilter implements Dependency
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        return $this->extractor($factory, $content, $loadPath);
+        if (null !== $callable = $this->extractor) {
+            return $callable($factory, $content, $loadPath);
+        }
     }
 
 }
