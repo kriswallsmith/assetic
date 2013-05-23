@@ -33,6 +33,8 @@ class CallablesDependencyExtractor extends CallablesFilter implements Dependency
     {
         if (null !== $callable = $this->extractor) {
             return $callable($factory, $content, $loadPath);
+        } else {
+            return array();
         }
     }
 
