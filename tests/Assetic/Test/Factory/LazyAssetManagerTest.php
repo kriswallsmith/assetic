@@ -177,4 +177,54 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
          */
         $this->assertEquals(456, $this->am->getLastModified($assetCollection));
     }
+
+    public function testGetLastModifiedConsidersFiltersAtLeafAssets()
+    {
+        $self = $this;
+
+        $filter = new CallablesFilter(
+            function (AssetInterface $asset)
+            {
+                $asset->setContent(str_replace("unprocessed", "processed", $asset->getContent()));
+            },
+
+            null,
+
+            function (AssetFactory $factory, $content, $loadPath = null) use ($self)
+            {
+                $self->assertEquals('unprocessed', $content, "This filter is applied first");
+
+                $dependedOnAsset = new StringAsset("depended-on asset");
+                $dependedOnAsset->setLastModified(789);
+
+                return array($dependedOnAsset);
+            }
+        );
+
+        $filter2 = new CallablesFilter(
+            function (AssetInterface $asset)
+            {
+                $asset->setContent(str_replace("processed", "even more processed", $asset->getContent()));
+            },
+
+            null,
+
+            function (AssetFactory $factory, $content, $loadPath = null) use ($self)
+            {
+                $self->assertEquals('processed', $content, "This filter is applied as the second one");
+
+                $dependedOnAsset = new StringAsset("another depended-on asset");
+                $dependedOnAsset->setLastModified(456);
+
+                return array($dependedOnAsset);
+            }
+        );
+
+        $asset = new StringAsset("unprocessed", array($filter));
+        $asset->setLastModified(123);
+        $assetCollection = new AssetCollection(array($asset), array($filter2));
+
+        $this->assertEquals("even more processed", $assetCollection->dump());
+        $this->assertEquals(789, $this->am->getLastModified($assetCollection));
+    }
 }
