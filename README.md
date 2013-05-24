@@ -217,19 +217,21 @@ If you serve your assets from static files as just described, you can use the Ca
 paths for assets. It will insert an identifier before the filename extension that is unique for a particular version
 of the asset.
 
-Two strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
+This identifier is based on the modification time of the asset and will also take depended-on assets into
+consideration if the applied filters support it.
 
 ``` php
 <?php
 
 use Assetic\Factory\AssetFactory;
+use Assetic\Factory\LazyAssetManager;
 use Assetic\Factory\Worker\CacheBustingWorker;
 
 $factory = new AssetFactory('/path/to/asset/directory/');
 $factory->setAssetManager($am);
 $factory->setFilterManager($fm);
 $factory->setDebug(true);
-$factory->addWorker(new CacheBustingWorker(CacheBustingWorker::STRATEGY_CONTENT));
+$factory->addWorker(new CacheBustingWorker(new LazyAssetManager($factory)));
 
 $css = $factory->createAsset(array(
     '@reset',         // load the asset manager's "reset" asset
