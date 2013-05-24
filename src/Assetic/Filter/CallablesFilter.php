@@ -55,9 +55,9 @@ class CallablesFilter implements FilterInterface, DependencyExtractorInterface
     {
         if (null !== $callable = $this->extractor) {
             return $callable($factory, $content, $loadPath);
-        } else {
-            return array();
         }
+
+        return array();
     }
 
 }
