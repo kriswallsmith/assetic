@@ -71,7 +71,7 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
             }
 
             // ignore other imports
-            if ('css' != pathinfo($importPath, PATHINFO_EXTENSION)) {
+            if (!isset($importHost) && 'css' != pathinfo($importPath, PATHINFO_EXTENSION)) {
                 return $matches[0];
             }
 
