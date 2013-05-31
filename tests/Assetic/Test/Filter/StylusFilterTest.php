@@ -63,6 +63,6 @@ class StylusFilterTest extends FilterTestCase
         $this->filter->setUseNib(true);
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals("body {\n  white-space: nowrap;\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n\n", $asset->getContent(), '->filterLoad() parses the content using the nib extension');
+        $this->assertEquals("body {\n  white-space: nowrap;\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n", $asset->getContent(), '->filterLoad() parses the content using the nib extension');
     }
 }
