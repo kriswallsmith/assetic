@@ -342,4 +342,16 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll = new AssetCollection();
         $coll->replaceLeaf(new StringAsset('foo'), new StringAsset('bar'));
     }
+
+    public function testClone()
+    {
+        $coll1 = new AssetCollection();
+        $coll1->ensureFilter(new CallablesFilter());
+
+        $coll2 = clone $coll1;
+        $coll2->ensureFilter(new CallablesFilter());
+
+        $this->assertCount(1, $coll1->getFilters());
+        $this->assertCount(2, $coll2->getFilters());
+    }
 }
