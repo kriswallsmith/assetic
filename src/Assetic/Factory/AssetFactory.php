@@ -20,6 +20,7 @@ use Assetic\Asset\GlobAsset;
 use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
 use Assetic\Factory\Worker\WorkerInterface;
+use Assetic\Filter\DependencyExtractorInterface;
 use Assetic\FilterManager;
 
 /**
@@ -247,6 +248,42 @@ class AssetFactory
         return substr(sha1(serialize($inputs).serialize($filters).serialize($options)), 0, 7);
     }
 
+    public function getLastModified(AssetInterface $asset)
+    {
+        $mtime = $asset->getLastModified();
+        if (!$filters = $asset->getFilters()) {
+            return $mtime;
+        }
+
+        // prepare load path
+        $sourceRoot = $asset->getSourceRoot();
+        $sourcePath = $asset->getSourcePath();
+        $loadPath = $sourceRoot && $sourcePath ? dirname($sourceRoot.'/'.$sourcePath) : null;
+
+        $prevFilters = array();
+        foreach ($filters as $filter) {
+            $prevFilters[] = $filter;
+
+            if (!$filter instanceof DependencyExtractorInterface) {
+                continue;
+            }
+
+            // extract children from asset after running all preceeding filters
+            $clone = clone $asset;
+            $clone->clearFilters();
+            foreach (array_slice($prevFilters, 0, -1) as $prevFilter) {
+                $clone->ensureFilter($prevFilter);
+            }
+            $clone->load();
+
+            foreach ($filter->getChildren($this, $clone->getContent(), $loadPath) as $child) {
+                $mtime = max($mtime, $this->getLastModified($child));
+            }
+        }
+
+        return $mtime;
+    }
+
     /**
      * Parses an input string string into an asset.
      *
@@ -345,7 +382,7 @@ class AssetFactory
     {
         foreach ($asset as $leaf) {
             foreach ($this->workers as $worker) {
-                $retval = $worker->process($leaf);
+                $retval = $worker->process($leaf, $this);
 
                 if ($retval instanceof AssetInterface && $leaf !== $retval) {
                     $asset->replaceLeaf($leaf, $retval);
@@ -354,7 +391,7 @@ class AssetFactory
         }
 
         foreach ($this->workers as $worker) {
-            $retval = $worker->process($asset);
+            $retval = $worker->process($asset, $this);
 
             if ($retval instanceof AssetInterface) {
                 $asset = $retval;
