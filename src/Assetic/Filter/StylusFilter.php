@@ -68,7 +68,7 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
 var stylus = require('stylus');
 var sys    = require(process.binding('natives').util ? 'util' : 'sys');
 
-stylus(%s, %s).use(%s).render(function(e, css){
+stylus(%s, %s)%s.render(function(e, css){
     if (e) {
         throw e;
     }
@@ -93,15 +93,13 @@ EOF;
             $parserOptions['compress'] = $this->compress;
         }
 
-        $nib = $this->useNib ? 'require(\'nib\')()' : 'function(){}';
-
         $pb = $this->createProcessBuilder();
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
             json_encode($parserOptions),
-            $nib
+            $this->useNib ? '.use(require(\'nib\')())' : ''
         ));
 
         $proc = $pb->getProcess();
