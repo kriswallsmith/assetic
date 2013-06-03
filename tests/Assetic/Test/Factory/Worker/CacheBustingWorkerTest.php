@@ -40,6 +40,9 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
     public function shouldApplyHash()
     {
         $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $asset->expects($this->any())
             ->method('getTargetPath')
@@ -54,7 +57,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
                 $this->stringEndsWith('.css')
             ));
 
-        $this->worker->process($asset);
+        $this->worker->process($asset, $factory);
     }
 
     /**
@@ -63,6 +66,9 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
     public function shouldApplyConsistentHash()
     {
         $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
         $paths = array();
 
         $asset->expects($this->any())
@@ -77,8 +83,8 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
                 $paths[] = $path;
             }));
 
-        $this->worker->process($asset);
-        $this->worker->process($asset);
+        $this->worker->process($asset, $factory);
+        $this->worker->process($asset, $factory);
 
         $this->assertCount(2, $paths);
         $this->assertCount(1, array_unique($paths));
@@ -90,6 +96,9 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
     public function shouldNotReapplyHash()
     {
         $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
         $path = null;
 
         $asset->expects($this->any())
@@ -106,7 +115,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
                 $path = $arg;
             }));
 
-        $this->worker->process($asset);
-        $this->worker->process($asset);
+        $this->worker->process($asset, $factory);
+        $this->worker->process($asset, $factory);
     }
 }

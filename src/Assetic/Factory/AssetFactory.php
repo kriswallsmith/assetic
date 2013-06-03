@@ -345,7 +345,7 @@ class AssetFactory
     {
         foreach ($asset as $leaf) {
             foreach ($this->workers as $worker) {
-                $retval = $worker->process($leaf);
+                $retval = $worker->process($leaf, $this);
 
                 if ($retval instanceof AssetInterface && $leaf !== $retval) {
                     $asset->replaceLeaf($leaf, $retval);
@@ -354,7 +354,7 @@ class AssetFactory
         }
 
         foreach ($this->workers as $worker) {
-            $retval = $worker->process($asset);
+            $retval = $worker->process($asset, $this);
 
             if ($retval instanceof AssetInterface) {
                 $asset = $retval;

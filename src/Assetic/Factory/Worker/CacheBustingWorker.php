@@ -13,6 +13,7 @@ namespace Assetic\Factory\Worker;
 
 use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 use Assetic\Factory\LazyAssetManager;
 
 /**
@@ -31,7 +32,7 @@ class CacheBustingWorker implements WorkerInterface
         $this->separator = $separator;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, AssetFactory $factory)
     {
         if (!$path = $asset->getTargetPath()) {
             // no path to work with
