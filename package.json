@@ -3,6 +3,7 @@
     "uglifycss": "*",
     "coffee-script": "*",
     "stylus": "*",
+    "nib": "*",
     "ember-precompile": "*",
     "typescript": "*",
     "less": "*",
