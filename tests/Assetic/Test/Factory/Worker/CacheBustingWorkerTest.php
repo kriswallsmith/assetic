@@ -16,21 +16,15 @@ use Assetic\Factory\Worker\CacheBustingWorker;
 
 class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 {
-    private $am;
     private $worker;
 
     protected function setUp()
     {
-        $this->am = $this->getMockBuilder('Assetic\Factory\LazyAssetManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->worker = new CacheBustingWorker($this->am);
+        $this->worker = new CacheBustingWorker();
     }
 
     protected function tearDown()
     {
-        $this->am = null;
         $this->worker = null;
     }
 
@@ -47,7 +41,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
         $asset->expects($this->any())
             ->method('getTargetPath')
             ->will($this->returnValue('css/main.css'));
-        $this->am->expects($this->any())
+        $factory->expects($this->any())
             ->method('getLastModified')
             ->will($this->returnValue(1234));
         $asset->expects($this->once())
@@ -74,7 +68,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
         $asset->expects($this->any())
             ->method('getTargetPath')
             ->will($this->returnValue('css/main.css'));
-        $this->am->expects($this->any())
+        $factory->expects($this->any())
             ->method('getLastModified')
             ->will($this->returnValue(1234));
         $asset->expects($this->exactly(2))
@@ -106,7 +100,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnCallback(function() use(& $path) {
                 return $path ?: 'css/main.css';
             }));
-        $this->am->expects($this->any())
+        $factory->expects($this->any())
             ->method('getLastModified')
             ->will($this->returnValue(1234));
         $asset->expects($this->once())
