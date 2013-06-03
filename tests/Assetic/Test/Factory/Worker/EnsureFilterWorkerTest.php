@@ -19,6 +19,9 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $asset->expects($this->once())
             ->method('getTargetPath')
@@ -28,13 +31,16 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
             ->with($filter);
 
         $worker = new EnsureFilterWorker('/\.css$/', $filter);
-        $worker->process($asset);
+        $worker->process($asset, $factory);
     }
 
     public function testNonMatch()
     {
         $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $asset->expects($this->once())
             ->method('getTargetPath')
@@ -42,6 +48,6 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
         $asset->expects($this->never())->method('ensureFilter');
 
         $worker = new EnsureFilterWorker('/\.css$/', $filter);
-        $worker->process($asset);
+        $worker->process($asset, $factory);
     }
 }
