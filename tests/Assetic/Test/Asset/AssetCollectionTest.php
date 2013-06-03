@@ -372,4 +372,22 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testClearingFiltersWorksAfterCollectionHasBeenIterated()
+    {
+        $coll = new AssetCollection();
+        $coll->add(new StringAsset(""));
+        $coll->ensureFilter(new CallablesFilter());
+
+        /* This iteration is necessary to internally prime the collection's
+           "clones" with one filter. */
+        foreach ($coll as $asset) {
+            $this->assertCount(1, $asset->getFilters());
+        }
+
+        $coll->clearFilters();
+
+        foreach ($coll as $asset) {
+            $this->assertCount(0, $asset->getFilters());
+        }
+    }
 }
