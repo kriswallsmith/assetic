@@ -13,6 +13,7 @@ namespace Assetic\Factory\Worker;
 
 use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 use Assetic\Factory\LazyAssetManager;
 
 /**
@@ -22,16 +23,14 @@ use Assetic\Factory\LazyAssetManager;
  */
 class CacheBustingWorker implements WorkerInterface
 {
-    protected $am;
     private $separator;
 
-    public function __construct(LazyAssetManager $am, $separator = '-')
+    public function __construct($separator = '-')
     {
-        $this->am = $am;
         $this->separator = $separator;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, AssetFactory $factory)
     {
         if (!$path = $asset->getTargetPath()) {
             // no path to work with
@@ -43,7 +42,7 @@ class CacheBustingWorker implements WorkerInterface
             return;
         }
 
-        $replace = $this->separator.$this->getHash($asset).'.'.$search;
+        $replace = $this->separator.$this->getHash($asset, $factory).'.'.$search;
         if (preg_match('/'.preg_quote($replace, '/').'$/', $path)) {
             // already replaced
             return;
@@ -54,11 +53,11 @@ class CacheBustingWorker implements WorkerInterface
         );
     }
 
-    protected function getHash(AssetInterface $asset)
+    protected function getHash(AssetInterface $asset, AssetFactory $factory)
     {
         $hash = hash_init('sha1');
 
-        hash_update($hash, $this->am->getLastModified($asset));
+        hash_update($hash, $factory->getLastModified($asset));
 
         if ($asset instanceof AssetCollectionInterface) {
             foreach ($asset as $i => $leaf) {

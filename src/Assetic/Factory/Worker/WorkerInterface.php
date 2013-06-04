@@ -12,6 +12,7 @@
 namespace Assetic\Factory\Worker;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 
 /**
  * Assets are passed through factory workers before leaving the factory.
@@ -23,9 +24,10 @@ interface WorkerInterface
     /**
      * Processes an asset.
      *
-     * @param AssetInterface $asset An asset
+     * @param AssetInterface $asset   An asset
+     * @param AssetFactory   $factory The factory
      *
      * @return AssetInterface|null May optionally return a replacement asset
      */
-    public function process(AssetInterface $asset);
+    public function process(AssetInterface $asset, AssetFactory $factory);
 }

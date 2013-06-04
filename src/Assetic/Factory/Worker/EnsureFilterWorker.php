@@ -12,6 +12,7 @@
 namespace Assetic\Factory\Worker;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\FilterInterface;
 
 /**
@@ -47,7 +48,7 @@ class EnsureFilterWorker implements WorkerInterface
         $this->flags = $flags;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, AssetFactory $factory)
     {
         if (
             (self::CHECK_SOURCE === (self::CHECK_SOURCE & $this->flags) && preg_match($this->pattern, $asset->getSourcePath()))

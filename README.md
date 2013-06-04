@@ -33,6 +33,8 @@ some of which is immutable.
 | source path  | getSourcePath   | n/a           |
 | target path  | getTargetPath   | setTargetPath |
 
+The "target path" property denotes where an asset (or an collection of assets) should be dumped. 
+
 Filters
 -------
 
@@ -183,10 +185,66 @@ $css = $factory->createAsset(array(
 echo $css->dump();
 ```
 
+The `AssetFactory` is constructed with a root directory which is used as the base directory for relative asset paths.
+
 Prefixing a filter name with a question mark, as `yui_css` is here, will cause
 that filter to be omitted when the factory is in debug mode.
 
-Caching
+You can also register [Workers](src/Assetic/Factory/Worker/WorkerInterface.php) on the factory and all assets created 
+by it will be passed to the worker's `process()` method before being returned. See _Cache Busting_ below for an example.
+
+Dumping Assets to static files
+------------------------------
+
+You can dump all the assets an AssetManager holds to files in a directory. This will probably be below your webserver's document root
+so the files can be served statically.
+
+``` php
+<?php
+
+use Assetic\AssetWriter;
+
+$writer = new AssetWriter('/path/to/web');
+$writer->writeManagerAssets($am);
+```
+
+This will make use of the assets' target path.
+
+Cache Busting
+-------------
+
+If you serve your assets from static files as just described, you can use the CacheBustingWorker to rewrite the target
+paths for assets. It will insert an identifier before the filename extension that is unique for a particular version
+of the asset.
+
+This identifier is based on the modification time of the asset and will also take depended-on assets into
+consideration if the applied filters support it.
+
+``` php
+<?php
+
+use Assetic\Factory\AssetFactory;
+use Assetic\Factory\LazyAssetManager;
+use Assetic\Factory\Worker\CacheBustingWorker;
+
+$factory = new AssetFactory('/path/to/asset/directory/');
+$factory->setAssetManager($am);
+$factory->setFilterManager($fm);
+$factory->setDebug(true);
+$factory->addWorker(new CacheBustingWorker(new LazyAssetManager($factory)));
+
+$css = $factory->createAsset(array(
+    '@reset',         // load the asset manager's "reset" asset
+    'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
+), array(
+    'scss',           // filter through the filter manager's "scss" filter
+    '?yui_css',       // don't use this filter in debug mode
+));
+
+echo $css->dump();
+```
+
+Internal caching
 -------
 
 A simple caching mechanism is provided to avoid unnecessary work.
@@ -209,51 +267,6 @@ $js = new AssetCache(
 $js->dump();
 $js->dump();
 $js->dump();
-```
-
-Cache Busting
--------------
-
-You can use the CacheBustingWorker to provide unique names.
-
-Two strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
-
-``` php
-<?php
-
-use Assetic\Factory\AssetFactory;
-use Assetic\Factory\Worker\CacheBustingWorker;
-
-$factory = new AssetFactory('/path/to/asset/directory/');
-$factory->setAssetManager($am);
-$factory->setFilterManager($fm);
-$factory->setDebug(true);
-$factory->addWorker(new CacheBustingWorker(CacheBustingWorker::STRATEGY_CONTENT));
-
-$css = $factory->createAsset(array(
-    '@reset',         // load the asset manager's "reset" asset
-    'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
-), array(
-    'scss',           // filter through the filter manager's "scss" filter
-    '?yui_css',       // don't use this filter in debug mode
-));
-
-echo $css->dump();
-```
-
-Static Assets
--------------
-
-Alternatively you can just write filtered assets to your web directory and be
-done with it.
-
-``` php
-<?php
-
-use Assetic\AssetWriter;
-
-$writer = new AssetWriter('/path/to/web');
-$writer->writeManagerAssets($am);
 ```
 
 Twig
