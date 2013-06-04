@@ -11,6 +11,8 @@
 
 namespace Assetic\Factory;
 
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
 use Assetic\AssetManager;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
@@ -206,7 +208,17 @@ class LazyAssetManager extends AssetManager
 
     public function getLastModified(AssetInterface $asset)
     {
+        $mtime = null;
+
+        if ($asset instanceof AssetCollectionInterface) {
+            foreach ($asset as $leaf) {
+                $mtime = max($mtime, $this->getLastModified($leaf));
+            }
+            return $mtime;
+        }
+
         $mtime = $asset->getLastModified();
+
         if (!$filters = $asset->getFilters()) {
             return $mtime;
         }

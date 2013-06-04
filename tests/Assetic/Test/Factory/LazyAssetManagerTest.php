@@ -11,7 +11,12 @@
 
 namespace Assetic\Test\Factory;
 
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetInterface;
+use Assetic\Asset\StringAsset;
 use Assetic\Factory\LazyAssetManager;
+use Assetic\Factory\AssetFactory;
+use Assetic\Filter\CallablesFilter;
 
 class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -122,5 +127,104 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array()));
 
         $this->assertEquals(456, $this->am->getLastModified($asset));
+    }
+
+    public function testGetLastModifiedWithAssetCollection()
+    {
+        $asset = new StringAsset("unprocessed");
+        $asset->setLastModified(123);
+
+        $self = $this;
+
+        $filter = new CallablesFilter(
+            function (AssetInterface $asset)
+            {
+                $asset->setContent(str_replace("unprocessed", "processed", $asset->getContent()));
+            },
+
+            null,
+
+            function (AssetFactory $factory, $content, $loadPath = null) use ($self)
+            {
+                $self->assertEquals('unprocessed', $content, "Dependency extraction happens on the content before the filter itself is applied");
+
+                $dependedOnAsset = new StringAsset("depended-on asset");
+                $dependedOnAsset->setLastModified(456);
+
+                return array($dependedOnAsset);
+            }
+        );
+
+        $filter2 = new CallablesFilter(
+            function (AssetInterface $asset)
+            {
+                $asset->setContent(str_replace("processed", "even more processed", $asset->getContent()));
+            }
+        );
+
+
+        $assetCollection = new AssetCollection(array($asset), array($filter, $filter2));
+
+        $this->assertEquals(123, $asset->getLastModified());
+
+        $this->assertEquals("even more processed", $assetCollection->dump());
+        $this->assertEquals(123, $assetCollection->getLastModified());
+
+        /*
+         * Might be confusing that the LazyAssetManager's getLastModified() method
+         * applies the "deep mtime" logic, whereas every other Asset returns
+         * the "shallow" value from a method with the same name.
+         */
+        $this->assertEquals(456, $this->am->getLastModified($assetCollection));
+    }
+
+    public function testGetLastModifiedConsidersFiltersAtLeafAssets()
+    {
+        $self = $this;
+
+        $filter = new CallablesFilter(
+            function (AssetInterface $asset)
+            {
+                $asset->setContent(str_replace("unprocessed", "processed", $asset->getContent()));
+            },
+
+            null,
+
+            function (AssetFactory $factory, $content, $loadPath = null) use ($self)
+            {
+                $self->assertEquals('unprocessed', $content, "This filter is applied first");
+
+                $dependedOnAsset = new StringAsset("depended-on asset");
+                $dependedOnAsset->setLastModified(789);
+
+                return array($dependedOnAsset);
+            }
+        );
+
+        $filter2 = new CallablesFilter(
+            function (AssetInterface $asset)
+            {
+                $asset->setContent(str_replace("processed", "even more processed", $asset->getContent()));
+            },
+
+            null,
+
+            function (AssetFactory $factory, $content, $loadPath = null) use ($self)
+            {
+                $self->assertEquals('processed', $content, "This filter is applied as the second one");
+
+                $dependedOnAsset = new StringAsset("another depended-on asset");
+                $dependedOnAsset->setLastModified(456);
+
+                return array($dependedOnAsset);
+            }
+        );
+
+        $asset = new StringAsset("unprocessed", array($filter));
+        $asset->setLastModified(123);
+        $assetCollection = new AssetCollection(array($asset), array($filter2));
+
+        $this->assertEquals("even more processed", $assetCollection->dump());
+        $this->assertEquals(789, $this->am->getLastModified($assetCollection));
     }
 }
