@@ -54,8 +54,6 @@ abstract class CssUtils
      */
     public static function filterUrls($content, $callback, $limit = -1, &$count = 0)
     {
-        $content = static::stripComments($content);
-
         return preg_replace_callback(static::REGEX_URLS, $callback, $content, $limit, $count);
     }
 
@@ -72,7 +70,6 @@ abstract class CssUtils
      */
     public static function filterImports($content, $callback, $limit = -1, &$count = 0, $includeUrl = true)
     {
-        $content = static::stripComments($content);
         $pattern = $includeUrl ? static::REGEX_IMPORTS : static::REGEX_IMPORTS_NO_URLS;
 
         return preg_replace_callback($pattern, $callback, $content, $limit, $count);
@@ -90,8 +87,6 @@ abstract class CssUtils
      */
     public static function filterIEFilters($content, $callback, $limit = -1, &$count = 0)
     {
-        $content = static::stripComments($content);
-
         return preg_replace_callback(static::REGEX_IE_FILTERS, $callback, $content, $limit, $count);
     }
 
@@ -113,9 +108,4 @@ abstract class CssUtils
     }
 
     final private function __construct() { }
-
-    protected static function stripComments($content)
-    {
-        return implode('', preg_split('#/\*.*\*/#', $content));
-    }
 }
