@@ -34,4 +34,18 @@ CSS;
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
         $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
+
+    public function testFilterCommentless()
+    {
+        $content = 'A/*B*/C/*D*/E';
+
+        $filtered = '';
+        $result = CssUtils::filterCommentless($content, function($part) use(& $filtered) {
+            $filtered .= $part;
+            return $part;
+        });
+
+        $this->assertEquals('ACE', $filtered);
+        $this->assertEquals($content, $result);
+    }
 }

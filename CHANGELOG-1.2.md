@@ -5,3 +5,4 @@
    `WorkerInterface::process()`
  * [BC BREAK] Removed `LazyAssetManager` from `CacheBustingWorker` constructor
  * A new `getSourceDirectory()` method was added on the AssetInterface
+ * added CssUtils::filterCommentless()

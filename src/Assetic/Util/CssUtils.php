@@ -22,6 +22,7 @@ abstract class CssUtils
     const REGEX_IMPORTS         = '/@import (?:url\()?(\'|"|)(?P<url>[^\'"\)\n\r]*)\1\)?;?/';
     const REGEX_IMPORTS_NO_URLS = '/@import (?!url\()(\'|"|)(?P<url>[^\'"\)\n\r]*)\1;?/';
     const REGEX_IE_FILTERS      = '/src=(["\']?)(?P<url>.*?)\\1/';
+    const REGEX_COMMENTS        = '/(\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\/)/';
 
     /**
      * Filters all references -- url() and "@import" -- through a callable.
@@ -88,6 +89,28 @@ abstract class CssUtils
     public static function filterIEFilters($content, $callback, $limit = -1, &$count = 0)
     {
         return preg_replace_callback(static::REGEX_IE_FILTERS, $callback, $content, $limit, $count);
+    }
+
+    /**
+     * Filters each non-comment part through a callable.
+     *
+     * @param string   $content  The CSS
+     * @param callable $callback A PHP callable
+     *
+     * @return string The filtered CSS
+     */
+    public static function filterCommentless($content, $callback)
+    {
+        $result = '';
+        foreach (preg_split(static::REGEX_COMMENTS, $content, -1, PREG_SPLIT_DELIM_CAPTURE) as $part) {
+            if (!preg_match(static::REGEX_COMMENTS, $part, $match) || $part != $match[0]) {
+                $part = call_user_func($callback, $part);
+            }
+
+            $result .= $part;
+        }
+
+        return $result;
     }
 
     /**
