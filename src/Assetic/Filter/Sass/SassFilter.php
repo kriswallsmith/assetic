@@ -178,11 +178,11 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
     {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    public function getChildren(AssetFactory $factory, AssetInterface $asset)
     {
         $loadPaths = $this->loadPaths;
-        if ($loadPath) {
-            array_unshift($loadPaths, $loadPath);
+        if ($dir = $asset->getSourceDirectory()) {
+            array_unshift($loadPaths, $dir);
         }
 
         if (!$loadPaths) {
@@ -190,7 +190,7 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         }
 
         $children = array();
-        foreach (CssUtils::extractImports($content) as $reference) {
+        foreach (CssUtils::extractImports($asset->getContent()) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
                 // todo: skip imports with media queries
@@ -214,7 +214,8 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
 
             foreach ($loadPaths as $loadPath) {
                 foreach ($needles as $needle) {
-                    if (file_exists($file = $loadPath.'/'.$needle)) {
+                    $file = $loadPath.'/'.$needle;
+                    if (file_exists($file)) {
                         $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
                         foreach ($coll as $leaf) {
                             $leaf->ensureFilter($this);

@@ -83,10 +83,12 @@ EOF;
     public function testGetChildrenCatchesSassImports()
     {
         $factory = new AssetFactory('/'); // the factory root isn't used
+        $asset = new StringAsset('@import "include";', array(), __DIR__ . "/../fixtures/sass", "test.scss");
+        $asset->load(); // https://github.com/kriswallsmith/assetic/pull/432#issuecomment-18355754
 
-        $children = $this->filter->getChildren($factory, '@import "include";', __DIR__.'/../fixtures/sass');
+        $children = $this->filter->getChildren($factory, $asset);
         $this->assertCount(1, $children);
-        $this->assertEquals(__DIR__.'/../fixtures/sass', $children[0]->getSourceRoot());
+        $this->assertEquals($asset->getSourceDirectory(), $children[0]->getSourceDirectory());
         $this->assertEquals('_include.scss', $children[0]->getSourcePath());
 
         $filters = $children[0]->getFilters();
@@ -105,7 +107,9 @@ EOF;
 CSS;
 
         $factory = new AssetFactory('/'); // the factory root isn't used
+        $asset = new StringAsset($imports, array(), __DIR__, '/../fixtures/sass');
+        $asset->load(); // https://github.com/kriswallsmith/assetic/pull/432#issuecomment-18355754
 
-        $this->assertEquals(array(), $this->filter->getChildren($factory, $imports, __DIR__.'/../fixtures/sass'));
+        $this->assertEmpty($this->filter->getChildren($factory, $asset));
     }
 }

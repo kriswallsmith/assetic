@@ -274,7 +274,7 @@ class AssetFactory
                 }
                 $clone->load();
 
-                foreach ($filter->getChildren($this, $clone->getContent(), $clone->getSourceDirectory()) as $child) {
+                foreach ($filter->getChildren($this, $clone) as $child) {
                     $mtime = max($mtime, $this->getLastModified($child));
                 }
             }

@@ -161,11 +161,11 @@ EOF;
      * @todo support for import-once
      * @todo support for import (less) "lib.css"
      */
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    public function getChildren(AssetFactory $factory, AssetInterface $asset)
     {
         $loadPaths = $this->loadPaths;
-        if (null !== $loadPath) {
-            $loadPaths[] = $loadPath;
+        if ($dir = $asset->getSourceDirectory()) {
+            $loadPaths[] = $dir;
         }
 
         if (empty($loadPaths)) {
@@ -173,7 +173,7 @@ EOF;
         }
 
         $children = array();
-        foreach (LessUtils::extractImports($content) as $reference) {
+        foreach (LessUtils::extractImports($asset->getContent()) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
                 // todo: skip imports with media queries

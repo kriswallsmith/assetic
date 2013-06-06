@@ -140,10 +140,15 @@ EOF;
      */
     public function testGetChildren($import)
     {
-        $children = $this->filter->getChildren(new AssetFactory('/'), $import, __DIR__.'/fixtures/less');
+        $factory = new AssetFactory('/');
+        $asset = new StringAsset($import, array(), __DIR__ . "/fixtures/less", "test.less");
+        $asset->load(); // https://github.com/kriswallsmith/assetic/pull/432#issuecomment-18355754
+
+        $children = $this->filter->getChildren($factory, $asset);
 
         $this->assertCount(1, $children);
         $this->assertEquals('main.less', $children[0]->getSourcePath());
+        $this->assertEquals($asset->getSourceDirectory(), $children[0]->getSourceDirectory());
     }
 
     public function provideImports()

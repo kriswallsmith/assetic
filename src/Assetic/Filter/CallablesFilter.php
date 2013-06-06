@@ -51,10 +51,10 @@ class CallablesFilter implements FilterInterface, DependencyExtractorInterface
         }
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    public function getChildren(AssetFactory $factory, AssetInterface $asset)
     {
         if (null !== $callable = $this->extractor) {
-            return $callable($factory, $content, $loadPath);
+            return $callable($factory, $asset);
         }
 
         return array();

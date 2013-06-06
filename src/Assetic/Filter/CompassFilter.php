@@ -370,7 +370,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    public function getChildren(AssetFactory $factory, AssetInterface $asset)
     {
         // todo
         return array();

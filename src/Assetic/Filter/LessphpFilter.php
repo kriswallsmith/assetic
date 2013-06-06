@@ -105,11 +105,11 @@ class LessphpFilter implements DependencyExtractorInterface
     {
     }
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    public function getChildren(AssetFactory $factory, AssetInterface $asset)
     {
         $loadPaths = $this->loadPaths;
-        if (null !== $loadPath) {
-            $loadPaths[] = $loadPath;
+        if ($dir = $asset->getSourceDirectory()) {
+            $loadPaths[] = $dir;
         }
 
         if (empty($loadPaths)) {
@@ -117,7 +117,7 @@ class LessphpFilter implements DependencyExtractorInterface
         }
 
         $children = array();
-        foreach (LessUtils::extractImports($content) as $reference) {
+        foreach (LessUtils::extractImports($asset->getContent()) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
                 // todo: skip imports with media queries
