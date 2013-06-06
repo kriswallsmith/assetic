@@ -34,4 +34,16 @@ CSS;
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
         $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
+
+    public function testExtractImportsIgnoresComments()
+    {
+        $content = <<<CSS
+@import 'yes.css';
+/* @import 'no.css'; */
+@import 'yep.css';
+/* @import 'nope.css'; */
+CSS;
+
+        $this->assertEquals(array('yes.css', 'yep.css'), CssUtils::extractImports($content));
+    }
 }
