@@ -79,14 +79,11 @@ stylus(%s, %s)%s.render(function(e, css){
 
 EOF;
 
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         // parser options
         $parserOptions = array();
-        if ($root && $path) {
-            $parserOptions['paths'] = array(dirname($root.'/'.$path));
-            $parserOptions['filename'] = basename($path);
+        if ($dir = $asset->getSourceDirectory()) {
+            $parserOptions['paths'] = array($dir);
+            $parserOptions['filename'] = basename($asset->getSourcePath());
         }
 
         if (null !== $this->compress) {

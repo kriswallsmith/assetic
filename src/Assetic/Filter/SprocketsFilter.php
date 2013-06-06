@@ -144,11 +144,8 @@ end
 
 EOF;
 
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
-        if ($root && $path) {
-            return sprintf($format, var_export(dirname($root.'/'.$path), true));
+        if ($dir = $asset->getSourceDirectory()) {
+            return sprintf($format, var_export($dir, true));
         }
     }
 }

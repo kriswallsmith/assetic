@@ -190,12 +190,9 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
 
     public function filterLoad(AssetInterface $asset)
     {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         $loadPaths = $this->loadPaths;
-        if ($root && $path) {
-            $loadPaths[] = dirname($root.'/'.$path);
+        if ($dir = $asset->getSourceDirectory()) {
+            $loadPaths[] = $dir;
         }
 
         // compass does not seems to handle symlink, so we use realpath()
@@ -318,7 +315,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
             $type = $this->scss ? 'scss' : 'sass';
-        } elseif ($path) {
+        } elseif ($path = $asset->getSourcePath()) {
             // FIXME: what if the extension is something else?
             $type = pathinfo($path, PATHINFO_EXTENSION);
         } else {

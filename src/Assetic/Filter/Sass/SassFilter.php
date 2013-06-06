@@ -115,18 +115,15 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
 
         $pb = $this->createProcessBuilder($sassProcessArgs);
 
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
-        if ($root && $path) {
-            $pb->add('--load-path')->add(dirname($root.'/'.$path));
+        if ($dir = $asset->getSourceDirectory()) {
+            $pb->add('--load-path')->add($dir);
         }
 
         if ($this->unixNewlines) {
             $pb->add('--unix-newlines');
         }
 
-        if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($path, PATHINFO_EXTENSION))) {
+        if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($asset->getSourcePath(), PATHINFO_EXTENSION))) {
             $pb->add('--scss');
         }
 

@@ -83,6 +83,11 @@ class AssetReference implements AssetInterface
         return $this->callAsset(__FUNCTION__);
     }
 
+    public function getSourceDirectory()
+    {
+        return $this->callAsset(__FUNCTION__);
+    }
+
     public function getTargetPath()
     {
         return $this->callAsset(__FUNCTION__);
