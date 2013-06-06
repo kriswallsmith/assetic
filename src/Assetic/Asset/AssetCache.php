@@ -92,6 +92,11 @@ class AssetCache implements AssetInterface
         return $this->asset->getSourcePath();
     }
 
+    public function getSourceDirectory()
+    {
+        return $this->asset->getSourceDirectory();
+    }
+
     public function getTargetPath()
     {
         return $this->asset->getTargetPath();

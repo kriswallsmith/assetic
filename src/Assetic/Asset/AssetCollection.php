@@ -173,6 +173,10 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     {
     }
 
+    public function getSourceDirectory()
+    {
+    }
+
     public function getTargetPath()
     {
         return $this->targetPath;

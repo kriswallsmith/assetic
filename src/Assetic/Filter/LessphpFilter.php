@@ -81,12 +81,9 @@ class LessphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         $lc = new \lessc();
-        if ($root && $path) {
-            $lc->importDir = dirname($root.'/'.$path);
+        if ($dir = $asset->getSourceDirectory()) {
+            $lc->importDir = $dir;
         }
 
         foreach ($this->loadPaths as $loadPath) {
