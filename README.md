@@ -33,7 +33,7 @@ some of which is immutable.
 | source path  | getSourcePath   | n/a           |
 | target path  | getTargetPath   | setTargetPath |
 
-The "target path" property denotes where an asset (or an collection of assets) should be dumped. 
+The "target path" property denotes where an asset (or an collection of assets) should be dumped.
 
 Filters
 -------
@@ -190,7 +190,7 @@ The `AssetFactory` is constructed with a root directory which is used as the bas
 Prefixing a filter name with a question mark, as `yui_css` is here, will cause
 that filter to be omitted when the factory is in debug mode.
 
-You can also register [Workers](src/Assetic/Factory/Worker/WorkerInterface.php) on the factory and all assets created 
+You can also register [Workers](src/Assetic/Factory/Worker/WorkerInterface.php) on the factory and all assets created
 by it will be passed to the worker's `process()` method before being returned. See _Cache Busting_ below for an example.
 
 Dumping Assets to static files
@@ -224,14 +224,13 @@ consideration if the applied filters support it.
 <?php
 
 use Assetic\Factory\AssetFactory;
-use Assetic\Factory\LazyAssetManager;
 use Assetic\Factory\Worker\CacheBustingWorker;
 
 $factory = new AssetFactory('/path/to/asset/directory/');
 $factory->setAssetManager($am);
 $factory->setFilterManager($fm);
 $factory->setDebug(true);
-$factory->addWorker(new CacheBustingWorker(new LazyAssetManager($factory)));
+$factory->addWorker(new CacheBustingWorker());
 
 $css = $factory->createAsset(array(
     '@reset',         // load the asset manager's "reset" asset
