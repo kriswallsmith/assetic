@@ -29,16 +29,14 @@ abstract class CssUtils
      *
      * @param string   $content  The CSS
      * @param callable $callback A PHP callable
-     * @param integer  $limit
-     * @param integer  $count
      *
      * @return string The filtered CSS
      */
-    public static function filterReferences($content, $callback, $limit = -1, &$count = 0)
+    public static function filterReferences($content, $callback)
     {
-        $content = static::filterUrls($content, $callback, $limit, $count);
-        $content = static::filterImports($content, $callback, $limit, $count, false);
-        $content = static::filterIEFilters($content, $callback, $limit, $count);
+        $content = static::filterUrls($content, $callback);
+        $content = static::filterImports($content, $callback, false);
+        $content = static::filterIEFilters($content, $callback);
 
         return $content;
     }
@@ -48,14 +46,12 @@ abstract class CssUtils
      *
      * @param string   $content  The CSS
      * @param callable $callback A PHP callable
-     * @param integer  $limit    Limit the number of replacements
-     * @param integer  $count    Will be populated with the count
      *
      * @return string The filtered CSS
      */
-    public static function filterUrls($content, $callback, $limit = -1, &$count = 0)
+    public static function filterUrls($content, $callback)
     {
-        return preg_replace_callback(static::REGEX_URLS, $callback, $content, $limit, $count);
+        return preg_replace_callback(static::REGEX_URLS, $callback, $content);
     }
 
     /**
@@ -63,17 +59,15 @@ abstract class CssUtils
      *
      * @param string   $content    The CSS
      * @param callable $callback   A PHP callable
-     * @param integer  $limit      Limit the number of replacements
-     * @param integer  $count      Will be populated with the count
      * @param Boolean  $includeUrl Whether to include url() in the pattern
      *
      * @return string The filtered CSS
      */
-    public static function filterImports($content, $callback, $limit = -1, &$count = 0, $includeUrl = true)
+    public static function filterImports($content, $callback, $includeUrl = true)
     {
         $pattern = $includeUrl ? static::REGEX_IMPORTS : static::REGEX_IMPORTS_NO_URLS;
 
-        return preg_replace_callback($pattern, $callback, $content, $limit, $count);
+        return preg_replace_callback($pattern, $callback, $content);
     }
 
     /**
@@ -81,14 +75,12 @@ abstract class CssUtils
      *
      * @param string   $content  The CSS
      * @param callable $callback A PHP callable
-     * @param integer  $limit    Limit the number of replacements
-     * @param integer  $count    Will be populated with the count
      *
      * @return string The filtered CSS
      */
-    public static function filterIEFilters($content, $callback, $limit = -1, &$count = 0)
+    public static function filterIEFilters($content, $callback)
     {
-        return preg_replace_callback(static::REGEX_IE_FILTERS, $callback, $content, $limit, $count);
+        return preg_replace_callback(static::REGEX_IE_FILTERS, $callback, $content);
     }
 
     /**
