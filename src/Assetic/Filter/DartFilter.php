@@ -60,8 +60,4 @@ class DartFilter extends BaseProcessFilter
         $asset->setContent(file_get_contents($output));
         unlink($output);
     }
-
-    public function filterDump(AssetInterface $asset)
-    {
-    }
 }

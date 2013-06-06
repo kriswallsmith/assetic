@@ -67,10 +67,6 @@ class UglifyJs2Filter extends BaseNodeFilter
         $this->wrap = $wrap;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder($this->nodeBin

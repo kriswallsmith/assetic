@@ -23,7 +23,7 @@ use Assetic\Factory\AssetFactory;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssphpFilter implements DependencyExtractorInterface
+class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $compass = false;
 
@@ -63,10 +63,6 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function addImportPath($path)
     {
         $this->importPaths[] = $path;
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)

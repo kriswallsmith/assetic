@@ -134,8 +134,4 @@ class GssFilter extends BaseProcessFilter
 
         $asset->setContent($proc->getOutput());
     }
-
-    public function filterDump(AssetInterface $asset)
-    {
-    }
 }

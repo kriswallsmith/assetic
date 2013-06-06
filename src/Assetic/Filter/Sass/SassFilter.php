@@ -174,10 +174,6 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         $asset->setContent($proc->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
-
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         $loadPaths = $this->loadPaths;

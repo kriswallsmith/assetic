@@ -80,10 +80,6 @@ class PngoutFilter extends BaseProcessFilter
         $this->blockSplitThreshold = $blockSplitThreshold;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder(array($this->pngoutBin));

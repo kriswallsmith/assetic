@@ -21,7 +21,7 @@ use CssEmbed\CssEmbed;
  * @author Pierre Tachoire <pierre.tachoire@gmail.com>
  * @link https://github.com/krichprollsch/phpCssEmbed
  */
-class PhpCssEmbedFilter implements DependencyExtractorInterface
+class PhpCssEmbedFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $presets = array();
 
@@ -38,10 +38,6 @@ class PhpCssEmbedFilter implements DependencyExtractorInterface
         }
 
         $asset->setContent($pce->embedString($asset->getContent()));
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)

@@ -74,10 +74,6 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
         $this->maxImageSize = $maxImageSize;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder(array(

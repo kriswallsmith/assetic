@@ -19,7 +19,7 @@ use Assetic\Asset\AssetInterface;
  * @link https://github.com/kamicane/packager
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class PackagerFilter implements FilterInterface
+class PackagerFilter extends BaseFilter
 {
     private $packages;
 
@@ -56,9 +56,5 @@ EOF;
         rmdir($package);
 
         $asset->setContent($content);
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
     }
 }
