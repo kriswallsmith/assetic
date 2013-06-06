@@ -100,11 +100,8 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
 
         // automatically define root if not already defined
         if (null === $this->root) {
-            $root = $asset->getSourceRoot();
-            $path = $asset->getSourcePath();
-
-            if ($root && $path) {
-                $pb->add('--root')->add(dirname($root.'/'.$path));
+            if ($dir = $asset->getSourceDirectory()) {
+                $pb->add('--root')->add($dir);
             }
         } else {
             $pb->add('--root')->add($this->root);

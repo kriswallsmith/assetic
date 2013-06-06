@@ -113,6 +113,16 @@ interface AssetInterface
     public function getSourcePath();
 
     /**
+     * Returns the asset's source directory.
+     *
+     * The source directory is the directory the asset was located in
+     * and can be used to resolve references relative to an asset.
+     *
+     * @return string|null The asset's source directory
+     */
+    public function getSourceDirectory();
+
+    /**
      * Returns the URL for the current asset.
      *
      * @return string|null A web URL where the asset will be dumped

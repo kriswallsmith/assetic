@@ -32,12 +32,9 @@ class PhpCssEmbedFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         $pce = new CssEmbed();
-        if ($root && $path) {
-            $pce->setRootDir(dirname($root.'/'.$path));
+        if ($dir = $asset->getSourceDirectory()) {
+            $pce->setRootDir($dir);
         }
 
         $asset->setContent($pce->embedString($asset->getContent()));

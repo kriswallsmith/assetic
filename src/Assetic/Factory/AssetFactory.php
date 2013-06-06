@@ -258,11 +258,6 @@ class AssetFactory
                 continue;
             }
 
-            // prepare load path
-            $sourceRoot = $leaf->getSourceRoot();
-            $sourcePath = $leaf->getSourcePath();
-            $loadPath = $sourceRoot && $sourcePath ? dirname($sourceRoot.'/'.$sourcePath) : null;
-
             $prevFilters = array();
             foreach ($filters as $filter) {
                 $prevFilters[] = $filter;
@@ -279,7 +274,7 @@ class AssetFactory
                 }
                 $clone->load();
 
-                foreach ($filter->getChildren($this, $clone->getContent(), $loadPath) as $child) {
+                foreach ($filter->getChildren($this, $clone->getContent(), $clone->getSourceDirectory()) as $child) {
                     $mtime = max($mtime, $this->getLastModified($child));
                 }
             }

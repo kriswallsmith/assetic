@@ -56,5 +56,6 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new HttpAsset(self::JQUERY);
         $this->assertEquals('http://ajax.googleapis.com', $asset->getSourceRoot(), '->__construct() set the source root');
         $this->assertEquals('ajax/libs/jquery/1.6.1/jquery.min.js', $asset->getSourcePath(), '->__construct() set the source path');
+        $this->assertEquals('http://ajax.googleapis.com/ajax/libs/jquery/1.6.1', $asset->getSourceDirectory(), '->__construct() sets the source directory');
     }
 }
