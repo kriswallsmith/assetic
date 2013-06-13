@@ -197,18 +197,25 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
                 continue;
             }
 
+            // Compute the partial variant reference
+            $pathElements = pathinfo($reference);
+            $partialReference = $pathElements['dirname'] . DIRECTORY_SEPARATOR . '_' . $pathElements['filename'];
+            if (isset($pathElements['extension'])) {
+                $partialReference .= '.' . $pathElements['extension'];
+            }
+
             // the reference may or may not have an extension or be a partial
             if (pathinfo($reference, PATHINFO_EXTENSION)) {
                 $needles = array(
                     $reference,
-                    '_'.$reference,
+                    $partialReference,
                 );
             } else {
                 $needles = array(
                     $reference.'.scss',
                     $reference.'.sass',
-                    '_'.$reference.'.scss',
-                    '_'.$reference.'.sass',
+                    $partialReference.'.scss',
+                    $partialReference.'.sass',
                 );
             }
 

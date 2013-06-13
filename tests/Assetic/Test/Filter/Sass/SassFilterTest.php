@@ -94,6 +94,20 @@ EOF;
         $this->assertInstanceOf('Assetic\Filter\Sass\SassFilter', $filters[0]);
     }
 
+    public function testGetChildrenCatchesSassImportsInSubfolders()
+    {
+        $factory = new AssetFactory('/'); // the factory root isn't used
+
+        $children = $this->filter->getChildren($factory, '@import "import_path/import";', __DIR__.'/../fixtures/sass');
+        $this->assertCount(1, $children);
+        $this->assertEquals(__DIR__.'/../fixtures/sass', $children[0]->getSourceRoot());
+        $this->assertEquals('import_path/_import.scss', $children[0]->getSourcePath());
+
+        $filters = $children[0]->getFilters();
+        $this->assertCount(1, $filters);
+        $this->assertInstanceOf('Assetic\Filter\Sass\SassFilter', $filters[0]);
+    }
+
     public function testGetChildrenIgnoresCssImports()
     {
         // These aren't ignored yet (todo):
