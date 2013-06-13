@@ -15,6 +15,18 @@ use Assetic\Util\CssUtils;
 
 class CssUtilsTest extends \PHPUnit_Framework_TestCase
 {
+    public function testFilterUrls()
+    {
+        $content = 'body { background: url(../images/bg.gif); }';
+
+        $matches = array();
+        $actual = CssUtils::filterUrls($content, function($match) use(& $matches) {
+            $matches[] = $match['url'];
+        });
+
+        $this->assertEquals(array('../images/bg.gif'), $matches);
+    }
+
     public function testExtractImports()
     {
         // These don't work yet (todo):
