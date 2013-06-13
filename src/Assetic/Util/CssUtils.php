@@ -51,9 +51,10 @@ abstract class CssUtils
      */
     public static function filterUrls($content, $callback)
     {
-        $regex = static::REGEX_URLS;
-        return static::filterCommentless($content, function($part) use(& $callback, $regex) {
-            return preg_replace_callback($regex, $callback, $part);
+        $pattern = static::REGEX_URLS;
+
+        return static::filterCommentless($content, function($part) use(& $callback, $pattern) {
+            return preg_replace_callback($pattern, $callback, $part);
         });
     }
 
@@ -85,9 +86,10 @@ abstract class CssUtils
      */
     public static function filterIEFilters($content, $callback)
     {
-        $regex = static::REGEX_IE_FILTERS;
-        return static::filterCommentless($content, function($part) use (& $callback, $regex) {
-            return preg_replace_callback($regex, $callback, $part);
+        $pattern = static::REGEX_IE_FILTERS;
+
+        return static::filterCommentless($content, function($part) use (& $callback, $pattern) {
+            return preg_replace_callback($pattern, $callback, $part);
         });
     }
 
