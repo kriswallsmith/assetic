@@ -200,25 +200,18 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
                 continue;
             }
 
-            // Compute the partial variant reference
-            $pathElements = pathinfo($reference);
-            $partialReference = $pathElements['dirname'] . DIRECTORY_SEPARATOR . '_' . $pathElements['filename'];
-            if (isset($pathElements['extension'])) {
-                $partialReference .= '.' . $pathElements['extension'];
-            }
-
             // the reference may or may not have an extension or be a partial
             if (pathinfo($reference, PATHINFO_EXTENSION)) {
                 $needles = array(
                     $reference,
-                    $partialReference,
+                    self::partialize($reference),
                 );
             } else {
                 $needles = array(
                     $reference.'.scss',
                     $reference.'.sass',
-                    $partialReference.'.scss',
-                    $partialReference.'.sass',
+                    self::partialize($reference).'.scss',
+                    self::partialize($reference).'.sass',
                 );
             }
 
@@ -239,5 +232,22 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         }
 
         return $children;
+    }
+
+    private static function partialize($reference)
+    {
+        $parts = pathinfo($reference);
+
+        if ('.' === $parts['dirname']) {
+            $partial = '_'.$parts['filename'];
+        } else {
+            $partial = $parts['dirname'].DIRECTORY_SEPARATOR.'_'.$parts['filename'];
+        }
+
+        if (isset($parts['extension'])) {
+            $partial .= '.'.$parts['extension'];
+        }
+
+        return $partial;
     }
 }
