@@ -1,3 +1,10 @@
+1.1.2 (coming soon)
+-------------------
+
+ * Fixed deep mtime on asset collections
+ * `CallablesFilter` now implements `DependencyExtractorInterface`
+ * Fixed detection of "partial" children in subfolders in `SassFilter`
+
 1.1.1 (June 1, 2013)
 --------------------
 
