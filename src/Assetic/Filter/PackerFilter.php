@@ -21,7 +21,7 @@ use Assetic\Asset\AssetInterface;
  * @link http://joliclic.free.fr/php/javascript-packer/en/
  * @author Maximilian Walter <github@max-walter.net>
  */
-class PackerFilter implements FilterInterface
+class PackerFilter extends BaseFilter
 {
     protected $encoding = 'None';
 
@@ -42,10 +42,6 @@ class PackerFilter implements FilterInterface
     public function setSpecialChars($specialChars)
     {
         $this->specialChars = (bool) $specialChars;
-    }
-
-    public function filterLoad(AssetInterface $asset)
-    {
     }
 
     public function filterDump(AssetInterface $asset)

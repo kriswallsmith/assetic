@@ -69,8 +69,4 @@ class TypeScriptFilter extends BaseNodeFilter
 
         $asset->setContent($compiledJs);
     }
-
-    public function filterDump(AssetInterface $asset)
-    {
-    }
 }

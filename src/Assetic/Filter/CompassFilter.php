@@ -366,10 +366,6 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         }
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
-
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo

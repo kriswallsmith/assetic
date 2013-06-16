@@ -153,10 +153,6 @@ EOF;
         $asset->setContent($proc->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
-
     /**
      * @todo support for import-once
      * @todo support for import (less) "lib.css"

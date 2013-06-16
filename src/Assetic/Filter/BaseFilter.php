@@ -14,17 +14,17 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 
 /**
- * Filters assets through JsMin.
+ * Base class for filter implementations
  *
- * All credit for the filter itself is mentioned in the file itself.
- *
- * @link https://raw.github.com/mrclay/minify/master/min/lib/JSMin.php
- * @author Brunoais <brunoaiss@gmail.com>
+ * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JSMinFilter extends BaseFilter
+abstract class BaseFilter implements FilterInterface
 {
+    public function filterLoad(AssetInterface $asset)
+    {
+    }
+
     public function filterDump(AssetInterface $asset)
     {
-        $asset->setContent(\JSMin::minify($asset->getContent()));
     }
 }

@@ -50,10 +50,6 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $this->stackSize = $stackSize;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     /**
      * Compresses a string.
      *

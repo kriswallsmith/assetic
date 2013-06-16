@@ -40,10 +40,6 @@ class OptiPngFilter extends BaseProcessFilter
         $this->level = $level;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder(array($this->optipngBin));
