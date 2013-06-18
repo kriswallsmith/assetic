@@ -59,14 +59,18 @@ class AssetWriter
         foreach (VarUtils::getCombinations($asset->getVars(), $this->values) as $combination) {
             $asset->setValues($combination);
 
-            static::write(
-                $this->dir.'/'.VarUtils::resolve(
-                    $asset->getTargetPath(),
-                    $asset->getVars(),
-                    $asset->getValues()
-                ),
-                $asset->dump()
+            $target = $this->dir.'/'.VarUtils::resolve(
+                $asset->getTargetPath(),
+                $asset->getVars(),
+                $asset->getValues()
             );
+
+            if (!file_exists($target) || filemtime($target) < $asset->getLastModified()) {
+                static::write(
+                    $target,
+                    $asset->dump()
+                );
+            }
         }
     }
 
