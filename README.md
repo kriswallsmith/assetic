@@ -304,7 +304,11 @@ This behavior can also be triggered by setting a `debug` attribute on the tag:
 ```
 
 These assets need to be written to the web directory so these URLs don't
-return 404 errors.
+return 404 errors. This is done via a script such as the one below, which
+would need to be run each time assets are changed so that changes are
+reflected on the web.
+
+Note: The Twig setup below is extremely simplfiied. Consult the [Twig API Documentation][4] for more detail.
 
 ``` php
 <?php
@@ -316,12 +320,20 @@ use Assetic\Factory\LazyAssetManager;
 
 $am = new LazyAssetManager($factory);
 
+// Setup Twig environment
+$twig = new Twig_Environment(new Twig_Loader_Filesystem('/path/to/templates');
+
 // enable loading assets from twig templates
 $am->setLoader('twig', new TwigFormulaLoader($twig));
 
-// loop through all your templates
+// loop through all your templates (You will likely want to dynamically build this path list vs hardcoding them)
+$templates = array(
+    '/path/to/template.twig',
+    '/path/to/othertemplate.twig'
+);
+
 foreach ($templates as $template) {
-    $resource = new TwigResource($twigLoader, $template);
+    $resource = new TwigResource($twig->getLoader(), $template);
     $am->addResource($resource, 'twig');
 }
 
@@ -337,3 +349,4 @@ Assetic is based on the Python [webassets][1] library (available on
 [1]: http://elsdoerfer.name/docs/webassets
 [2]: https://github.com/miracle2k/webassets
 [3]: http://twig.sensiolabs.org
+[4]: http://twig.sensiolabs.org/doc/api.html
