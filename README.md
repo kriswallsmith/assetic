@@ -308,7 +308,7 @@ return 404 errors. This is done via a script such as the one below, which
 would need to be run each time assets are changed so that changes are
 reflected on the web.
 
-Note: The Twig setup below is extremely simplfiied. Consult the [Twig API Documentation][4] for more detail.
+Note: The Twig setup below is extremely simplified. Consult the [Twig API Documentation][4] for more detail.
 
 ``` php
 <?php
