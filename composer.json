@@ -28,7 +28,7 @@
         "cssmin/cssmin": "*",
         "mrclay/minify": "*",
         "kamicane/packager": "*",
-        "joliclic/javascript-packer": "*"
+        "meenie/javascript-packer": "*"
     },
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
@@ -66,15 +66,6 @@
                 "version": "1.0",
                 "dist": { "url": "https://github.com/kamicane/packager/archive/1.0.zip", "type": "zip" },
                 "autoload": { "classmap": [ "." ] }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "joliclic/javascript-packer",
-                "version": "1.1",
-                "dist": { "url": "http://joliclic.free.fr/php/javascript-packer/telechargement.php?id=2&action=telecharger", "type": "zip" },
-                "autoload": { "classmap": [ "class.JavaScriptPacker.php" ] }
             }
         }
     ]
