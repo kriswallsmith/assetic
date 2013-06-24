@@ -1,22 +1,37 @@
 <?php
 
+/*
+ * This file is part of the Assetic package, an OpenSky project.
+ *
+ * (c) 2010-2013 OpenSky Project Inc
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Assetic\Filter;
+
 use Assetic\Asset\AssetInterface;
+use Assetic\Util\AssetDirectory;
 
 /**
- * Parses URLs in a CSS and move all images to a folder,
+ * Parses URLs in a CSS and move all assets to a folder,
  * changing location of them in CSS.
  *
  * @author Alexandre Salomé <alexandre.salome@gmail.com>
  */
-class ImageDirectoryFilter extends BaseCssFilter
+class AssetDirectoryFilter extends BaseCssFilter
 {
+    /**
+     * @var AssetDirectory
+     */
     protected $directory;
 
-    public function __construct($directory)
+    public function __construct(AssetDirectory $directory)
     {
         $this->directory = $directory;
     }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -44,10 +59,27 @@ class ImageDirectoryFilter extends BaseCssFilter
             return $url;
         }
 
+
+        // we need to resolve path, because fake paths are not accepted:
+        // ie: path/to/inexisting/../folder
         $targetDir = $sourceBase.'/'.dirname($asset->getTargetPath());
-        $image = $this->addImage($targetDir.'/'.$url);
+        $file = $targetDir.'/'.$url;
+        do {
+            $last = $file;
+            $file = preg_replace('#/[^/]+/\.\./#', '/', $last);
+        } while ($last !== $file);
+
+        // we need to remove #... and ?...
+        if (false !== $pos = strpos($file, '?')) {
+            $file = substr($file, 0, $pos);
+        }
+        if (false !== $pos = strpos($file, '#')) {
+            $file = substr($file, 0, $pos);
+        }
+
+        $image = $this->directory->add($file);
         $targetPath = $sourceBase.'/'.$asset->getTargetPath();
-        $sourcePath = $this->directory.'/'.$image;
+        $sourcePath = $this->directory->getDirectory().'/'.$image;
 
         $path = '';
         while (0 !== strpos($sourcePath, $targetDir)) {
@@ -63,38 +95,5 @@ class ImageDirectoryFilter extends BaseCssFilter
         $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
 
         return $path.$image;
-    }
-
-    private function addImage($url)
-    {
-        $name = basename($url);
-
-        if (!file_exists($target = $this->directory.'/'.$name)) {
-            $this->copy($url, $target);
-
-            return $name;
-        }
-
-        $extPos = strrpos($name, '.');
-        $prefix = substr($name, 0, $extPos);
-
-        $count = 1;
-        do {
-            $newName = $prefix.'_'.$count.substr($name, $extPos);
-            $count++;
-        } while (file_exists($this->directory.'/'.$newName));
-
-        $this->copy($url, $this->directory.'/'.$newName);
-
-        return $newName;
-    }
-
-    private function copy($from, $to)
-    {
-        if (!is_dir($dir = dirname($to))) {
-            mkdir($dir, 0777, true);
-        }
-
-        copy($from, $to);
     }
 }
