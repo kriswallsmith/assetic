@@ -22,8 +22,8 @@ use Assetic\Util\VarUtils;
  */
 class AssetWriter
 {
-    private $dir;
-    private $values;
+    protected $dir;
+    protected $values;
 
     /**
      * Constructor.
@@ -59,18 +59,14 @@ class AssetWriter
         foreach (VarUtils::getCombinations($asset->getVars(), $this->values) as $combination) {
             $asset->setValues($combination);
 
-            $target = $this->dir.'/'.VarUtils::resolve(
-                $asset->getTargetPath(),
-                $asset->getVars(),
-                $asset->getValues()
+            static::write(
+                $this->dir.'/'.VarUtils::resolve(
+                    $asset->getTargetPath(),
+                    $asset->getVars(),
+                    $asset->getValues()
+                ),
+                $asset->dump()
             );
-
-            if (!file_exists($target) || filemtime($target) < $asset->getLastModified()) {
-                static::write(
-                    $target,
-                    $asset->dump()
-                );
-            }
         }
     }
 
