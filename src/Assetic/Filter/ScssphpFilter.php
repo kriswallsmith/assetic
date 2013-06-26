@@ -45,11 +45,11 @@ class ScssphpFilter implements DependencyExtractorInterface
         if ($this->compass) {
             new \scss_compass($lc);
         }
-        if ($dir = $asset->getSourceDirectory()) {
-            $lc->addImportPath($dir);
-        }
         foreach ($this->importPaths as $path) {
             $lc->addImportPath($path);
+        }
+        if ($dir = $asset->getSourceDirectory()) {
+            $lc->addImportPath($dir);
         }
 
         $asset->setContent($lc->compile($asset->getContent()));
