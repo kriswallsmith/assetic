@@ -74,7 +74,22 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        // todo
-        return array();
+        preg_match_all('/@import "(.*)";/', $content, $m);
+
+        $sc = new \scssc();
+        $sc->addImportPath($loadPath);
+        foreach($this->importPaths as $path) {
+            $sc->addImportPath($path);
+        }
+
+        $children = array();
+        foreach($m[1] as $match) {
+            $file = $sc->findImport($match);
+            if ($file) {
+                $children[] = $factory->createAsset($file, array(), array('root' => $loadPath));
+            }
+        }
+
+        return $children;
     }
 }
