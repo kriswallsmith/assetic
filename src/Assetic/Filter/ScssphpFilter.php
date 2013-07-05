@@ -41,18 +41,18 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $lc = new \scssc();
+        $sc = new \scssc();
         if ($this->compass) {
-            new \scss_compass($lc);
+            new \scss_compass($sc);
         }
         if ($dir = $asset->getSourceDirectory()) {
-            $lc->addImportPath($dir);
+            $sc->addImportPath($dir);
         }
         foreach ($this->importPaths as $path) {
-            $lc->addImportPath($path);
+            $sc->addImportPath($path);
         }
 
-        $asset->setContent($lc->compile($asset->getContent()));
+        $asset->setContent($sc->compile($asset->getContent()));
     }
 
     public function setImportPaths(array $paths)
@@ -71,7 +71,22 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        // todo
-        return array();
+        preg_match_all('/@import "(.*)";/', $content, $m);
+
+        $sc = new \scssc();
+        $sc->addImportPath($loadPath);
+        foreach($this->importPaths as $path) {
+            $sc->addImportPath($path);
+        }
+
+        $children = array();
+        foreach($m[1] as $match) {
+            $file = $sc->findImport($match);
+            if ($file) {
+                $children[] = $factory->createAsset($file, array(), array('root' => $loadPath));
+            }
+        }
+
+        return $children;
     }
 }
