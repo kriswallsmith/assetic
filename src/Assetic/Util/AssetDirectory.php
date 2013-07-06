@@ -26,6 +26,11 @@ class AssetDirectory
     protected $directory;
 
     /**
+     * @var string
+     */
+    protected $target;
+
+    /**
      * @var CacheInterface
      */
     protected $cache;
@@ -36,9 +41,10 @@ class AssetDirectory
      * @param string         $directory path to the directory of assets
      * @param CacheInterface $cache     a cache to use, to avoid copying the same file
      */
-    public function __construct($directory, CacheInterface $cache = null)
+    public function __construct($directory, $target = null, CacheInterface $cache = null)
     {
         $this->directory = $directory;
+        $this->target    = $target;
         $this->cache     = $cache;
     }
 
@@ -51,7 +57,7 @@ class AssetDirectory
      * @throws InvalidArgumentException file does not exist
      * @throws RuntimeException filesystem errors
      *
-     * @return string relative path (from directory) of the copied file
+     * @return string target image path
      */
     public function add($file, $force = false)
     {
@@ -60,7 +66,7 @@ class AssetDirectory
         }
 
         if (false === $force && null !== $path = $this->getCache($file)) {
-            return $path;
+            return null === $this->target ? $path : $this->target.'/'.$path;
         }
 
         $name = $this->findAvailableName($file);
@@ -77,7 +83,7 @@ class AssetDirectory
             throw new \RuntimeException(sprintf('Error while copying "%s" to "%s".', $file, $target));
         }
 
-        return $name;
+        return null === $this->target ? $name : $this->target.'/'.$name;
     }
 
     /**
@@ -88,6 +94,30 @@ class AssetDirectory
     public function getDirectory()
     {
         return $this->directory;
+    }
+
+    /**
+     * Returns target.
+     *
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Changes target value.
+     *
+     * @param string $target a target path
+     *
+     * @return AssetDirectory fluid interface
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+
+        return $this;
     }
 
     /**

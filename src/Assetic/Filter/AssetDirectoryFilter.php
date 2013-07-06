@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Util\AssetDirectory;
+use Assetic\Util\PathUtils;
 
 /**
  * Parses URLs in a CSS and move all assets to a folder,
@@ -27,73 +28,47 @@ class AssetDirectoryFilter extends BaseCssFilter
      */
     protected $directory;
 
+    /**
+     * @param AssetDirectory $directory directory where to store assets
+     */
     public function __construct(AssetDirectory $directory)
     {
         $this->directory = $directory;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filterLoad(AssetInterface $asset)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filterDump(AssetInterface $asset)
     {
-        $filter = $this;
-        $content = $this->filterReferences($asset->getContent(), function ($match) use ($asset, $filter) {
-            $url = $match['url'];
+        $directory = $this->directory;
 
-            $url = $filter->filterUrl($asset, $url);
+        if (null === $asset->getSourcePath() || null === $asset->getTargetPath()) {
+            return;
+        }
 
-            return 'url('.$match[1].$url.$match[3].')';
+        $content = $this->filterReferences($asset->getContent(), function ($matches) use ($asset, $directory) {
+            $url = $matches['url'];
+
+            if (!PathUtils::isPath($url)) {
+                return $matches[0];
+            }
+
+            $file = PathUtils::resolveUrl($asset, $url);
+            $target = $this->directory->add($file);
+
+            $path = PathUtils::resolveRelative($target, $asset->getTargetPath()).basename($file);
+
+            return str_replace($matches['url'], $path, $matches[0]);
         });
 
         $asset->setContent($content);
-    }
-
-    public function filterUrl(AssetInterface $asset, $url)
-    {
-        $sourceBase = $asset->getSourceRoot();
-        $sourcePath = $asset->getSourcePath();
-
-        if (false !== strpos($sourceBase, '://')) {
-            return $url;
-        }
-
-
-        // we need to resolve path, because fake paths are not accepted:
-        // ie: path/to/inexisting/../folder
-        $targetDir = $sourceBase.'/'.dirname($asset->getTargetPath());
-        $file = $targetDir.'/'.$url;
-        do {
-            $last = $file;
-            $file = preg_replace('#/[^/]+/\.\./#', '/', $last);
-        } while ($last !== $file);
-
-        // we need to remove #... and ?...
-        if (false !== $pos = strpos($file, '?')) {
-            $file = substr($file, 0, $pos);
-        }
-        if (false !== $pos = strpos($file, '#')) {
-            $file = substr($file, 0, $pos);
-        }
-
-        $image = $this->directory->add($file);
-        $targetPath = $sourceBase.'/'.$asset->getTargetPath();
-        $sourcePath = $this->directory->getDirectory().'/'.$image;
-
-        $path = '';
-        while (0 !== strpos($sourcePath, $targetDir)) {
-            if (false !== $pos = strrpos($targetDir, '/')) {
-                $targetDir = substr($targetDir, 0, $pos);
-                $path .= '../';
-            } else {
-                $targetDir = '';
-                $path .= '../';
-                break;
-            }
-        }
-        $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
-
-        return $path.$image;
     }
 }

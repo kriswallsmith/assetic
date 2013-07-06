@@ -74,6 +74,6 @@ class AssetDirectoryTest extends \PHPUnit_Framework_TestCase
 
         $this->toDelete[] = $dir;
 
-        return new AssetDirectory($dir, $cache);
+        return new AssetDirectory($dir, null, $cache);
     }
 }
