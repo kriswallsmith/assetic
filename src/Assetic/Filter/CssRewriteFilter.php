@@ -12,6 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Util\PathUtils;
 
 /**
  * Fixes relative CSS urls.
@@ -45,35 +46,15 @@ class CssRewriteFilter extends BaseCssFilter
         } else {
             // assume source and target are on the same host
             $host = '';
-
-            // pop entries off the target until it fits in the source
-            if ('.' == dirname($sourcePath)) {
-                $path = str_repeat('../', substr_count($targetPath, '/'));
-            } elseif ('.' == $targetDir = dirname($targetPath)) {
-                $path = dirname($sourcePath).'/';
-            } else {
-                $path = '';
-                while (0 !== strpos($sourcePath, $targetDir)) {
-                    if (false !== $pos = strrpos($targetDir, '/')) {
-                        $targetDir = substr($targetDir, 0, $pos);
-                        $path .= '../';
-                    } else {
-                        $targetDir = '';
-                        $path .= '../';
-                        break;
-                    }
-                }
-                $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
-            }
+            $path = PathUtils::resolveRelative($sourcePath, $targetPath);
         }
 
         $content = $this->filterReferences($asset->getContent(), function($matches) use ($host, $path) {
-            if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
-                // absolute or protocol-relative or data uri
+            if (!PathUtils::isPath($matches['url'])) {
                 return $matches[0];
             }
 
-            if (isset($matches['url'][0]) && '/' == $matches['url'][0]) {
+            if (PathUtils::isRootPath($matches['url'])) {
                 // root relative
                 return str_replace($matches['url'], $host.$matches['url'], $matches[0]);
             }
@@ -85,16 +66,7 @@ class CssRewriteFilter extends BaseCssFilter
                 $url = substr($url, 3);
             }
 
-            $parts = array();
-            foreach (explode('/', $host.$path.$url) as $part) {
-                if ('..' === $part && count($parts) && '..' !== end($parts)) {
-                    array_pop($parts);
-                } else {
-                    $parts[] = $part;
-                }
-            }
-
-            return str_replace($matches['url'], implode('/', $parts), $matches[0]);
+            return str_replace($matches['url'], PathUtils::resolveUps($host.$path.$url), $matches[0]);
         });
 
         $asset->setContent($content);
