@@ -15,6 +15,15 @@ use Assetic\Util\VarUtils;
 
 class VarUtilsTest extends \PHPUnit_Framework_TestCase
 {
+    public function testResolve()
+    {
+        $template = '{foo}bar';
+        $vars = array('foo');
+        $values = array('foo' => 'foo');
+
+        $this->assertEquals('foobar', VarUtils::resolve($template, $vars, $values));
+    }
+
     /**
      * @dataProvider getCombinationTests
      */
