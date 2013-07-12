@@ -129,4 +129,23 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('var messages = {"text.greet": "All\u00f4 %name%!"};',
             file_get_contents($this->dir.'/messages.fr.js'));
     }
+
+    /**
+     * @expectedException        RuntimeException
+     * @expectedExceptionMessage Asset targetPath has not been set
+     */
+    public function testWriteAssetRequiresNonNullTargetPath()
+    {
+        $asset = $this->getMock('Assetic\Asset\AssetInterface');
+
+        $asset->expects($this->atLeastOnce())
+            ->method('getTargetPath')
+            ->will($this->returnValue(null));
+        $asset->expects($this->atLeastOnce())
+            ->method('getVars')
+            ->will($this->returnValue(array()));
+
+        $this->writer->writeAsset($asset);
+    }
+
 }
