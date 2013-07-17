@@ -141,9 +141,6 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         $asset->expects($this->atLeastOnce())
             ->method('getTargetPath')
             ->will($this->returnValue(null));
-        $asset->expects($this->atLeastOnce())
-            ->method('getVars')
-            ->will($this->returnValue(array()));
 
         $this->writer->writeAsset($asset);
     }
