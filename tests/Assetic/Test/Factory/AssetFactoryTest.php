@@ -280,4 +280,10 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(456, $this->factory->getLastModified($asset));
     }
+
+    public function testAppendConsensusExtension()
+    {
+        $asset = $this->factory->createAsset(array('{bar}.js'), array(), array('vars' => array('bar')));
+        $this->assertStringEndsWith('{bar}.js', $asset->getTargetPath());
+    }
 }
