@@ -26,16 +26,16 @@ class StylecowFilter implements FilterInterface
      *
      * @var string[]
      */
-    private $filters = array();
+    private $plugins = array();
 
     /**
      * Clears and sets filters to the array passed in.
      *
-     * @param string[] $filters An array of Stylecow plugins (@see https://github.com/oscarotero/stylecow#plugins).
+     * @param string[] $plugins An array of Stylecow plugins (@see https://github.com/oscarotero/stylecow#plugins).
      */
-    public function setFilters(array $filters)
+    public function setFilters(array $plugins)
     {
-        $this->filters = $filters;
+        $this->plugins = $plugins;
     }
 
     /**
@@ -45,8 +45,8 @@ class StylecowFilter implements FilterInterface
      */
     public function setFilter($name)
     {
-        if (!in_array($name, $this->filters)) {
-            $this->filters[] = $name;
+        if (!in_array($name, $this->plugins)) {
+            $this->plugins[] = $name;
         }
     }
 
@@ -57,7 +57,7 @@ class StylecowFilter implements FilterInterface
     public function filterLoad(AssetInterface $asset)
     {
         $css = Parser::parseString($asset->getContent());
-        $css->applyPlugins($this->filters);
+        $css->applyPlugins($this->plugins);
         $asset->setContent((string) $css);
     }
 
