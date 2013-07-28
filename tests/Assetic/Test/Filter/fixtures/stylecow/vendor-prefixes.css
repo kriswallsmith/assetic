@@ -1,0 +1,5 @@
+div {
+    border-radius: 5px;
+    background-image: linear-gradient(to bottom, #70d900, #57a900);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
