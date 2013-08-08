@@ -99,7 +99,7 @@ class GlobAsset extends AssetCollection
         foreach ($this->globs as $glob) {
             $glob = VarUtils::resolve($glob, $this->getVars(), $this->getValues());
 
-            if (false !== $paths = glob($glob)) {
+            if (false !== $paths = $this->glob($glob)) {
                 foreach ($paths as $path) {
                     if (is_file($path)) {
                         $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
@@ -109,5 +109,10 @@ class GlobAsset extends AssetCollection
         }
 
         $this->initialized = true;
+    }
+
+    protected function glob($pattern, $flags = 0)
+    {
+        return glob($pattern, $flags);
     }
 }
