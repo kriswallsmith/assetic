@@ -80,7 +80,31 @@ CSS;
         $asset = new StringAsset($input);
         $asset->load();
 
-        $this->filter->setBrowsers('ff 3');
+        $this->filter->setBrowsers(array('ff 3'));
+        $this->filter->filterLoad($asset);
+
+        $this->assertEquals($expected, $asset->getContent());
+    }
+    
+    public function testAddBrowser()
+    {
+        $input = <<<CSS
+img {
+  border-radius: 10px;
+}        
+CSS;
+        $expected = <<<CSS
+img {
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
+CSS;
+
+        $asset = new StringAsset($input);
+        $asset->load();
+
+        $this->filter->addBrowser('ff 3');
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent());
