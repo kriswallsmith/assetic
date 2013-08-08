@@ -62,12 +62,17 @@ class AutoprefixerFilter extends BaseNodeFilter
         if ($this->browsers) {
             $pb->add('-b')->add(implode(',', $this->browsers));
         }
+        
+        $output = tempnam(sys_get_temp_dir(), 'assetic_autoprefixer');
+        $pb->add('-o')->add($output);
+        
         $proc = $pb->getProcess();
         if (0 !== $proc->run()) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
         
-        $asset->setContent($proc->getOutput());
+        $asset->setContent(file_get_contents($output));
+        unlink($output);
     }
 
     /**

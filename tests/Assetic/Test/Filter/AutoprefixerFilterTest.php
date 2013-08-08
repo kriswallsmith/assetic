@@ -51,7 +51,6 @@ a {
   display: -ms-flexbox;
   display: flex;
 }
-
 CSS;
 
         $asset = new StringAsset($input);
@@ -74,7 +73,6 @@ img {
   -moz-border-radius: 10px;
   border-radius: 10px;
 }
-
 CSS;
 
         $asset = new StringAsset($input);
@@ -98,7 +96,6 @@ img {
   -moz-border-radius: 10px;
   border-radius: 10px;
 }
-
 CSS;
 
         $asset = new StringAsset($input);
