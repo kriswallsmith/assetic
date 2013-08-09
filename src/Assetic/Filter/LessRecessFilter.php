@@ -120,6 +120,41 @@ EOF;
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        return array();
+        $loadPaths = $this->loadPaths;
+        if (null !== $loadPath) {
+            $loadPaths[] = $loadPath;
+        }
+
+        if (empty($loadPaths)) {
+            return array();
+        }
+
+        $children = array();
+        foreach (LessUtils::extractImports($content) as $reference) {
+            if ('.css' === substr($reference, -4)) {
+                // skip normal css imports
+                // todo: skip imports with media queries
+                continue;
+            }
+
+            if ('.less' !== substr($reference, -5)) {
+                $reference .= '.less';
+            }
+
+            foreach ($loadPaths as $loadPath) {
+                if (file_exists($file = $loadPath.'/'.$reference)) {
+                    $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
+                    foreach ($coll as $leaf) {
+                        $leaf->ensureFilter($this);
+                        $children[] = $leaf;
+                        goto next_reference;
+                    }
+                }
+            }
+
+            next_reference:
+        }
+
+        return $children;
     }
 }
