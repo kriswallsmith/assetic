@@ -34,7 +34,6 @@ class CleanCssFilterTest extends FilterTestCase
         $this->asset->load();
 
         $this->filter = new CleanCssFilter($cleancssBin, $nodeBin);
-        $this->filter->setRemoveEmpty(true);
     }
 
     protected function tearDown()
@@ -45,12 +44,34 @@ class CleanCssFilterTest extends FilterTestCase
 
     public function testClean()
     {
+        $this->filter->setRemoveEmpty(true);
         $this->filter->filterDump($this->asset);
 
         $expected = <<<CSS
-@import url(fonts.css);body{background:#000}
+/*! Copyright */@import url(fonts.css);body{background:#000}/*! Second special comment */a{color:#fff}
 CSS;
         $this->assertSame($expected, $this->asset->getContent());
     }
 
+    public function testRemoveSpecialComments()
+    {
+        $this->filter->setKeepSpecialComments(0);
+        $this->filter->filterDump($this->asset);
+
+        $expected = <<<CSS
+@import url(fonts.css);body{background:#000}a{color:#fff}p{}
+CSS;
+        $this->assertSame($expected, $this->asset->getContent());
+    }
+
+    public function testKeepFirstSpecialComments()
+    {
+        $this->filter->setKeepSpecialComments(1);
+        $this->filter->filterDump($this->asset);
+
+        $expected = <<<CSS
+/*! Copyright */@import url(fonts.css);body{background:#000}a{color:#fff}p{}
+CSS;
+        $this->assertSame($expected, $this->asset->getContent());
+    }
 }

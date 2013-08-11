@@ -27,6 +27,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     private $removeEmpty;
     private $keepLineBreaks;
+    private $keepSpecialComments;
 
     /**
      * @param string $cleancssBin   Absolute path to the cleancss executable
@@ -57,6 +58,15 @@ class CleanCssFilter extends BaseNodeFilter
     }
 
     /**
+     * Keep special comments (i.e. /*! special comment *\/)
+     * @param bool $keepSpecialComments * for keeping all (default), 1 for keeping first one, 0 for removing all
+     */
+    public function setKeepSpecialComments($keepSpecialComments)
+    {
+        $this->keepSpecialComments = $keepSpecialComments;
+    }
+
+    /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
     public function filterLoad(AssetInterface $asset)
@@ -82,8 +92,11 @@ class CleanCssFilter extends BaseNodeFilter
             $pb->add('--keep-line-breaks');
         }
 
-        // Remove all special comments (i.e. /*! special comment */)
-        $pb->add('--s0');
+        if (0 === $this->keepSpecialComments) {
+            $pb->add('--s0');
+        } elseif (1 === $this->keepSpecialComments) {
+            $pb->add('--s1');
+        }
 
         // Skip inlining imports
         $pb->add('-s');

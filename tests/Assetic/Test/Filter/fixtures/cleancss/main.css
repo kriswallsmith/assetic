@@ -5,6 +5,9 @@
 body {
     background: black;
 }
-
+/*! Second special comment */
+a {
+    color: white;
+}
 p {
 }
