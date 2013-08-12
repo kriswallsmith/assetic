@@ -24,7 +24,7 @@ class NgminFilterTest extends FilterTestCase
         $ngminBin = $this->findExecutable('ngmin', 'NGMIN_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
         if (!$ngminBin) {
-            $this->markTestSkipped('Unable to find `uglifyjs` executable.');
+            $this->markTestSkipped('Unable to find `ngmin` executable.');
         }
 
 
