@@ -298,6 +298,10 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         if (count($optionsConfig)) {
             $config = array();
             foreach ($this->plugins as $plugin) {
+                if(is_array($plugin)) { // version check
+                    $config[] = sprintf("gem '%s'", addcslashes(implode("', '", $plugin), '\\'));
+                    $plugin = $plugin[0];
+                }
                 $config[] = sprintf("require '%s'", addcslashes($plugin, '\\'));
             }
             foreach ($optionsConfig as $name => $value) {
