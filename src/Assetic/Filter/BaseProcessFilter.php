@@ -32,6 +32,23 @@ abstract class BaseProcessFilter implements FilterInterface
     }
 
     /**
+     * Creates a new temporary file.
+     *
+     * @throws FilterException
+     * @return resource The temporary file resource handle.
+     */
+    protected function createTempFile()
+    {
+        $tmpHandle = tmpfile();
+
+        if (false === $tmpHandle) {
+            throw new FilterException('Error creating temp file.');
+        }
+
+        return $tmpHandle;
+    }
+
+    /**
      * Creates a new process builder.
      *
      * @param array $arguments An optional array of arguments

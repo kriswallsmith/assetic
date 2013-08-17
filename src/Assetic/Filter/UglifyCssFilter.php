@@ -97,18 +97,14 @@ class UglifyCssFilter extends BaseNodeFilter
         }
 
         // input and output files
-        $input = tempnam(sys_get_temp_dir(), 'input');
-        
-        if (false === $input) {
-            throw new \RuntimeException('Could not create temp file. Check temp directory permissions.');
-        }
+        $input = $this->createTempFile();
 
-        file_put_contents($input, $asset->getContent());
-        $pb->add($input);
+        fwrite($input, $asset->getContent());
+        $pb->add(stream_get_meta_data($input)['uri']);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
-        unlink($input);
+        fclose($input);
 
         if (127 === $code) {
             throw new \RuntimeException('Path to node executable could not be resolved.');
