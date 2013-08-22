@@ -229,7 +229,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $pb->add('--no-line-comments');
         }
 
-        // these two options are not passed into the config file
+        // these three options are not passed into the config file
         // because like this, compass adapts this to be xxx_dir or xxx_path
         // whether it's an absolute path or not
         if ($this->imagesDir) {
@@ -238,6 +238,10 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
 
         if ($this->javascriptsDir) {
             $pb->add('--javascripts-dir')->add($this->javascriptsDir);
+        }
+        
+        if ($this->fontsDir) {
+            $pb->add('--fonts-dir')->add($this->fontsDir);
         }
 
         // options in config file
@@ -285,10 +289,6 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
 
         if ($this->httpJavascriptsPath) {
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
-        }
-
-        if ($this->fontsDir) {
-            $optionsConfig['fonts_dir'] = $this->fontsDir;
         }
 
         // options in configuration file
