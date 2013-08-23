@@ -42,6 +42,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $imagesDir;
     private $javascriptsDir;
     private $fontsDir;
+    private $projectDir;
 
     // compass configuration file options
     private $plugins = array();
@@ -132,6 +133,11 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->fontsDir = $fontsDir;
     }
 
+    public function setProjectDir($projectDir)
+    {
+        $this->projectDir = $projectDir;
+    }
+
     // compass configuration file options setters
     public function setPlugins(array $plugins)
     {
@@ -195,13 +201,18 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $loadPaths[] = $dir;
         }
 
+        if ($this->projectDir) {
+            $projectDir = $this->projectDir;
+        } else {
+            $projectDir = sys_get_temp_dir();
+        }
         // compass does not seems to handle symlink, so we use realpath()
-        $tempDir = realpath(sys_get_temp_dir());
+        $projectDir = realpath($projectDir);
 
         $compassProcessArgs = array(
             $this->compassPath,
             'compile',
-            $tempDir,
+            $projectDir,
         );
         if (null !== $this->rubyPath) {
             $compassProcessArgs = array_merge(explode(' ', $this->rubyPath), $compassProcessArgs);
