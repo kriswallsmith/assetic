@@ -310,7 +310,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $pb->add('--config')->add($configFile);
         }
 
-        $pb->add('--sass-dir')->add('')->add('--css-dir')->add('');
+        $pb->add('--sass-dir')->add($tempDir)->add('--css-dir')->add($tempDir);
 
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
