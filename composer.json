@@ -1,5 +1,5 @@
 {
-    "name": "kriswallsmith/assetic",
+    "name": "horvathantal/assetic",
     "minimum-stability": "dev",
     "description": "Asset Management for PHP",
     "keywords": [ "assets", "compression", "minification" ],
