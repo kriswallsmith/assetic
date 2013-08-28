@@ -226,9 +226,9 @@ class AssetFactory
         }
 
         // append consensus extension if missing
-        if (1 === count($extensions)) {
-            $extension = key($extensions);
-            if ($extension && pathinfo($options['output'], PATHINFO_EXTENSION) !== $extension) {
+        if (1 === count($extensions) && $extension = key($extensions)) {
+            $output_extension = pathinfo($options['output'], PATHINFO_EXTENSION);
+            if (!($output_extension && $output_extension[0] !== '{')) {
                 $options['output'] .= '.' . $extension;
             }
         }
