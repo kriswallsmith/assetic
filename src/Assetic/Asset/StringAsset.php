@@ -20,7 +20,6 @@ use Assetic\Filter\FilterInterface;
  */
 class StringAsset extends BaseAsset
 {
-    private $content;
     private $lastModified;
 
     /**
@@ -33,14 +32,14 @@ class StringAsset extends BaseAsset
      */
     public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null)
     {
-        $this->content = $content;
+        $this->setContent($content);
 
         parent::__construct($filters, $sourceRoot, $sourcePath);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad($this->content, $additionalFilter);
+        $this->doLoad($this->getContent(), $additionalFilter);
     }
 
     public function setLastModified($lastModified)
