@@ -204,10 +204,10 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         if ($this->projectDir) {
             $projectDir = $this->projectDir;
         } else {
-            $projectDir = sys_get_temp_dir();
+            // compass does not seems to handle symlink, so we use realpath()
+            $projectDir = realpath(sys_get_temp_dir());
         }
-        // compass does not seems to handle symlink, so we use realpath()
-        $projectDir = realpath($projectDir);
+        $projectDir = $projectDir;
 
         $compassProcessArgs = array(
             $this->compassPath,
