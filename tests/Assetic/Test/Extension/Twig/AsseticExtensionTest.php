@@ -13,6 +13,8 @@ namespace Assetic\Test\Extension\Twig;
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Extension\Twig\AsseticExtension;
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\FileAsset;
 
 class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -214,7 +216,22 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $xml = $this->renderXml('variables.twig');
         $this->assertEquals(2, $xml->url->count());
         $this->assertEquals("js/7d0828c.a.b_foo_1.js", (string) $xml->url[0]);
-        $this->assertEquals("js/7d0828c.a.b_variable_input.a_2.js", (string) $xml->url[1]);
+        $this->assertEquals("js/7d0828c.a.b_variable_input._2.js", (string) $xml->url[1]);
+    }
+
+    public function testMultipleSameVariableValues()
+    {
+        $vars = array('locale');
+        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', array(), null, null, $vars);
+
+        $coll = new AssetCollection(array($asset), array(), null, $vars);
+
+        $coll->setTargetPath('output.{locale}.js');
+
+        $coll->setValues(array('locale' => 'en'));
+        foreach($coll as $asset) {
+            $this->assertEquals('output.{locale}_messages._1.js', $asset->getTargetPath(), 'targetPath must not contain several time the same variable');
+        }
     }
 
     /**
