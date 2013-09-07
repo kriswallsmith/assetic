@@ -31,11 +31,11 @@ class LessRecessFilterTest extends FilterTestCase
             $this->markTestSkipped('Unable to find `node` executable.');
         }
 
-        if (!$this->checkNodeModule('less', $nodeBin)) {
-            $this->markTestSkipped('The "less" module is not installed.');
+        if (!$this->checkNodeModule('recess', $nodeBin)) {
+            $this->markTestSkipped('The "recess" module is not installed.');
         }
 
-        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+        $this->filter = new LessRecessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
     }
 
     public function testFilterLoad()
@@ -43,9 +43,16 @@ class LessRecessFilterTest extends FilterTestCase
         $asset = new StringAsset('.foo{.bar{width:(1+1);}}');
         $asset->load();
 
-        $this->filter->filterLoad($asset);
+        $testFilePath = '/tmp/lessrecesstestfile.less';
+        file_put_contents($testFilePath, $asset->getContent());
 
-        $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+        $fileAsset = new FileAsset($testFilePath);
+        $fileAsset->load();
+
+        $this->filter->filterLoad($fileAsset);
+
+        $this->assertEquals(".foo .bar {\n  width: 2;\n}", $fileAsset->getContent(), '->filterLoad() parses the content');
+        unlink($testFilePath);
     }
 
     public function testImport()
@@ -54,10 +61,10 @@ class LessRecessFilterTest extends FilterTestCase
 .foo {
   color: blue;
 }
+
 .foo {
   color: red;
 }
-
 EOF;
 
         $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
@@ -71,9 +78,7 @@ EOF;
     public function testCompressImport()
     {
         $expected = <<<EOF
-.foo{color:blue}
-.foo{color:red}
-
+.foo{color:blue}.foo{color:red}
 EOF;
 
         $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
@@ -91,10 +96,10 @@ EOF;
 .foo {
   color: blue;
 }
+
 .foo {
   color: red;
 }
-
 EOF;
 
         $this->filter->addLoadPath(__DIR__.'/fixtures/less');
@@ -102,9 +107,15 @@ EOF;
         $asset = new StringAsset('@import "main";');
         $asset->load();
 
-        $this->filter->filterLoad($asset);
+        $testFilePath = '/tmp/lessrecesstestfile.less';
+        file_put_contents($testFilePath, $asset->getContent());
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
+        $fileAsset = new FileAsset($testFilePath);
+        $fileAsset->load();
+
+        $this->filter->filterLoad($fileAsset);
+
+        $this->assertEquals($expected, $fileAsset->getContent(), '->filterLoad() adds load paths to include paths');
     }
 
     public function testSettingLoadPaths()
@@ -113,13 +124,14 @@ EOF;
 .foo {
   color: blue;
 }
+
 .foo {
   color: red;
 }
+
 .bar {
   color: #ff0000;
 }
-
 EOF;
 
         $this->filter->setLoadPaths(array(
@@ -130,9 +142,15 @@ EOF;
         $asset = new StringAsset('@import "main"; @import "_import"; .bar {color: @red}');
         $asset->load();
 
-        $this->filter->filterLoad($asset);
+        $testFilePath = '/tmp/lessrecesstestfile.less';
+        file_put_contents($testFilePath, $asset->getContent());
 
-        $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets load paths to include paths');
+        $fileAsset = new FileAsset($testFilePath);
+        $fileAsset->load();
+
+        $this->filter->filterLoad($fileAsset);
+
+        $this->assertEquals($expected, $fileAsset->getContent(), '->filterLoad() sets load paths to include paths');
     }
 
     /**
