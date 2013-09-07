@@ -34,6 +34,15 @@ class LessRecessFilter extends BaseNodeFilter implements DependencyExtractorInte
     private $parserOptions;
 
     /**
+     * Load Paths
+     *
+     * A list of paths which less will search for includes.
+     *
+     * @var array
+     */
+    protected $loadPaths = array();
+
+    /**
      * Constructor.
      *
      * @param string $nodeBin   The path to the node binary
@@ -47,6 +56,11 @@ class LessRecessFilter extends BaseNodeFilter implements DependencyExtractorInte
     }
 
     /**
+     * setCompress
+     *
+     * Sets the option whether to compress the resulting
+     * output or not
+     *
      * @param bool $compress
      */
     public function setCompress($compress)
@@ -55,6 +69,10 @@ class LessRecessFilter extends BaseNodeFilter implements DependencyExtractorInte
     }
 
     /**
+     * addParserOption
+     *
+     * Pass in options to the parser
+     *
      * @param string $code
      * @param string $value
      */
@@ -63,6 +81,37 @@ class LessRecessFilter extends BaseNodeFilter implements DependencyExtractorInte
         $this->parserOptions[$code] = $value;
     }
 
+    /**
+     * setLoadPaths
+     *
+     * Set the include paths where the parser looks for @imported files
+     *
+     * @param array $loadPaths
+     */
+    public function setLoadPaths(array $loadPaths)
+    {
+        $this->loadPaths = $loadPaths;
+    }
+
+    /**
+     * addLoadPath
+     *
+     * Adds a path where less will search for includes
+     *
+     * @param string $path Load path (absolute)
+     */
+    public function addLoadPath($path)
+    {
+        $this->loadPaths[] = $path;
+    }
+
+    /**
+     * filterLoad
+     *
+     * Parses and compiles the asset
+     *
+     * @param AssetInterface $asset
+     */
     public function filterLoad(AssetInterface $asset)
     {
         static $format = <<<'EOF'
@@ -86,20 +135,16 @@ EOF;
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
+        $paths = array();
 
-        if ($root && $path) {
-            $paths = array($root.'/'.$path);
-        }
-
-        foreach ($this->loadPaths as $loadPath) {
-            $paths[] = $loadPath;
-        }
+        $this->addParserOption('includePath', $this->loadPaths);
 
         $pb = $this->createProcessBuilder();
 
         $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_lessrecess'));
+
         file_put_contents($input, sprintf($format,
-            json_encode($paths),
+            json_encode($root.'/'.$path),
             json_encode($this->parserOptions)
         ));
 
@@ -114,10 +159,26 @@ EOF;
         $asset->setContent($proc->getOutput());
     }
 
+    /**
+     * filterDump
+     *
+     * @param AssetInterface $asset
+     */
     public function filterDump(AssetInterface $asset)
     {
     }
 
+    /**
+     * getChildren
+     *
+     * Gets all @imported children
+     *
+     * @param AssetFactory $factory
+     * @param string $content
+     * @param string $loadPath
+     *
+     * @return array
+     */
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         $loadPaths = $this->loadPaths;
