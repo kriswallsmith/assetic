@@ -29,6 +29,8 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     private $importPaths = array();
 
+    private $customFunctions = array(); 
+
     public function enableCompass($enable = true)
     {
         $this->compass = (Boolean) $enable;
@@ -52,6 +54,10 @@ class ScssphpFilter implements DependencyExtractorInterface
             $lc->addImportPath($path);
         }
 
+        foreach($this->customFunctions as $name=>$cal){
+            $lc->registerFunction($name,$cal);
+        }
+
         $asset->setContent($lc->compile($asset->getContent()));
     }
 
@@ -63,6 +69,11 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function addImportPath($path)
     {
         $this->importPaths[] = $path;
+    }
+
+    public function registerFunction($name,$cal)
+    {
+        $this->customFunctions[$name] = $cal;
     }
 
     public function filterDump(AssetInterface $asset)
