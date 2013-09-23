@@ -54,8 +54,8 @@ class ScssphpFilter implements DependencyExtractorInterface
             $lc->addImportPath($path);
         }
 
-        foreach($this->customFunctions as $name=>$cal){
-            $lc->registerFunction($name,$cal);
+        foreach($this->customFunctions as $name=>$callable){
+            $lc->registerFunction($name,$callable);
         }
 
         $asset->setContent($lc->compile($asset->getContent()));
@@ -71,9 +71,9 @@ class ScssphpFilter implements DependencyExtractorInterface
         $this->importPaths[] = $path;
     }
 
-    public function registerFunction($name,$cal)
+    public function registerFunction($name,$callable)
     {
-        $this->customFunctions[$name] = $cal;
+        $this->customFunctions[$name] = $callable;
     }
 
     public function filterDump(AssetInterface $asset)
