@@ -99,6 +99,23 @@ EOF;
         $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), 'Import paths are correctly used');
     }
 
+
+    public function testRegisterFunction()
+    {
+        $asset = new StringAsset('.foo{ color: bar(); }');
+        $asset->load();
+        
+        $filter = $this->getFilter();
+        $filter->registerFunction('bar',function(){ return 'red';});
+        $filter->filterLoad($asset);
+        
+        $expected = new StringAsset('.foo{ color: red;}');
+        $expected->load();
+        $filter->filterLoad($expected);
+
+        $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
+    }
+
     // private
 
     private function getFilter($compass = false)
