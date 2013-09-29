@@ -37,10 +37,6 @@ class ScssphpFilter implements DependencyExtractorInterface
      */
     private $scss_compiler;
     
-    public function __construct()
-    {
-        $this->scss_compiler = new \scssc();
-    }
 
     public function enableCompass($enable = true)
     {
@@ -54,6 +50,7 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
+        $this->resetScssCompiler();
         if ($dir = $asset->getSourceDirectory()) {
             $this->scss_compiler->addImportPath($dir);
         }
@@ -81,6 +78,7 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
+        $this->resetScssCompiler();
         $this->compile( $content );
         $children = array();
         foreach($this->scss_compiler->getParsedFiles() as $file){
@@ -104,5 +102,10 @@ class ScssphpFilter implements DependencyExtractorInterface
             $this->scss_compiler->registerFunction($name,$callable);
         }
         return $this->scss_compiler->compile( $content );
+    }
+    
+    private function resetScssCompiler()
+    {
+        $this->scss_compiler = new \scssc();
     }
 }
