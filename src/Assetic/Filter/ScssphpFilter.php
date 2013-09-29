@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\Asset\FileAsset;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
@@ -30,6 +31,16 @@ class ScssphpFilter implements DependencyExtractorInterface
     private $importPaths = array();
 
     private $customFunctions = array(); 
+    
+    /**
+     * @var \scssc
+     */
+    private $scss_compiler;
+    
+    public function __construct()
+    {
+        $this->scss_compiler = new \scssc();
+    }
 
     public function enableCompass($enable = true)
     {
@@ -43,22 +54,10 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $lc = new \scssc();
-        if ($this->compass) {
-            new \scss_compass($lc);
-        }
         if ($dir = $asset->getSourceDirectory()) {
-            $lc->addImportPath($dir);
+            $this->scss_compiler->addImportPath($dir);
         }
-        foreach ($this->importPaths as $path) {
-            $lc->addImportPath($path);
-        }
-
-        foreach($this->customFunctions as $name=>$callable){
-            $lc->registerFunction($name,$callable);
-        }
-
-        $asset->setContent($lc->compile($asset->getContent()));
+        $asset->setContent($this->compile($asset->getContent()));
     }
 
     public function setImportPaths(array $paths)
@@ -82,7 +81,28 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        // todo
-        return array();
+        $this->compile( $content );
+        $children = array();
+        foreach($this->scss_compiler->getParsedFiles() as $file){
+            $asset = new FileAsset($file);
+            $asset->ensureFilter($this);
+            $children[] = $asset;
+        }
+        return $children;
+    }
+    
+    private function compile( $content )
+    {
+        if ($this->compass) {
+            new \scss_compass($this->scss_compiler);
+        }
+        foreach ($this->importPaths as $path) {
+            $this->scss_compiler->addImportPath($path);
+        }
+
+        foreach($this->customFunctions as $name=>$callable){
+            $this->scss_compiler->registerFunction($name,$callable);
+        }
+        return $this->scss_compiler->compile( $content );
     }
 }
