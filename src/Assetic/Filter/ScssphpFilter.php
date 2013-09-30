@@ -35,7 +35,7 @@ class ScssphpFilter implements DependencyExtractorInterface
     /**
      * @var \scssc
      */
-    private $scss_compiler;
+    private $scssCompiler;
     
 
     public function enableCompass($enable = true)
@@ -52,7 +52,7 @@ class ScssphpFilter implements DependencyExtractorInterface
     {
         $this->resetScssCompiler();
         if ($dir = $asset->getSourceDirectory()) {
-            $this->scss_compiler->addImportPath($dir);
+            $this->scssCompiler->addImportPath($dir);
         }
         $asset->setContent($this->compile($asset->getContent()));
     }
@@ -81,7 +81,7 @@ class ScssphpFilter implements DependencyExtractorInterface
         $this->resetScssCompiler();
         $this->compile( $content );
         $children = array();
-        foreach($this->scss_compiler->getParsedFiles() as $file){
+        foreach($this->scssCompiler->getParsedFiles() as $file){
             $asset = new FileAsset($file);
             $asset->ensureFilter($this);
             $children[] = $asset;
@@ -92,20 +92,20 @@ class ScssphpFilter implements DependencyExtractorInterface
     private function compile( $content )
     {
         if ($this->compass) {
-            new \scss_compass($this->scss_compiler);
+            new \scss_compass($this->scssCompiler);
         }
         foreach ($this->importPaths as $path) {
-            $this->scss_compiler->addImportPath($path);
+            $this->scssCompiler->addImportPath($path);
         }
 
         foreach($this->customFunctions as $name=>$callable){
-            $this->scss_compiler->registerFunction($name,$callable);
+            $this->scssCompiler->registerFunction($name,$callable);
         }
-        return $this->scss_compiler->compile( $content );
+        return $this->scssCompiler->compile( $content );
     }
     
     private function resetScssCompiler()
     {
-        $this->scss_compiler = new \scssc();
+        $this->scssCompiler = new \scssc();
     }
 }
