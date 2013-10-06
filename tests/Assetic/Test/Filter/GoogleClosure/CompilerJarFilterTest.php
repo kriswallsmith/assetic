@@ -90,4 +90,28 @@ EOF;
 
         $this->assertEquals($expected, $asset->getContent());
     }
+
+    public function testFlagFile()
+    {
+        $input = <<<EOF
+/** @define {boolean} */
+var TESTING = false;
+EOF;
+
+        $expected = <<<EOF
+var TESTING=!0;
+
+EOF;
+        $flagfile = tmpfile();
+        fwrite($flagfile, '--define="TESTING"');
+
+        $asset = new StringAsset($input);
+        $asset->load();
+
+        $this->filter->setFlagFile(stream_get_meta_data($flagfile)['uri']);
+        $this->filter->filterDump($asset);
+
+        fclose($flagfile);
+        $this->assertEquals($expected, $asset->getContent());
+    }
 }
