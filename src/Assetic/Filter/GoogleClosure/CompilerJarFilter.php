@@ -42,7 +42,7 @@ class CompilerJarFilter extends BaseCompilerFilter
             $is64bit
                 ? array('-server', '-XX:+TieredCompilation')
                 : array('-client', '-d32'),
-            array('-jar', $this->jarPath),
+            array('-jar', $this->jarPath)
         ));
 
         if (null !== $this->timeout) {
