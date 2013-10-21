@@ -51,6 +51,26 @@ class AssetFactory
     }
 
     /**
+     * Sets root dir of the current factory.
+     *
+     * @param string $root
+     */
+    public function setRoot($root)
+    {
+        $this->root = rtrim($root, '/');
+    }
+
+    /**
+     * Returns root dir of the current factory.
+     *
+     * @return string
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    /**
      * Sets debug mode for the current factory.
      *
      * @param Boolean $debug Debug mode
