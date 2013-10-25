@@ -34,12 +34,15 @@ class CompilerJarFilter extends BaseCompilerFilter
 
     public function filterDump(AssetInterface $asset)
     {
+        $is64bit = PHP_INT_SIZE === 8;
         $cleanup = array();
 
-        $pb = new ProcessBuilder(array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
+        $pb = new ProcessBuilder(array_merge(
+            array($this->javaPath),
+            $is64bit
+                ? array('-server', '-XX:+TieredCompilation')
+                : array('-client', '-d32'),
+            array('-jar', $this->jarPath)
         ));
 
         if (null !== $this->timeout) {
