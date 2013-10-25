@@ -25,11 +25,17 @@ class CompilerJarFilter extends BaseCompilerFilter
 {
     private $jarPath;
     private $javaPath;
+    private $flagFile;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
         $this->jarPath = $jarPath;
         $this->javaPath = $javaPath;
+    }
+
+    public function setFlagFile($flagFile)
+    {
+        $this->flagFile = $flagFile;
     }
 
     public function filterDump(AssetInterface $asset)
@@ -83,6 +89,10 @@ class CompilerJarFilter extends BaseCompilerFilter
 
         if (null !== $this->language) {
             $pb->add('--language_in')->add($this->language);
+        }
+
+        if (null !== $this->flagFile) {
+            $pb->add('--flagfile')->add($this->flagFile);
         }
 
         $pb->add('--js')->add($cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler'));
