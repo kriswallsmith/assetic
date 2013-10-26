@@ -79,12 +79,19 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         $this->resetScssCompiler();
+        if( null !== $loadPath ) $this->scssCompiler->addImportPath( $loadPath );
+
         $this->compile( $content );
+
         $children = array();
-        foreach($this->scssCompiler->getParsedFiles() as $file){
-            $asset = new FileAsset($file);
-            $asset->ensureFilter($this);
-            $children[] = $asset;
+
+        $files = $this->scssCompiler->getParsedFiles();
+        foreach($files as $file){
+            $coll = $factory->createAsset( $file, array(), array('root' => $loadPath) );
+            foreach($coll as $leaf) {
+                $leaf->ensureFilter($this);
+                $children[] = $leaf;
+            }
         }
         return $children;
     }

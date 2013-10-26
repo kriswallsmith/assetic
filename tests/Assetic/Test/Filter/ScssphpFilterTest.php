@@ -103,9 +103,8 @@ EOF;
     public function testGetChildren()
     {
         $filter = $this->getFilter();
-        $filter->addImportPath(__DIR__.'/fixtures/sass/import_path');
 
-        $children = $filter->getChildren(new AssetFactory('/'),"#test { color: #fff }\n@import 'import';\n");
+        $children = $filter->getChildren(new AssetFactory('/'),"#test { color: #fff }\n@import 'import';\n",__DIR__.'/fixtures/sass/import_path');
         $this->assertEquals(1, count($children));
     }
     
