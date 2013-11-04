@@ -1,0 +1,7 @@
+/**
+ * using non-ascii unicode characters
+ */
+.omega:before {
+	// display Ω
+	content: "Ω";
+}

@@ -69,4 +69,28 @@ class CompassFilterTest extends FilterTestCase
 
         $this->assertContains('text-decoration', $asset->getContent());
     }
+
+    public function testDefaultEncoding()
+    {
+        $asset = new FileAsset(__DIR__.'/fixtures/compass/unicode.scss');
+        $asset->load();
+
+        $this->filter->setDefaultEncoding('utf-8');
+        $this->filter->setExternalEncoding('utf-8');
+        $this->filter->filterLoad($asset);
+
+        $this->assertContains('foo', $asset->getContent());
+    }
+
+    public function testExternalEncoding()
+    {
+        $asset = new FileAsset(__DIR__.'/fixtures/compass/unicode-external.scss');
+        $asset->load();
+
+        $this->filter->setDefaultEncoding('utf-8');
+        $this->filter->setExternalEncoding('utf-8');
+        $this->filter->filterLoad($asset);
+
+        $this->assertContains('foo', $asset->getContent());
+    }
 }
