@@ -53,6 +53,15 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter = null;
     }
 
+    public function testDefine()
+    {
+        $this->filter->setDefine('DEBUG=false');
+        $this->filter->filterDump($this->asset);
+
+        $this->assertContains('DEBUG', $this->asset->getContent());
+        $this->assertContains('console.log', $this->asset->getContent());
+    }
+
     public function testUglify()
     {
         $this->filter->filterDump($this->asset);
@@ -68,6 +77,7 @@ class UglifyJs2FilterTest extends FilterTestCase
 
         $this->assertContains('var foo', $this->asset->getContent());
         $this->assertNotContains('var var1', $this->asset->getContent());
+        //!function(){function bar(foo){return var2.push(foo),foo}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var2=(new Array(w Array(a)),foo=function(var1){return var1};foo("abc123"),bar("abc123")}();5))}
     }
 
     public function testMangle()
@@ -88,6 +98,16 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->assertNotContains('var var1', $this->asset->getContent());
         $this->assertNotContains('var var2', $this->asset->getContent());
         $this->assertContains('new Array(1,2,3,4)', $this->asset->getContent());
+    }
+
+    public function testDefineAndCompress()
+    {
+        $this->filter->setCompress(true);
+        $this->filter->setDefine('DEBUG=false');
+        $this->filter->filterDump($this->asset);
+
+        $this->assertNotContains('DEBUG', $this->asset->getContent());
+        $this->assertNotContains('console.log', $this->asset->getContent());
     }
 
     public function testBeautify()

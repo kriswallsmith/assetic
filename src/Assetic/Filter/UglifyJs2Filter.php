@@ -30,6 +30,7 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $screwIe8;
     private $comments;
     private $wrap;
+    private $define;
 
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -61,10 +62,15 @@ class UglifyJs2Filter extends BaseNodeFilter
     {
         $this->comments = $comments;
     }
-    
+
     public function setWrap($wrap)
     {
         $this->wrap = $wrap;
+    }
+
+    public function setDefine($define)
+    {
+        $this->define = $define;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -96,9 +102,13 @@ class UglifyJs2Filter extends BaseNodeFilter
         if ($this->comments) {
             $pb->add('--comments')->add(true === $this->comments ? 'all' : $this->comments);
         }
-        
+
         if ($this->wrap) {
             $pb->add('--wrap')->add($this->wrap);
+        }
+
+        if ($this->define) {
+            $pb->add('--define')->add($this->define);
         }
 
         // input and output files

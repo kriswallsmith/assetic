@@ -1,6 +1,9 @@
 /**
  * Copyright
  */
+if (typeof DEBUG === 'undefined') {
+    DEBUG = true;
+}
 
 (function() {
 
@@ -16,6 +19,7 @@ function bar(foo) {
 
 // comment
 var foo = function (var1) {
+    DEBUG && console.log('hellow world');
     return var1;
 }
 

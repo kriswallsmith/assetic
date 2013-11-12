@@ -60,7 +60,7 @@ class UglifyJsFilterTest extends FilterTestCase
         $expected = <<<JS
 /**
  * Copyright
- */(function(){function t(e){return r.push(e),e}var e=new Array(1,2,3,4),t=Array(a,b,c),n=new Array(5),r=new Array(a),e=function(e){return e};e("abc123"),t("abc123")})();
+ */typeof DEBUG=="undefined"&&(DEBUG=!0),function(){function t(e){return r.push(e),e}var e=new Array(1,2,3,4),t=Array(a,b,c),n=new Array(5),r=new Array(a),e=function(e){return DEBUG&&console.log("hellow world"),e};e("abc123"),t("abc123")}();
 JS;
         $this->assertEquals($expected, $this->asset->getContent());
     }
@@ -73,7 +73,7 @@ JS;
         $expected = <<<JS
 /**
  * Copyright
- */(function(){function t(e){return r.push(e),e}var e=[1,2,3,4],t=[a,b,c],n=Array(5),r=Array(a),e=function(e){return e};e("abc123"),t("abc123")})();
+ */typeof DEBUG=="undefined"&&(DEBUG=!0),function(){function t(e){return r.push(e),e}var e=[1,2,3,4],t=[a,b,c],n=Array(5),r=Array(a),e=function(e){return DEBUG&&console.log("hellow world"),e};e("abc123"),t("abc123")}();
 JS;
         $this->assertEquals($expected, $this->asset->getContent());
     }
@@ -86,15 +86,15 @@ JS;
         $expected = <<<JS
 /**
  * Copyright
- */(function() {
+ */typeof DEBUG == "undefined" && (DEBUG = !0), function() {
     function t(e) {
         return r.push(e), e;
     }
     var e = new Array(1, 2, 3, 4), t = Array(a, b, c), n = new Array(5), r = new Array(a), e = function(e) {
-        return e;
+        return DEBUG && console.log("hellow world"), e;
     };
     e("abc123"), t("abc123");
-})();
+}();
 JS;
 
         $this->assertEquals($expected, $this->asset->getContent());
@@ -108,7 +108,7 @@ JS;
         $expected = <<<JS
 /**
  * Copyright
- */(function(){function bar(foo){return var2.push(foo),foo}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(var1){return var1};foo("abc123"),bar("abc123")})();
+ */typeof DEBUG=="undefined"&&(DEBUG=!0),function(){function bar(foo){return var2.push(foo),foo}var foo=new Array(1,2,3,4),bar=Array(a,b,c),var1=new Array(5),var2=new Array(a),foo=function(var1){return DEBUG&&console.log("hellow world"),var1};foo("abc123"),bar("abc123")}();
 JS;
 
         $this->assertEquals($expected, $this->asset->getContent());
@@ -119,7 +119,7 @@ JS;
         $this->filter->setNoCopyright(true);
         $this->filter->filterDump($this->asset);
 
-        $expected = '(function(){function t(e){return r.push(e),e}var e=new Array(1,2,3,4),t=Array(a,b,c),n=new Array(5),r=new Array(a),e=function(e){return e};e("abc123"),t("abc123")})();';
+        $expected = 'typeof DEBUG=="undefined"&&(DEBUG=!0),function(){function t(e){return r.push(e),e}var e=new Array(1,2,3,4),t=Array(a,b,c),n=new Array(5),r=new Array(a),e=function(e){return DEBUG&&console.log("hellow world"),e};e("abc123"),t("abc123")}();';
         $this->assertEquals($expected, $this->asset->getContent());
     }
 }
