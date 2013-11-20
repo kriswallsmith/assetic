@@ -110,7 +110,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         )));
         $php = 'php';
         if (defined('PHP_BINARY')) {
-          $php = PHP_BINARY;
+            $php = PHP_BINARY;
         }
         $args = unserialize(shell_exec($php.' '.escapeshellarg($tmp)));
         unlink($tmp);
