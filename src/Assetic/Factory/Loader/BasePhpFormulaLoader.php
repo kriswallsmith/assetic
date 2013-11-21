@@ -111,7 +111,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         if (defined('PHP_BINARY')) {
             $binary = PHP_BINARY;
         } else {
-            $binary = 'php';
+            $binary = `which php`;
         }
         $args = unserialize(shell_exec($binary.' '.escapeshellarg($tmp)));
         unlink($tmp);
