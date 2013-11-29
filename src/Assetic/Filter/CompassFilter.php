@@ -260,7 +260,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         }
 
         if ($this->noCache) {
-            $optionsConfig['sass_options']['no_cache'] = true;
+            $optionsConfig['sass_options']['cache'] = true;
         }
 
         if ($this->httpPath) {
