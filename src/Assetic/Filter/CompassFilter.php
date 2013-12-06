@@ -52,6 +52,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $httpGeneratedImagesPath;
     private $generatedImagesPath;
     private $httpJavascriptsPath;
+    private $cachePath;
     private $homeEnv = true;
 
     public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
@@ -182,6 +183,11 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     {
         $this->httpJavascriptsPath = $httpJavascriptsPath;
     }
+    
+    public function setCachePath($cachePath)
+    {
+        $this->cachePath = $cachePath;
+    }
 
     public function setHomeEnv($homeEnv)
     {
@@ -285,6 +291,10 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
 
         if ($this->httpJavascriptsPath) {
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
+        }
+        
+        if ($this->cachePath) {
+            $optionsConfig['cache_path'] = $this->cachePath;
         }
 
         if ($this->fontsDir) {
