@@ -17,7 +17,7 @@ before_script:
 
     # java deps
     - mkdir -p vendor/java
-    - wget http://closure-compiler.googlecode.com/files/compiler-latest.zip && unzip compiler-latest.zip -d vendor/java/compiler
+    - wget http://dl.google.com/closure-compiler/compiler-latest.zip && unzip compiler-latest.zip -d vendor/java/compiler
     - export CLOSURE_JAR=vendor/java/compiler/compiler.jar
     - wget http://closure-stylesheets.googlecode.com/files/closure-stylesheets-20111230.jar && mv closure-stylesheets-20111230.jar vendor/java
     - export GSS_JAR=vendor/java/closure-stylesheets-20111230.jar
