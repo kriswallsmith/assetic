@@ -17,7 +17,7 @@ before_script:
 
     # java deps
     - mkdir -p vendor/java
-    - wget http://closure-compiler.googlecode.com/files/compiler-latest.zip && unzip compiler-latest.zip -d vendor/java/compiler
+    - wget http://dl.google.com/closure-compiler/compiler-latest.zip && unzip compiler-latest.zip -d vendor/java/compiler
     - export CLOSURE_JAR=vendor/java/compiler/compiler.jar
     - wget http://closure-stylesheets.googlecode.com/files/closure-stylesheets-20111230.jar && mv closure-stylesheets-20111230.jar vendor/java
     - export GSS_JAR=vendor/java/closure-stylesheets-20111230.jar
@@ -32,9 +32,10 @@ before_script:
     # other deps
     - sudo apt-get install jpegoptim libjpeg-progs optipng
 
+    - wget -q http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip && unzip dartsdk-linux-x64-release.zip && mv dart-sdk vendor
+    - export DART_BIN=vendor/dart-sdk/bin/dart2js
+
     # (why don't these work?)
-    # - wget -q https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-32.tar.gz && tar -xzf dartsdk-linux-32.tar.gz && mv dart-sdk vendor
-    # - export DART_BIN=vendor/dart-sdk/bin/dart2js
     # - wget -q http://static.jonof.id.au/dl/kenutils/pngout-20120530-linux.tar.gz && tar -xzf pngout-20120530-linux.tar.gz && mv pngout-20120530-linux vendor
     # - export PNGOUT_BIN=vendor/pngout-20120530-linux/i386/pngout
 
