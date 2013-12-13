@@ -64,8 +64,6 @@ EOF;
 
     public function testCompassExtension()
     {
-        $this->markTestIncomplete('Someone fix this, SVP? (Undefined mixin "box-shadow")');
-
         $expected = <<<EOF
 .shadow {
   -webkit-box-shadow : 10px 10px 8px red;
@@ -82,6 +80,8 @@ EOF;
 
         $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
         $asset->load();
+
+        $this->setExpectedException('Exception');
 
         $this->getFilter(false)->filterLoad($asset);
         $this->assertEquals("@import \"compass\";\n", $asset->getContent(), 'compass plugin can be disabled');
