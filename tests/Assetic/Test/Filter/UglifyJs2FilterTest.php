@@ -66,7 +66,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setCompress(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('var var2', $this->asset->getContent());
+        $this->assertContains('var foo', $this->asset->getContent());
         $this->assertNotContains('var var1', $this->asset->getContent());
     }
 
