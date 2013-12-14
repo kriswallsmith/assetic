@@ -35,8 +35,7 @@ before_script:
     - wget -q http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip && unzip dartsdk-linux-x64-release.zip && mv dart-sdk vendor
     - export DART_BIN=vendor/dart-sdk/bin/dart2js
 
-    # (why don't these work?)
-    # - wget -q http://static.jonof.id.au/dl/kenutils/pngout-20120530-linux.tar.gz && tar -xzf pngout-20120530-linux.tar.gz && mv pngout-20120530-linux vendor
-    # - export PNGOUT_BIN=vendor/pngout-20120530-linux/i386/pngout
+    - wget -q http://static.jonof.id.au/dl/kenutils/pngout-20130221-linux.tar.gz && tar -xzf pngout-20130221-linux.tar.gz && mv pngout-20130221-linux vendor
+    - export PNGOUT_BIN=vendor/pngout-20130221-linux/x86_64/pngout
 
 script: ./bin/phpunit -v
