@@ -210,24 +210,24 @@ class AssetFactory
         }
 
         // append variables
+        $varsToAdd = array();
         if (!empty($options['vars'])) {
-            $toAdd = array();
             foreach ($options['vars'] as $var) {
                 if (false !== strpos($options['output'], '{'.$var.'}')) {
                     continue;
                 }
 
-                $toAdd[] = '{'.$var.'}';
-            }
-
-            if ($toAdd) {
-                $options['output'] = str_replace('*', '*.'.implode('.', $toAdd), $options['output']);
+                $varsToAdd[] = '{'.$var.'}';
             }
         }
 
         // append consensus extension if missing
         if (1 == count($extensions) && !pathinfo($options['output'], PATHINFO_EXTENSION) && $extension = key($extensions)) {
             $options['output'] .= '.'.$extension;
+        }
+
+        if ($varsToAdd) {
+            $options['output'] = str_replace('*', '*.'.implode('.', $varsToAdd), $options['output']);
         }
 
         // output --> target url

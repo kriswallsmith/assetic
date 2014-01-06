@@ -219,6 +219,17 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("js/7d0828c.a.b_variable_input._2.js", (string) $xml->url[1]);
     }
 
+    public function testVariablesImages()
+    {
+        $this->valueSupplier->expects($this->once())
+            ->method('getValues')
+            ->will($this->returnValue(array('foo' => 'a', 'bar' => 'b')));
+
+        $xml = $this->renderXml('variables_images.twig');
+        $this->assertEquals(1, $xml->url->count());
+        $this->assertEquals("images/84f96e1.a.b_variable_input._1.jpg", (string) $xml->url[0]);
+    }
+
     public function testMultipleSameVariableValues()
     {
         $vars = array('locale');
