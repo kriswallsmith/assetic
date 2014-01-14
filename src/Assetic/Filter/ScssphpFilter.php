@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\Asset\FileAsset;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
@@ -30,6 +31,14 @@ class ScssphpFilter implements DependencyExtractorInterface
     private $importPaths = array();
 
     private $customFunctions = array(); 
+    
+    private $compileParsedFilesCache = array();
+    
+    /**
+     * @var \scssc
+     */
+    private $scssCompiler;
+    
 
     public function enableCompass($enable = true)
     {
@@ -43,22 +52,12 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $lc = new \scssc();
-        if ($this->compass) {
-            new \scss_compass($lc);
-        }
+        $this->resetScssCompiler();
         if ($dir = $asset->getSourceDirectory()) {
-            $lc->addImportPath($dir);
+            $this->scssCompiler->addImportPath($dir);
         }
-        foreach ($this->importPaths as $path) {
-            $lc->addImportPath($path);
-        }
-
-        foreach($this->customFunctions as $name=>$callable){
-            $lc->registerFunction($name,$callable);
-        }
-
-        $asset->setContent($lc->compile($asset->getContent()));
+        $asset->setContent($this->compile($asset->getContent()));
+        $this->compileParsedFilesCachex[sha1($asset->getSourceDirectory().$asset->getContent())] = $this->scssCompiler->getParsedFiles();
     }
 
     public function setImportPaths(array $paths)
@@ -80,9 +79,56 @@ class ScssphpFilter implements DependencyExtractorInterface
     {
     }
 
+
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        // todo
-        return array();
+        $cacheId = sha1($loadPath.$content);
+        if (isset($this->compileParsedFilesCache[$cacheId])) {
+            $parsedFiles = $this->compileParsedFilesCache[$cacheId];
+        } else {
+            $this->resetScssCompiler();
+
+            if (null !== $loadPath) {
+                $this->addImportPath($loadPath);
+            }
+
+            $this->compile( $content );
+
+            $parsedFiles = $this->scssCompiler->getParsedFiles();
+            $this->compileParsedFilesCache[$cacheId] = $parsedFiles;
+        }
+
+        $children = array();
+        foreach ($parsedFiles as $file) {
+            // We don't want assetic to compile this $file and do the same with all its children
+            // What we care is only that assetic picks the children lastModified date
+            $asset = new StringAsset('');
+            $asset->setLastModified(filemtime($file));
+
+            $children[] = $asset;
+        }
+
+        return $children;
+    }
+
+    
+    private function compile( $content )
+    {
+        if ($this->compass) {
+            new \scss_compass($this->scssCompiler);
+        }
+        foreach ($this->importPaths as $path) {
+            $this->scssCompiler->addImportPath($path);
+        }
+
+        foreach($this->customFunctions as $name=>$callable){
+            $this->scssCompiler->registerFunction($name,$callable);
+        }
+        return $this->scssCompiler->compile( $content );
+    }
+    
+    private function resetScssCompiler()
+    {
+        $this->scssCompiler = new \scssc();
     }
 }

@@ -14,6 +14,7 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\ScssphpFilter;
+use Assetic\Factory\AssetFactory;
 
 /**
  * @group integration
@@ -98,6 +99,15 @@ EOF;
 
         $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), 'Import paths are correctly used');
     }
+
+    public function testGetChildren()
+    {
+        $filter = $this->getFilter();
+
+        $children = $filter->getChildren(new AssetFactory('/'),"#test { color: #fff }\n@import 'import';\n",__DIR__.'/fixtures/sass/import_path');
+        $this->assertEquals(1, count($children));
+    }
+    
 
 
     public function testRegisterFunction()
