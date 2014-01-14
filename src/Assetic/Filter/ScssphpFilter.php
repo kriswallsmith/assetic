@@ -32,6 +32,8 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     private $customFunctions = array(); 
     
+    private $compileParsedFilesCache = array();
+    
     /**
      * @var \scssc
      */
@@ -55,6 +57,7 @@ class ScssphpFilter implements DependencyExtractorInterface
             $this->scssCompiler->addImportPath($dir);
         }
         $asset->setContent($this->compile($asset->getContent()));
+        $this->compileParsedFilesCachex[sha1($asset->getSourceDirectory().$asset->getContent())] = $this->scssCompiler->getParsedFiles();
     }
 
     public function setImportPaths(array $paths)
@@ -76,25 +79,38 @@ class ScssphpFilter implements DependencyExtractorInterface
     {
     }
 
+
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        $this->resetScssCompiler();
-        if( null !== $loadPath ) $this->scssCompiler->addImportPath( $loadPath );
+        $cacheId = sha1($loadPath.$content);
+        if (isset($this->compileParsedFilesCache[$cacheId])) {
+            $parsedFiles = $this->compileParsedFilesCache[$cacheId];
+        } else {
+            $this->resetScssCompiler();
 
-        $this->compile( $content );
+            if (null !== $loadPath) {
+                $this->addImportPath($loadPath);
+            }
+
+            $this->compile( $content );
+
+            $parsedFiles = $this->scssCompiler->getParsedFiles();
+            $this->compileParsedFilesCache[$cacheId] = $parsedFiles;
+        }
 
         $children = array();
+        foreach ($parsedFiles as $file) {
+            // We don't want assetic to compile this $file and do the same with all its children
+            // What we care is only that assetic picks the children lastModified date
+            $asset = new StringAsset('');
+            $asset->setLastModified(filemtime($file));
 
-        $files = $this->scssCompiler->getParsedFiles();
-        foreach($files as $file){
-            $coll = $factory->createAsset( $file, array(), array('root' => $loadPath) );
-            foreach($coll as $leaf) {
-                $leaf->ensureFilter($this);
-                $children[] = $leaf;
-            }
+            $children[] = $asset;
         }
+
         return $children;
     }
+
     
     private function compile( $content )
     {
