@@ -13,6 +13,7 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\ScssphpFilter;
 
 /**
@@ -114,6 +115,16 @@ EOF;
         $filter->filterLoad($expected);
 
         $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
+    }
+
+    public function testGetChildren()
+    {
+        $factory = new AssetFactory('');
+
+        $filter = $this->getFilter();
+        $children = $filter->getChildren($factory, '@import "main";', __DIR__.'/fixtures/sass');
+
+        $this->assertCount(2, $children);
     }
 
     // private
