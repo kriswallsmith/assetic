@@ -43,22 +43,22 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $lc = new \scssc();
+        $sc = new \scssc();
         if ($this->compass) {
-            new \scss_compass($lc);
+            new \scss_compass($sc);
         }
         if ($dir = $asset->getSourceDirectory()) {
-            $lc->addImportPath($dir);
+            $sc->addImportPath($dir);
         }
         foreach ($this->importPaths as $path) {
-            $lc->addImportPath($path);
+            $sc->addImportPath($path);
         }
 
         foreach($this->customFunctions as $name=>$callable){
-            $lc->registerFunction($name,$callable);
+            $sc->registerFunction($name,$callable);
         }
 
-        $asset->setContent($lc->compile($asset->getContent()));
+        $asset->setContent($sc->compile($asset->getContent()));
     }
 
     public function setImportPaths(array $paths)
