@@ -13,7 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
-use Assetic\Asset\FileAsset;
+use Assetic\Asset\StringAsset;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
