@@ -52,6 +52,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $httpGeneratedImagesPath;
     private $generatedImagesPath;
     private $httpJavascriptsPath;
+    private $configFiles;
     private $homeEnv = true;
 
     public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
@@ -183,6 +184,11 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->httpJavascriptsPath = $httpJavascriptsPath;
     }
 
+    public function setConfigFiles($configFiles)
+    {
+        $this->configFiles = $configFiles;
+    }
+
     public function setHomeEnv($homeEnv)
     {
         $this->homeEnv = $homeEnv;
@@ -294,6 +300,15 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $optionsConfig['fonts_dir'] = $this->fontsDir;
         }
 
+        $configOutput = '';
+
+        // config files go first, if any
+        if (!empty($this->configFiles)) {
+            foreach ($this->configFiles as $file) {
+                $configOutput .= file_get_contents($file)."\n";
+            }
+        }
+
         // options in configuration file
         if (count($optionsConfig)) {
             $config = array();
@@ -307,9 +322,11 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
                     $config[] = sprintf('%s = %s', $name, $this->formatArrayToRuby($value));
                 }
             }
+        }
 
+        if ($configOutput || $config) {
             $configFile = tempnam($tempDir, 'assetic_compass');
-            file_put_contents($configFile, implode("\n", $config)."\n");
+            file_put_contents($configFile, $configOutput . implode("\n", $config)."\n");
             $pb->add('--config')->add($configFile);
         }
 
