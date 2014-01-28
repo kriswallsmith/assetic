@@ -31,7 +31,7 @@
         "joliclic/javascript-packer": "*",
         "patchwork/jsqueeze": "*",
         "psr/log": "~1.0"
-        "patchwork/cssqueeze": ">=1.2.2"
+        "ianbogda/cssqueeze": "*"
     },
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
@@ -40,7 +40,7 @@
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
         "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
         "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor",
-        "patchwork/cssqueeze": "Assetic provides the integration with the CSSqueeze CSS compressor"
+        "ianbogda/cssqueeze": "Assetic provides the integration with the CSSqueeze CSS compressor"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
