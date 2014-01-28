@@ -16,7 +16,7 @@ use Assetic\Asset\AssetInterface;
 /**
  * CSSqueeze filter.
  *
- * @link https://github.com/anbogda/CSSqueeze
+ * @link https://github.com/ianbogda/CSSqueeze
  * @author Yann Bogdanovic <ianbogda@gmail.com>
  */
 class CSSqueezeFilter implements FilterInterface
@@ -31,7 +31,7 @@ class CSSqueezeFilter implements FilterInterface
         $this->singleLine = (bool) $bool;
     }
 
-    public function setDeflatIndet($deflatIndent = null)
+    public function setDeflatIndent($deflatIndent = null)
     {
         $this->deflatIndent = (string) $deflatIndent;
     }
@@ -53,9 +53,9 @@ class CSSqueezeFilter implements FilterInterface
     public function filterDump(AssetInterface $asset)
     {
         $parser = new \CSSqueeze(
-			$this->deflatIndent,
-			$this->configuration
-		);
+            $this->deflatIndent,
+            $this->configuration
+        );
         $asset->setContent($parser->squeeze(
             $asset->getContent(),
             $this->singleLine,

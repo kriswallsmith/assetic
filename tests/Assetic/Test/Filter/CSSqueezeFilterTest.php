@@ -32,7 +32,7 @@ class CSSqueezeFilterTest extends \PHPUnit_Framework_TestCase
         $asset->load();
 
         $filter = new CSSqueezeFilter();
-		$filter->setConfiguration(array('BasePath' => __DIR__.'/fixtures/cssmin/')); 
+        $filter->setConfiguration(array('BasePath' => __DIR__.'/fixtures/cssmin/')); 
         $filter->filterDump($asset);
 
         $this->assertEquals("body{background:#000;color:#fff}", $asset->getContent());
