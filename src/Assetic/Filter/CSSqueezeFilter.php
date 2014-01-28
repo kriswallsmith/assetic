@@ -52,8 +52,10 @@ class CSSqueezeFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-		!isset($this->configuration['BasePath'])
-			&& $this->setConfiguration(array('BasePath' => $asset->getSourceDirectory()));
+        if (!isset($this->configuration['BasePath']))
+        {
+            $this->setConfiguration(array('BasePath' => $asset->getSourceDirectory()));
+        }
 
         $parser = new \CSSqueeze(
             $this->deflatIndent,
