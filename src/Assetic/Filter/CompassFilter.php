@@ -333,7 +333,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $type = 'scss';
         }
 
-        $tempName = tempnam($tempDir, 'assetic_compass');
+        $tempName = tempnam($projectDir, 'assetic_compass');
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
