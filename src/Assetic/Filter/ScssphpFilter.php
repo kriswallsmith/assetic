@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\CssUtils;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
@@ -82,8 +83,6 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        preg_match_all('/@import "(.*)";/', $content, $m);
-
         $sc = new \scssc();
         $sc->addImportPath($loadPath);
         foreach($this->importPaths as $path) {
@@ -91,10 +90,12 @@ class ScssphpFilter implements DependencyExtractorInterface
         }
 
         $children = array();
-        foreach($m[1] as $match) {
+        foreach(CssUtils::extractImports($content) as $match) {
             $file = $sc->findImport($match);
             if ($file) {
-                $children[] = $factory->createAsset($file, array(), array('root' => $loadPath));
+                $children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));
+                $child->load();
+                $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
             }
         }
 
