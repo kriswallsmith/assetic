@@ -30,6 +30,10 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $screwIe8;
     private $comments;
     private $wrap;
+    private $sourceMap;
+    private $sourceMapRoot;
+    private $sourceMapUrl;
+    private $inputSourceMap;
 
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -67,6 +71,26 @@ class UglifyJs2Filter extends BaseNodeFilter
         $this->wrap = $wrap;
     }
 
+    public function setSourceMap($sourceMap)
+    {
+        $this->sourceMap = $sourceMap;
+    }
+
+    public function setSourceMapRoot($sourceMapRoot)
+    {
+        $this->sourceMapRoot = $sourceMapRoot;
+    }
+
+    public function setSourceMapUrl($sourceMapUrl)
+    {
+        $this->sourceMapUrl = $sourceMapUrl;
+    }
+
+    public function setInputSourceMap($inputSourceMap)
+    {
+        $this->inputSourceMap = $inputSourceMap;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -99,6 +123,22 @@ class UglifyJs2Filter extends BaseNodeFilter
         
         if ($this->wrap) {
             $pb->add('--wrap')->add($this->wrap);
+        }
+
+        if ($this->sourceMap) {
+            $pb->add('--source-map')->add($this->sourceMap);
+        }
+
+        if ($this->sourceMapRoot) {
+            $pb->add('--source-map-root')->add($this->sourceMapRoot);
+        }
+
+        if ($this->sourceMapUrl) {
+            $pb->add('--source-map-url')->add($this->sourceMapUrl);
+        }
+
+        if ($this->inputSourceMap) {
+            $pb->add('--in-source-map')->add($this->inputSourceMap);
         }
 
         // input and output files
