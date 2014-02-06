@@ -8,7 +8,7 @@ php:
 before_script:
     # php deps
     - composer self-update
-    - composer install --dev
+    - phpversion=$(phpenv version); if [[ $phpversion =~ 5\.3\.* ]]; then composer install --dev --prefer-source; else composer install --dev; fi;
 
     # node deps
     - npm install uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
