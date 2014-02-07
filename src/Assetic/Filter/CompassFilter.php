@@ -195,8 +195,13 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $loadPaths[] = $dir;
         }
 
-        // compass does not seems to handle symlink, so we use realpath()
-        $tempDir = realpath(sys_get_temp_dir());
+        if ($this->cacheLocation) {
+            $optionsConfig['sass_options']['cache_location'] = $this->cacheLocation;
+            $tempDir = $this->cacheLocation;
+        } else {
+            // compass does not seems to handle symlink, so we use realpath()
+            $tempDir = realpath(sys_get_temp_dir());
+        }
 
         $compassProcessArgs = array(
             $this->compassPath,
@@ -253,10 +258,6 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
 
         if ($this->debugInfo) {
             $optionsConfig['sass_options']['debug_info'] = true;
-        }
-
-        if ($this->cacheLocation) {
-            $optionsConfig['sass_options']['cache_location'] = $this->cacheLocation;
         }
 
         if ($this->noCache) {
