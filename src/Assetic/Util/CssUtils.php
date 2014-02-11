@@ -18,7 +18,7 @@ namespace Assetic\Util;
  */
 abstract class CssUtils
 {
-    const REGEX_URLS            = '/url\((["\']?)(?P<url>.*?)(\\1)\)/';
+    const REGEX_URLS            = '/url\(\s*(["\']?)(?P<url>.*?)(\\1)\s*\)/';
     const REGEX_IMPORTS         = '/@import (?:url\()?(\'|"|)(?P<url>[^\'"\)\n\r]*)\1\)?;?/';
     const REGEX_IMPORTS_NO_URLS = '/@import (?!url\()(\'|"|)(?P<url>[^\'"\)\n\r]*)\1;?/';
     const REGEX_IE_FILTERS      = '/src=(["\']?)(?P<url>.*?)\\1/';
