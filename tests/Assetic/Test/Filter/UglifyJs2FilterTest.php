@@ -25,7 +25,7 @@ class UglifyJs2FilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        $uglifyjsBin = $this->findExecutable('uglifyjs', 'UGLIFYJS2_BIN');
+        $uglifyjsBin = $this->findExecutable('uglifyjs2', 'UGLIFYJS2_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
         if (!$uglifyjsBin) {
             $this->markTestSkipped('Unable to find `uglifyjs` executable.');
@@ -53,12 +53,23 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter = null;
     }
 
-    public function testDefine()
+    public function testDefines()
     {
-        $this->filter->setDefine('DEBUG=false');
+        $this->filter->setDefines(array('DEBUG=false'));
         $this->filter->filterDump($this->asset);
 
         $this->assertContains('DEBUG', $this->asset->getContent());
+        $this->assertContains('console.log', $this->asset->getContent());
+    }
+
+    public function testMutiplieDefines()
+    {
+        $this->filter->setDefines(array('DEBUG=false', 'FOO=2'));
+        $this->filter->filterDump($this->asset);
+
+        $this->assertContains('DEBUG', $this->asset->getContent());
+        $this->assertContains('FOO', $this->asset->getContent());
+        $this->assertContains('Array(FOO,2,3,4)', $this->asset->getContent());
         $this->assertContains('console.log', $this->asset->getContent());
     }
 
@@ -85,7 +96,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setMangle(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('new Array(1,2,3,4)', $this->asset->getContent());
+        $this->assertContains('new Array(FOO,2,3,4)', $this->asset->getContent());
         $this->assertNotContains('var var2', $this->asset->getContent());
     }
 
@@ -97,16 +108,28 @@ class UglifyJs2FilterTest extends FilterTestCase
 
         $this->assertNotContains('var var1', $this->asset->getContent());
         $this->assertNotContains('var var2', $this->asset->getContent());
-        $this->assertContains('new Array(1,2,3,4)', $this->asset->getContent());
+        $this->assertContains('Array(FOO,2,3,4)', $this->asset->getContent());
     }
 
-    public function testDefineAndCompress()
+    public function testDefinesAndCompress()
     {
         $this->filter->setCompress(true);
-        $this->filter->setDefine('DEBUG=false');
+        $this->filter->setDefines(array('DEBUG=false'));
         $this->filter->filterDump($this->asset);
 
         $this->assertNotContains('DEBUG', $this->asset->getContent());
+        $this->assertNotContains('console.log', $this->asset->getContent());
+    }
+
+    public function testMutipleDefines()
+    {
+        $this->filter->setCompress(true);
+        $this->filter->setDefines(array('DEBUG=false', 'FOO=2'));
+        $this->filter->filterDump($this->asset);
+
+        $this->assertNotContains('DEBUG', $this->asset->getContent());
+        $this->assertNotContains('FOO', $this->asset->getContent());
+        $this->assertContains('Array(2,2,3,4)', $this->asset->getContent());
         $this->assertNotContains('console.log', $this->asset->getContent());
     }
 

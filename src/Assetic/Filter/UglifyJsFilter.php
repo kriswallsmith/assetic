@@ -29,6 +29,7 @@ class UglifyJsFilter extends BaseNodeFilter
     private $beautify;
     private $unsafe;
     private $mangle;
+    private $defines;
 
     /**
      * @param string $uglifyjsBin Absolute path to the uglifyjs executable
@@ -76,6 +77,11 @@ class UglifyJsFilter extends BaseNodeFilter
         $this->mangle = $mangle;
     }
 
+    public function setDefines(array $defines)
+    {
+        $this->defines = $defines;
+    }
+
     /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
@@ -90,9 +96,11 @@ class UglifyJsFilter extends BaseNodeFilter
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $pb = $this->createProcessBuilder(
+            $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin));
+            : array($this->uglifyjsBin)
+        );
 
         if ($this->noCopyright) {
             $pb->add('--no-copyright');
@@ -108,6 +116,12 @@ class UglifyJsFilter extends BaseNodeFilter
 
         if (false === $this->mangle) {
             $pb->add('--no-mangle');
+        }
+
+        if ($this->defines) {
+            foreach ($this->defines as $define) {
+                $pb->add('-d')->add($define);
+            }
         }
 
         // input and output files
