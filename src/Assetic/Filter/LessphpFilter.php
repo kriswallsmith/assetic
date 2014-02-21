@@ -98,7 +98,9 @@ class LessphpFilter implements DependencyExtractorInterface
             $lc->setPreserveComments($this->preserveComments);
         }
 
-        $asset->setContent($lc->parse($asset->getContent(), $this->presets));
+        $lc->setVariables($this->presets);
+
+        $asset->setContent($lc->parse($asset->getContent()));
     }
 
     public function filterDump(AssetInterface $asset)
