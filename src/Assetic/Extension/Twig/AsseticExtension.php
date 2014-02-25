@@ -19,12 +19,14 @@ class AsseticExtension extends \Twig_Extension
     protected $factory;
     protected $functions;
     protected $valueSupplier;
+    protected $lazyAssets;
 
-    public function __construct(AssetFactory $factory, $functions = array(), ValueSupplierInterface $valueSupplier = null)
+    public function __construct(AssetFactory $factory, $functions = array(), ValueSupplierInterface $valueSupplier = null, $lazyAssets = false)
     {
         $this->factory = $factory;
         $this->functions = array();
         $this->valueSupplier = $valueSupplier;
+        $this->lazyAssets = $lazyAssets;
 
         foreach ($functions as $function => $options) {
             if (is_integer($function) && is_string($options)) {
@@ -38,9 +40,9 @@ class AsseticExtension extends \Twig_Extension
     public function getTokenParsers()
     {
         return array(
-            new AsseticTokenParser($this->factory, 'javascripts', 'js/*.js'),
-            new AsseticTokenParser($this->factory, 'stylesheets', 'css/*.css'),
-            new AsseticTokenParser($this->factory, 'image', 'images/*', true),
+            $this->createTokenParser($this->factory, 'javascripts', 'js/*.js'),
+            $this->createTokenParser($this->factory, 'stylesheets', 'css/*.css'),
+            $this->createTokenParser($this->factory, 'image', 'images/*', true),
         );
     }
 
@@ -72,5 +74,14 @@ class AsseticExtension extends \Twig_Extension
     public function getName()
     {
         return 'assetic';
+    }
+
+    protected function createTokenParser(AssetFactory $factory, $tag, $output, $single = false, array $extensions = array())
+    {
+        if ($this->lazyAssets) {
+            return new LazyAsseticTokenParser($factory, $tag, $output, $single, $extensions);
+        }
+
+        return new AsseticTokenParser($factory, $tag, $output, $single, $extensions);
     }
 }

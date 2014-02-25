@@ -11,10 +11,9 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 
-class AsseticTokenParser extends BaseAsseticTokenParser
+class LazyAsseticTokenParser extends BaseAsseticTokenParser
 {
     private $factory;
 
@@ -39,17 +38,6 @@ class AsseticTokenParser extends BaseAsseticTokenParser
 
     protected function createAsseticNode(\Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes, $lineno, $tag)
     {
-        if (!$name) {
-            $name = $this->factory->generateAssetName($inputs, $filters, $attributes);
-        }
-
-        $asset = $this->factory->createAsset($inputs, $filters, $attributes + array('name' => $name));
-
-        return $this->createNode($asset, $body, $inputs, $filters, $name, $attributes, $lineno, $tag);
-    }
-
-    protected function createNode(AssetInterface $asset, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
-    {
-        return new AsseticNode($asset, $body, $inputs, $filters, $name, $attributes, $lineno, $tag);
+        return new LazyAsseticNode($this->factory, $body, $inputs, $filters, $name, $attributes, $lineno, $tag);
     }
 }
