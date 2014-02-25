@@ -21,6 +21,7 @@ use Assetic\Factory\Resource\ResourceInterface;
  * A cached formula loader is a composition of a formula loader and a cache.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class CachedFormulaLoader implements FormulaLoaderInterface
 {
@@ -47,6 +48,9 @@ class CachedFormulaLoader implements FormulaLoaderInterface
 
     public function load(ResourceInterface $resources)
     {
+        // The IteratorResourceInterface is deprecated
+        // You should not pass resource collections to this class. Pass
+        // single resources instead.
         if (!$resources instanceof IteratorResourceInterface) {
             $resources = array($resources);
         }

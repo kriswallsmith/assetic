@@ -11,10 +11,16 @@
 
 namespace Assetic\Factory\Resource;
 
+use Assetic\Factory\Resource\Loader\DirectoryLoader;
+
 /**
  * A resource is something formulae can be loaded from.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @author Bernhard Schussek <bschussek@gmail.com>
+ *
+ * @deprecated Deprecated since Assetic 1.2. Use the
+ *             {@link Loader\DirectoryLoader} instead.
  */
 class DirectoryResource implements IteratorResourceInterface
 {
@@ -70,64 +76,20 @@ class DirectoryResource implements IteratorResourceInterface
         return $this->path;
     }
 
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
     public function getIterator()
     {
-        return is_dir($this->path)
-            ? new DirectoryResourceIterator($this->getInnerIterator())
-            : new \EmptyIterator();
-    }
+        try {
+            $loader = new DirectoryLoader();
 
-    protected function getInnerIterator()
-    {
-        return new DirectoryResourceFilterIterator(new \RecursiveDirectoryIterator($this->path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), $this->pattern);
-    }
-}
-
-/**
- * An iterator that converts file objects into file resources.
- *
- * @author Kris Wallsmith <kris.wallsmith@gmail.com>
- * @access private
- */
-class DirectoryResourceIterator extends \RecursiveIteratorIterator
-{
-    public function current()
-    {
-        return new FileResource(parent::current()->getPathname());
-    }
-}
-
-/**
- * Filters files by a basename pattern.
- *
- * @author Kris Wallsmith <kris.wallsmith@gmail.com>
- * @access private
- */
-class DirectoryResourceFilterIterator extends \RecursiveFilterIterator
-{
-    protected $pattern;
-
-    public function __construct(\RecursiveDirectoryIterator $iterator, $pattern = null)
-    {
-        parent::__construct($iterator);
-
-        $this->pattern = $pattern;
-    }
-
-    public function accept()
-    {
-        $file = $this->current();
-        $name = $file->getBasename();
-
-        if ($file->isDir()) {
-            return '.' != $name[0];
+            return new \ArrayIterator($loader->load($this->path, $this->pattern));
+        } catch (\InvalidArgumentException $exception) {
+            // Ignore non-existing directories
+            return new \EmptyIterator();
         }
-
-        return null === $this->pattern || 0 < preg_match($this->pattern, $name);
-    }
-
-    public function getChildren()
-    {
-        return new self(new \RecursiveDirectoryIterator($this->current()->getPathname(), \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), $this->pattern);
     }
 }

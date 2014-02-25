@@ -15,6 +15,10 @@ namespace Assetic\Factory\Resource;
  * Coalesces multiple directories together into one merged resource.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @author Bernhard Schussek <bschussek@gmail.com>
+ *
+ * @deprecated Deprecated since Assetic 1.2. Use the
+ *             {@link Loader\CoalescingDirectoryLoader} instead.
  */
 class CoalescingDirectoryResource implements IteratorResourceInterface
 {

@@ -15,6 +15,10 @@ namespace Assetic\Factory\Resource;
  * A resource is something formulae can be loaded from.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @author Bernhard Schussek <bschussek@gmail.com>
+ *
+ * @deprecated Deprecated since Assetic 1.2. Use the
+ *             {@link Loader\ResourceLoaderInterface} instead.
  */
 interface IteratorResourceInterface extends ResourceInterface, \IteratorAggregate
 {
