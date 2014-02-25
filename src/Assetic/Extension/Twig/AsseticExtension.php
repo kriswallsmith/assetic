@@ -40,9 +40,9 @@ class AsseticExtension extends \Twig_Extension
     public function getTokenParsers()
     {
         return array(
-            $this->createTokenParser($this->factory, 'javascripts', 'js/*.js'),
-            $this->createTokenParser($this->factory, 'stylesheets', 'css/*.css'),
-            $this->createTokenParser($this->factory, 'image', 'images/*', true),
+            $this->createTokenParser('javascripts', 'js/*.js'),
+            $this->createTokenParser('stylesheets', 'css/*.css'),
+            $this->createTokenParser('image', 'images/*', true),
         );
     }
 
@@ -76,12 +76,12 @@ class AsseticExtension extends \Twig_Extension
         return 'assetic';
     }
 
-    protected function createTokenParser(AssetFactory $factory, $tag, $output, $single = false, array $extensions = array())
+    protected function createTokenParser($tag, $output, $single = false)
     {
         if ($this->lazyAssets) {
-            return new LazyAsseticTokenParser($factory, $tag, $output, $single, $extensions);
+            return new LazyAsseticTokenParser($this->factory, $tag, $output, $single);
         }
 
-        return new AsseticTokenParser($factory, $tag, $output, $single, $extensions);
+        return new AsseticTokenParser($this->factory, $tag, $output, $single);
     }
 }
