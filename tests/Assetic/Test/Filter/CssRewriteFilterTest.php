@@ -40,6 +40,11 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
             array('body { background: url("%s"); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
             array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
 
+            // url with whitespace
+            array("body { background: url( %s ); }", 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
+            array("body { background: url(\n'%s'\n); }", 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
+            array("body { background: url(\t\"%s\"\t); }", 'css/body.css', 'css/build/main.css', '../images/bg.gif', '../../images/bg.gif'),
+
             //url with data:
             array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', 'data:image/png;base64,abcdef=', 'data:image/png;base64,abcdef='),
             array('body { background: url(\'%s\'); }', 'css/body.css', 'css/build/main.css', '../images/bg-data:.gif', '../../images/bg-data:.gif'),
