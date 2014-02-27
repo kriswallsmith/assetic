@@ -26,6 +26,11 @@ body { background: url( '../images/bg5.gif' ); }
 body { background: url( "../images/bg6.gif" ); }
 body { background: url(/images/bg7.gif); }
 body { background: url(http://www.example.com/images/bg8.gif); }
+body {
+\tbackground: url(
+\t\t"../images/bg9.gif"
+\t);
+}
 CSS;
 
         $expected = array(
@@ -36,7 +41,8 @@ CSS;
             '../images/bg5.gif',
             '../images/bg6.gif',
             '/images/bg7.gif',
-            'http://www.example.com/images/bg8.gif'
+            'http://www.example.com/images/bg8.gif',
+            '../images/bg9.gif'
         );
 
         $actual = array();
