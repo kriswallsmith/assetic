@@ -17,14 +17,34 @@ class CssUtilsTest extends \PHPUnit_Framework_TestCase
 {
     public function testFilterUrls()
     {
-        $content = 'body { background: url(../images/bg.gif); }';
+        $content = <<<CSS
+body { background: url(../images/bg1.gif); }
+body { background: url( ../images/bg2.gif ); }
+body { background: url('../images/bg3.gif'); }
+body { background: url("../images/bg4.gif"); }
+body { background: url( '../images/bg5.gif' ); }
+body { background: url( "../images/bg6.gif" ); }
+body { background: url(/images/bg7.gif); }
+body { background: url(http://www.example.com/images/bg8.gif); }
+CSS;
 
-        $matches = array();
-        $actual = CssUtils::filterUrls($content, function($match) use(& $matches) {
-            $matches[] = $match['url'];
+        $expected = array(
+            '../images/bg1.gif',
+            '../images/bg2.gif',
+            '../images/bg3.gif',
+            '../images/bg4.gif',
+            '../images/bg5.gif',
+            '../images/bg6.gif',
+            '/images/bg7.gif',
+            'http://www.example.com/images/bg8.gif'
+        );
+
+        $actual = array();
+        CssUtils::filterUrls($content, function($match) use(& $actual) {
+            $actual[] = $match['url'];
         });
 
-        $this->assertEquals(array('../images/bg.gif'), $matches);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testExtractImports()
