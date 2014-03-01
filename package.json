@@ -9,6 +9,7 @@
     "less": "*",
     "handlebars": "*",
     "uglify-js": "*",
-    "autoprefixer": "*"
+    "autoprefixer": "*",
+    "react-tools": "*"
   }
 }
