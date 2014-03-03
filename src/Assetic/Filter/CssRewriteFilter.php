@@ -47,13 +47,13 @@ class CssRewriteFilter extends BaseCssFilter
             $host = '';
 
             // pop entries off the target until it fits in the source
-            if ('.' == dirname($sourcePath)) {
+            if ('.' == dirname($sourceBase)) {
                 $path = str_repeat('../', substr_count($targetPath, '/'));
             } elseif ('.' == $targetDir = dirname($targetPath)) {
-                $path = dirname($sourcePath).'/';
+                $path = dirname($sourceBase).'/';
             } else {
                 $path = '';
-                while (0 !== strpos($sourcePath, $targetDir)) {
+                while (0 !== strpos($sourceBase, $targetDir)) {
                     if (false !== $pos = strrpos($targetDir, '/')) {
                         $targetDir = substr($targetDir, 0, $pos);
                         $path .= '../';
@@ -63,7 +63,7 @@ class CssRewriteFilter extends BaseCssFilter
                         break;
                     }
                 }
-                $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
+                $path .= ltrim(substr(($sourceBase.'/'), strlen($targetDir)), '/');
             }
         }
 
