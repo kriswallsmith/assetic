@@ -94,6 +94,12 @@ class TwigFormulaLoader implements FormulaLoaderInterface
             }
         }
 
+        if ($node->hasAttribute('embedded_templates')) {
+            foreach ($node->getAttribute('embedded_templates') as $child) {
+                $formulae += $this->loadNode($child);
+            }
+        }
+
         return $formulae;
     }
 }
