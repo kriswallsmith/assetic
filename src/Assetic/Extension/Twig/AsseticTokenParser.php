@@ -45,6 +45,28 @@ class AsseticTokenParser extends \Twig_TokenParser
 
     public function parse(\Twig_Token $token)
     {
+        list($inputs, $filters, $name, $attributes) = $this->parseStartOfTag();
+        $stream = $this->parser->getStream();
+
+        $body = $this->parser->subparse(array($this, 'testEndTag'), true);
+
+        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+
+        if ($this->single && 1 < count($inputs)) {
+            $inputs = array_slice($inputs, -1);
+        }
+
+        if (!$name) {
+            $name = $this->factory->generateAssetName($inputs, $filters, $attributes);
+        }
+
+        $asset = $this->factory->createAsset($inputs, $filters, $attributes + array('name' => $name));
+
+        return $this->createNode($asset, $body, $inputs, $filters, $name, $attributes, $token->getLine(), $this->getTag());
+    }
+
+    protected function parseStartOfTag()
+    {
         $inputs = array();
         $filters = array();
         $name = null;
@@ -119,21 +141,7 @@ class AsseticTokenParser extends \Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        $body = $this->parser->subparse(array($this, 'testEndTag'), true);
-
-        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
-
-        if ($this->single && 1 < count($inputs)) {
-            $inputs = array_slice($inputs, -1);
-        }
-
-        if (!$name) {
-            $name = $this->factory->generateAssetName($inputs, $filters, $attributes);
-        }
-
-        $asset = $this->factory->createAsset($inputs, $filters, $attributes + array('name' => $name));
-
-        return $this->createNode($asset, $body, $inputs, $filters, $name, $attributes, $token->getLine(), $this->getTag());
+        return array($inputs, $filters, $name, $attributes);
     }
 
     public function getTag()
