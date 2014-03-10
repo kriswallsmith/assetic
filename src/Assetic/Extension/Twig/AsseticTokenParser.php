@@ -16,11 +16,11 @@ use Assetic\Factory\AssetFactory;
 
 class AsseticTokenParser extends \Twig_TokenParser
 {
-    private $factory;
-    private $tag;
-    private $output;
-    private $single;
-    private $extensions;
+    protected $factory;
+    protected $tag;
+    protected $output;
+    protected $single;
+    protected $extensions;
 
     /**
      * Constructor.
