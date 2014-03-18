@@ -1,0 +1,7 @@
+<assets>
+{% embed 'embedded.twig' %}
+    {% block assets %}
+        {% image 'images/foo.png' output='images/foo.png' name='image' debug=true combine=false %}<image url="{{ asset_url }}" />{% endimage %}
+    {% endblock %}
+{% endembed %}
+</assets>

@@ -105,4 +105,29 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $formulae = $this->loader->load($resource);
         $this->assertEquals(array(), $formulae);
     }
+
+    public function testEmbeddedTemplate()
+    {
+        $expected = array(
+            'image' => array(
+                array('images/foo.png'),
+                array(),
+                array(
+                    'name'    => 'image',
+                    'debug'   => true,
+                    'vars'    => array(),
+                    'output'  => 'images/foo.png',
+                    'combine' => false,
+                ),
+            ),
+        );
+
+        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue(file_get_contents(__DIR__.'/templates/embed.twig')));
+
+        $formulae = $this->loader->load($resource);
+        $this->assertEquals($expected, $formulae);
+    }
 }
