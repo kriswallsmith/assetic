@@ -172,4 +172,15 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(123, $this->asset->getLastModified(), '->getLastModified() returns the inner asset last modified');
     }
+
+    public function testSetLastModified()
+    {
+        $this->inner->expects($this->once())
+            ->method('getLastModified')
+            ->will($this->returnValue(123));
+
+        $this->asset->setLastModified(234);
+
+        $this->assertEquals(234, $this->asset->getLastModified(), '->getLastModified() returns the modified last modified');
+    }
 }
