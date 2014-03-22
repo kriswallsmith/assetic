@@ -62,10 +62,8 @@ EOF;
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
 
-    public function testCompassExtension()
+    public function testCompassExtensionCanBeEnabled()
     {
-        $this->markTestIncomplete('Someone fix this, SVP? (Undefined mixin "box-shadow")');
-
         $expected = <<<EOF
 .shadow {
   -webkit-box-shadow : 10px 10px 8px red;
@@ -78,13 +76,25 @@ EOF;
         $asset->load();
 
         $this->getFilter(true)->filterLoad($asset);
-        $this->assertEquals($expected, $asset->getContent(), 'compass plugin can be enabled');
+        $this->assertEquals(
+            $expected,
+            $asset->getContent(),
+            'compass plugin can be enabled'
+        );
+    }
+
+    public function testCompassExtensionCanBeDisabled()
+    {
+        $this->setExpectedException(
+            "Exception",
+            "Undefined mixin box-shadow: failed at `@include box-shadow(10px "
+            . "10px 8px red);` line: 4"
+        );
 
         $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
         $asset->load();
 
         $this->getFilter(false)->filterLoad($asset);
-        $this->assertEquals("@import \"compass\";\n", $asset->getContent(), 'compass plugin can be disabled');
     }
 
     public function testSetImportPath()
