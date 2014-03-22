@@ -31,6 +31,8 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     private $customFunctions = array(); 
 
+    private $formatter;
+
     public function enableCompass($enable = true)
     {
         $this->compass = (Boolean) $enable;
@@ -58,6 +60,10 @@ class ScssphpFilter implements DependencyExtractorInterface
             $sc->registerFunction($name,$callable);
         }
 
+        if ($this->formatter) {
+            $sc->setFormatter($this->formatter);
+        }
+
         $asset->setContent($sc->compile($asset->getContent()));
     }
 
@@ -78,6 +84,12 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterDump(AssetInterface $asset)
     {
+
+    }
+
+    public function setFormatter($formatter)
+    {
+        $this->formatter = $formatter;
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)

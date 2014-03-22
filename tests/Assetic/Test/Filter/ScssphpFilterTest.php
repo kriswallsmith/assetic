@@ -104,16 +104,35 @@ EOF;
     {
         $asset = new StringAsset('.foo{ color: bar(); }');
         $asset->load();
-        
+
         $filter = $this->getFilter();
         $filter->registerFunction('bar',function(){ return 'red';});
         $filter->filterLoad($asset);
-        
+
         $expected = new StringAsset('.foo{ color: red;}');
         $expected->load();
         $filter->filterLoad($expected);
 
         $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
+    }
+
+    public function testSetFormatter()
+    {
+        $actual = new StringAsset(".foo {\n  color: #fff;\n}");
+        $actual->load();
+
+        $filter = $this->getFilter();
+        $filter->setFormatter("scss_formatter_compressed");
+        $filter->filterLoad($actual);
+
+        $expected = new StringAsset('.foo{color:#fff;}');
+        $expected->load();
+
+        $this->assertEquals(
+            $expected->getContent(),
+            $actual->getContent(),
+            'scss_formatter can be changed'
+        );
     }
 
     // private
