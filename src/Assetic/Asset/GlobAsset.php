@@ -102,7 +102,7 @@ class GlobAsset extends AssetCollection
             if (false !== $paths = glob($glob)) {
                 foreach ($paths as $path) {
                     if (is_file($path)) {
-                        $asset = new FileAsset($path, array(), $this->getSourceRoot(), $this->getSourcePath(), $this->getVars());
+                        $asset = new FileAsset($path, array(), $this->getSourceRoot(), null, $this->getVars());
                         $asset->setValues($this->getValues());
                         $this->add($asset);
                     }
