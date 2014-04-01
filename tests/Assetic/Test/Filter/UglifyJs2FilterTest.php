@@ -25,7 +25,7 @@ class UglifyJs2FilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        $uglifyjsBin = $this->findExecutable('uglifyjs2', 'UGLIFYJS2_BIN');
+        $uglifyjsBin = $this->findExecutable('uglifyjs', 'UGLIFYJS2_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
         if (!$uglifyjsBin) {
             $this->markTestSkipped('Unable to find `uglifyjs` executable.');
