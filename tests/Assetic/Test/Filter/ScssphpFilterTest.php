@@ -13,6 +13,7 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\ScssphpFilter;
 
 /**
@@ -133,6 +134,16 @@ EOF;
             $actual->getContent(),
             'scss_formatter can be changed'
         );
+    }
+
+    public function testGetChildren()
+    {
+        $factory = new AssetFactory('');
+
+        $filter = $this->getFilter();
+        $children = $filter->getChildren($factory, '@import "main";', __DIR__.'/fixtures/sass');
+
+        $this->assertCount(2, $children);
     }
 
     // private

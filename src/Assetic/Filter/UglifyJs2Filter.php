@@ -30,6 +30,7 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $screwIe8;
     private $comments;
     private $wrap;
+    private $defines;
 
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -61,10 +62,15 @@ class UglifyJs2Filter extends BaseNodeFilter
     {
         $this->comments = $comments;
     }
-    
+
     public function setWrap($wrap)
     {
         $this->wrap = $wrap;
+    }
+
+    public function setDefines(array $defines)
+    {
+        $this->defines = $defines;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -73,9 +79,11 @@ class UglifyJs2Filter extends BaseNodeFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $pb = $this->createProcessBuilder(
+            $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin));
+            : array($this->uglifyjsBin)
+        );
 
         if ($this->compress) {
             $pb->add('--compress');
@@ -96,9 +104,13 @@ class UglifyJs2Filter extends BaseNodeFilter
         if ($this->comments) {
             $pb->add('--comments')->add(true === $this->comments ? 'all' : $this->comments);
         }
-        
+
         if ($this->wrap) {
             $pb->add('--wrap')->add($this->wrap);
+        }
+
+        if ($this->defines) {
+            $pb->add('--define')->add(join(',', $this->defines));
         }
 
         // input and output files
