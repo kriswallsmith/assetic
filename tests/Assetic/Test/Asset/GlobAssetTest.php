@@ -12,6 +12,7 @@
 namespace Assetic\Test\Asset;
 
 use Assetic\Asset\GlobAsset;
+use Assetic\Util\VarUtils;
 
 class GlobAssetTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,5 +58,17 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     {
         $assets = new GlobAsset(__DIR__.'/*.php');
         $this->assertNotEmpty($assets->dump(), '->dump() dumps contents');
+    }
+
+    public function testVariableInPath()
+    {
+        $globasset = new GlobAsset(__DIR__.'/*.php', array(), null, array('testvar'));
+        $globasset->setTargetPath('{testvar}_*.php');
+        $globasset->setValues(array('testvar' => 'works'));
+
+        foreach($globasset as $asset) {
+            $target = VarUtils::resolve($asset->getTargetPath(), $asset->getVars(), $asset->getValues());
+            $this->assertContains('works', $target);
+        }
     }
 }
