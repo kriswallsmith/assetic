@@ -278,7 +278,7 @@ environment:
 ``` php
 <?php
 
-$twig->addExtension(new AsseticExtension($factory, $debug));
+$twig->addExtension(new AsseticExtension($factory));
 ```
 
 Once in place, the extension exposes a stylesheets and a javascripts tag with a syntax similar
