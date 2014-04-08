@@ -37,7 +37,8 @@
         "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
         "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
-        "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor"
+        "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor",
+        "LinusU/Stylus.php": "Assetic provides the integration with the Stylus.php STYL compiler"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
