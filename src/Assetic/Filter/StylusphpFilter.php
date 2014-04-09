@@ -32,12 +32,20 @@ class StylusphpFilter implements DependencyExtractorInterface
     {
         $stylus = new Stylus();
 
-        $stylus->setReadDir($asset->getSourceRoot());
-        $stylus->setImportDir($asset->getSourceDirectory());
+        if ($asset->getSourceRoot()) {
 
-        $output = $stylus->parseFileToString($asset->getSourcePath());
+            $stylus->setReadDir($asset->getSourceRoot());
+            $stylus->setImportDir($asset->getSourceDirectory());
 
-        $asset->setContent($output);
+            $stylus->formFile($asset->getSourcePath());
+
+        } else {
+
+            $stylus->fromString($asset->getContent());
+
+        }
+
+        $asset->setContent($stylus->toString());
     }
 
     /**
