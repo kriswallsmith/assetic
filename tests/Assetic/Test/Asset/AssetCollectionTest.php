@@ -42,6 +42,18 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll->dump();
     }
 
+    public function testDumpGroupedFilter()
+    {
+        $filter = $this->getMock('Assetic\\Filter\\GrouppedFilterInterface');
+        $stringAsset = new StringAsset("1\n2");
+
+        $stringAsset->load();
+        $filter->expects($this->once())->method('filterDump')->with();
+
+        $coll = new AssetCollection(array(new StringAsset('1'), new StringAsset('2')), array($filter));
+        $coll->dump();
+    }
+
     public function testNestedCollectionLoad()
     {
         $content = 'foobar';

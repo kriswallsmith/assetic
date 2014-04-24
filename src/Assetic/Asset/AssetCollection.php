@@ -13,8 +13,10 @@ namespace Assetic\Asset;
 
 use Assetic\Asset\Iterator\AssetCollectionFilterIterator;
 use Assetic\Asset\Iterator\AssetCollectionIterator;
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\FilterCollection;
 use Assetic\Filter\FilterInterface;
+use Assetic\Filter\GrouppedFilterInterface;
 
 /**
  * A collection of assets.
@@ -68,6 +70,19 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function add(AssetInterface $asset)
     {
         $this->assets[] = $asset;
+    }
+
+    private function applyGrouppedFilters($parts){
+        $stringAsset = new StringAsset(implode("\n", $parts));
+        $stringAsset->load();
+
+        foreach($this->filters as $filter){
+            if($filter instanceOf GrouppedFilterInterface){
+                $filter->filterDump($stringAsset);
+            }
+        }
+
+        return $stringAsset->getContent();
     }
 
     public function removeLeaf(AssetInterface $needle, $graceful = false)
@@ -151,7 +166,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             $parts[] = $asset->dump($additionalFilter);
         }
 
-        return implode("\n", $parts);
+        return $this->applyGrouppedFilters($parts);
     }
 
     public function getContent()
