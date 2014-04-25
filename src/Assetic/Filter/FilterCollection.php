@@ -66,7 +66,9 @@ class FilterCollection implements FilterInterface, \IteratorAggregate, \Countabl
     public function filterDump(AssetInterface $asset)
     {
         foreach ($this->filters as $filter) {
-            $filter->filterDump($asset);
+            if(!($filter instanceOf GrouppedFilterInterface)){
+                $filter->filterDump($asset);
+            }
         }
     }
 

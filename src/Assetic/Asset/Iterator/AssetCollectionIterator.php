@@ -12,6 +12,7 @@
 namespace Assetic\Asset\Iterator;
 
 use Assetic\Asset\AssetCollectionInterface;
+use Assetic\Filter\GrouppedFilterInterface;
 
 /**
  * Iterates over an asset collection.
@@ -74,7 +75,9 @@ class AssetCollectionIterator implements \RecursiveIterator
 
         // cascade filters
         foreach ($this->filters as $filter) {
-            $clone->ensureFilter($filter);
+            if(!($filter instanceOf GrouppedFilterInterface)){
+                $clone->ensureFilter($filter);
+            }
         }
 
         return $clone;

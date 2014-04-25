@@ -37,7 +37,7 @@ EOF;
 
         $expected = <<<EOF
 (function() {
-  alert("foobar")
+  alert("foobar");
 })();
 
 EOF;
@@ -69,7 +69,7 @@ EOF;
 
         $expected = <<<EOF
 (function() {
-  console.log(123)
+  console.log(123);
 })();
 
 EOF;
