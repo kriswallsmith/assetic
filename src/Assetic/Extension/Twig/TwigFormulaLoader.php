@@ -13,6 +13,7 @@ namespace Assetic\Extension\Twig;
 
 use Assetic\Factory\Loader\FormulaLoaderInterface;
 use Assetic\Factory\Resource\ResourceInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Loads asset formulae from Twig templates.
@@ -22,10 +23,12 @@ use Assetic\Factory\Resource\ResourceInterface;
 class TwigFormulaLoader implements FormulaLoaderInterface
 {
     private $twig;
+    private $logger;
 
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(\Twig_Environment $twig, LoggerInterface $logger = null)
     {
         $this->twig = $twig;
+        $this->logger = $logger;
     }
 
     public function load(ResourceInterface $resource)
@@ -34,6 +37,10 @@ class TwigFormulaLoader implements FormulaLoaderInterface
             $tokens = $this->twig->tokenize($resource->getContent(), (string) $resource);
             $nodes  = $this->twig->parse($tokens);
         } catch (\Exception $e) {
+            if ($this->logger) {
+                $this->logger->error(sprintf('The template "%s" contains an error: %s', $resource, $e->getMessage()));
+            }
+
             return array();
         }
 

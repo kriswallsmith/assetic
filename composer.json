@@ -29,7 +29,8 @@
         "mrclay/minify": "*",
         "kamicane/packager": "*",
         "joliclic/javascript-packer": "*",
-        "patchwork/jsqueeze": "*"
+        "patchwork/jsqueeze": "*",
+        "psr/log": "~1.0"
     },
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
