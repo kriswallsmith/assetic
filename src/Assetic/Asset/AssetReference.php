@@ -23,12 +23,18 @@ class AssetReference implements AssetInterface
 {
     private $am;
     private $name;
+    private $asset;
     private $filters = array();
 
     public function __construct(AssetManager $am, $name)
     {
         $this->am = $am;
         $this->name = $name;
+    }
+
+    public function __clone()
+    {
+        $this->asset = clone $this->am->get($this->name);
     }
 
     public function ensureFilter(FilterInterface $filter)
@@ -122,14 +128,14 @@ class AssetReference implements AssetInterface
 
     private function callAsset($method, $arguments = array())
     {
-        $asset = $this->am->get($this->name);
+        $asset = isset($this->asset) ? $this->asset : $this->am->get($this->name);
 
         return call_user_func_array(array($asset, $method), $arguments);
     }
 
     private function flushFilters()
     {
-        $asset = $this->am->get($this->name);
+        $asset = isset($this->asset) ? $this->asset : $this->am->get($this->name);
 
         while ($filter = array_shift($this->filters)) {
             $asset->ensureFilter($filter);
