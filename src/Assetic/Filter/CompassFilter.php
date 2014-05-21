@@ -42,6 +42,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $imagesDir;
     private $javascriptsDir;
     private $fontsDir;
+    private $relativeAssets = false;
 
     // compass configuration file options
     private $plugins = array();
@@ -188,6 +189,22 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->homeEnv = $homeEnv;
     }
 
+    /**
+     * @param bool $relativeAssets
+     */
+    public function setRelativeAssets($relativeAssets)
+    {
+        $this->relativeAssets = $relativeAssets;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRelativeAssets()
+    {
+        return $this->relativeAssets;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $loadPaths = $this->loadPaths;
@@ -234,6 +251,10 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         // whether it's an absolute path or not
         if ($this->imagesDir) {
             $pb->add('--images-dir')->add($this->imagesDir);
+        }
+
+        if ($this->getRelativeAssets()) {
+            $pb->add('--relative-assets');
         }
 
         if ($this->javascriptsDir) {
