@@ -37,6 +37,16 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     private $parserOptions;
 
     /**
+     * @var array
+     */
+    private $globalVariables;
+
+    /**
+     * @var array
+     */
+    private $modifyVariables;
+
+    /**
      * Load Paths
      *
      * A list of paths which less will search for includes.
@@ -57,6 +67,8 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $this->setNodePaths($nodePaths);
         $this->treeOptions = array();
         $this->parserOptions = array();
+        $this->globalVariables = array();
+        $this->modifyVariables = array();
     }
 
     /**
@@ -92,6 +104,22 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     }
 
     /**
+     * @param array $globalVariables
+     */
+    public function setGlobalVariables(array $globalVariables)
+    {
+        $this->globalVariables = $globalVariables;
+    }
+
+    /**
+     * @param array $modifyVariables
+     */
+    public function setModifyVariables(array $modifyVariables)
+    {
+        $this->modifyVariables = $modifyVariables;
+    }
+
+    /**
      * @param string $code
      * @param string $value
      */
@@ -118,7 +146,7 @@ new(less.Parser)(%s).parse(%s, function(e, tree) {
         less.writeError(e);
         process.exit(3);
     }
-});
+}, %s);
 
 EOF;
 
@@ -139,7 +167,11 @@ EOF;
         file_put_contents($input, sprintf($format,
             json_encode($parserOptions),
             json_encode($asset->getContent()),
-            json_encode($this->treeOptions)
+            json_encode($this->treeOptions),
+            json_encode(array(
+                'globalVars' => $this->globalVariables,
+                'modifyVars' => $this->modifyVariables,
+            ))
         ));
 
         $proc = $pb->getProcess();
