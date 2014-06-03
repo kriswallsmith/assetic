@@ -13,8 +13,7 @@ matrix:
 
 before_script:
     # php deps
-    - composer self-update
-    - composer install --dev
+    - composer install
 
     # node deps
     - npm install uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
