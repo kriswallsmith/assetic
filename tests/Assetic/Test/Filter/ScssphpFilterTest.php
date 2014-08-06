@@ -155,6 +155,18 @@ EOF;
 
         $this->assertCount(2, $children);
     }
+	
+    public function testSetVariables()
+    {
+        $filter = $this->getFilter();
+        $filter->setVariables(array('color' => 'red'));
+
+        $asset = new StringAsset("#test { color: \$color; }");
+        $asset->load();
+        $filter->filterLoad($asset);
+
+        $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), "Variables can be added");
+    }	
 
     // private
 

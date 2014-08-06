@@ -33,6 +33,8 @@ class ScssphpFilter implements DependencyExtractorInterface
     private $customFunctions = array(); 
 
     private $formatter;
+	
+	private $variables = array();
 
     public function enableCompass($enable = true)
     {
@@ -64,6 +66,10 @@ class ScssphpFilter implements DependencyExtractorInterface
         if ($this->formatter) {
             $sc->setFormatter($this->formatter);
         }
+		
+        if( !empty($this->variables)) {
+            $sc->setVariables($this->variables);
+        }		
 
         $asset->setContent($sc->compile($asset->getContent()));
     }
@@ -92,7 +98,17 @@ class ScssphpFilter implements DependencyExtractorInterface
     {
         $this->formatter = $formatter;
     }
+	
+    public function setVariables($variables)
+    {
+    $this->variables = $variables;
+    }
 
+    public function addVariable($variable)
+    {
+        $this->variables[] = $variable;
+    }	
+	
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         $sc = new \scssc();
