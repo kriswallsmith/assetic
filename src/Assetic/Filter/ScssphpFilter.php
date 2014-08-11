@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\CssUtils;
+use Leafo\ScssPhp\Compiler;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
@@ -46,7 +47,7 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $sc = new \scssc();
+        $sc = new Compiler();
         if ($this->compass) {
             new \scss_compass($sc);
         }
@@ -95,7 +96,7 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        $sc = new \scssc();
+        $sc = new Compiler();
         $sc->addImportPath($loadPath);
         foreach($this->importPaths as $path) {
             $sc->addImportPath($path);
