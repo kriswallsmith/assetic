@@ -52,4 +52,13 @@ class EmberPrecompileFilterTest extends FilterTestCase
         $this->assertContains('Ember.TEMPLATES["template"]', $this->asset->getContent());
         $this->assertContains('data.buffer.push("<div id=\"test\"><h2>");', $this->asset->getContent());
     }
+
+	public function testEmberPrecompileWin() {
+		if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			$this->filter->setBaseDir(true);
+			$this->testEmberPrecompile();
+		} else {
+			$this->markTestSkipped('Not running on Windows.');
+		}
+	}
 }
