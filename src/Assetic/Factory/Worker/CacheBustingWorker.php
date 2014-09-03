@@ -22,13 +22,18 @@ use Assetic\Factory\LazyAssetManager;
  */
 class CacheBustingWorker implements WorkerInterface
 {
+    const STRATEGY_CONTENT = 1;
+    const STRATEGY_MODIFICATION = 2;
+
     protected $am;
     private $separator;
+    private $strategy;
 
-    public function __construct(LazyAssetManager $am, $separator = '-')
+    public function __construct(LazyAssetManager $am, $separator = '-', $strategy = self::STRATEGY_CONTENT)
     {
         $this->am = $am;
         $this->separator = $separator;
+        $this->strategy = $strategy;
     }
 
     public function process(AssetInterface $asset)
@@ -54,17 +59,46 @@ class CacheBustingWorker implements WorkerInterface
         );
     }
 
+    /**
+     * Get hash for Asset based on content
+     *
+     * @param AssetInterface $asset
+     *
+     * @return string
+     */
+    protected function getHashForAsset(AssetInterface $asset)
+    {
+        $path = implode('/', [$asset->getSourceRoot(), $asset->getSourcePath()]);
+        $content = file_get_contents($path);
+
+        return md5($content);
+    }
+
     protected function getHash(AssetInterface $asset)
     {
         $hash = hash_init('sha1');
 
-        hash_update($hash, $this->am->getLastModified($asset));
+        switch($this->strategy) {
+            case self::STRATEGY_CONTENT:
+                if ($asset instanceof AssetCollectionInterface) {
+                    foreach ($asset as $leaf) {
+                        hash_update($hash, $this->getHashForAsset($leaf));
+                    }
+                } else {
+                    hash_update($hash, $this->getHashForAsset($asset));
+                }
+                break;
 
-        if ($asset instanceof AssetCollectionInterface) {
-            foreach ($asset as $i => $leaf) {
-                $sourcePath = $leaf->getSourcePath();
-                hash_update($hash, $sourcePath ?: $i);
-            }
+            case self::STRATEGY_MODIFICATION:
+                hash_update($hash, $this->am->getLastModified($asset));
+
+                if ($asset instanceof AssetCollectionInterface) {
+                    foreach ($asset as $i => $leaf) {
+                        $sourcePath = $leaf->getSourcePath();
+                        hash_update($hash, $sourcePath ?: $i);
+                    }
+                }
+                break;
         }
 
         return substr(hash_final($hash), 0, 7);
