@@ -27,6 +27,7 @@ class CoffeeScriptFilter extends BaseNodeFilter
 
     // coffee options
     private $bare;
+    private $noHeader;
 
     public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null)
     {
@@ -37,6 +38,11 @@ class CoffeeScriptFilter extends BaseNodeFilter
     public function setBare($bare)
     {
         $this->bare = $bare;
+    }
+    
+    public function setNoHeader($noHeader)
+    {
+        $this->noHeader = $noHeader;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -52,6 +58,10 @@ class CoffeeScriptFilter extends BaseNodeFilter
 
         if ($this->bare) {
             $pb->add('--bare');
+        }
+        
+        if ($this->noHeader) {
+           $pb->add('--no-header');
         }
 
         $pb->add($input);
