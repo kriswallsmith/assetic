@@ -39,19 +39,11 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $quiet;
     private $boring;
     private $noLineComments;
-    private $imagesDir;
-    private $javascriptsDir;
-    private $fontsDir;
 
     // compass configuration file options
     private $plugins = array();
     private $loadPaths = array();
-    private $httpPath;
-    private $httpImagesPath;
-    private $httpFontsPath;
-    private $httpGeneratedImagesPath;
-    private $generatedImagesPath;
-    private $httpJavascriptsPath;
+    private $configOptions = array();
     private $homeEnv = true;
 
     public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
@@ -117,22 +109,12 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->noLineComments = $noLineComments;
     }
 
-    public function setImagesDir($imagesDir)
-    {
-        $this->imagesDir = $imagesDir;
-    }
-
-    public function setJavascriptsDir($javascriptsDir)
-    {
-        $this->javascriptsDir = $javascriptsDir;
-    }
-
-    public function setFontsDir($fontsDir)
-    {
-        $this->fontsDir = $fontsDir;
-    }
-
     // compass configuration file options setters
+    public function setConfigOptions(array $configOptions)
+    {
+        $this->configOptions = $configOptions;
+    }
+
     public function setPlugins(array $plugins)
     {
         $this->plugins = $plugins;
@@ -153,39 +135,118 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->loadPaths[] = $loadPath;
     }
 
-    public function setHttpPath($httpPath)
-    {
-        $this->httpPath = $httpPath;
-    }
-
-    public function setHttpImagesPath($httpImagesPath)
-    {
-        $this->httpImagesPath = $httpImagesPath;
-    }
-
-    public function setHttpFontsPath($httpFontsPath)
-    {
-        $this->httpFontsPath = $httpFontsPath;
-    }
-
-    public function setHttpGeneratedImagesPath($httpGeneratedImagesPath)
-    {
-        $this->httpGeneratedImagesPath = $httpGeneratedImagesPath;
-    }
-
-    public function setGeneratedImagesPath($generatedImagesPath)
-    {
-        $this->generatedImagesPath = $generatedImagesPath;
-    }
-
-    public function setHttpJavascriptsPath($httpJavascriptsPath)
-    {
-        $this->httpJavascriptsPath = $httpJavascriptsPath;
-    }
-
     public function setHomeEnv($homeEnv)
     {
         $this->homeEnv = $homeEnv;
+    }
+
+    /**
+     * Set images_dir
+     *
+     * @param string $imagesDir
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setImagesDir($imagesDir)
+    {
+        $this->configOptions['images_dir'] = $imagesDir;
+    }
+
+    /**
+     * Set javascripts_dir
+     *
+     * @param string $javascriptsDir
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setJavascriptsDir($javascriptsDir)
+    {
+        $this->configOptions['javascripts_dir'] = $javascriptsDir;
+    }
+
+    /**
+     * Set fonts_dir
+     *
+     * @param string $fontsDir
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+
+    public function setFontsDir($fontsDir)
+    {
+        $this->configOptions['fonts_dir'] = $fontsDir;
+    }
+
+    /**
+     * Set http_path
+     *
+     * @param string $httpPath
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setHttpPath($httpPath)
+    {
+        $this->configOptions['http_path'] = $httpPath;
+    }
+
+    /**
+     * Set http_images_path
+     *
+     * @param string $httpImagesPath
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setHttpImagesPath($httpImagesPath)
+    {
+        $this->configOptions['http_images_path'] = $httpImagesPath;
+    }
+
+    /**
+     * Set http_fonts_path
+     *
+     * @param string $httpFontsPath
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setHttpFontsPath($httpFontsPath)
+    {
+        $this->configOptions['http_fonts_path'] = $httpFontsPath;
+    }
+
+    /**
+     * Set http_generated_images_path
+     *
+     * @param string $httpGeneratedImagesPath
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setHttpGeneratedImagesPath($httpGeneratedImagesPath)
+    {
+        $this->configOptions['http_generated_images_path'] = $httpGeneratedImagesPath;
+    }
+
+    /**
+     * Set generated_images_path
+     *
+     * @param string $generatedImagesPath
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setGeneratedImagesPath($generatedImagesPath)
+    {
+        $this->configOptions['generated_images_path'] = $generatedImagesPath;
+    }
+
+    /**
+     * Set http_javascripts_path
+     *
+     * @param string $httpJavascriptsPath
+     *
+     * @deprecated Use {@link setConfigOptions()} instead
+     */
+    public function setHttpJavascriptsPath($httpJavascriptsPath)
+    {
+        $this->configOptions['http_javascripts_path'] = $httpJavascriptsPath;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -229,79 +290,53 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $pb->add('--no-line-comments');
         }
 
+        // options in config file
+        $configOptions = $this->configOptions;
+
         // these two options are not passed into the config file
         // because like this, compass adapts this to be xxx_dir or xxx_path
         // whether it's an absolute path or not
-        if ($this->imagesDir) {
-            $pb->add('--images-dir')->add($this->imagesDir);
+        if (isset($configOptions['images_dir'])) {
+            $pb->add('--images-dir')->add($configOptions['images_dir']);
+            unset($configOptions['images_dir']);
         }
 
-        if ($this->javascriptsDir) {
-            $pb->add('--javascripts-dir')->add($this->javascriptsDir);
+        if (isset($configOptions['javascripts_dir'])) {
+            $pb->add('--javascripts-dir')->add($configOptions['javascripts_dir']);
+            unset($configOptions['javascripts_dir']);
         }
-
-        // options in config file
-        $optionsConfig = array();
 
         if (!empty($loadPaths)) {
-            $optionsConfig['additional_import_paths'] = $loadPaths;
+            $configOptions['additional_import_paths'] = $loadPaths;
         }
 
         if ($this->unixNewlines) {
-            $optionsConfig['sass_options']['unix_newlines'] = true;
+            $configOptions['sass_options']['unix_newlines'] = true;
         }
 
         if ($this->debugInfo) {
-            $optionsConfig['sass_options']['debug_info'] = true;
+            $configOptions['sass_options']['debug_info'] = true;
         }
 
         if ($this->cacheLocation) {
-            $optionsConfig['sass_options']['cache_location'] = $this->cacheLocation;
+            $configOptions['sass_options']['cache_location'] = $this->cacheLocation;
         }
 
         if ($this->noCache) {
-            $optionsConfig['sass_options']['no_cache'] = true;
-        }
-
-        if ($this->httpPath) {
-            $optionsConfig['http_path'] = $this->httpPath;
-        }
-
-        if ($this->httpImagesPath) {
-            $optionsConfig['http_images_path'] = $this->httpImagesPath;
-        }
-
-        if ($this->httpFontsPath) {
-            $optionsConfig['http_fonts_path'] = $this->httpFontsPath;
-        }
-
-        if ($this->httpGeneratedImagesPath) {
-            $optionsConfig['http_generated_images_path'] = $this->httpGeneratedImagesPath;
-        }
-
-        if ($this->generatedImagesPath) {
-            $optionsConfig['generated_images_path'] = $this->generatedImagesPath;
-        }
-
-        if ($this->httpJavascriptsPath) {
-            $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
-        }
-
-        if ($this->fontsDir) {
-            $optionsConfig['fonts_dir'] = $this->fontsDir;
+            $configOptions['sass_options']['no_cache'] = true;
         }
 
         // options in configuration file
-        if (count($optionsConfig)) {
+        if (count($configOptions)) {
             $config = array();
             foreach ($this->plugins as $plugin) {
                 $config[] = sprintf("require '%s'", addcslashes($plugin, '\\'));
             }
-            foreach ($optionsConfig as $name => $value) {
-                if (!is_array($value)) {
-                    $config[] = sprintf('%s = "%s"', $name, addcslashes($value, '\\'));
-                } elseif (!empty($value)) {
+            foreach ($configOptions as $name => $value) {
+                if (is_array($value)) {
                     $config[] = sprintf('%s = %s', $name, $this->formatArrayToRuby($value));
+                } elseif (null !== $value) {
+                    $config[] = sprintf('%s = "%s"', $name, addcslashes($value, '\\'));
                 }
             }
 
