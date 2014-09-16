@@ -40,14 +40,13 @@ class AutoprefixerFilterTest extends FilterTestCase
         $input = <<<CSS
 a {
   display: flex;
-}        
+}
 CSS;
         //TODO in some point of future this test will fail. Update test when new versions come out?
         $expected = <<<CSS
 a {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -moz-box;
   display: -ms-flexbox;
   display: flex;
 }
@@ -66,12 +65,12 @@ CSS;
         $input = <<<CSS
 img {
   border-radius: 10px;
-}        
+}
 CSS;
         $expected = <<<CSS
 img {
   -moz-border-radius: 10px;
-  border-radius: 10px;
+       border-radius: 10px;
 }
 CSS;
 
@@ -89,12 +88,12 @@ CSS;
         $input = <<<CSS
 img {
   border-radius: 10px;
-}        
+}
 CSS;
         $expected = <<<CSS
 img {
   -moz-border-radius: 10px;
-  border-radius: 10px;
+       border-radius: 10px;
 }
 CSS;
 
