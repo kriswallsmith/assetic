@@ -42,6 +42,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $imagesDir;
     private $javascriptsDir;
     private $fontsDir;
+    private $relativeAssets;
 
     // compass configuration file options
     private $plugins = array();
@@ -130,6 +131,13 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     public function setFontsDir($fontsDir)
     {
         $this->fontsDir = $fontsDir;
+    }
+
+    public function setRelativeAssets($relativeAssets)
+    {
+        $this->relativeAssets = $relativeAssets;
+
+        return $this;
     }
 
     // compass configuration file options setters
@@ -291,6 +299,10 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $optionsConfig['fonts_dir'] = $this->fontsDir;
         }
 
+        if ($this->relativeAssets) {
+            $optionsConfig['relative_assets'] = $this->relativeAssets;
+        }
+
         // options in configuration file
         if (count($optionsConfig)) {
             $config = array();
@@ -298,10 +310,16 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
                 $config[] = sprintf("require '%s'", addcslashes($plugin, '\\'));
             }
             foreach ($optionsConfig as $name => $value) {
-                if (!is_array($value)) {
-                    $config[] = sprintf('%s = "%s"', $name, addcslashes($value, '\\'));
-                } elseif (!empty($value)) {
-                    $config[] = sprintf('%s = %s', $name, $this->formatArrayToRuby($value));
+                switch (true) {
+                    case is_bool($value):
+                        $config[] = sprintf('%s = %s', $name, ($value ? "true": "false"));
+                        break;
+                    case !is_array($value):
+                        $config[] = sprintf('%s = "%s"', $name, addcslashes($value, '\\'));
+                        break;
+                    case !empty($value):
+                        $config[] = sprintf('%s = %s', $name, $this->formatArrayToRuby($value));
+                        break;
                 }
             }
 
