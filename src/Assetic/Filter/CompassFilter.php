@@ -42,6 +42,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $imagesDir;
     private $javascriptsDir;
     private $fontsDir;
+    private $projectDir;
 
     // compass configuration file options
     private $plugins = array();
@@ -132,6 +133,11 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->fontsDir = $fontsDir;
     }
 
+    public function setProjectDir($projectDir)
+    {
+        $this->projectDir = $projectDir;
+    }
+
     // compass configuration file options setters
     public function setPlugins(array $plugins)
     {
@@ -195,13 +201,18 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $loadPaths[] = $dir;
         }
 
-        // compass does not seems to handle symlink, so we use realpath()
-        $tempDir = realpath(sys_get_temp_dir());
+        if ($this->projectDir) {
+            $projectDir = $this->projectDir;
+        } else {
+            // compass does not seems to handle symlink, so we use realpath()
+            $projectDir = realpath(sys_get_temp_dir());
+        }
+        $projectDir = $projectDir;
 
         $compassProcessArgs = array(
             $this->compassPath,
             'compile',
-            $tempDir,
+            $projectDir,
         );
         if (null !== $this->rubyPath) {
             $compassProcessArgs = array_merge(explode(' ', $this->rubyPath), $compassProcessArgs);
@@ -322,7 +333,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $type = 'scss';
         }
 
-        $tempName = tempnam($tempDir, 'assetic_compass');
+        $tempName = tempnam($projectDir, 'assetic_compass');
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
