@@ -46,6 +46,8 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     // compass configuration file options
     private $plugins = array();
     private $loadPaths = array();
+    private $defaultEncoding;
+    private $externalEncoding;
     private $httpPath;
     private $httpImagesPath;
     private $httpFontsPath;
@@ -151,6 +153,16 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     public function addLoadPath($loadPath)
     {
         $this->loadPaths[] = $loadPath;
+    }
+
+    public function setDefaultEncoding($defaultEncoding)
+    {
+        $this->defaultEncoding = $defaultEncoding;
+    }
+
+    public function setExternalEncoding($externalEncoding)
+    {
+        $this->externalEncoding = $externalEncoding;
     }
 
     public function setHttpPath($httpPath)
@@ -265,6 +277,14 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
 
         if ($this->noCache) {
             $optionsConfig['sass_options']['no_cache'] = true;
+        }
+
+        if ($this->defaultEncoding) {
+            $optionsConfig['encoding'] = $this->defaultEncoding;
+        }
+
+        if ($this->externalEncoding) {
+            $optionsConfig['Encoding.default_external'] = $this->externalEncoding;
         }
 
         if ($this->httpPath) {
