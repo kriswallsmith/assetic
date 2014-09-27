@@ -89,7 +89,7 @@ class UglifyJs2Filter extends BaseNodeFilter
             $pb->add('--compress');
 
             if (is_string($this->compress) && !empty($this->compress)) {
-                $pb->add(true === $this->compress ? '' : $this->compress);
+                $pb->add($this->compress);
             }
         }
 
