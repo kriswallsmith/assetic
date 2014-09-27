@@ -12,6 +12,10 @@
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\TraversableString;
 
+if (function_exists('assetic_init')) {
+    return;
+}
+
 /**
  * Initializes the global Assetic object.
  *
