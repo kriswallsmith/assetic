@@ -110,6 +110,24 @@ EOF;
     /**
      * @group integration
      */
+    public function testRegisterFunction()
+    {
+        $asset = new StringAsset('.foo { color: bar(); }');
+        $asset->load();
+
+        $this->filter->registerFunction('bar', function() { return 'red';});
+        $this->filter->filterLoad($asset);
+
+        $expected = new StringAsset('.foo { color: red; }');
+        $expected->load();
+        $this->filter->filterLoad($expected);
+
+        $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
+    }
+
+    /**
+     * @group integration
+     */
     public function testFormatterLessjs()
     {
         $asset = new StringAsset('.foo { color: green; }');
