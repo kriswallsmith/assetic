@@ -42,7 +42,7 @@ class CompassFilter extends BaseSassFilter
     private $imagesDir;
     private $javascriptsDir;
     private $fontsDir;
-    private $relativeAssets = false;
+    private $relativeAssets;
 
     // compass configuration file options
     private $plugins = array();
@@ -178,20 +178,9 @@ class CompassFilter extends BaseSassFilter
         $this->homeEnv = $homeEnv;
     }
 
-    /**
-     * @param bool $relativeAssets
-     */
     public function setRelativeAssets($relativeAssets)
     {
         $this->relativeAssets = $relativeAssets;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getRelativeAssets()
-    {
-        return $this->relativeAssets;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -242,7 +231,7 @@ class CompassFilter extends BaseSassFilter
             $pb->add('--images-dir')->add($this->imagesDir);
         }
 
-        if ($this->getRelativeAssets()) {
+        if ($this->relativeAssets) {
             $pb->add('--relative-assets');
         }
 
