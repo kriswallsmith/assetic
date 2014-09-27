@@ -20,7 +20,14 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class UglifyJs2FilterTest extends FilterTestCase
 {
+    /**
+     * @var FileAsset
+     */
     private $asset;
+
+    /**
+     * @var UglifyJs2Filter
+     */
     private $filter;
 
     protected function setUp()
@@ -88,6 +95,14 @@ class UglifyJs2FilterTest extends FilterTestCase
 
         $this->assertContains('var foo', $this->asset->getContent());
         $this->assertNotContains('var var1', $this->asset->getContent());
+    }
+
+    public function testCompressOptions()
+    {
+        $this->filter->setCompress('drop_console');
+        $this->filter->filterDump($this->asset);
+
+        $this->assertNotContains('console.log', $this->asset->getContent());
     }
 
     public function testMangle()
