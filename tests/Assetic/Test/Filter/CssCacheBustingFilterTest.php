@@ -22,16 +22,17 @@ class CssCacheBustingFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideUrls
      */
-    public function testUrls($version, $versionFormat, $format, $inputUrl, $expectedUrl)
+    public function testUrls($version, $format, $expectedFormat, $inputUrl, $expectedUrl)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl));
+        $asset = new StringAsset(sprintf($expectedFormat, $inputUrl));
         $asset->load();
 
-        $filter = new CssCacheBustingFilter($version, $versionFormat);
-        $filter->filterLoad($asset);
+        $filter = new CssCacheBustingFilter();
+        $filter->setVersion($version);
+        $filter->setFormat($format);
         $filter->filterDump($asset);
 
-        $this->assertEquals(sprintf($format, $expectedUrl), $asset->getContent());
+        $this->assertEquals(sprintf($expectedFormat, $expectedUrl), $asset->getContent());
     }
 
     public function provideUrls()
@@ -56,16 +57,17 @@ class CssCacheBustingFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideMultipleUrls
      */
-    public function testMultipleUrls($version, $versionFormat, $format, $inputUrl1, $expectedUrl1, $inputUrl2, $expectedUrl2)
+    public function testMultipleUrls($version, $format, $expectedFormat, $inputUrl1, $expectedUrl1, $inputUrl2, $expectedUrl2)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2));
+        $asset = new StringAsset(sprintf($expectedFormat, $inputUrl1, $inputUrl2));
         $asset->load();
 
-        $filter = new CssCacheBustingFilter($version, $versionFormat);
-        $filter->filterLoad($asset);
+        $filter = new CssCacheBustingFilter();
+        $filter->setVersion($version);
+        $filter->setFormat($format);
         $filter->filterDump($asset);
 
-        $this->assertEquals(sprintf($format, $expectedUrl1, $expectedUrl2), $asset->getContent());
+        $this->assertEquals(sprintf($expectedFormat, $expectedUrl1, $expectedUrl2), $asset->getContent());
     }
 
     public function provideMultipleUrls()

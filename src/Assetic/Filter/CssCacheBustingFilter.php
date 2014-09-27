@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
@@ -19,52 +21,41 @@ use Assetic\Asset\AssetInterface;
  */
 class CssCacheBustingFilter extends BaseCssFilter
 {
-    /**
-     * @var string
-     */
     private $version;
+    private $format = '%s?%s';
 
-    /**
-     * @var string
-     */
-    private $versionFormat;
-
-    /**
-     * @param string $version the version string
-     * @param string $versionFormat sprintf compatible format string
-     */
-    public function __construct($version = '', $versionFormat = '%s?%s')
+    public function setVersion($version)
     {
-        $this->versionFormat = $versionFormat;
         $this->version = $version;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function setFormat($versionFormat)
+    {
+        $this->format = $versionFormat;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filterDump(AssetInterface $asset)
     {
-        $version = $this->version;
-        $versionFormat = $this->versionFormat;
+        if (!$this->version) {
+            return;
+        }
 
-        $content = $this->filterReferences(
+        $version = $this->version;
+        $format = $this->format;
+
+        $asset->setContent($this->filterReferences(
             $asset->getContent(),
-            function ($matches) use ($version, $versionFormat) {
+            function($matches) use($version, $format) {
                 return str_replace(
                     $matches['url'],
-                    sprintf($versionFormat, $matches['url'], $version),
+                    sprintf($format, $matches['url'], $version),
                     $matches[0]
                 );
             }
-        );
-
-        $asset->setContent($content);
+        ));
     }
 }
