@@ -21,27 +21,27 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\AssetManager
      */
-    private $am;
+    protected $am;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\FilterManager
      */
-    private $fm;
+    protected $fm;
 
     /**
      * @var AssetFactory
      */
-    private $factory;
+    protected $factory;
 
     /**
      * @var \Twig_Environment
      */
-    private $twig;
+    protected $twig;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\ValueSupplierInterface
      */
-    private $valueSupplier;
+    protected $valueSupplier;
 
     protected function setUp()
     {
@@ -58,7 +58,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
 
-        $this->twig = new \Twig_Environment();
+        $this->twig = new RandomizedTwigEnvironment();
         $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
         $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
     }

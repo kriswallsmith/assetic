@@ -11,10 +11,12 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 
-class AsseticNode extends BaseAsseticNode
+class LazyAsseticNode extends BaseAsseticNode
 {
+    private $factory;
+
     /**
      * Constructor.
      *
@@ -24,7 +26,7 @@ class AsseticNode extends BaseAsseticNode
      *  * combine:  Whether to combine assets
      *  * var_name: The name of the variable to expose to the body node
      *
-     * @param AssetInterface      $asset      The asset
+     * @param AssetFactory        $factory    The asset factory
      * @param \Twig_NodeInterface $body       The body node
      * @param array               $inputs     An array of input strings
      * @param array               $filters    An array of filter strings
@@ -33,13 +35,27 @@ class AsseticNode extends BaseAsseticNode
      * @param integer             $lineno     The line number
      * @param string              $tag        The tag name
      */
-    public function __construct(AssetInterface $asset, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
+    public function __construct(AssetFactory $factory, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
     {
-        $attributes = array_replace(
-            $attributes,
-            array('asset' => $asset)
-        );
-
         parent::__construct($body, $inputs, $filters, $name, $attributes, $lineno, $tag);
+
+        $this->factory = $factory;
+    }
+
+    public function compile(\Twig_Compiler $compiler)
+    {
+        // Create the asset just before compilation
+        if (!$this->hasAttribute('asset')) {
+            $inputs = $this->getAttribute('inputs');
+            $filters = $this->getAttribute('filters');
+
+            if (!$this->getAttribute('name')) {
+                $this->setAttribute('name', $this->factory->generateAssetName($inputs, $filters, $this->attributes));
+            }
+
+            $this->setAttribute('asset', $this->factory->createAsset($inputs, $filters, $this->attributes));
+        }
+
+        parent::compile($compiler);
     }
 }
