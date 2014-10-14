@@ -67,6 +67,8 @@ class CssRewriteFilter extends BaseCssFilter
             }
         }
 
+        list($host, $path) = $this->pathRewrite($asset, $host, $path);
+
         $content = $this->filterReferences($asset->getContent(), function($matches) use ($host, $path) {
             if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
                 // absolute or protocol-relative or data uri
@@ -98,5 +100,20 @@ class CssRewriteFilter extends BaseCssFilter
         });
 
         $asset->setContent($content);
+    }
+
+    /**
+     * Rewrite css paths
+     *
+     * May use when framework compile assets and move it's to other folder
+     *
+     * @param AssetInterface $asset
+     * @param string $host host of asset
+     * @param string $path path to asset
+     * @return array of ($host, $path)
+     */
+    protected function pathRewrite(AssetInterface $asset, $host, $path)
+    {
+        return array($host, $path);
     }
 }
