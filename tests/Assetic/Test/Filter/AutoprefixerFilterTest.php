@@ -27,14 +27,14 @@ class AutoprefixerFilterTest extends FilterTestCase
     protected function setUp()
     {
         $autoprefixerBin = $this->findExecutable('autoprefixer', 'AUTOPREFIXER_BIN');
-        
+
         if (!$autoprefixerBin) {
             $this->markTestSkipped('Unable to find `autoprefixer` executable.');
         }
 
         $this->filter = new AutoprefixerFilter($autoprefixerBin);
     }
-    
+
     public function testFilterLoad()
     {
         $input = <<<CSS
@@ -45,6 +45,7 @@ CSS;
         //TODO in some point of future this test will fail. Update test when new versions come out?
         $expected = <<<CSS
 a {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -58,7 +59,7 @@ CSS;
 
         $this->assertEquals($expected, $asset->getContent());
     }
-    
+
     public function testReallyOldBrowsers()
     {
         $input = <<<CSS
@@ -81,7 +82,7 @@ CSS;
 
         $this->assertEquals($expected, $asset->getContent());
     }
-    
+
     public function testAddBrowser()
     {
         $input = <<<CSS
