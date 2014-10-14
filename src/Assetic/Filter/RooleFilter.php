@@ -43,8 +43,8 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $input = tempnam(sys_get_temp_dir(), 'assetic_roole');
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin 
-            ? array($this->nodeBin, $this->rooleBin) 
+        $pb = $this->createProcessBuilder($this->nodeBin
+            ? array($this->nodeBin, $this->rooleBin)
             : array($this->rooleBin));
 
         $pb->add('-p');

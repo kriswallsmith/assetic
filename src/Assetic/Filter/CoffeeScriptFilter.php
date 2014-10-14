@@ -39,7 +39,7 @@ class CoffeeScriptFilter extends BaseNodeFilter
     {
         $this->bare = $bare;
     }
-    
+
     public function setNoHeader($noHeader)
     {
         $this->noHeader = $noHeader;
@@ -59,9 +59,9 @@ class CoffeeScriptFilter extends BaseNodeFilter
         if ($this->bare) {
             $pb->add('--bare');
         }
-        
+
         if ($this->noHeader) {
-           $pb->add('--no-header');
+            $pb->add('--no-header');
         }
 
         $pb->add($input);

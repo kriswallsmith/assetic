@@ -59,10 +59,10 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             $current = self::tokenToString($token);
             // loop through each prototype (by reference)
             foreach (array_keys($this->prototypes) as $i) {
-                $prototype =& $this->prototypes[$i][0];
+                $prototype = & $this->prototypes[$i][0];
                 $options = $this->prototypes[$i][1];
-                $buffer =& $buffers[$i];
-                $level =& $bufferLevels[$i];
+                $buffer = & $buffers[$i];
+                $level = & $bufferLevels[$i];
 
                 if (isset($buffersInWildcard[$i])) {
                     switch ($current) {

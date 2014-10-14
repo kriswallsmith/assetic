@@ -13,8 +13,6 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Assetic\Factory\AssetFactory;
-use Assetic\Util\CssUtils;
 
 /**
  * Loads SASS files.

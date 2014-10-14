@@ -115,7 +115,7 @@ EOF;
         $asset = new StringAsset('.foo { color: bar(); }');
         $asset->load();
 
-        $this->filter->registerFunction('bar', function() { return 'red';});
+        $this->filter->registerFunction('bar', function () { return 'red';});
         $this->filter->filterLoad($asset);
 
         $expected = new StringAsset('.foo { color: red; }');

@@ -40,8 +40,8 @@ class AssetFactory
     /**
      * Constructor.
      *
-     * @param string  $root   The default root directory
-     * @param Boolean $debug  Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $root  The default root directory
+     * @param Boolean $debug Filters prefixed with a "?" will be omitted in debug mode
      */
     public function __construct($root, $debug = false)
     {

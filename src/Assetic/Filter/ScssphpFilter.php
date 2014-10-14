@@ -89,17 +89,17 @@ class ScssphpFilter implements DependencyExtractorInterface
             $sc->addImportPath($path);
         }
 
-        foreach ($this->customFunctions as $name=>$callable){
+        foreach ($this->customFunctions as $name => $callable) {
             $sc->registerFunction($name, $callable);
         }
 
         if ($this->formatter) {
             $sc->setFormatter($this->formatter);
         }
-		
+
         if (!empty($this->variables)) {
             $sc->setVariables($this->variables);
-        }		
+        }
 
         $asset->setContent($sc->compile($asset->getContent()));
     }
@@ -112,12 +112,12 @@ class ScssphpFilter implements DependencyExtractorInterface
     {
         $sc = new Compiler();
         $sc->addImportPath($loadPath);
-        foreach($this->importPaths as $path) {
+        foreach ($this->importPaths as $path) {
             $sc->addImportPath($path);
         }
 
         $children = array();
-        foreach(CssUtils::extractImports($content) as $match) {
+        foreach (CssUtils::extractImports($content) as $match) {
             $file = $sc->findImport($match);
             if ($file) {
                 $children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));

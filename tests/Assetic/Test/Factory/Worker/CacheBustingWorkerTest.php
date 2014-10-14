@@ -73,7 +73,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(1234));
         $asset->expects($this->exactly(2))
             ->method('setTargetPath')
-            ->will($this->returnCallback(function($path) use(& $paths) {
+            ->will($this->returnCallback(function ($path) use (&$paths) {
                 $paths[] = $path;
             }));
 
@@ -97,7 +97,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 
         $asset->expects($this->any())
             ->method('getTargetPath')
-            ->will($this->returnCallback(function() use(& $path) {
+            ->will($this->returnCallback(function () use (&$path) {
                 return $path ?: 'css/main.css';
             }));
         $factory->expects($this->any())
@@ -105,7 +105,7 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(1234));
         $asset->expects($this->once())
             ->method('setTargetPath')
-            ->will($this->returnCallback(function($arg) use(& $path) {
+            ->will($this->returnCallback(function ($arg) use (&$path) {
                 $path = $arg;
             }));
 

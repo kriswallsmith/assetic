@@ -31,7 +31,7 @@ class UglifyCssFilter extends BaseNodeFilter
 
     /**
      * @param string $uglifycssBin Absolute path to the uglifycss executable
-     * @param string $nodeBin       Absolute path to the folder containg node.js executable
+     * @param string $nodeBin      Absolute path to the folder containg node.js executable
      */
     public function __construct($uglifycssBin = '/usr/bin/uglifycss', $nodeBin = null)
     {

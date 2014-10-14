@@ -35,7 +35,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $formula = array(
             array('js/core.js', 'js/more.js'),
             array('?yui_js'),
-            array('output' => 'js/all.js')
+            array('output' => 'js/all.js'),
         );
 
         $loader->expects($this->once())

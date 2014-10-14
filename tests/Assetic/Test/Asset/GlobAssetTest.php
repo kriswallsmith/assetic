@@ -66,7 +66,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
         $globasset->setTargetPath('{testvar}_*.php');
         $globasset->setValues(array('testvar' => 'works'));
 
-        foreach($globasset as $asset) {
+        foreach ($globasset as $asset) {
             $target = VarUtils::resolve($asset->getTargetPath(), $asset->getVars(), $asset->getValues());
             $this->assertContains('works', $target);
         }

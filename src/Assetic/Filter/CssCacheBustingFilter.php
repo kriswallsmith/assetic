@@ -49,7 +49,7 @@ class CssCacheBustingFilter extends BaseCssFilter
 
         $asset->setContent($this->filterReferences(
             $asset->getContent(),
-            function($matches) use($version, $format) {
+            function ($matches) use ($version,$format) {
                 return str_replace(
                     $matches['url'],
                     sprintf($format, $matches['url'], $version),

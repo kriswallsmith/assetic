@@ -36,7 +36,7 @@ class ApcCache implements CacheInterface
         $value = apc_fetch($key, $success);
 
         if (!$success) {
-            throw new \RuntimeException('There is no cached value for ' . $key);
+            throw new \RuntimeException('There is no cached value for '.$key);
         }
 
         return $value;
@@ -50,7 +50,7 @@ class ApcCache implements CacheInterface
         $store = apc_store($key, $value, $this->ttl);
 
         if (!$store) {
-            throw new \RuntimeException('Unable to store "' . $key . '" for ' . $this->ttl . ' seconds.');
+            throw new \RuntimeException('Unable to store "'.$key.'" for '.$this->ttl.' seconds.');
         }
 
         return $store;

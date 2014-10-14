@@ -11,7 +11,6 @@
 
 namespace Assetic\Filter;
 
-use Assetic\Filter\FilterInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**

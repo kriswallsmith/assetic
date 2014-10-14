@@ -238,7 +238,7 @@ class CompassFilter extends BaseSassFilter
         if ($this->javascriptsDir) {
             $pb->add('--javascripts-dir')->add($this->javascriptsDir);
         }
-        
+
         if ($this->fontsDir) {
             $pb->add('--fonts-dir')->add($this->fontsDir);
         }

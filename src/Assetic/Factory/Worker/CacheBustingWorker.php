@@ -14,7 +14,6 @@ namespace Assetic\Factory\Worker;
 use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
-use Assetic\Factory\LazyAssetManager;
 
 /**
  * Adds cache busting code

@@ -46,7 +46,7 @@ class JSqueezeFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $parser = new \JSqueeze;
+        $parser = new \JSqueeze();
         $asset->setContent($parser->squeeze(
             $asset->getContent(),
             $this->singleLine,

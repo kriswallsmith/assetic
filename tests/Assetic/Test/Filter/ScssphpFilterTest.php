@@ -89,7 +89,7 @@ EOF;
         $this->setExpectedException(
             "Exception",
             "Undefined mixin box-shadow: failed at `@include box-shadow(10px "
-            . "10px 8px red);` line: 4"
+            ."10px 8px red);` line: 4"
         );
 
         $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
@@ -110,14 +110,13 @@ EOF;
         $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), 'Import paths are correctly used');
     }
 
-
     public function testRegisterFunction()
     {
         $asset = new StringAsset('.foo{ color: bar(); }');
         $asset->load();
 
         $filter = $this->getFilter();
-        $filter->registerFunction('bar',function(){ return 'red';});
+        $filter->registerFunction('bar',function () { return 'red';});
         $filter->filterLoad($asset);
 
         $expected = new StringAsset('.foo{ color: red;}');
@@ -155,7 +154,7 @@ EOF;
 
         $this->assertCount(2, $children);
     }
-	
+
     public function testSetVariables()
     {
         $filter = $this->getFilter();
@@ -166,7 +165,7 @@ EOF;
         $filter->filterLoad($asset);
 
         $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), "Variables can be added");
-    }	
+    }
 
     // private
 

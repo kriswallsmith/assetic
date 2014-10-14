@@ -144,7 +144,6 @@ class AsseticNode extends \Twig_Node
             ->raw("strtr(")
             ->string($asset->getTargetPath())
             ->raw(", array(");
-        ;
 
         $first = true;
         foreach ($vars as $var) {

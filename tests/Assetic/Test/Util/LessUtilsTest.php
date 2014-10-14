@@ -20,7 +20,7 @@ class LessUtilsTest extends \PHPUnit_Framework_TestCase
         $content = 'body { background: url(../images/bg.gif); }';
 
         $matches = array();
-        $actual = LessUtils::filterUrls($content, function($match) use(& $matches) {
+        $actual = LessUtils::filterUrls($content, function ($match) use (&$matches) {
             $matches[] = $match['url'];
         });
 
@@ -52,8 +52,9 @@ CSS;
         $content = 'A/*B*/C/*D*/E';
 
         $filtered = '';
-        $result = LessUtils::filterCommentless($content, function($part) use(& $filtered) {
+        $result = LessUtils::filterCommentless($content, function ($part) use (&$filtered) {
             $filtered .= $part;
+
             return $part;
         });
 
@@ -66,8 +67,9 @@ CSS;
         $content = "ACE // foo /* bar */\nbla";
 
         $filtered = '';
-        $result = LessUtils::filterCommentless($content, function($part) use(& $filtered) {
+        $result = LessUtils::filterCommentless($content, function ($part) use (&$filtered) {
             $filtered .= $part;
+
             return $part;
         });
 

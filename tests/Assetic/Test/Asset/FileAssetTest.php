@@ -38,7 +38,7 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testGetLastModifiedTypeFileNotFound()
     {
-        $asset = new FileAsset(__DIR__ . "/foo/bar/baz.css");
+        $asset = new FileAsset(__DIR__."/foo/bar/baz.css");
 
         $this->setExpectedException("RuntimeException", "The source file");
         $asset->getLastModified();

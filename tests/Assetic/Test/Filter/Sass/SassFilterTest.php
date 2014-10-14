@@ -11,7 +11,6 @@
 
 namespace Assetic\Test\Filter\Sass;
 
-use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\Sass\SassFilter;

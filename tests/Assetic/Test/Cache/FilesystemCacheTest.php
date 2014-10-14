@@ -47,7 +47,8 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
         $this->removeDir($dir);
     }
 
-    private function removeDir($dir) {
+    private function removeDir($dir)
+    {
         array_map('unlink', glob($dir.'/*'));
         @rmdir($dir);
     }
