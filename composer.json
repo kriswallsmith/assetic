@@ -30,7 +30,7 @@
         "kamicane/packager": "*",
         "joliclic/javascript-packer": "*",
         "patchwork/jsqueeze": "*",
-        "psr/log": "~1.0"
+        "psr/log": "~1.0",
         "ianbogda/cssqueeze": "*"
     },
     "suggest": {
