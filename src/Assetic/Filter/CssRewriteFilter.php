@@ -102,6 +102,11 @@ class CssRewriteFilter extends BaseCssFilter
         $asset->setContent($content);
     }
 
+    /**
+     * Rewrite css paths
+     *
+     * May use when framework compile assets and move it's to other folder
+     */
     protected function pathRewriter(AssetInterface $asset, $host, $path)
     {
         return array($host, $path);
