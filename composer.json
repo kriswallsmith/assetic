@@ -31,7 +31,7 @@
         "joliclic/javascript-packer": "*",
         "patchwork/jsqueeze": "*",
         "psr/log": "~1.0",
-        "ianbogda/cssqueeze": "*"
+        "ianbogda/cssqueeze": "~1.0"
     },
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
