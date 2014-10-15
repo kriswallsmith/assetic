@@ -31,19 +31,19 @@ class CSSqueezeFilter implements FilterInterface
         $this->singleLine = (bool) $bool;
     }
 
-    public function setDeflatIndent($deflatIndent = null)
+    public function setDeflatIndent(string $deflatIndent)
     {
-        $this->deflatIndent = (string) $deflatIndent;
+        $this->deflatIndent = $deflatIndent;
     }
 
-    public function setConfiguration($configuration)
+    public function setConfiguration(array $configuration)
     {
-        $this->configuration = (array) $configuration;
+        $this->configuration = $configuration;
     }
 
-    public function keepHack($bool)
+    public function keepHack(bool $bool)
     {
-        $this->keepHack = (bool) $bool;
+        $this->keepHack = $bool;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -54,7 +54,7 @@ class CSSqueezeFilter implements FilterInterface
     {
         if (!isset($this->configuration['BasePath']))
         {
-            $this->setConfiguration(array('BasePath' => $asset->getSourceDirectory()));
+            $this->configuration['BasePath'] = $asset->getSourceDirectory();
         }
 
         $parser = new \CSSqueeze(
