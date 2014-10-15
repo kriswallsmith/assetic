@@ -31,7 +31,7 @@ class CSSqueezeFilter implements FilterInterface
         $this->singleLine = (bool) $bool;
     }
 
-    public function setDeflatIndent(string $deflatIndent)
+    public function setDeflatIndent($deflatIndent)
     {
         $this->deflatIndent = $deflatIndent;
     }
@@ -41,7 +41,7 @@ class CSSqueezeFilter implements FilterInterface
         $this->configuration = $configuration;
     }
 
-    public function keepHack(bool $bool)
+    public function keepHack($bool)
     {
         $this->keepHack = $bool;
     }
