@@ -33,9 +33,9 @@ abstract class BaseNodeFilter extends BaseProcessFilter
     protected function createProcessBuilder(array $arguments = array())
     {
         $pb = parent::createProcessBuilder($arguments);
+        $this->mergeEnv($pb);
 
         if ($this->nodePaths) {
-            $this->mergeEnv($pb);
             $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
         }
 
