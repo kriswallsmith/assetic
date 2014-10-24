@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -41,7 +41,7 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
         $sourceRoot = $asset->getSourceRoot();
         $sourcePath = $asset->getSourcePath();
 
-        $callback = function($matches) use ($importFilter, $sourceRoot, $sourcePath) {
+        $callback = function ($matches) use ($importFilter, $sourceRoot, $sourcePath) {
             if (!$matches['url'] || null === $sourceRoot) {
                 return $matches[0];
             }
@@ -56,7 +56,7 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
             } elseif (0 === strpos($matches['url'], '//')) {
                 // protocol-relative
                 list($importHost, $importPath) = explode('/', substr($matches['url'], 2), 2);
-                $importHost = '//'.$importHost;
+                $importRoot = '//'.$importHost;
             } elseif ('/' == $matches['url'][0]) {
                 // root-relative
                 $importPath = substr($matches['url'], 1);
@@ -70,16 +70,11 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
                 return $matches[0];
             }
 
-            // ignore other imports
-            if ('css' != pathinfo($importPath, PATHINFO_EXTENSION)) {
-                return $matches[0];
-            }
-
             $importSource = $importRoot.'/'.$importPath;
             if (false !== strpos($importSource, '://') || 0 === strpos($importSource, '//')) {
                 $import = new HttpAsset($importSource, array($importFilter), true);
-            } elseif (!file_exists($importSource)) {
-                // ignore not found imports
+            } elseif ('css' != pathinfo($importPath, PATHINFO_EXTENSION) || !file_exists($importSource)) {
+                // ignore non-css and non-existant imports
                 return $matches[0];
             } else {
                 $import = new FileAsset($importSource, array($importFilter), $importRoot, $importPath);

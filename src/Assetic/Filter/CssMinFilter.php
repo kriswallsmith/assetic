@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -60,10 +60,8 @@ class CssMinFilter implements FilterInterface
         $plugins = $this->plugins;
 
         if (isset($filters['ImportImports']) && true === $filters['ImportImports']) {
-            $root = $asset->getSourceRoot();
-            $path = $asset->getSourcePath();
-            if ($root && $path) {
-                $filters['ImportImports'] = array('BasePath' => dirname($root.'/'.$path));
+            if ($dir = $asset->getSourceDirectory()) {
+                $filters['ImportImports'] = array('BasePath' => $dir);
             } else {
                 unset($filters['ImportImports']);
             }

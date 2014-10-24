@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,12 +11,10 @@
 
 namespace Assetic\Factory;
 
-use Assetic\Asset\AssetCollectionInterface;
 use Assetic\Asset\AssetInterface;
 use Assetic\AssetManager;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
 use Assetic\Factory\Resource\ResourceInterface;
-use Assetic\Filter\DependencyExtractorInterface;
 
 /**
  * A lazy asset manager is a composition of a factory and many formula loaders.
@@ -207,41 +205,6 @@ class LazyAssetManager extends AssetManager
 
     public function getLastModified(AssetInterface $asset)
     {
-        $mtime = 0;
-        foreach ($asset instanceof AssetCollectionInterface ? $asset : array($asset) as $leaf) {
-            $mtime = max($mtime, $leaf->getLastModified());
-
-            if (!$filters = $leaf->getFilters()) {
-                continue;
-            }
-
-            // prepare load path
-            $sourceRoot = $leaf->getSourceRoot();
-            $sourcePath = $leaf->getSourcePath();
-            $loadPath = $sourceRoot && $sourcePath ? dirname($sourceRoot.'/'.$sourcePath) : null;
-
-            $prevFilters = array();
-            foreach ($filters as $filter) {
-                $prevFilters[] = $filter;
-
-                if (!$filter instanceof DependencyExtractorInterface) {
-                    continue;
-                }
-
-                // extract children from leaf after running all preceeding filters
-                $clone = clone $leaf;
-                $clone->clearFilters();
-                foreach (array_slice($prevFilters, 0, -1) as $prevFilter) {
-                    $clone->ensureFilter($prevFilter);
-                }
-                $clone->load();
-
-                foreach ($filter->getChildren($this->factory, $clone->getContent(), $loadPath) as $child) {
-                    $mtime = max($mtime, $this->getLastModified($child));
-                }
-            }
-        }
-
-        return $mtime;
+        return $this->factory->getLastModified($asset);
     }
 }

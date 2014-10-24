@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +20,7 @@ use Assetic\Filter\FilterInterface;
  */
 class StringAsset extends BaseAsset
 {
-    private $content;
+    private $string;
     private $lastModified;
 
     /**
@@ -33,14 +33,14 @@ class StringAsset extends BaseAsset
      */
     public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null)
     {
-        $this->content = $content;
+        $this->string = $content;
 
         parent::__construct($filters, $sourceRoot, $sourcePath);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $this->doLoad($this->content, $additionalFilter);
+        $this->doLoad($this->string, $additionalFilter);
     }
 
     public function setLastModified($lastModified)

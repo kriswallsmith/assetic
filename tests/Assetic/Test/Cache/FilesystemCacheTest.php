@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,9 +15,13 @@ use Assetic\Cache\FilesystemCache;
 
 class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCache()
+    public function testWithExistingDir()
     {
-        $cache = new FilesystemCache(sys_get_temp_dir());
+        $dir = sys_get_temp_dir().'/assetic_filesystemcachetest_testcache';
+        $this->removeDir($dir);
+        mkdir($dir);
+
+        $cache = new FilesystemCache($dir);
 
         $this->assertFalse($cache->has('foo'));
 
@@ -33,19 +37,19 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
     public function testSetCreatesDir()
     {
         $dir = sys_get_temp_dir().'/assetic/fscachetest';
-
-        $tearDown = function() use ($dir) {
-            array_map('unlink', glob($dir.'/*'));
-            @rmdir($dir);
-        };
-
-        $tearDown();
+        $this->removeDir($dir);
 
         $cache = new FilesystemCache($dir);
         $cache->set('foo', 'bar');
 
         $this->assertFileExists($dir.'/foo');
 
-        $tearDown();
+        $this->removeDir($dir);
+    }
+
+    private function removeDir($dir)
+    {
+        array_map('unlink', glob($dir.'/*'));
+        @rmdir($dir);
     }
 }

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Assetic\Factory\AssetFactory;
+use Assetic\Filter\Sass\BaseSassFilter;
 
 /**
  * Loads Compass files.
@@ -21,7 +21,7 @@ use Assetic\Factory\AssetFactory;
  * @link http://compass-style.org/
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
-class CompassFilter extends BaseProcessFilter implements DependencyExtractorInterface
+class CompassFilter extends BaseSassFilter
 {
     private $compassPath;
     private $rubyPath;
@@ -42,10 +42,10 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
     private $imagesDir;
     private $javascriptsDir;
     private $fontsDir;
+    private $relativeAssets;
 
     // compass configuration file options
     private $plugins = array();
-    private $loadPaths = array();
     private $httpPath;
     private $httpImagesPath;
     private $httpFontsPath;
@@ -143,16 +143,6 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->plugins[] = $plugin;
     }
 
-    public function setLoadPaths(array $loadPaths)
-    {
-        $this->loadPaths = $loadPaths;
-    }
-
-    public function addLoadPath($loadPath)
-    {
-        $this->loadPaths[] = $loadPath;
-    }
-
     public function setHttpPath($httpPath)
     {
         $this->httpPath = $httpPath;
@@ -188,14 +178,16 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         $this->homeEnv = $homeEnv;
     }
 
+    public function setRelativeAssets($relativeAssets)
+    {
+        $this->relativeAssets = $relativeAssets;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         $loadPaths = $this->loadPaths;
-        if ($root && $path) {
-            $loadPaths[] = dirname($root.'/'.$path);
+        if ($dir = $asset->getSourceDirectory()) {
+            $loadPaths[] = $dir;
         }
 
         // compass does not seems to handle symlink, so we use realpath()
@@ -232,15 +224,23 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $pb->add('--no-line-comments');
         }
 
-        // these two options are not passed into the config file
+        // these three options are not passed into the config file
         // because like this, compass adapts this to be xxx_dir or xxx_path
         // whether it's an absolute path or not
         if ($this->imagesDir) {
             $pb->add('--images-dir')->add($this->imagesDir);
         }
 
+        if ($this->relativeAssets) {
+            $pb->add('--relative-assets');
+        }
+
         if ($this->javascriptsDir) {
             $pb->add('--javascripts-dir')->add($this->javascriptsDir);
+        }
+
+        if ($this->fontsDir) {
+            $pb->add('--fonts-dir')->add($this->fontsDir);
         }
 
         // options in config file
@@ -290,10 +290,6 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
         }
 
-        if ($this->fontsDir) {
-            $optionsConfig['fonts_dir'] = $this->fontsDir;
-        }
-
         // options in configuration file
         if (count($optionsConfig)) {
             $config = array();
@@ -318,7 +314,7 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
             $type = $this->scss ? 'scss' : 'sass';
-        } elseif ($path) {
+        } elseif ($path = $asset->getSourcePath()) {
             // FIXME: what if the extension is something else?
             $type = pathinfo($path, PATHINFO_EXTENSION);
         } else {
@@ -371,12 +367,6 @@ class CompassFilter extends BaseProcessFilter implements DependencyExtractorInte
 
     public function filterDump(AssetInterface $asset)
     {
-    }
-
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
-        // todo
-        return array();
     }
 
     private function formatArrayToRuby($array)

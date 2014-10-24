@@ -3,10 +3,12 @@
     "uglifycss": "*",
     "coffee-script": "*",
     "stylus": "*",
+    "nib": "*",
     "ember-precompile": "*",
     "typescript": "*",
     "less": "*",
     "handlebars": "*",
-    "uglify-js": "*"
+    "uglify-js": "*",
+    "autoprefixer": "*"
   }
 }

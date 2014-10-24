@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -59,10 +59,10 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             $current = self::tokenToString($token);
             // loop through each prototype (by reference)
             foreach (array_keys($this->prototypes) as $i) {
-                $prototype =& $this->prototypes[$i][0];
+                $prototype = & $this->prototypes[$i][0];
                 $options = $this->prototypes[$i][1];
-                $buffer =& $buffers[$i];
-                $level =& $bufferLevels[$i];
+                $buffer = & $buffers[$i];
+                $level = & $bufferLevels[$i];
 
                 if (isset($buffersInWildcard[$i])) {
                     switch ($current) {

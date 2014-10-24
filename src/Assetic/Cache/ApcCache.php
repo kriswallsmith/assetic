@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -36,7 +36,7 @@ class ApcCache implements CacheInterface
         $value = apc_fetch($key, $success);
 
         if (!$success) {
-            throw new \RuntimeException('There is no cached value for ' . $key);
+            throw new \RuntimeException('There is no cached value for '.$key);
         }
 
         return $value;
@@ -50,7 +50,7 @@ class ApcCache implements CacheInterface
         $store = apc_store($key, $value, $this->ttl);
 
         if (!$store) {
-            throw new \RuntimeException('Unable to store "' . $key . '" for ' . $this->ttl . ' seconds.');
+            throw new \RuntimeException('Unable to store "'.$key.'" for '.$this->ttl.' seconds.');
         }
 
         return $store;

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -48,6 +48,7 @@ class AssetCollectionIterator implements \RecursiveIterator
      * Returns a copy of the current asset with filters and a target URL applied.
      *
      * @param Boolean $raw Returns the unmodified asset if true
+     *
      * @return \Assetic\Asset\AssetInterface
      */
     public function current($raw = false)

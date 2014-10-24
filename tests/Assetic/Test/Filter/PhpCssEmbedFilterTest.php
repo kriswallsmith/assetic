@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,7 +30,7 @@ class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
     {
         $data = base64_encode(file_get_contents(__DIR__.'/fixtures/home.png'));
 
-        $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssembed/test.css');
         $asset->load();
 
         $filter = new PhpCssEmbedFilter();

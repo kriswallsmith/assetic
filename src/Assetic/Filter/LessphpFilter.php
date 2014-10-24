@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,6 +30,7 @@ class LessphpFilter implements DependencyExtractorInterface
     private $presets = array();
     private $formatter;
     private $preserveComments;
+    private $customFunctions = array();
 
     /**
      * Lessphp Load Paths
@@ -81,16 +82,17 @@ class LessphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         $lc = new \lessc();
-        if ($root && $path) {
-            $lc->importDir = dirname($root.'/'.$path);
+        if ($dir = $asset->getSourceDirectory()) {
+            $lc->importDir = $dir;
         }
 
         foreach ($this->loadPaths as $loadPath) {
             $lc->addImportDir($loadPath);
+        }
+
+        foreach ($this->customFunctions as $name => $callable) {
+            $lc->registerFunction($name, $callable);
         }
 
         if ($this->formatter) {
@@ -102,6 +104,11 @@ class LessphpFilter implements DependencyExtractorInterface
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
+    }
+
+    public function registerFunction($name, $callable)
+    {
+        $this->customFunctions[$name] = $callable;
     }
 
     public function filterDump(AssetInterface $asset)

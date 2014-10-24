@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,6 @@ namespace Assetic\Test\Filter\Yui;
 
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\Yui\JsCompressorFilter;
-use Assetic\Test\Filter\FilterTestCase;
 
 class JsCompressorFilterTest extends \PHPUnit_Framework_TestCase
 {

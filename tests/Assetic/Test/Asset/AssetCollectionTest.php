@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -48,7 +48,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $count = 0;
         $matches = array();
-        $filter = new CallablesFilter(function($asset) use ($content, &$matches, &$count) {
+        $filter = new CallablesFilter(function ($asset) use ($content, &$matches, &$count) {
             ++$count;
             if ($content == $asset->getContent()) {
                 $matches[] = $asset;
@@ -70,7 +70,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $innerColl = new AssetCollection(array($nestedAsset));
 
         $contents = array();
-        $filter = new CallablesFilter(function($asset) use (&$contents) {
+        $filter = new CallablesFilter(function ($asset) use (&$contents) {
             $contents[] = $asset->getContent();
         });
 
@@ -125,7 +125,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
     public function testIterationFilters()
     {
         $count = 0;
-        $filter = new CallablesFilter(function() use (&$count) { ++$count; });
+        $filter = new CallablesFilter(function () use (&$count) { ++$count; });
 
         $coll = new AssetCollection();
         $coll->add(new StringAsset(''));
@@ -301,7 +301,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll = new AssetCollection(array(
             new AssetCollection(array(
                 $leaf = new StringAsset('asdf'),
-            ))
+            )),
         ));
 
         $this->assertTrue($coll->removeLeaf($leaf));
@@ -364,7 +364,8 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $coll2->ensureFilter(new CallablesFilter());
 
         // Internally, this will set up the "clones" for collection #2 with one filter
-        foreach ($coll2 as $asset) { }
+        foreach ($coll2 as $asset) {
+        }
 
         // The clones on collection #1 must not be affected
         foreach ($coll1 as $asset) {

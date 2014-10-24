@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -111,6 +111,16 @@ interface AssetInterface
      * @return string|null The source asset path
      */
     public function getSourcePath();
+
+    /**
+     * Returns the asset's source directory.
+     *
+     * The source directory is the directory the asset was located in
+     * and can be used to resolve references relative to an asset.
+     *
+     * @return string|null The asset's source directory
+     */
+    public function getSourceDirectory();
 
     /**
      * Returns the URL for the current asset.

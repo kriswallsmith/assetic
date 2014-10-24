@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -43,8 +43,8 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $input = tempnam(sys_get_temp_dir(), 'assetic_roole');
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin 
-            ? array($this->nodeBin, $this->rooleBin) 
+        $pb = $this->createProcessBuilder($this->nodeBin
+            ? array($this->nodeBin, $this->rooleBin)
             : array($this->rooleBin));
 
         $pb->add('-p');

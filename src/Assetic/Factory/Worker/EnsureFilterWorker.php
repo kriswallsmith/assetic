@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,6 +12,7 @@
 namespace Assetic\Factory\Worker;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 use Assetic\Filter\FilterInterface;
 
 /**
@@ -47,7 +48,7 @@ class EnsureFilterWorker implements WorkerInterface
         $this->flags = $flags;
     }
 
-    public function process(AssetInterface $asset)
+    public function process(AssetInterface $asset, AssetFactory $factory)
     {
         if (
             (self::CHECK_SOURCE === (self::CHECK_SOURCE & $this->flags) && preg_match($this->pattern, $asset->getSourcePath()))

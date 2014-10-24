@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -63,5 +63,29 @@ CSS;
         $filter->filterLoad($asset);
 
         $this->assertEquals(file_get_contents(__DIR__.'/fixtures/cssimport/noncssimport.css'), $asset->getContent(), '->filterLoad() skips non css');
+    }
+
+    /**
+     * @dataProvider getFilters
+     */
+    public function testCommentedImport($filter1, $filter2)
+    {
+        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/commentedimport.css', array(), __DIR__.'/fixtures/cssimport', 'commentedimport.css');
+        $asset->setTargetPath('foo/bar.css');
+        $asset->ensureFilter($filter1);
+        $asset->ensureFilter($filter2);
+
+        $expected = <<<CSS
+/* commentedimport.css */
+/*@import "import.css";*/
+/* more/evenmore/deep1.css */
+/* more/evenmore/deep2.css */
+body {
+    background: url(../more/evenmore/bg.gif);
+}
+body { color: black; }
+CSS;
+
+        $this->assertEquals($expected, $asset->dump(), '->filterLoad() inlines CSS imports');
     }
 }

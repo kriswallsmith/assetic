@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -102,7 +102,9 @@ class GlobAsset extends AssetCollection
             if (false !== $paths = glob($glob)) {
                 foreach ($paths as $path) {
                     if (is_file($path)) {
-                        $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
+                        $asset = new FileAsset($path, array(), $this->getSourceRoot(), null, $this->getVars());
+                        $asset->setValues($this->getValues());
+                        $this->add($asset);
                     }
                 }
             }

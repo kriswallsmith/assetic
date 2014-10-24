@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -122,14 +122,11 @@ new(less.Parser)(%s).parse(%s, function(e, tree) {
 
 EOF;
 
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         // parser options
         $parserOptions = $this->parserOptions;
-        if ($root && $path) {
-            $parserOptions['paths'] = array(dirname($root.'/'.$path));
-            $parserOptions['filename'] = basename($path);
+        if ($dir = $asset->getSourceDirectory()) {
+            $parserOptions['paths'] = array($dir);
+            $parserOptions['filename'] = basename($asset->getSourcePath());
         }
 
         foreach ($this->loadPaths as $loadPath) {

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,7 +38,7 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testGetLastModifiedTypeFileNotFound()
     {
-        $asset = new FileAsset(__DIR__ . "/foo/bar/baz.css");
+        $asset = new FileAsset(__DIR__."/foo/bar/baz.css");
 
         $this->setExpectedException("RuntimeException", "The source file");
         $asset->getLastModified();
@@ -55,12 +55,14 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__FILE__);
         $this->assertEquals(__DIR__, $asset->getSourceRoot(), '->__construct() defaults base to the asset directory');
         $this->assertEquals(basename(__FILE__), $asset->getSourcePath(), '->__construct() defaults path to the asset basename');
+        $this->assertEquals(__DIR__, $asset->getSourceDirectory(), '->__construct() derives the asset directory');
     }
 
     public function testPathGuessing()
     {
         $asset = new FileAsset(__FILE__, array(), __DIR__);
         $this->assertEquals(basename(__FILE__), $asset->getSourcePath(), '->__construct() guesses the asset path');
+        $this->assertEquals(__DIR__, $asset->getSourceDirectory(), '->__construct() derives the asset directory');
     }
 
     public function testInvalidBase()

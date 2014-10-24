@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -91,9 +91,7 @@ class CompilerApiFilter extends BaseCompilerFilter
 
             $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
             $data = json_decode($response);
-
         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
-
             $ch = curl_init('http://closure-compiler.appspot.com/compile');
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded'));
@@ -104,7 +102,7 @@ class CompilerApiFilter extends BaseCompilerFilter
                 curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
             }
             if ($this->proxy) {
-                curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
+                curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
                 curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
             }
             $response = curl_exec($ch);

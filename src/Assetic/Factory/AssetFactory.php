@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,6 +20,7 @@ use Assetic\Asset\GlobAsset;
 use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
 use Assetic\Factory\Worker\WorkerInterface;
+use Assetic\Filter\DependencyExtractorInterface;
 use Assetic\FilterManager;
 
 /**
@@ -39,8 +40,8 @@ class AssetFactory
     /**
      * Constructor.
      *
-     * @param string  $root   The default root directory
-     * @param Boolean $debug  Filters prefixed with a "?" will be omitted in debug mode
+     * @param string  $root  The default root directory
+     * @param Boolean $debug Filters prefixed with a "?" will be omitted in debug mode
      */
     public function __construct($root, $debug = false)
     {
@@ -247,6 +248,41 @@ class AssetFactory
         return substr(sha1(serialize($inputs).serialize($filters).serialize($options)), 0, 7);
     }
 
+    public function getLastModified(AssetInterface $asset)
+    {
+        $mtime = 0;
+        foreach ($asset instanceof AssetCollectionInterface ? $asset : array($asset) as $leaf) {
+            $mtime = max($mtime, $leaf->getLastModified());
+
+            if (!$filters = $leaf->getFilters()) {
+                continue;
+            }
+
+            $prevFilters = array();
+            foreach ($filters as $filter) {
+                $prevFilters[] = $filter;
+
+                if (!$filter instanceof DependencyExtractorInterface) {
+                    continue;
+                }
+
+                // extract children from leaf after running all preceeding filters
+                $clone = clone $leaf;
+                $clone->clearFilters();
+                foreach (array_slice($prevFilters, 0, -1) as $prevFilter) {
+                    $clone->ensureFilter($prevFilter);
+                }
+                $clone->load();
+
+                foreach ($filter->getChildren($this, $clone->getContent(), $clone->getSourceDirectory()) as $child) {
+                    $mtime = max($mtime, $this->getLastModified($child));
+                }
+            }
+        }
+
+        return $mtime;
+    }
+
     /**
      * Parses an input string string into an asset.
      *
@@ -345,7 +381,7 @@ class AssetFactory
     {
         foreach ($asset as $leaf) {
             foreach ($this->workers as $worker) {
-                $retval = $worker->process($leaf);
+                $retval = $worker->process($leaf, $this);
 
                 if ($retval instanceof AssetInterface && $leaf !== $retval) {
                     $asset->replaceLeaf($leaf, $retval);
@@ -354,7 +390,7 @@ class AssetFactory
         }
 
         foreach ($this->workers as $worker) {
-            $retval = $worker->process($asset);
+            $retval = $worker->process($asset, $this);
 
             if ($retval instanceof AssetInterface) {
                 $asset = $retval;

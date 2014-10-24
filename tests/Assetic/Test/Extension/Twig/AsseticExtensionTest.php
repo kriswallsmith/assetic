@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -229,7 +229,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $coll->setTargetPath('output.{locale}.js');
 
         $coll->setValues(array('locale' => 'en'));
-        foreach($coll as $asset) {
+        foreach ($coll as $asset) {
             $this->assertEquals('output.{locale}_messages._1.js', $asset->getTargetPath(), 'targetPath must not contain several time the same variable');
         }
     }

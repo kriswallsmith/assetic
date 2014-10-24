@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,6 +25,7 @@ class CompilerJarFilter extends BaseCompilerFilter
 {
     private $jarPath;
     private $javaPath;
+    private $flagFile;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -32,14 +33,22 @@ class CompilerJarFilter extends BaseCompilerFilter
         $this->javaPath = $javaPath;
     }
 
+    public function setFlagFile($flagFile)
+    {
+        $this->flagFile = $flagFile;
+    }
+
     public function filterDump(AssetInterface $asset)
     {
+        $is64bit = PHP_INT_SIZE === 8;
         $cleanup = array();
 
-        $pb = new ProcessBuilder(array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
+        $pb = new ProcessBuilder(array_merge(
+            array($this->javaPath),
+            $is64bit
+                ? array('-server', '-XX:+TieredCompilation')
+                : array('-client', '-d32'),
+            array('-jar', $this->jarPath)
         ));
 
         if (null !== $this->timeout) {
@@ -80,6 +89,10 @@ class CompilerJarFilter extends BaseCompilerFilter
 
         if (null !== $this->language) {
             $pb->add('--language_in')->add($this->language);
+        }
+
+        if (null !== $this->flagFile) {
+            $pb->add('--flagfile')->add($this->flagFile);
         }
 
         $pb->add('--js')->add($cleanup[] = $input = tempnam(sys_get_temp_dir(), 'assetic_google_closure_compiler'));

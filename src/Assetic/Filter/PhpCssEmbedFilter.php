@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,12 +32,9 @@ class PhpCssEmbedFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $root = $asset->getSourceRoot();
-        $path = $asset->getSourcePath();
-
         $pce = new CssEmbed();
-        if ($root && $path) {
-            $pce->setRootDir(dirname($root.'/'.$path));
+        if ($dir = $asset->getSourceDirectory()) {
+            $pce->setRootDir($dir);
         }
 
         $asset->setContent($pce->embedString($asset->getContent()));

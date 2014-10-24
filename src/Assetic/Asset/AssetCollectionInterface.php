@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,8 +35,8 @@ interface AssetCollectionInterface extends AssetInterface, \Traversable
     /**
      * Removes a leaf.
      *
-     * @param AssetInterface $leaf      The leaf to remove
-     * @param Boolean        $graceful  Whether the failure should return false or throw an exception
+     * @param AssetInterface $leaf     The leaf to remove
+     * @param Boolean        $graceful Whether the failure should return false or throw an exception
      *
      * @return Boolean Whether the asset has been found
      *
@@ -49,7 +49,7 @@ interface AssetCollectionInterface extends AssetInterface, \Traversable
      *
      * @param AssetInterface $needle      The current asset to replace
      * @param AssetInterface $replacement The new asset
-     * @param Boolean        $graceful  Whether the failure should return false or throw an exception
+     * @param Boolean        $graceful    Whether the failure should return false or throw an exception
      *
      * @return Boolean Whether the asset has been found
      *

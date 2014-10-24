@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -67,7 +67,7 @@ class CssRewriteFilter extends BaseCssFilter
             }
         }
 
-        $content = $this->filterReferences($asset->getContent(), function($matches) use ($host, $path) {
+        $content = $this->filterReferences($asset->getContent(), function ($matches) use ($host, $path) {
             if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
                 // absolute or protocol-relative or data uri
                 return $matches[0];

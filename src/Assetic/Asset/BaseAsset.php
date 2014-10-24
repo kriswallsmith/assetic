@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,6 +27,7 @@ abstract class BaseAsset implements AssetInterface
     private $filters;
     private $sourceRoot;
     private $sourcePath;
+    private $sourceDir;
     private $targetPath;
     private $content;
     private $loaded;
@@ -46,6 +47,9 @@ abstract class BaseAsset implements AssetInterface
         $this->filters = new FilterCollection($filters);
         $this->sourceRoot = $sourceRoot;
         $this->sourcePath = $sourcePath;
+        if ($sourcePath && $sourceRoot) {
+            $this->sourceDir = dirname("$sourceRoot/$sourcePath");
+        }
         $this->vars = $vars;
         $this->values = array();
         $this->loaded = false;
@@ -128,6 +132,11 @@ abstract class BaseAsset implements AssetInterface
     public function getSourcePath()
     {
         return $this->sourcePath;
+    }
+
+    public function getSourceDirectory()
+    {
+        return $this->sourceDir;
     }
 
     public function getTargetPath()

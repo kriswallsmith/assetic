@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -43,7 +43,7 @@ class CssEmbedFilterTest extends FilterTestCase
     {
         $data = base64_encode(file_get_contents(__DIR__.'/fixtures/home.png'));
 
-        $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssembed/test.css');
         $asset->load();
 
         $this->filter->filterDump($asset);
@@ -53,7 +53,7 @@ class CssEmbedFilterTest extends FilterTestCase
 
     public function testCssEmbedMhtml()
     {
-        $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssembed/test.css');
         $asset->load();
 
         $this->filter->setMhtml(true);

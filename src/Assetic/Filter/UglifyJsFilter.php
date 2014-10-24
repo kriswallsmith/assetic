@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,10 +29,11 @@ class UglifyJsFilter extends BaseNodeFilter
     private $beautify;
     private $unsafe;
     private $mangle;
+    private $defines;
 
     /**
      * @param string $uglifyjsBin Absolute path to the uglifyjs executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
+     * @param string $nodeBin     Absolute path to the folder containg node.js executable
      */
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -76,6 +77,11 @@ class UglifyJsFilter extends BaseNodeFilter
         $this->mangle = $mangle;
     }
 
+    public function setDefines(array $defines)
+    {
+        $this->defines = $defines;
+    }
+
     /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
@@ -90,9 +96,11 @@ class UglifyJsFilter extends BaseNodeFilter
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $pb = $this->createProcessBuilder(
+            $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin));
+            : array($this->uglifyjsBin)
+        );
 
         if ($this->noCopyright) {
             $pb->add('--no-copyright');
@@ -108,6 +116,12 @@ class UglifyJsFilter extends BaseNodeFilter
 
         if (false === $this->mangle) {
             $pb->add('--no-mangle');
+        }
+
+        if ($this->defines) {
+            foreach ($this->defines as $define) {
+                $pb->add('-d')->add($define);
+            }
         }
 
         // input and output files

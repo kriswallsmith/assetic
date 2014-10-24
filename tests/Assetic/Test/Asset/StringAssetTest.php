@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -75,5 +75,16 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset('');
         $asset->setLastModified(123);
         $this->assertEquals(123, $asset->getLastModified(), '->getLastModified() return the set last modified value');
+    }
+
+    public function testGetContentNullUnlessLoaded()
+    {
+        // see https://github.com/kriswallsmith/assetic/pull/432
+        $asset = new StringAsset("test");
+        $this->assertNull($asset->getContent(), '->getContent() returns null unless load() has been called.');
+
+        $asset->load();
+
+        $this->assertEquals("test", $asset->getContent(), '->getContent() returns the content after load()');
     }
 }

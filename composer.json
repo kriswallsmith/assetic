@@ -18,7 +18,7 @@
         "symfony/process": "~2.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "~3.7",
+        "phpunit/phpunit": "~4",
         "twig/twig": "~1.6",
         "leafo/lessphp": "*",
         "leafo/scssphp": "*",
@@ -28,14 +28,17 @@
         "cssmin/cssmin": "*",
         "mrclay/minify": "*",
         "kamicane/packager": "*",
-        "joliclic/javascript-packer": "*"
+        "joliclic/javascript-packer": "*",
+        "patchwork/jsqueeze": "~1.0",
+        "psr/log": "~1.0"
     },
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
         "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
-        "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin"
+        "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
+        "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
@@ -46,7 +49,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1-dev"
+            "dev-master": "1.2-dev"
         }
     },
     "repositories": [

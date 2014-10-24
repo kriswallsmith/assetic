@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +20,14 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class UglifyJs2FilterTest extends FilterTestCase
 {
+    /**
+     * @var FileAsset
+     */
     private $asset;
+
+    /**
+     * @var UglifyJs2Filter
+     */
     private $filter;
 
     protected function setUp()
@@ -53,6 +60,26 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter = null;
     }
 
+    public function testDefines()
+    {
+        $this->filter->setDefines(array('DEBUG=false'));
+        $this->filter->filterDump($this->asset);
+
+        $this->assertContains('DEBUG', $this->asset->getContent());
+        $this->assertContains('console.log', $this->asset->getContent());
+    }
+
+    public function testMutiplieDefines()
+    {
+        $this->filter->setDefines(array('DEBUG=false', 'FOO=2'));
+        $this->filter->filterDump($this->asset);
+
+        $this->assertContains('DEBUG', $this->asset->getContent());
+        $this->assertContains('FOO', $this->asset->getContent());
+        $this->assertContains('Array(FOO,2,3,4)', $this->asset->getContent());
+        $this->assertContains('console.log', $this->asset->getContent());
+    }
+
     public function testUglify()
     {
         $this->filter->filterDump($this->asset);
@@ -66,8 +93,16 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setCompress(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('var var2', $this->asset->getContent());
+        $this->assertContains('var foo', $this->asset->getContent());
         $this->assertNotContains('var var1', $this->asset->getContent());
+    }
+
+    public function testCompressOptions()
+    {
+        $this->filter->setCompress('drop_console');
+        $this->filter->filterDump($this->asset);
+
+        $this->assertNotContains('console.log', $this->asset->getContent());
     }
 
     public function testMangle()
@@ -75,7 +110,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setMangle(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('new Array(1,2,3,4)', $this->asset->getContent());
+        $this->assertContains('new Array(FOO,2,3,4)', $this->asset->getContent());
         $this->assertNotContains('var var2', $this->asset->getContent());
     }
 
@@ -87,7 +122,29 @@ class UglifyJs2FilterTest extends FilterTestCase
 
         $this->assertNotContains('var var1', $this->asset->getContent());
         $this->assertNotContains('var var2', $this->asset->getContent());
-        $this->assertContains('new Array(1,2,3,4)', $this->asset->getContent());
+        $this->assertContains('Array(FOO,2,3,4)', $this->asset->getContent());
+    }
+
+    public function testDefinesAndCompress()
+    {
+        $this->filter->setCompress(true);
+        $this->filter->setDefines(array('DEBUG=false'));
+        $this->filter->filterDump($this->asset);
+
+        $this->assertNotContains('DEBUG', $this->asset->getContent());
+        $this->assertNotContains('console.log', $this->asset->getContent());
+    }
+
+    public function testMutipleDefines()
+    {
+        $this->filter->setCompress(true);
+        $this->filter->setDefines(array('DEBUG=false', 'FOO=2'));
+        $this->filter->filterDump($this->asset);
+
+        $this->assertNotContains('DEBUG', $this->asset->getContent());
+        $this->assertNotContains('FOO', $this->asset->getContent());
+        $this->assertContains('Array(2,2,3,4)', $this->asset->getContent());
+        $this->assertNotContains('console.log', $this->asset->getContent());
     }
 
     public function testBeautify()

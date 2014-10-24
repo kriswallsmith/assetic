@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -105,6 +105,24 @@ EOF;
         $this->filter->filterLoad($asset);
 
         $this->assertContains('green', $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+    }
+
+    /**
+     * @group integration
+     */
+    public function testRegisterFunction()
+    {
+        $asset = new StringAsset('.foo { color: bar(); }');
+        $asset->load();
+
+        $this->filter->registerFunction('bar', function () { return 'red';});
+        $this->filter->filterLoad($asset);
+
+        $expected = new StringAsset('.foo { color: red; }');
+        $expected->load();
+        $this->filter->filterLoad($expected);
+
+        $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
     }
 
     /**

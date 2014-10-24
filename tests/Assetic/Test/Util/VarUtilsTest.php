@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2013 OpenSky Project Inc
+ * (c) 2010-2014 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,6 +15,15 @@ use Assetic\Util\VarUtils;
 
 class VarUtilsTest extends \PHPUnit_Framework_TestCase
 {
+    public function testResolve()
+    {
+        $template = '{foo}bar';
+        $vars = array('foo');
+        $values = array('foo' => 'foo');
+
+        $this->assertEquals('foobar', VarUtils::resolve($template, $vars, $values));
+    }
+
     /**
      * @dataProvider getCombinationTests
      */
@@ -25,7 +34,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
             array(
                 'locale'  => array('en', 'de', 'fr'),
                 'browser' => array('ie', 'firefox', 'other'),
-                'gzip'    => array('gzip', '')
+                'gzip'    => array('gzip', ''),
             )
         );
 
@@ -39,7 +48,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
         // no variables
         $tests[] = array(
             array(),
-            array(array())
+            array(array()),
         );
 
         // one variables
@@ -49,7 +58,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
                 array('locale' => 'en'),
                 array('locale' => 'de'),
                 array('locale' => 'fr'),
-            )
+            ),
         );
 
         // two variables
@@ -65,7 +74,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
                 array('locale' => 'en', 'browser' => 'other'),
                 array('locale' => 'de', 'browser' => 'other'),
                 array('locale' => 'fr', 'browser' => 'other'),
-            )
+            ),
         );
 
         // three variables
@@ -90,7 +99,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
                 array('locale' => 'en', 'browser' => 'other', 'gzip' => ''),
                 array('locale' => 'de', 'browser' => 'other', 'gzip' => ''),
                 array('locale' => 'fr', 'browser' => 'other', 'gzip' => ''),
-            )
+            ),
         );
 
         return $tests;
