@@ -86,9 +86,9 @@ TYPESCRIPT;
         $referenceCode = str_replace('%tmp_file%', $tmpFile, $referenceCode);
 
         // Load filter with use_real_path
-        $asset = new StringAsset($referenceCode, [], $tmpDir, 'test');
+        $asset = new StringAsset($referenceCode, array(), $tmpDir, 'test');
         $asset->load();
-        $filter = new TypeScriptFilter($this->tscBin, $this->nodeBin, ['use_real_path' => true]);
+        $filter = new TypeScriptFilter($this->tscBin, $this->nodeBin, array('use_real_path' => true));
         $filter->filterLoad($asset);
 
         unlink($tmpFile);
