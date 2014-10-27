@@ -98,13 +98,13 @@ TYPESCRIPT;
 
     public function relativeToAbsolutePathsDataProvider()
     {
-        return [
-            ['/// <reference path="%tmp_file%" />'],
-            ['/// <reference path="%tmp_file%"         />'],
-            ['///<reference path="%tmp_file%" />'],
-            ['///<reference path="%tmp_file%"/>'],
-            ['///<reference      path="%tmp_file%" />'],
-            ['    /// <reference path="%tmp_file%" />']
-        ];
+        return array(
+            array('/// <reference path="%tmp_file%" />'),
+            array('/// <reference path="%tmp_file%"         />'),
+            array('///<reference path="%tmp_file%" />'),
+            array('///<reference path="%tmp_file%"/>'),
+            array('///<reference      path="%tmp_file%" />'),
+            array('    /// <reference path="%tmp_file%" />')
+        );
     }
 }
