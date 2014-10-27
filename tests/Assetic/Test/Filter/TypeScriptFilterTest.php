@@ -73,40 +73,38 @@ TYPESCRIPT;
         $this->assertNotContains('interface Person', $asset->getContent());
     }
 
-    public function testRelativeToAbsolutepaths()
+    /**
+     * @dataProvider relativeToAbsolutePathsDataProvider
+     */
+    public function testRelativeToAbsolutePaths($referenceCode)
     {
+        // Create file that is going to be referenced
         $tmpDir = sys_get_temp_dir();
         $tmpName = uniqid('php_assetic_test') . '.ts';
         $tmpFile = $tmpDir.DIRECTORY_SEPARATOR.$tmpName;
-        file_put_contents($tmpFile, '');
+        file_put_contents($tmpFile, "var a = 'test';");
+        $referenceCode = str_replace('%tmp_file%', $tmpFile, $referenceCode);
 
-        $typescript = <<<TYPESCRIPT
-/// <reference path="{$tmpName}" />
-/// <reference path="{$tmpName}"         />
-///<reference path="{$tmpName}" />
-///<reference path="{$tmpName}"/>
-///<reference      path="{$tmpName}" />
-     /// <reference path="{$tmpName}" />
-
-TYPESCRIPT;
-
-        $expectedOutput = <<<TYPESCRIPT
-/// <reference path="{$tmpFile}" />
-/// <reference path="{$tmpFile}"         />
-///<reference path="{$tmpFile}" />
-///<reference path="{$tmpFile}"/>
-///<reference      path="{$tmpFile}" />
-/// <reference path="{$tmpFile}" />
-
-TYPESCRIPT;
-
-        $asset = new StringAsset($typescript, [], $tmpDir, 'test');
+        // Load filter with use_real_path
+        $asset = new StringAsset($referenceCode, [], $tmpDir, 'test');
         $asset->load();
         $filter = new TypeScriptFilter($this->tscBin, $this->nodeBin, ['use_real_path' => true]);
         $filter->filterLoad($asset);
 
         unlink($tmpFile);
 
-        $this->assertEquals($expectedOutput, $asset->getContent());
+        $this->assertEquals("var a = 'test';\n", $asset->getContent(), 'File should be included by reference');
+    }
+
+    public function relativeToAbsolutePathsDataProvider()
+    {
+        return [
+            ['/// <reference path="%tmp_file%" />'],
+            ['/// <reference path="%tmp_file%"         />'],
+            ['///<reference path="%tmp_file%" />'],
+            ['///<reference path="%tmp_file%"/>'],
+            ['///<reference      path="%tmp_file%" />'],
+            ['    /// <reference path="%tmp_file%" />']
+        ];
     }
 }
