@@ -36,7 +36,7 @@ class SassFilter extends BaseSassFilter
     private $debugInfo;
     private $lineNumbers;
     private $sourceMap;
-    private $loadPaths = array();
+    protected $loadPaths = array();
     private $cacheLocation;
     private $noCache;
     private $compass;
