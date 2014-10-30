@@ -36,7 +36,6 @@ class SassFilter extends BaseSassFilter
     private $debugInfo;
     private $lineNumbers;
     private $sourceMap;
-    private $loadPaths = array();
     private $cacheLocation;
     private $noCache;
     private $compass;
@@ -81,16 +80,6 @@ class SassFilter extends BaseSassFilter
     public function setSourceMap($sourceMap)
     {
         $this->sourceMap = $sourceMap;
-    }
-
-    public function setLoadPaths(array $loadPaths)
-    {
-        $this->loadPaths = $loadPaths;
-    }
-
-    public function addLoadPath($loadPath)
-    {
-        $this->loadPaths[] = $loadPath;
     }
 
     public function setCacheLocation($cacheLocation)
