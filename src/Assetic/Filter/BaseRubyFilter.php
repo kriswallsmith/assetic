@@ -67,7 +67,7 @@ abstract class BaseRubyFilter extends BaseProcessFilter
 
         if ($this->gemPaths) {
             $this->mergeEnv($pb);
-            $pb->setEnv('GEM_PATH', implode(':', $this->gemPaths));
+            $pb->setEnv('GEM_PATH', implode(PATH_SEPARATOR, $this->gemPaths));
         }
 
         return $pb;
