@@ -60,13 +60,13 @@ abstract class BaseRubyFilter extends BaseProcessFilter
     {
         $pb = parent::createProcessBuilder($arguments);
 
+        $this->mergeEnv($pb);
+
         if ($this->gemHome) {
-            $this->mergeEnv($pb);
             $pb->setEnv('GEM_HOME', $this->gemHome);
         }
 
         if ($this->gemPaths) {
-            $this->mergeEnv($pb);
             $pb->setEnv('GEM_PATH', implode(PATH_SEPARATOR, $this->gemPaths));
         }
 
