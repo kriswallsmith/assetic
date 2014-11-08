@@ -20,8 +20,8 @@ use Assetic\Filter\DependencyExtractorInterface;
 /**
  * Browserify filter.
  *
- * @link http://lisperator.net/uglifyjs
- * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @link http://browserify.org/
+ * @author Ivan Nikolić <niksy5@gmail.com>
  */
 class BrowserifyFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
