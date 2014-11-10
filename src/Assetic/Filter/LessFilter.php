@@ -106,19 +106,18 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
 var less = require('less');
 var sys  = require(process.binding('natives').util ? 'util' : 'sys');
 
-less.render(%s, %s, function(error, css) {
-    if (error) {
+less.render(%s, %s)
+    .then(function (css){
+        try {
+            sys.print(css.css);
+        } catch (error) {
+            less.writeError(error);
+            process.exit(3);
+        }
+    },function (error){
         less.writeError(error);
         process.exit(2);
-    }
-
-    try {
-        sys.print(css.css);
-    } catch (e) {
-        less.writeError(error);
-        process.exit(3);
-    }
-});
+    });
 
 EOF;
 
