@@ -32,6 +32,7 @@ class SassFilter extends BaseSassFilter
     private $unixNewlines;
     private $scss;
     private $style;
+    private $precision;
     private $quiet;
     private $debugInfo;
     private $lineNumbers;
@@ -60,6 +61,11 @@ class SassFilter extends BaseSassFilter
     public function setStyle($style)
     {
         $this->style = $style;
+    }
+    
+    public function setPrecision($precision)
+    {
+        $this->precision = $precision;
     }
 
     public function setQuiet($quiet)
@@ -120,6 +126,10 @@ class SassFilter extends BaseSassFilter
 
         if ($this->style) {
             $pb->add('--style')->add($this->style);
+        }
+        
+        if ($this->precision) {
+            $pb->add('--precision')->add($this->precision);
         }
 
         if ($this->quiet) {
