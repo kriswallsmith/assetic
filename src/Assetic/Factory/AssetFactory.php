@@ -416,6 +416,9 @@ class AssetFactory
     private static function findRootDir($path, array $roots)
     {
         foreach ($roots as $root) {
+            if (empty($root)) {
+                continue;
+            }
             if (0 === strpos($path, $root)) {
                 return $root;
             }
