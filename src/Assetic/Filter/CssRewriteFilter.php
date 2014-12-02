@@ -80,7 +80,7 @@ class CssRewriteFilter extends BaseCssFilter
 
             // document relative
             $url = $matches['url'];
-            while (0 === strpos($url, '../') && 2 <= substr_count($path, '/')) {
+            while (0 === strpos($url, '../') && '/../' !== substr($path, -4) && 2 <= substr_count($path, '/')) {
                 $path = substr($path, 0, strrpos(rtrim($path, '/'), '/') + 1);
                 $url = substr($url, 3);
             }
