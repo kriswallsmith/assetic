@@ -76,4 +76,23 @@ CSS;
         $this->assertEquals("ACE \nbla", $filtered);
         $this->assertEquals($content, $result);
     }
+
+    public function testExtractImportsWithOption()
+    {
+        $content = <<<LESS
+@import () "empty";
+@import (reference) "foo.less";
+@import (inline) "not-less-compatible.css";
+@import (less) "foo.css";
+@import (css) "bar.less";
+@import (once) "once.less";
+@import (once) url("once_with_url.less");
+LESS;
+
+        $expected = array('empty', 'foo.less', 'not-less-compatible.css', 'foo.css', 'bar.less', 'once.less', 'once_with_url.less');
+        $actual = LessUtils::extractImports($content);
+
+        $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
+        $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
+    }
 }
