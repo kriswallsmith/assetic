@@ -51,6 +51,12 @@ class CssCacheBustingFilterTest extends \PHPUnit_Framework_TestCase
 
             // IE AlphaImageLoader filter
             array('v123', '%s?%s', '.fix { filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'%s\'); }', 'css/ie.css', 'css/ie.css?v123'),
+
+            // data url
+            array('v1', '%s?%s', '.grayscale { filter: url("%s"); }',
+                'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\'/></filter></svg>#grayscale',
+                'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\'/></filter></svg>#grayscale'
+            ),
         );
     }
 
