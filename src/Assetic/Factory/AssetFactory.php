@@ -251,6 +251,11 @@ class AssetFactory
     public function getLastModified(AssetInterface $asset)
     {
         $mtime = 0;
+
+        if ($asset instanceof AssetReference) {
+            $asset = $asset->getReferencedAsset();
+        }
+
         foreach ($asset instanceof AssetCollectionInterface ? $asset : array($asset) as $leaf) {
             $mtime = max($mtime, $leaf->getLastModified());
 
