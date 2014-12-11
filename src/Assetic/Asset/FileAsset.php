@@ -73,6 +73,72 @@ class FileAsset extends BaseAsset
             throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
         }
 
+        if (strpos($source, '.less')!== false) {
+            $sourceTime = filemtime($source);
+            $fileTime =  self::checkChildrenLess($source, array('time'=>$sourceTime));
+
+            if   ($sourceTime< $fileTime['time'] ) {
+                touch($source, $fileTime['time'] );
+            }
+        }
+        
         return filemtime($source);
+    }
+        /**
+     *
+     *
+     * @param string    $source       Complete file path + Name
+     * @param array     $maxTime      Array with the name that cause the touch on the master file
+     * @param string    $extension    Extension in order to allow .less . sass
+     * @return array
+     * @author Yoni Alhadeff
+     */
+    public static function checkChildrenLess ($source, $maxTime, $extension = '.less')
+    {
+        $path = pathinfo($source);
+        $dirName = $path['dirname'];
+        $f = fopen($source, 'r');
+
+        $lineNo = 0;
+        $maxLine = 50; // after 50 lines I won't check anymore if we have imports
+        $containImport = false;
+
+        while ($line = fgets($f)) {
+
+            if ($lineNo<10  && strpos($line,'@start-import')) { // If I don't have start statement in the first 10 lines
+                $containImport = true;
+            }
+            //If I didn't have a start statement for imports, in the first lines, I won't read all the file
+            if ($lineNo>10 && $containImport == false) {
+                break;
+            }
+            if (strpos($line,'@end-import')) { //If I detect end import statement, I can stop
+                break;
+            }
+            if ($lineNo > $maxLine) {
+                break;
+            }
+            //Looking for any @import statement
+            if (strpos($line,'@import')!==false) {
+                if (preg_match('/"([^"]+)"/', $line , $m)) {
+                    $importedFileName = $m[1];
+                    if (strpos($importedFileName,$extension)===false) {
+                        $importedFileName .=$extension;
+                    }
+
+                    $importedFileFullPath = $dirName.'/'.$importedFileName;
+                    $newFileTime = filemtime($importedFileFullPath);
+
+                    if ($newFileTime>$maxTime['time']) {
+                        $maxTime=  array("file"=>$importedFileFullPath,'time'=>$newFileTime);
+                        return $maxTime; //If the parent has been changed to need to curse
+                    }
+                    $maxTime =  self::checkChildrenLess($importedFileFullPath, $maxTime, $extension);
+                }
+
+            }
+            $lineNo++;
+        }
+        return $maxTime;
     }
 }
