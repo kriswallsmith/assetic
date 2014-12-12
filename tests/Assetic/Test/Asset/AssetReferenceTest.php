@@ -12,6 +12,7 @@
 namespace Assetic\Test\Asset;
 
 use Assetic\Asset\AssetReference;
+use Assetic\Asset\StringAsset;
 
 class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 {
@@ -122,5 +123,34 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
             ->with($filter);
 
         $this->ref->dump($filter);
+    }
+
+    public function testClone()
+    {
+        $filter1 = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter2 = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter3 = $this->getMock('Assetic\\Filter\\FilterInterface');
+
+        $asset = new StringAsset('');
+        $this->am->expects($this->any())
+            ->method('get')
+            ->with('foo')
+            ->will($this->returnValue($asset));
+
+        $this->ref->ensureFilter($filter1);
+        $this->ref->load();
+
+        $clone1 = clone $this->ref;
+        $clone1->ensureFilter($filter2);
+        $clone1->load();
+
+        $clone2 = clone $clone1;
+        $clone2->ensureFilter($filter3);
+        $clone2->load();
+
+        $this->assertCount(1, $asset->getFilters());
+        $this->assertCount(1, $this->ref->getFilters());
+        $this->assertCount(2, $clone1->getFilters());
+        $this->assertCount(3, $clone2->getFilters());
     }
 }
