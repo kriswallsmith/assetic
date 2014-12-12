@@ -36,7 +36,7 @@ EOF;
 
         $expected = <<<EOF
 (function() {
-  alert("foobar")
+  alert("foobar");
 })();
 
 EOF;
