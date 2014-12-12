@@ -127,26 +127,30 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 
     public function testClone()
     {
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter1 = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter2 = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter3 = $this->getMock('Assetic\\Filter\\FilterInterface');
 
         $asset = new StringAsset('');
-        $asset->ensureFilter($filter);
-
         $this->am->expects($this->any())
             ->method('get')
             ->with('foo')
             ->will($this->returnValue($asset));
 
+        $this->ref->ensureFilter($filter1);
+        $this->ref->load();
+
         $clone1 = clone $this->ref;
-        $clone1->clearFilters();
+        $clone1->ensureFilter($filter2);
         $clone1->load();
 
         $clone2 = clone $clone1;
-        $clone2->ensureFilter($filter);
+        $clone2->ensureFilter($filter3);
         $clone2->load();
 
         $this->assertCount(1, $asset->getFilters());
-        $this->assertCount(0, $clone1->getFilters());
-        $this->assertCount(1, $clone2->getFilters());
+        $this->assertCount(1, $this->ref->getFilters());
+        $this->assertCount(2, $clone1->getFilters());
+        $this->assertCount(3, $clone2->getFilters());
     }
 }

@@ -36,7 +36,10 @@ class AssetReference implements AssetInterface
     public function __clone()
     {
         $this->clone = true;
-        $this->asset = null;
+
+        if ($this->asset) {
+            $this->asset = clone $this->asset;
+        }
     }
 
     public function ensureFilter(FilterInterface $filter)
