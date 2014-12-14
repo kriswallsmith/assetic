@@ -54,7 +54,7 @@ class CoffeeScriptFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->coffeeBin)
             : array($this->coffeeBin));
 
-        $pb->add('-cp');
+        $pb->add('-c');
 
         if ($this->bare) {
             $pb->add('--bare');
@@ -63,6 +63,8 @@ class CoffeeScriptFilter extends BaseNodeFilter
         if ($this->noHeader) {
             $pb->add('--no-header');
         }
+
+        $pb->add('--map');
 
         $pb->add($input);
         $proc = $pb->getProcess();
@@ -73,7 +75,19 @@ class CoffeeScriptFilter extends BaseNodeFilter
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $content = file_get_contents($input.'.js');
+        $contentMap = file_get_contents($input.'.js.map');
+        unlink($input.'.js');
+        unlink($input.'.js.map');
+
+        $content = str_replace("\n".'//# sourceMappingURL='.basename($input).'.js.map'."\n", '', $content);
+        $asset->setContent($content);
+
+        $contentMap = json_decode($contentMap);
+        unset($contentMap->file);
+        unset($contentMap->sourceRoot);
+        $contentMap->sources[0] = $asset->getSourceRoot().'/'.$asset->getSourcePath();
+        $asset->setContentSourceMap(new \Kwf_SourceMaps_SourceMap($contentMap, $content));
     }
 
     public function filterDump(AssetInterface $asset)

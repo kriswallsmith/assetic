@@ -28,6 +28,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     private $sourceRoot;
     private $targetPath;
     private $content;
+    private $contentSourceMap;
     private $clones;
     private $vars;
     private $values;
@@ -154,14 +155,40 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         return implode("\n", $parts);
     }
 
+    public function dumpSourceMap(FilterInterface $additionalFilter = null)
+    {
+        $map = \Kwf_SourceMaps_SourceMap::createEmptyMap('');
+
+        // loop through leaves and dump each asset
+        foreach ($this as $asset) {
+            $m = $asset->dumpSourceMap($additionalFilter);
+            if (!$m) {
+                $m = \Kwf_SourceMaps_SourceMap::createEmptyMap($asset->dump($additionalFilter));
+            }
+            $map->concat($m);
+        }
+
+        return $map;
+    }
+
     public function getContent()
     {
         return $this->content;
     }
 
+    public function getContentSourceMap()
+    {
+        return $this->contentSourceMap;
+    }
+
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    public function setContentSourceMap(\Kwf_SourceMaps_SourceMap $contentSourceMap)
+    {
+        $this->contentSourceMap = $contentSourceMap;
     }
 
     public function getSourceRoot()

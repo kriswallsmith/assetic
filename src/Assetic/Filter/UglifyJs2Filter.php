@@ -117,11 +117,21 @@ class UglifyJs2Filter extends BaseNodeFilter
             $pb->add('--define')->add(join(',', $this->defines));
         }
 
+
+        $outputSourceMap = tempnam(sys_get_temp_dir(), 'outputSourceMap');
+        $pb->add('--source-map')->add($outputSourceMap);
+
+        $inputSourceMap = $asset->getContentSourceMap();
+        if ($inputSourceMap) {
+            $inputSourceMapTempFile = tempnam(sys_get_temp_dir(), 'inputSourceMap');
+            file_put_contents($inputSourceMapTempFile, $inputSourceMap->getMapContents(false));
+            $pb->add('--in-source-map')->add($inputSourceMapTempFile);
+        }
+
         // input and output files
         $input = tempnam(sys_get_temp_dir(), 'input');
-        $output = tempnam(sys_get_temp_dir(), 'output');
-
         file_put_contents($input, $asset->getContent());
+        $output = tempnam(sys_get_temp_dir(), 'output');
         $pb->add('-o')->add($output)->add($input);
 
         $proc = $pb->getProcess();
@@ -131,6 +141,9 @@ class UglifyJs2Filter extends BaseNodeFilter
         if (0 !== $code) {
             if (file_exists($output)) {
                 unlink($output);
+            }
+            if (file_exists($outputSourceMap)) {
+                unlink($outputSourceMap);
             }
 
             if (127 === $code) {
@@ -144,8 +157,20 @@ class UglifyJs2Filter extends BaseNodeFilter
             throw new \RuntimeException('Error creating output file.');
         }
 
-        $asset->setContent(file_get_contents($output));
+        $content = file_get_contents($output);
+        $content = str_replace("\n".'//# sourceMappingURL='.$outputSourceMap, '', $content);
+        $asset->setContent($content);
+
+        $contentMap = json_decode(file_get_contents($outputSourceMap));
+        unset($contentMap->file);
+        if ($inputSourceMap) {
+            $contentMap->sources = $inputSourceMap->getMapContentsData(false)->sources;
+        } else {
+            $contentMap->sources[0] = $asset->getSourceRoot().'/'.$asset->getSourcePath();
+        }
+        $asset->setContentSourceMap(new \Kwf_SourceMaps_SourceMap($contentMap, $content));
 
         unlink($output);
+        unlink($outputSourceMap);
     }
 }
