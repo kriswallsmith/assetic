@@ -38,7 +38,7 @@ class TypeScriptFilterTest extends FilterTestCase
 
     protected function tearDown()
     {
-        unset($this->filter);
+        $this->filter = null;
     }
 
     public function testFilterLoad()

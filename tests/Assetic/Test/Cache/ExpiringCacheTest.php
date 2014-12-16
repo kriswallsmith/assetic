@@ -26,6 +26,13 @@ class ExpiringCacheTest extends \PHPUnit_Framework_TestCase
         $this->cache = new ExpiringCache($this->inner, $this->lifetime);
     }
 
+    protected function tearDown()
+    {
+        $this->inner = null;
+        $this->lifetime = null;
+        $this->cache = null;
+    }
+
     public function testHasExpired()
     {
         $key = 'asdf';

@@ -30,6 +30,13 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory->setFilterManager($this->fm);
     }
 
+    protected function tearDown()
+    {
+        $this->am = null;
+        $this->fm = null;
+        $this->factory = null;
+    }
+
     public function testNoAssetManagerReference()
     {
         $this->setExpectedException('LogicException', 'There is no asset manager.');

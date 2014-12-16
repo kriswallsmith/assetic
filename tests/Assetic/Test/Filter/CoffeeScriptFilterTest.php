@@ -36,6 +36,11 @@ class CoffeeScriptFilterTest extends FilterTestCase
         $this->filter = new CoffeeScriptFilter($coffeeBin, $nodeBin);
     }
 
+    protected function tearDown()
+    {
+        $this->filter = null;
+    }
+
     public function testFilterLoad()
     {
         $expected = <<<JAVASCRIPT

@@ -63,6 +63,15 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
     }
 
+    protected function tearDown()
+    {
+        $this->am = null;
+        $this->fm = null;
+        $this->factory = null;
+        $this->twig = null;
+        $this->valueSupplier = null;
+    }
+
     public function testReference()
     {
         $asset = $this->getMock('Assetic\\Asset\\AssetInterface');

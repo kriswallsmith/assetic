@@ -29,6 +29,9 @@ class ConfigCacheTest extends \PHPUnit_Framework_TestCase
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->dir, \FilesystemIterator::SKIP_DOTS)) as $file) {
             unlink($file->getPathname());
         }
+
+        $this->dir = null;
+        $this->cache = null;
     }
 
     public function testCache()

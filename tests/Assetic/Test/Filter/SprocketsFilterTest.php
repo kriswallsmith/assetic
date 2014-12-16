@@ -44,8 +44,10 @@ class SprocketsFilterTest extends FilterTestCase
 
     protected function tearDown()
     {
-        $this->filter = null;
         $this->cleanup();
+
+        $this->filter = null;
+        $this->assetRoot = null;
     }
 
     public function testFilterLoad()

@@ -19,7 +19,6 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 {
     private $am;
     private $fm;
-    private $twig;
 
     protected function setUp()
     {
@@ -43,6 +42,12 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         )));
 
         $this->loader = new TwigFormulaLoader($twig);
+    }
+
+    protected function tearDown()
+    {
+        $this->am = null;
+        $this->fm = null;
     }
 
     public function testMixture()

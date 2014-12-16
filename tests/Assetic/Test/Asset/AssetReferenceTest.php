@@ -25,6 +25,12 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
         $this->ref = new AssetReference($this->am, 'foo');
     }
 
+    protected function tearDown()
+    {
+        $this->am = null;
+        $this->ref = null;
+    }
+
     /**
      * @dataProvider getMethodAndRetVal
      */

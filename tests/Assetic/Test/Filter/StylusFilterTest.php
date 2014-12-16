@@ -34,6 +34,11 @@ class StylusFilterTest extends FilterTestCase
         $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
     }
 
+    protected function tearDown()
+    {
+        $this->filter = null;
+    }
+
     public function testFilterLoad()
     {
         $asset = new StringAsset("body\n  font 12px Helvetica, Arial, sans-serif\n  color black");
