@@ -46,11 +46,9 @@ class DartFilter extends BaseProcessFilter
         unlink($input);
 
         if (0 !== $code) {
-            if (file_exists($output)) {
-                unlink($output);
-            }
+            $this->cleanup($output);
 
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($proc);
         }
 
         if (!file_exists($output)) {
@@ -58,10 +56,17 @@ class DartFilter extends BaseProcessFilter
         }
 
         $asset->setContent(file_get_contents($output));
-        unlink($output);
+        $this->cleanup($output);
     }
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    private function cleanup($file)
+    {
+        foreach (glob($file.'*') as $related) {
+            unlink($related);
+        }
     }
 }

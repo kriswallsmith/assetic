@@ -32,6 +32,8 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
 
         $cache->remove('foo');
         $this->assertFalse($cache->has('foo'));
+
+        $this->removeDir($dir);
     }
 
     public function testSetCreatesDir()
@@ -50,6 +52,9 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
     private function removeDir($dir)
     {
         array_map('unlink', glob($dir.'/*'));
-        @rmdir($dir);
+
+        if (is_dir($dir)) {
+            rmdir($dir);
+        }
     }
 }
