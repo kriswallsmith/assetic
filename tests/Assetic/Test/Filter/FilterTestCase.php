@@ -28,6 +28,15 @@ abstract class FilterTestCase extends \PHPUnit_Framework_TestCase
             return $_SERVER[$serverKey];
         }
 
+        // update the path (emulates logic in ExecutableFinder)
+        $paths = array(__DIR__ . '/../../../../node_modules/.bin');
+        if ($current = ini_get('open_basedir')) {
+            ini_set('open_basedir', $this->ensurePaths($current, $paths));
+        } else {
+            $varname = getenv('PATH') ? 'PATH' : 'Path';
+            putenv(sprintf('%s=%s', $varname, $this->ensurePaths(getenv($varname), $paths)));
+        }
+
         $finder = new ExecutableFinder();
 
         return $finder->find($name);
@@ -46,5 +55,16 @@ abstract class FilterTestCase extends \PHPUnit_Framework_TestCase
         }
 
         return 0 === $pb->getProcess()->run();
+    }
+
+    private function ensurePaths($current, array $paths)
+    {
+        foreach ($paths as $path) {
+            if (!preg_match(sprintf('~(^|%s)%s(%1$s|$)~', PATH_SEPARATOR, preg_quote($path, '~')), $current)) {
+                $current .= PATH_SEPARATOR.$path;
+            }
+        }
+
+        return $current;
     }
 }
