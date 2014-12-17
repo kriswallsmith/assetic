@@ -41,24 +41,34 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
     public function filterLoad(AssetInterface $asset)
     {
         $input = tempnam(sys_get_temp_dir(), 'assetic_roole');
+        $output = $input.'.css';
+
         file_put_contents($input, $asset->getContent());
 
         $pb = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->rooleBin)
             : array($this->rooleBin));
 
-        $pb->add('-p');
-
         $pb->add($input);
+
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            if (file_exists($output)) {
+                unlink($output);
+            }
+
+            throw FilterException::fromProcess($proc);
         }
 
-        $asset->setContent($proc->getOutput());
+        if (!file_exists($output)) {
+            throw new \RuntimeException('Error creating output file.');
+        }
+
+        $asset->setContent(file_get_contents($output));
+        unlink($output);
     }
 
     public function filterDump(AssetInterface $asset)

@@ -40,11 +40,12 @@ class RooleFilterTest extends FilterTestCase
 
     public function testFilterLoad()
     {
-        $source = <<<ROOLE
-\$margin = 30px
+        $source = <<<'ROOLE'
+$margin = 30px;
 
-body
-  margin: \$margin
+body {
+  margin: $margin;
+}
 
 ROOLE;
 
