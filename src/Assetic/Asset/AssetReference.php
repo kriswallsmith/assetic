@@ -129,6 +129,16 @@ class AssetReference implements AssetInterface
         $this->callAsset(__FUNCTION__, array($values));
     }
 
+    /**
+     * Returns the name of this asset reference.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
     // private
 
     private function callAsset($method, $arguments = array())

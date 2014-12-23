@@ -60,6 +60,11 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testReturnsName()
+    {
+        $this->assertSame('foo', $this->ref->getName());
+    }
+
     public function testLazyFilters()
     {
         $this->am->expects($this->never())->method('get');
