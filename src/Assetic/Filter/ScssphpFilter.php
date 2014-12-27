@@ -121,7 +121,7 @@ class ScssphpFilter implements DependencyExtractorInterface
             $file = $sc->findImport($match);
             if ($file) {
                 $children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));
-                $child->load();
+                $child->ensureFilter($this);
                 $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
             }
         }
