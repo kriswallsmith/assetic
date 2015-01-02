@@ -53,7 +53,7 @@ abstract class CssUtils
     {
         $pattern = static::REGEX_URLS;
 
-        return static::filterCommentless($content, function ($part) use (& $callback,$pattern) {
+        return static::filterCommentless($content, function ($part) use (& $callback, $pattern) {
             return preg_replace_callback($pattern, $callback, $part);
         });
     }
@@ -71,7 +71,7 @@ abstract class CssUtils
     {
         $pattern = $includeUrl ? static::REGEX_IMPORTS : static::REGEX_IMPORTS_NO_URLS;
 
-        return static::filterCommentless($content, function ($part) use (& $callback,$pattern) {
+        return static::filterCommentless($content, function ($part) use (& $callback, $pattern) {
             return preg_replace_callback($pattern, $callback, $part);
         });
     }

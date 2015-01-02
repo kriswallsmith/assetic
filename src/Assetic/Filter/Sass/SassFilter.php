@@ -62,7 +62,7 @@ class SassFilter extends BaseSassFilter
     {
         $this->style = $style;
     }
-    
+
     public function setPrecision($precision)
     {
         $this->precision = $precision;
@@ -127,7 +127,7 @@ class SassFilter extends BaseSassFilter
         if ($this->style) {
             $pb->add('--style')->add($this->style);
         }
-        
+
         if ($this->precision) {
             $pb->add('--precision')->add($this->precision);
         }

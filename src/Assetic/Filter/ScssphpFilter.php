@@ -68,7 +68,7 @@ class ScssphpFilter implements DependencyExtractorInterface
         $this->importPaths[] = $path;
     }
 
-    public function registerFunction($name,$callable)
+    public function registerFunction($name, $callable)
     {
         $this->customFunctions[$name] = $callable;
     }

@@ -114,7 +114,7 @@ class UglifyJs2Filter extends BaseNodeFilter
         }
 
         if ($this->defines) {
-            $pb->add('--define')->add(join(',', $this->defines));
+            $pb->add('--define')->add(implode(',', $this->defines));
         }
 
         // input and output files
