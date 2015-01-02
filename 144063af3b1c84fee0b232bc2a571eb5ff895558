@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by AdamWill at 2015-01-01T19:44:02Z
+
+(if anyone's watching this, please play Yakity Sax at this point)
+
+---------------------------------------------------------------------------
+
+by AdamWill at 2015-01-02T00:36:07Z
+
+@nicolas-grekas how about this version? the global renaming is disabled by default for 1.x and 2.x but you can do `setDefaultRx(true)` to enable it with the default regex. (haven't tested that bit yet, I will).
+
+edit: looks like it works. Well, it doesn't seem to be safe to use with OC - if I enable the global renaming I get buggy OC behaviour - but it does what it's supposed to do, I think.
