@@ -64,12 +64,16 @@ interface AssetInterface
      */
     public function dump(FilterInterface $additionalFilter = null);
 
+    public function dumpSourceMap(FilterInterface $additionalFilter = null);
+
     /**
      * Returns the loaded content of the current asset.
      *
      * @return string The content
      */
     public function getContent();
+
+    public function getContentSourceMap();
 
     /**
      * Sets the content of the current asset.
