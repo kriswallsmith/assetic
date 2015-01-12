@@ -17,11 +17,11 @@ use Assetic\Asset\HttpAsset;
 use Assetic\Factory\AssetFactory;
 
 /**
- * Inlines imported stylesheets.
+ * Inlines imported resources.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterface
+class ImportFilter extends BaseCssFilter implements DependencyExtractorInterface
 {
     private $importFilter;
 
@@ -73,8 +73,8 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
             $importSource = $importRoot.'/'.$importPath;
             if (false !== strpos($importSource, '://') || 0 === strpos($importSource, '//')) {
                 $import = new HttpAsset($importSource, array($importFilter), true);
-            } elseif ('css' != pathinfo($importPath, PATHINFO_EXTENSION) || !file_exists($importSource)) {
-                // ignore non-css and non-existant imports
+            } elseif (!file_exists($importSource)) {
+                // ignore non-existant imports
                 return $matches[0];
             } else {
                 $import = new FileAsset($importSource, array($importFilter), $importRoot, $importPath);
