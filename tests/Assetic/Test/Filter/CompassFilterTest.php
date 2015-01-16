@@ -79,7 +79,7 @@ class CompassFilterTest extends FilterTestCase
         $this->filter->setExternalEncoding('utf-8');
         $this->filter->filterLoad($asset);
 
-        $this->assertContains('foo', $asset->getContent());
+        $this->assertContains('Ω', $asset->getContent());
     }
 
     public function testExternalEncoding()
@@ -91,6 +91,6 @@ class CompassFilterTest extends FilterTestCase
         $this->filter->setExternalEncoding('utf-8');
         $this->filter->filterLoad($asset);
 
-        $this->assertContains('foo', $asset->getContent());
+        $this->assertContains('Ω', $asset->getContent());
     }
 }
