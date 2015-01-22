@@ -27,15 +27,7 @@ class LessFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
-            $this->markTestSkipped('Unable to find `node` executable.');
-        }
-
-        if (!$this->checkNodeModule('less', $nodeBin)) {
-            $this->markTestSkipped('The "less" module is not installed.');
-        }
-
-        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+        $this->filter = new LessFilter();
     }
 
     protected function tearDown()

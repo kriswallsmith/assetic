@@ -27,13 +27,12 @@ class CoffeeScriptFilterTest extends FilterTestCase
     protected function setUp()
     {
         $coffeeBin = $this->findExecutable('coffee', 'COFFEE_BIN');
-        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
 
         if (!$coffeeBin) {
             $this->markTestSkipped('Unable to find `coffee` executable.');
         }
 
-        $this->filter = new CoffeeScriptFilter($coffeeBin, $nodeBin);
+        $this->filter = new CoffeeScriptFilter($coffeeBin);
     }
 
     protected function tearDown()

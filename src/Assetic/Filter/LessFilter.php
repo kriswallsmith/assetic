@@ -22,9 +22,15 @@ use Assetic\Util\LessUtils;
  * @link http://lesscss.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
+class LessFilter extends BaseProcessFilter implements DependencyExtractorInterface
 {
-    private $nodeBin;
+
+    /**
+     * Path to the Less binary, assumed in PATH
+     *
+     * @var string
+     */
+    private $lesscBin;
 
     /**
      * @var array
@@ -51,12 +57,21 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
      * @param string $nodeBin   The path to the node binary
      * @param array  $nodePaths An array of node paths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct()
     {
-        $this->nodeBin = $nodeBin;
-        $this->setNodePaths($nodePaths);
-        $this->treeOptions = array();
+        $this->treeOptions = array(
+            "compress" => false
+        );
         $this->parserOptions = array();
+    }
+
+    /**
+     * Sets the path to the Less binary
+     *
+     * @param string $path path to the Less binary
+     */
+    public function setLessBinary($lesscBin){
+        $this->lesscBin = $lesscBin;
     }
 
     /**
@@ -64,7 +79,7 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
      */
     public function setCompress($compress)
     {
-        $this->addTreeOption('compress', $compress);
+        $this->treeOptions['compress'] = $compress;
     }
 
     public function setLoadPaths(array $loadPaths)
@@ -102,51 +117,37 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<'EOF'
-var less = require('less');
-var sys  = require(process.binding('natives').util ? 'util' : 'sys');
-
-less.render(%s, %s, function(error, css) {
-    if (error) {
-        less.writeError(error);
-        process.exit(2);
-    }
-    try {
-        if (typeof css == 'string') {
-            sys.print(css);
-        } else {
-            sys.print(css.css);
-        }
-    } catch (e) {
-        less.writeError(error);
-        process.exit(3);
-    }
-});
-
-EOF;
-
-        // parser options
-        $parserOptions = $this->parserOptions;
-        if ($dir = $asset->getSourceDirectory()) {
-            $parserOptions['paths'] = array($dir);
-            $parserOptions['filename'] = basename($asset->getSourcePath());
-        }
-
-        foreach ($this->loadPaths as $loadPath) {
-            $parserOptions['paths'][] = $loadPath;
-        }
-
         $pb = $this->createProcessBuilder();
+        $pb->inheritEnvironmentVariables();
 
-        $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_less'));
-        file_put_contents($input, sprintf($format,
-            json_encode($asset->getContent()),
-            json_encode(array_merge($parserOptions, $this->treeOptions))
-        ));
+        // the lessc binary
+        $pb->add($this->lesscBin ?: 'lessc');
+
+        // --compress, -x
+        if($this->treeOptions['compress']){
+            $pb->add("--compress");
+        }
+
+        // --include-path=PATHS
+        // separated by : on unix, ; on Windows
+        if($this->loadPaths){
+            $loadPaths = join(PATH_SEPARATOR, $this->loadPaths);
+            $pb->add("--include-path=" . $loadPaths);
+        }
+
+        $source_path = $asset->getSourcePath();
+        if($source_path){
+            // file asset, set as input
+            $dir = $asset->getSourceDirectory();
+            $pb->add($dir . DIRECTORY_SEPARATOR . $source_path);
+        } else {
+            // string asset, so use '-' to specify input from stdin
+            $pb->add("-");
+            $pb->setInput($asset->getContent());
+        }
 
         $proc = $pb->getProcess();
         $code = $proc->run();
-        unlink($input);
 
         if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
