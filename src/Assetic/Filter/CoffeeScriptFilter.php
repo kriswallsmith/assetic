@@ -48,10 +48,9 @@ class CoffeeScriptFilter extends BaseProcessFilter
         $pb = $this->createProcessBuilder();
         $pb->inheritEnvironmentVariables();
 
-        // the lessc binary
+        // the coffee binary
         $pb->add($this->coffeeBin);
 
-        // --compress, -x
         if ($this->bare) {
             $pb->add('--bare');
         }
@@ -66,16 +65,12 @@ class CoffeeScriptFilter extends BaseProcessFilter
         // we want it to print the output rather than run it
         $pb->add('--print');
 
-        $source_path = $asset->getSourcePath();
-        if($source_path){
-            // file asset, set as input
-            $dir = $asset->getSourceDirectory();
-            $pb->add($dir . DIRECTORY_SEPARATOR . $source_path);
-        } else {
-            // string asset, so use '--stdio' to specify input from stdin
-            $pb->add("--stdio");
-            $pb->setInput($asset->getContent());
-        }
+        // read content from standard input
+        $pb->add("--stdio");
+
+        // set the input to be sent to stdin as the current asset content,
+        // to maintain the ability to chain filters
+        $pb->setInput($asset->getContent());
 
         $proc = $pb->getProcess();
         $code = $proc->run();

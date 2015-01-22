@@ -120,7 +120,7 @@ class LessFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         $pb = $this->createProcessBuilder();
         $pb->inheritEnvironmentVariables();
 
-        // the lessc binary
+        // the lessc binary, defaults to global
         $pb->add($this->lesscBin ?: 'lessc');
 
         // --compress, -x
@@ -129,22 +129,22 @@ class LessFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         }
 
         // --include-path=PATHS
-        // separated by : on unix, ; on Windows
-        if($this->loadPaths){
-            $loadPaths = join(PATH_SEPARATOR, $this->loadPaths);
-            $pb->add("--include-path=" . $loadPaths);
+        $paths = $this->loadPaths;
+
+        if($asset->getSourceDirectory()){
+            $paths[] = $asset->getSourceDirectory();
         }
 
-        $source_path = $asset->getSourcePath();
-        if($source_path){
-            // file asset, set as input
-            $dir = $asset->getSourceDirectory();
-            $pb->add($dir . DIRECTORY_SEPARATOR . $source_path);
-        } else {
-            // string asset, so use '-' to specify input from stdin
-            $pb->add("-");
-            $pb->setInput($asset->getContent());
+        if($paths){
+            // only specify this option if there are include paths
+            // as the argument can not be blank
+            $pb->add("--include-path=" . join(PATH_SEPARATOR, $paths));
         }
+
+        // set the input to be sent to stdin as the current asset content,
+        // to maintain the ability to chain filters
+        $pb->add("-");
+        $pb->setInput($asset->getContent());
 
         $proc = $pb->getProcess();
         $code = $proc->run();
