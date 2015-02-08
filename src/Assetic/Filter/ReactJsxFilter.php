@@ -24,66 +24,52 @@ class ReactJsxFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $inputDir = $this->createTempDir();
-        $outputDir = $this->createTempDir();
-        $inputMinusExtension = tempnam($inputDir, '');
-        $inputFilePath = $inputMinusExtension . '.js';
-        file_put_contents($inputFilePath, $asset->getContent());
-
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $builder = $this->createProcessBuilder($this->nodeBin
             ? array($this->nodeBin, $this->jsxBin)
             : array($this->jsxBin));
 
-        $pb->add($inputDir)->add($outputDir)->add('--no-cache-dir');
+        $inputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_reactjsx_input');
+        $inputFile = $inputDir.DIRECTORY_SEPARATOR.'asset.js';
+        $outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_reactjsx_output');
+        $outputFile = $outputDir.DIRECTORY_SEPARATOR.'asset.js';
 
-        $proc = $pb->getProcess();
+        // create the input directory and asset file
+        mkdir($inputDir);
+        file_put_contents($inputFile, $asset->getContent());
+
+        $builder
+            ->add($inputDir)
+            ->add($outputDir)
+            ->add('--no-cache-dir')
+        ;
+
+        $proc = $builder->getProcess();
         $code = $proc->run();
 
-        $file = new \SplFileInfo($inputFilePath);
-        $filename = $file->getFilename();
-        $outputFilePath = $outputDir . '/' . $filename;
-
-        //clean up input temp files/dirs
-        unlink($inputMinusExtension);
-        unlink($inputFilePath);
+        // remove the input directory and asset file
+        unlink($inputFile);
         rmdir($inputDir);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            if (file_exists($outputFile)) {
+                unlink($outputFile);
+            }
+
+            if (file_exists($outputDir)) {
+                rmdir($outputDir);
+            }
+
+            throw FilterException::fromProcess($proc);
         }
 
-        $output = file_get_contents($outputFilePath);
-        $asset->setContent($output);
+        $asset->setContent(file_get_contents($outputFile));
 
-        //clean up output temp files/dirs
-        unlink($outputFilePath);
+        // remove the output directory and processed asset file
+        unlink($outputFile);
         rmdir($outputDir);
     }
 
     public function filterDump(AssetInterface $asset)
     {
-    }
-
-    private function createTempDir()
-    {
-        $dirName = tempnam(sys_get_temp_dir(), 'assetic_react_jsx');
-        if (file_exists($dirName)) {
-            $this->deleteDir($dirName);
-        }
-        mkdir($dirName);
-
-        return $dirName;
-    }
-
-    private function deleteDir($dirName)
-    {
-        foreach (glob($dirName . '/*') as $file) {
-            if (is_dir($file)) {
-                $this->deleteDir($file);
-                continue;
-            }
-            unlink($file);
-        }
-        unlink($dirName);
     }
 }
