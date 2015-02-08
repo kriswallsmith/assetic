@@ -87,8 +87,8 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
 
         // input and output files
         $tempDir = realpath(sys_get_temp_dir());
-        $input = tempnam($tempDir, 'YUI-IN-');
-        $output = tempnam($tempDir, 'YUI-OUT-');
+        $input = tempnam($tempDir, 'assetic_yui_input');
+        $output = tempnam($tempDir, 'assetic_yui_output');
         file_put_contents($input, $content);
         $pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
 

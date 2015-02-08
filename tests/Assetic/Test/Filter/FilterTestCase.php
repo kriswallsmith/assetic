@@ -11,10 +11,11 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Test\TestCase;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
 
-abstract class FilterTestCase extends \PHPUnit_Framework_TestCase
+abstract class FilterTestCase extends TestCase
 {
     protected function assertMimeType($expected, $data, $message = null)
     {

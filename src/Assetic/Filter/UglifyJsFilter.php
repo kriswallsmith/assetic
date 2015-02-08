@@ -125,8 +125,8 @@ class UglifyJsFilter extends BaseNodeFilter
         }
 
         // input and output files
-        $input = tempnam(sys_get_temp_dir(), 'input');
-        $output = tempnam(sys_get_temp_dir(), 'output');
+        $input = tempnam(sys_get_temp_dir(), 'assetic_uglifyjs_input');
+        $output = tempnam(sys_get_temp_dir(), 'assetic_uglifyjs_output');
 
         file_put_contents($input, $asset->getContent());
         $pb->add('-o')->add($output)->add($input);

@@ -39,9 +39,9 @@ class TypeScriptFilter extends BaseNodeFilter
 
         $templateName = basename($asset->getSourcePath());
 
-        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
+        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_typescript_input');
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
-        $outputPath = tempnam(sys_get_temp_dir(), 'output');
+        $outputPath = tempnam(sys_get_temp_dir(), 'assetic_typescript_output');
 
         mkdir($inputDirPath);
         file_put_contents($inputPath, $asset->getContent());

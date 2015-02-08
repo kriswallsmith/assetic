@@ -52,9 +52,9 @@ class HandlebarsFilter extends BaseNodeFilter
 
         $templateName = basename($asset->getSourcePath());
 
-        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
+        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_handlebars_input');
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;
-        $outputPath = tempnam(sys_get_temp_dir(), 'output');
+        $outputPath = tempnam(sys_get_temp_dir(), 'assetic_handlebars_output');
 
         mkdir($inputDirPath);
         file_put_contents($inputPath, $asset->getContent());

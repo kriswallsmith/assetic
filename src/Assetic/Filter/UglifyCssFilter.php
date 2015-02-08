@@ -97,7 +97,7 @@ class UglifyCssFilter extends BaseNodeFilter
         }
 
         // input and output files
-        $input = tempnam(sys_get_temp_dir(), 'input');
+        $input = tempnam(sys_get_temp_dir(), 'assetic_uglifycss');
 
         file_put_contents($input, $asset->getContent());
         $pb->add($input);
