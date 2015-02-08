@@ -10,6 +10,7 @@
     "handlebars": "*",
     "uglify-js": "*",
     "autoprefixer": "*",
-    "roole": "*"
+    "roole": "*",
+    "react-tools": "*"
   }
 }

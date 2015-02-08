@@ -99,6 +99,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `PackerFilter`: compresses Javascript using Dean Edwards's Packer
  * `PhpCssEmbedFilter`: embeds image data in your stylesheet
  * `PngoutFilter`: optimize your PNGs
+ * `ReactJsxFilter`: compiles React JSX into JavaScript
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
  * `ScssphpFilter`: parses SCSS using scssphp
