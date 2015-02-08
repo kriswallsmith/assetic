@@ -13,31 +13,15 @@ use Assetic\Exception\FilterException;
  */
 class ReactJsxFilter extends BaseNodeFilter
 {
-    /**
-     * @var string
-     */
     private $jsxBin;
-
-    /**
-     * @var string
-     */
     private $nodeBin;
 
-    /**
-     * @param string $jsxBin
-     * @param string $nodeBin
-     */
     public function __construct($jsxBin = '/usr/bin/jsx', $nodeBin = null)
     {
         $this->jsxBin = $jsxBin;
         $this->nodeBin = $nodeBin;
     }
 
-    /**
-     * Filters an asset after it has been loaded.
-     *
-     * @param AssetInterface $asset An asset
-     */
     public function filterLoad(AssetInterface $asset)
     {
         $inputDir = $this->createTempDir();
@@ -76,11 +60,6 @@ class ReactJsxFilter extends BaseNodeFilter
         rmdir($outputDir);
     }
 
-    /**
-     * Filters an asset just before it's dumped.
-     *
-     * @param AssetInterface $asset An asset
-     */
     public function filterDump(AssetInterface $asset)
     {
     }
