@@ -4,6 +4,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Compiles JSX (for use with React) into JavaScript.
@@ -28,13 +29,12 @@ class ReactJsxFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->jsxBin)
             : array($this->jsxBin));
 
-        $inputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_reactjsx_input');
+        $inputDir = FilesystemUtils::createThrowAwayDirectory('jsx_in');
         $inputFile = $inputDir.DIRECTORY_SEPARATOR.'asset.js';
-        $outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_reactjsx_output');
+        $outputDir = FilesystemUtils::createThrowAwayDirectory('jsx_out');
         $outputFile = $outputDir.DIRECTORY_SEPARATOR.'asset.js';
 
-        // create the input directory and asset file
-        mkdir($inputDir);
+        // create the asset file
         file_put_contents($inputFile, $asset->getContent());
 
         $builder

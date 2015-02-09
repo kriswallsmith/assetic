@@ -13,6 +13,7 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Loads SASS files.
@@ -45,7 +46,7 @@ class SassFilter extends BaseSassFilter
     {
         $this->sassPath = $sassPath;
         $this->rubyPath = $rubyPath;
-        $this->cacheLocation = realpath(sys_get_temp_dir());
+        $this->cacheLocation = FilesystemUtils::getTemporaryDirectory();
     }
 
     public function setUnixNewlines($unixNewlines)
@@ -165,7 +166,7 @@ class SassFilter extends BaseSassFilter
         }
 
         // input
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_sass'));
+        $pb->add($input = FilesystemUtils::createTemporaryFile('sass'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();

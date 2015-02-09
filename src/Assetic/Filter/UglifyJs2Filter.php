@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * UglifyJs2 filter.
@@ -118,8 +119,8 @@ class UglifyJs2Filter extends BaseNodeFilter
         }
 
         // input and output files
-        $input = tempnam(sys_get_temp_dir(), 'assetic_uglifyjs2_input');
-        $output = tempnam(sys_get_temp_dir(), 'assetic_uglifyjs2_output');
+        $input  = FilesystemUtils::createTemporaryFile('uglifyjs2_in');
+        $output = FilesystemUtils::createTemporaryFile('uglifyjs2_out');
 
         file_put_contents($input, $asset->getContent());
         $pb->add('-o')->add($output)->add($input);

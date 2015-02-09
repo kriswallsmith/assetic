@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through Sprockets.
@@ -89,10 +90,10 @@ EOF;
             $more .= "\n";
         }
 
-        $tmpAsset = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
+        $tmpAsset = FilesystemUtils::createTemporaryFile('sprockets_asset');
         file_put_contents($tmpAsset, $asset->getContent());
 
-        $input = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
+        $input = FilesystemUtils::createTemporaryFile('sprockets_in');
         file_put_contents($input, sprintf($format,
             $this->sprocketsLib
                 ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))

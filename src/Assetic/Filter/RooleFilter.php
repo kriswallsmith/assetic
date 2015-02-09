@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Loads Roole files.
@@ -40,7 +41,7 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = tempnam(sys_get_temp_dir(), 'assetic_roole');
+        $input = FilesystemUtils::createTemporaryFile('roole');
         $output = $input.'.css';
 
         file_put_contents($input, $asset->getContent());

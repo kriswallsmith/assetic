@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Precompiles Handlebars templates for use in the Ember.js framework. This filter
@@ -41,11 +42,10 @@ class EmberPrecompileFilter extends BaseNodeFilter
 
         $templateName = basename($asset->getSourcePath());
 
-        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_ember_input');
+        $inputDirPath = FilesystemUtils::createThrowAwayDirectory('ember_in');
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;
-        $outputPath = tempnam(sys_get_temp_dir(), 'assetic_ember_output');
+        $outputPath = FilesystemUtils::createTemporaryFile('ember_out');
 
-        mkdir($inputDirPath);
         file_put_contents($inputPath, $asset->getContent());
 
         $pb->add($inputPath)->add('-f')->add($outputPath);
