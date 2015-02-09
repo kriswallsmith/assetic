@@ -38,7 +38,11 @@ class TypeScriptFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->tscBin)
             : array($this->tscBin));
 
-        $templateName = basename($asset->getSourcePath());
+        if ($sourcePath = $asset->getSourcePath()) {
+            $templateName = basename($sourcePath);
+        } else {
+            $templateName = 'asset';
+        }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('typescript_in');
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
