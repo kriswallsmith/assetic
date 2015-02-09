@@ -40,7 +40,11 @@ class EmberPrecompileFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->emberBin)
             : array($this->emberBin));
 
-        $templateName = basename($asset->getSourcePath());
+        if ($sourcePath = $asset->getSourcePath()) {
+            $templateName = basename($sourcePath);
+        } else {
+            throw new \LogicException('The embed-precompile filter requires that assets have a source path set');
+        }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('ember_in');
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;

@@ -51,7 +51,11 @@ class HandlebarsFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->handlebarsBin)
             : array($this->handlebarsBin));
 
-        $templateName = basename($asset->getSourcePath());
+        if ($sourcePath = $asset->getSourcePath()) {
+            $templateName = basename($sourcePath);
+        } else {
+            throw new \LogicException('The handlebars filter requires that assets have a source path set');
+        }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('handlebars_in');
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;

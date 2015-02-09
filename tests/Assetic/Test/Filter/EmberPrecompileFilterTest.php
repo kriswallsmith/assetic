@@ -12,6 +12,7 @@
 namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\EmberPrecompileFilter;
 
 /**
@@ -19,7 +20,6 @@ use Assetic\Filter\EmberPrecompileFilter;
  */
 class EmberPrecompileFilterTest extends FilterTestCase
 {
-    private $asset;
     private $filter;
 
     protected function setUp()
@@ -31,25 +31,34 @@ class EmberPrecompileFilterTest extends FilterTestCase
             $this->markTestSkipped('Unable to find `ember-precompile` executable.');
         }
 
-        $this->asset = new FileAsset(__DIR__.'/fixtures/handlebars/template.handlebars');
-        $this->asset->load();
-
         $this->filter = new EmberPrecompileFilter($emberBin, $nodeBin);
     }
 
     protected function tearDown()
     {
-        $this->asset = null;
         $this->filter = null;
     }
 
-    public function testEmberPrecompile()
+    public function testFileAsset()
     {
-        $this->filter->filterLoad($this->asset);
+        $asset = new FileAsset(__DIR__.'/fixtures/handlebars/template.handlebars');
+        $asset->load();
 
-        $this->assertNotContains('{{ var }}', $this->asset->getContent());
+        $this->filter->filterLoad($asset);
 
-        $this->assertContains('Ember.TEMPLATES["template"]', $this->asset->getContent());
-        $this->assertContains('data.buffer.push("<div id=\"test\"><h2>");', $this->asset->getContent());
+        $this->assertNotContains('{{ var }}', $asset->getContent());
+        $this->assertContains('Ember.TEMPLATES["template"]', $asset->getContent());
+        $this->assertContains('data.buffer.push("<div id=\"test\"><h2>");', $asset->getContent());
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testStringAsset()
+    {
+        $asset = new StringAsset(file_get_contents(__DIR__.'/fixtures/handlebars/template.handlebars'));
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
     }
 }
