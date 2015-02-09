@@ -20,19 +20,17 @@ use Assetic\Exception\FilterException;
  * @link http://coffeescript.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CoffeeScriptFilter extends BaseNodeFilter
+class CoffeeScriptFilter extends BaseProcessFilter
 {
     private $coffeeBin;
-    private $nodeBin;
 
     // coffee options
     private $bare;
     private $noHeader;
 
-    public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null)
+    public function __construct($coffeeBin = 'coffee')
     {
         $this->coffeeBin = $coffeeBin;
-        $this->nodeBin = $nodeBin;
     }
 
     public function setBare($bare)
@@ -47,14 +45,11 @@ class CoffeeScriptFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = tempnam(sys_get_temp_dir(), 'assetic_coffeescript');
-        file_put_contents($input, $asset->getContent());
+        $pb = $this->createProcessBuilder();
+        $pb->inheritEnvironmentVariables();
 
-        $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->coffeeBin)
-            : array($this->coffeeBin));
-
-        $pb->add('-cp');
+        // the coffee binary
+        $pb->add($this->coffeeBin);
 
         if ($this->bare) {
             $pb->add('--bare');
@@ -64,10 +59,21 @@ class CoffeeScriptFilter extends BaseNodeFilter
             $pb->add('--no-header');
         }
 
-        $pb->add($input);
+        // compile to JavaScript, otherwise coffee will run the script
+        $pb->add('--compile');
+
+        // we want it to print the output rather than run it
+        $pb->add('--print');
+
+        // read content from standard input
+        $pb->add("--stdio");
+
+        // set the input to be sent to stdin as the current asset content,
+        // to maintain the ability to chain filters
+        $pb->setInput($asset->getContent());
+
         $proc = $pb->getProcess();
         $code = $proc->run();
-        unlink($input);
 
         if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
