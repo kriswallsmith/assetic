@@ -47,6 +47,7 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($dir.'/foo');
 
         $this->removeDir($dir);
+        rmdir(sys_get_temp_dir().'/assetic');
     }
 
     private function removeDir($dir)
