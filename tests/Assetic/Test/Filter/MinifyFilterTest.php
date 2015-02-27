@@ -34,7 +34,7 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
      * being tested here (minification is already tested in the library itself),
      * so I'll use reflection to get access to the result of that method.
      *
-     * @param FileAsset $asset
+     * @param  FileAsset $asset
      * @return mixed
      */
     protected function getMinifier(FileAsset $asset)
@@ -47,7 +47,8 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
         return $method->invoke($filter, $asset);
     }
 
-    public function testDetectJSFromFilename() {
+    public function testDetectJSFromFilename()
+    {
         $asset = new FileAsset(__DIR__.'/fixtures/minify/js.js');
         $asset->load();
 
@@ -56,7 +57,8 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('MatthiasMullie\\Minify\\JS', $minifier);
     }
 
-    public function testDetectCSSFromFilename() {
+    public function testDetectCSSFromFilename()
+    {
         $asset = new FileAsset(__DIR__.'/fixtures/minify/css.css');
         $asset->load();
 
@@ -65,7 +67,8 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('MatthiasMullie\\Minify\\CSS', $minifier);
     }
 
-    public function testDetectJSFromContent() {
+    public function testDetectJSFromContent()
+    {
         $asset = new FileAsset(__DIR__.'/fixtures/minify/js.txt');
         $asset->load();
 
@@ -74,7 +77,8 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('MatthiasMullie\\Minify\\JS', $minifier);
     }
 
-    public function testDetectCSSFromContent() {
+    public function testDetectCSSFromContent()
+    {
         $asset = new FileAsset(__DIR__.'/fixtures/minify/css.txt');
         $asset->load();
 
@@ -103,7 +107,6 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRelativeJSSourceUrlImportImports()
     {
-
         $asset = new FileAsset(__DIR__.'/fixtures/jsmin/js.js');
         $asset->load();
 

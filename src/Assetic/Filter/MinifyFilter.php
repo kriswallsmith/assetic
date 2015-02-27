@@ -32,7 +32,7 @@ class MinifyFilter implements FilterInterface
     {
         $minifier = $this->getMinifier($asset);
 
-        $minifier->add($asset->getSourceRoot() . '/' . $asset->getSourcePath());
+        $minifier->add($asset->getSourceRoot().'/'.$asset->getSourcePath());
         $minified = $minifier->minify();
 
         $asset->setContent($minified);
@@ -54,7 +54,7 @@ class MinifyFilter implements FilterInterface
      * any of those words, except for maybe in comments. Let's first strip
      * whatever looks like a CSS comment, then look for the keywords.
      *
-     * @param AssetInterface $asset
+     * @param  AssetInterface $asset
      * @return CSS|JS
      */
     protected function getMinifier(AssetInterface $asset)
@@ -64,9 +64,9 @@ class MinifyFilter implements FilterInterface
         $ext = pathinfo($path, PATHINFO_EXTENSION);
 
         if ($ext === 'js') {
-            return new JS;
+            return new JS();
         } elseif ($ext === 'css') {
-            return new CSS;
+            return new CSS();
         }
 
         // invalid extension, guess based on content
@@ -74,9 +74,9 @@ class MinifyFilter implements FilterInterface
         $content = preg_replace('/\/\*.*?\*\//s', '', $content);
         $match = preg_match('/(^|\s|;)(function|var|for|do|while|if|else|new|switch|return)(\s|;|\{|\})/', $content);
         if ($match) {
-            return new JS;
+            return new JS();
         } else {
-            return new CSS;
+            return new CSS();
         }
     }
 }
