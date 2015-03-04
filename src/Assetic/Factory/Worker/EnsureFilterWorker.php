@@ -56,6 +56,7 @@ class EnsureFilterWorker implements WorkerInterface
             (self::CHECK_TARGET === (self::CHECK_TARGET & $this->flags) && preg_match($this->pattern, $asset->getTargetPath()))
         ) {
             $asset->ensureFilter($this->filter);
+            return $asset;
         }
     }
 }
