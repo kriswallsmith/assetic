@@ -191,14 +191,7 @@ class CompassFilter extends BaseSassFilter
             $loadPaths[] = $dir;
         }
 
-        $tempDir = FilesystemUtils::getTemporaryDirectory();
-        if ($this->cacheLocation) {
-            $optionsConfig['sass_options']['cache_location'] = $this->cacheLocation;
-            $tempDir = $this->cacheLocation;
-        } else {
-            // compass does not seems to handle symlink, so we use realpath()
-            $tempDir = realpath(sys_get_temp_dir());
-        }
+        $tempDir = $this->cacheLocation ? $this->cacheLocation : FilesystemUtils::getTemporaryDirectory();
 
         $compassProcessArgs = array(
             $this->compassPath,
@@ -263,6 +256,10 @@ class CompassFilter extends BaseSassFilter
 
         if ($this->debugInfo) {
             $optionsConfig['sass_options']['debug_info'] = true;
+        }
+
+        if ($this->cacheLocation) {
+            $optionsConfig['sass_options']['cache_location'] = $this->cacheLocation;
         }
 
         if ($this->noCache) {
