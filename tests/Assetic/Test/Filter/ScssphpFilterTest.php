@@ -155,6 +155,18 @@ EOF;
         $this->assertCount(2, $children);
     }
 
+    public function testGetChildrenEmptyPath()
+    {
+        $factory = new AssetFactory(__DIR__.'/fixtures/sass');
+
+        $filter = $this->getFilter();
+        $filter->addImportPath(__DIR__.'/fixtures/sass');
+
+        $children = $filter->getChildren($factory, '@import "main";');
+
+        $this->assertCount(2, $children);
+    }
+
     public function testSetVariables()
     {
         $filter = $this->getFilter();
