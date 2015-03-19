@@ -16,6 +16,7 @@ use Assetic\Factory\LazyAssetManager;
 class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $factory;
+    private $am;
 
     protected function setUp()
     {
@@ -24,6 +25,12 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->am = new LazyAssetManager($this->factory);
+    }
+
+    protected function tearDown()
+    {
+        $this->factory = null;
+        $this->am = null;
     }
 
     public function testGetFromLoader()
@@ -35,7 +42,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $formula = array(
             array('js/core.js', 'js/more.js'),
             array('?yui_js'),
-            array('output' => 'js/all.js')
+            array('output' => 'js/all.js'),
         );
 
         $loader->expects($this->once())

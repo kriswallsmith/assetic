@@ -19,6 +19,8 @@ use Assetic\Filter\GssFilter;
  */
 class GssFilterTest extends FilterTestCase
 {
+    private $filter;
+
     protected function setUp()
     {
         if (!$javaBin = $this->findExecutable('java', 'JAVA_BIN')) {
@@ -30,6 +32,11 @@ class GssFilterTest extends FilterTestCase
         }
 
         $this->filter = new GssFilter($_SERVER['GSS_JAR'], $javaBin);
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     public function testCompile()

@@ -36,7 +36,7 @@ abstract class BaseNodeFilter extends BaseProcessFilter
 
         if ($this->nodePaths) {
             $this->mergeEnv($pb);
-            $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
+            $pb->setEnv('NODE_PATH', implode(PATH_SEPARATOR, $this->nodePaths));
         }
 
         return $pb;

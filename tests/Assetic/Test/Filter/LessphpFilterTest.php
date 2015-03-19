@@ -21,7 +21,7 @@ use Assetic\Filter\LessphpFilter;
  */
 class LessphpFilterTest extends FilterTestCase
 {
-    protected $filter;
+    private $filter;
 
     protected function setUp()
     {
@@ -30,6 +30,11 @@ class LessphpFilterTest extends FilterTestCase
         }
 
         $this->filter = new LessphpFilter();
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     /**
@@ -105,6 +110,24 @@ EOF;
         $this->filter->filterLoad($asset);
 
         $this->assertContains('green', $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+    }
+
+    /**
+     * @group integration
+     */
+    public function testRegisterFunction()
+    {
+        $asset = new StringAsset('.foo { color: bar(); }');
+        $asset->load();
+
+        $this->filter->registerFunction('bar', function () { return 'red';});
+        $this->filter->filterLoad($asset);
+
+        $expected = new StringAsset('.foo { color: red; }');
+        $expected->load();
+        $this->filter->filterLoad($expected);
+
+        $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
     }
 
     /**

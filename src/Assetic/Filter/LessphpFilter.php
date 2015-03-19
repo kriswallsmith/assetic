@@ -30,6 +30,7 @@ class LessphpFilter implements DependencyExtractorInterface
     private $presets = array();
     private $formatter;
     private $preserveComments;
+    private $customFunctions = array();
 
     /**
      * Lessphp Load Paths
@@ -90,6 +91,10 @@ class LessphpFilter implements DependencyExtractorInterface
             $lc->addImportDir($loadPath);
         }
 
+        foreach ($this->customFunctions as $name => $callable) {
+            $lc->registerFunction($name, $callable);
+        }
+
         if ($this->formatter) {
             $lc->setFormatter($this->formatter);
         }
@@ -99,6 +104,11 @@ class LessphpFilter implements DependencyExtractorInterface
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
+    }
+
+    public function registerFunction($name, $callable)
+    {
+        $this->customFunctions[$name] = $callable;
     }
 
     public function filterDump(AssetInterface $asset)

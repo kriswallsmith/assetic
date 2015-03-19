@@ -51,5 +51,4 @@ class UglifyCssFilterTest extends FilterTestCase
 CSS;
         $this->assertSame($expected, $this->asset->getContent());
     }
-
 }

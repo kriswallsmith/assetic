@@ -34,18 +34,20 @@ class SprocketsFilterTest extends FilterTestCase
 
         $this->filter = new SprocketsFilter($_SERVER['SPROCKETS_LIB'], $rubyBin);
 
-        $this->assetRoot = sys_get_temp_dir().'/assetic_sprockets';
+        $this->assetRoot = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_sprockets');
         if (is_dir($this->assetRoot)) {
-            $this->cleanup();
-        } else {
-            mkdir($this->assetRoot);
+            self::removeDirectory($this->assetRoot);
         }
+
+        mkdir($this->assetRoot);
     }
 
     protected function tearDown()
     {
+        self::removeDirectory($this->assetRoot);
+
         $this->filter = null;
-        $this->cleanup();
+        $this->assetRoot = null;
     }
 
     public function testFilterLoad()
@@ -62,15 +64,5 @@ class SprocketsFilterTest extends FilterTestCase
         $this->assertContains('/* include.js */', $asset->getContent());
         $this->assertContains('/* footer.js */', $asset->getContent());
         $this->assertFileExists($this->assetRoot.'/images/image.gif');
-    }
-
-    private function cleanup()
-    {
-        $it = new \RecursiveDirectoryIterator($this->assetRoot);
-        foreach (new \RecursiveIteratorIterator($it) as $path => $file) {
-            if (is_file($path)) {
-                unlink($path);
-            }
-        }
     }
 }

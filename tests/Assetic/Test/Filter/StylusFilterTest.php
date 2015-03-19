@@ -34,6 +34,11 @@ class StylusFilterTest extends FilterTestCase
         $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
     }
 
+    protected function tearDown()
+    {
+        $this->filter = null;
+    }
+
     public function testFilterLoad()
     {
         $asset = new StringAsset("body\n  font 12px Helvetica, Arial, sans-serif\n  color black");
@@ -52,7 +57,7 @@ class StylusFilterTest extends FilterTestCase
         $this->filter->setCompress(true);
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}\n", $asset->getContent(), '->filterLoad() parses the content and compress it');
+        $this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}", $asset->getContent(), '->filterLoad() parses the content and compress it');
     }
 
     public function testFilterLoadWithUseNib()

@@ -20,7 +20,7 @@ class CssUtilsTest extends \PHPUnit_Framework_TestCase
         $content = 'body { background: url(../images/bg.gif); }';
 
         $matches = array();
-        $actual = CssUtils::filterUrls($content, function($match) use(& $matches) {
+        $actual = CssUtils::filterUrls($content, function ($match) use (&$matches) {
             $matches[] = $match['url'];
         });
 
@@ -52,8 +52,9 @@ CSS;
         $content = 'A/*B*/C/*D*/E';
 
         $filtered = '';
-        $result = CssUtils::filterCommentless($content, function($part) use(& $filtered) {
+        $result = CssUtils::filterCommentless($content, function ($part) use (&$filtered) {
             $filtered .= $part;
+
             return $part;
         });
 

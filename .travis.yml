@@ -4,6 +4,12 @@ php:
     - 5.3
     - 5.4
     - 5.5
+    - 5.6
+    - hhvm
+
+matrix:
+    allow_failures:
+        - php: hhvm
 
 before_script:
     # php deps
@@ -14,6 +20,7 @@ before_script:
     - npm install uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
     - npm install
     - export UGLIFYJS_BIN=vendor/uglifyjs/node_modules/uglify-js/bin/uglifyjs
+    - export AUTOPREFIXER_BIN=node_modules/autoprefixer/autoprefixer
 
     # java deps
     - mkdir -p vendor/java
@@ -21,13 +28,14 @@ before_script:
     - export CLOSURE_JAR=vendor/java/compiler/compiler.jar
     - wget http://closure-stylesheets.googlecode.com/files/closure-stylesheets-20111230.jar && mv closure-stylesheets-20111230.jar vendor/java
     - export GSS_JAR=vendor/java/closure-stylesheets-20111230.jar
-    - wget https://github.com/downloads/nzakas/cssembed/cssembed-0.4.5.jar && mv cssembed-0.4.5.jar vendor/java
-    - export CSSEMBED_JAR=vendor/java/cssembed-0.4.5.jar
+#    TODO find the new URL for the cssembed JAR
+#    - wget https://github.com/downloads/nzakas/cssembed/cssembed-0.4.5.jar && mv cssembed-0.4.5.jar vendor/java
+#    - export CSSEMBED_JAR=vendor/java/cssembed-0.4.5.jar
     - wget http://yui.zenfs.com/releases/yuicompressor/yuicompressor-2.4.7.zip && unzip yuicompressor-2.4.7.zip -d vendor/java
     - export YUI_COMPRESSOR_JAR=vendor/java/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar
 
-    # # ruby deps (why doesn't this work?)
-    # - bundle install
+    # ruby deps
+    - bundle install
 
     # other deps
     - sudo apt-get install jpegoptim libjpeg-progs optipng

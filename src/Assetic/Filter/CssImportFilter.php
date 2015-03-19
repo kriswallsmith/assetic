@@ -41,7 +41,7 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
         $sourceRoot = $asset->getSourceRoot();
         $sourcePath = $asset->getSourcePath();
 
-        $callback = function($matches) use ($importFilter, $sourceRoot, $sourcePath) {
+        $callback = function ($matches) use ($importFilter, $sourceRoot, $sourcePath) {
             if (!$matches['url'] || null === $sourceRoot) {
                 return $matches[0];
             }

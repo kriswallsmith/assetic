@@ -59,5 +59,4 @@ class CallablesFilter implements FilterInterface, DependencyExtractorInterface
 
         return array();
     }
-
 }

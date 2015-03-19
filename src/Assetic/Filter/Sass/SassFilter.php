@@ -13,10 +13,7 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Assetic\Factory\AssetFactory;
-use Assetic\Filter\BaseProcessFilter;
-use Assetic\Filter\DependencyExtractorInterface;
-use Assetic\Util\CssUtils;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Loads SASS files.
@@ -24,7 +21,7 @@ use Assetic\Util\CssUtils;
  * @link http://sass-lang.com/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SassFilter extends BaseProcessFilter implements DependencyExtractorInterface
+class SassFilter extends BaseSassFilter
 {
     const STYLE_NESTED     = 'nested';
     const STYLE_EXPANDED   = 'expanded';
@@ -36,10 +33,11 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
     private $unixNewlines;
     private $scss;
     private $style;
+    private $precision;
     private $quiet;
     private $debugInfo;
     private $lineNumbers;
-    private $loadPaths = array();
+    private $sourceMap;
     private $cacheLocation;
     private $noCache;
     private $compass;
@@ -48,7 +46,7 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
     {
         $this->sassPath = $sassPath;
         $this->rubyPath = $rubyPath;
-        $this->cacheLocation = realpath(sys_get_temp_dir());
+        $this->cacheLocation = FilesystemUtils::getTemporaryDirectory();
     }
 
     public function setUnixNewlines($unixNewlines)
@@ -66,6 +64,11 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         $this->style = $style;
     }
 
+    public function setPrecision($precision)
+    {
+        $this->precision = $precision;
+    }
+
     public function setQuiet($quiet)
     {
         $this->quiet = $quiet;
@@ -81,14 +84,9 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         $this->lineNumbers = $lineNumbers;
     }
 
-    public function setLoadPaths(array $loadPaths)
+    public function setSourceMap($sourceMap)
     {
-        $this->loadPaths = $loadPaths;
-    }
-
-    public function addLoadPath($loadPath)
-    {
-        $this->loadPaths[] = $loadPath;
+        $this->sourceMap = $sourceMap;
     }
 
     public function setCacheLocation($cacheLocation)
@@ -131,6 +129,10 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
             $pb->add('--style')->add($this->style);
         }
 
+        if ($this->precision) {
+            $pb->add('--precision')->add($this->precision);
+        }
+
         if ($this->quiet) {
             $pb->add('--quiet');
         }
@@ -141,6 +143,10 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
 
         if ($this->lineNumbers) {
             $pb->add('--line-numbers');
+        }
+
+        if ($this->sourceMap) {
+            $pb->add('--sourcemap');
         }
 
         foreach ($this->loadPaths as $loadPath) {
@@ -160,7 +166,7 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
         }
 
         // input
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_sass'));
+        $pb->add($input = FilesystemUtils::createTemporaryFile('sass'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();
@@ -176,75 +182,5 @@ class SassFilter extends BaseProcessFilter implements DependencyExtractorInterfa
 
     public function filterDump(AssetInterface $asset)
     {
-    }
-
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
-        $loadPaths = $this->loadPaths;
-        if ($loadPath) {
-            array_unshift($loadPaths, $loadPath);
-        }
-
-        if (!$loadPaths) {
-            return array();
-        }
-
-        $children = array();
-        foreach (CssUtils::extractImports($content) as $reference) {
-            if ('.css' === substr($reference, -4)) {
-                // skip normal css imports
-                // todo: skip imports with media queries
-                continue;
-            }
-
-            // the reference may or may not have an extension or be a partial
-            if (pathinfo($reference, PATHINFO_EXTENSION)) {
-                $needles = array(
-                    $reference,
-                    self::partialize($reference),
-                );
-            } else {
-                $needles = array(
-                    $reference.'.scss',
-                    $reference.'.sass',
-                    self::partialize($reference).'.scss',
-                    self::partialize($reference).'.sass',
-                );
-            }
-
-            foreach ($loadPaths as $loadPath) {
-                foreach ($needles as $needle) {
-                    if (file_exists($file = $loadPath.'/'.$needle)) {
-                        $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
-                        foreach ($coll as $leaf) {
-                            $leaf->ensureFilter($this);
-                            $children[] = $leaf;
-                            goto next_reference;
-                        }
-                    }
-                }
-            }
-
-            next_reference:
-        }
-
-        return $children;
-    }
-
-    private static function partialize($reference)
-    {
-        $parts = pathinfo($reference);
-
-        if ('.' === $parts['dirname']) {
-            $partial = '_'.$parts['filename'];
-        } else {
-            $partial = $parts['dirname'].DIRECTORY_SEPARATOR.'_'.$parts['filename'];
-        }
-
-        if (isset($parts['extension'])) {
-            $partial .= '.'.$parts['extension'];
-        }
-
-        return $partial;
     }
 }

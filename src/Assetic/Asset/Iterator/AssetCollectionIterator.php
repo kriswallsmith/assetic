@@ -48,6 +48,7 @@ class AssetCollectionIterator implements \RecursiveIterator
      * Returns a copy of the current asset with filters and a target URL applied.
      *
      * @param Boolean $raw Returns the unmodified asset if true
+     *
      * @return \Assetic\Asset\AssetInterface
      */
     public function current($raw = false)

@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * UglifyJs2 filter.
@@ -30,6 +31,7 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $screwIe8;
     private $comments;
     private $wrap;
+    private $defines;
 
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -61,10 +63,15 @@ class UglifyJs2Filter extends BaseNodeFilter
     {
         $this->comments = $comments;
     }
-    
+
     public function setWrap($wrap)
     {
         $this->wrap = $wrap;
+    }
+
+    public function setDefines(array $defines)
+    {
+        $this->defines = $defines;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -73,12 +80,18 @@ class UglifyJs2Filter extends BaseNodeFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $pb = $this->createProcessBuilder(
+            $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin));
+            : array($this->uglifyjsBin)
+        );
 
         if ($this->compress) {
             $pb->add('--compress');
+
+            if (is_string($this->compress) && !empty($this->compress)) {
+                $pb->add($this->compress);
+            }
         }
 
         if ($this->beautify) {
@@ -96,14 +109,18 @@ class UglifyJs2Filter extends BaseNodeFilter
         if ($this->comments) {
             $pb->add('--comments')->add(true === $this->comments ? 'all' : $this->comments);
         }
-        
+
         if ($this->wrap) {
             $pb->add('--wrap')->add($this->wrap);
         }
 
+        if ($this->defines) {
+            $pb->add('--define')->add(implode(',', $this->defines));
+        }
+
         // input and output files
-        $input = tempnam(sys_get_temp_dir(), 'input');
-        $output = tempnam(sys_get_temp_dir(), 'output');
+        $input  = FilesystemUtils::createTemporaryFile('uglifyjs2_in');
+        $output = FilesystemUtils::createTemporaryFile('uglifyjs2_out');
 
         file_put_contents($input, $asset->getContent());
         $pb->add('-o')->add($output)->add($input);

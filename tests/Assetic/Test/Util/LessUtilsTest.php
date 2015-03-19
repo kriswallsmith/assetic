@@ -20,7 +20,7 @@ class LessUtilsTest extends \PHPUnit_Framework_TestCase
         $content = 'body { background: url(../images/bg.gif); }';
 
         $matches = array();
-        $actual = LessUtils::filterUrls($content, function($match) use(& $matches) {
+        $actual = LessUtils::filterUrls($content, function ($match) use (&$matches) {
             $matches[] = $match['url'];
         });
 
@@ -52,8 +52,9 @@ CSS;
         $content = 'A/*B*/C/*D*/E';
 
         $filtered = '';
-        $result = LessUtils::filterCommentless($content, function($part) use(& $filtered) {
+        $result = LessUtils::filterCommentless($content, function ($part) use (&$filtered) {
             $filtered .= $part;
+
             return $part;
         });
 
@@ -66,12 +67,32 @@ CSS;
         $content = "ACE // foo /* bar */\nbla";
 
         $filtered = '';
-        $result = LessUtils::filterCommentless($content, function($part) use(& $filtered) {
+        $result = LessUtils::filterCommentless($content, function ($part) use (&$filtered) {
             $filtered .= $part;
+
             return $part;
         });
 
         $this->assertEquals("ACE \nbla", $filtered);
         $this->assertEquals($content, $result);
+    }
+
+    public function testExtractImportsWithOption()
+    {
+        $content = <<<LESS
+@import () "empty";
+@import (reference) "foo.less";
+@import (inline) "not-less-compatible.css";
+@import (less) "foo.css";
+@import (css) "bar.less";
+@import (once) "once.less";
+@import (once) url("once_with_url.less");
+LESS;
+
+        $expected = array('empty', 'foo.less', 'not-less-compatible.css', 'foo.css', 'bar.less', 'once.less', 'once_with_url.less');
+        $actual = LessUtils::extractImports($content);
+
+        $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
+        $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
 }

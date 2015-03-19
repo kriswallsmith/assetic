@@ -15,9 +15,13 @@ use Assetic\Cache\FilesystemCache;
 
 class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCache()
+    public function testWithExistingDir()
     {
-        $cache = new FilesystemCache(sys_get_temp_dir());
+        $dir = sys_get_temp_dir().'/assetic_filesystemcachetest_testcache';
+        $this->removeDir($dir);
+        mkdir($dir);
+
+        $cache = new FilesystemCache($dir);
 
         $this->assertFalse($cache->has('foo'));
 
@@ -28,24 +32,30 @@ class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
 
         $cache->remove('foo');
         $this->assertFalse($cache->has('foo'));
+
+        $this->removeDir($dir);
     }
 
     public function testSetCreatesDir()
     {
         $dir = sys_get_temp_dir().'/assetic/fscachetest';
-
-        $tearDown = function() use ($dir) {
-            array_map('unlink', glob($dir.'/*'));
-            @rmdir($dir);
-        };
-
-        $tearDown();
+        $this->removeDir($dir);
 
         $cache = new FilesystemCache($dir);
         $cache->set('foo', 'bar');
 
         $this->assertFileExists($dir.'/foo');
 
-        $tearDown();
+        $this->removeDir($dir);
+        rmdir(sys_get_temp_dir().'/assetic');
+    }
+
+    private function removeDir($dir)
+    {
+        array_map('unlink', glob($dir.'/*'));
+
+        if (is_dir($dir)) {
+            rmdir($dir);
+        }
     }
 }

@@ -12,7 +12,6 @@
 namespace Assetic\Test;
 
 use Assetic\Asset\FileAsset;
-
 use Assetic\AssetManager;
 use Assetic\AssetWriter;
 
@@ -25,7 +24,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         $this->writer = new AssetWriter($this->dir, array(
             'locale' => array('en', 'de', 'fr'),
             'browser' => array('ie', 'firefox', 'other'),
-            'gzip' => array('gzip', '')
+            'gzip' => array('gzip', ''),
         ));
     }
 
@@ -81,13 +80,13 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         );
         $asset->expects($this->exactly(3))
             ->method('setValues')
-            ->will($this->returnCallback(function($values) use ($self, $expectedValues) {
+            ->will($this->returnCallback(function ($values) use ($self, $expectedValues) {
                 static $counter = 0;
                 $self->assertEquals($expectedValues[$counter++], $values);
             }));
         $asset->expects($this->exactly(3))
             ->method('getValues')
-            ->will($this->returnCallback(function() use ($expectedValues) {
+            ->will($this->returnCallback(function () use ($expectedValues) {
                 static $counter = 0;
 
                 return $expectedValues[$counter++];

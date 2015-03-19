@@ -30,7 +30,7 @@ class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
     {
         $data = base64_encode(file_get_contents(__DIR__.'/fixtures/home.png'));
 
-        $asset = new FileAsset(__DIR__ . '/fixtures/cssembed/test.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssembed/test.css');
         $asset->load();
 
         $filter = new PhpCssEmbedFilter();

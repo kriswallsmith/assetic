@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Compiles TypeScript into JavaScript.
@@ -37,13 +38,16 @@ class TypeScriptFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->tscBin)
             : array($this->tscBin));
 
-        $templateName = basename($asset->getSourcePath());
+        if ($sourcePath = $asset->getSourcePath()) {
+            $templateName = basename($sourcePath);
+        } else {
+            $templateName = 'asset';
+        }
 
-        $inputDirPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('input_dir');
+        $inputDirPath = FilesystemUtils::createThrowAwayDirectory('typescript_in');
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
-        $outputPath = tempnam(sys_get_temp_dir(), 'output');
+        $outputPath = FilesystemUtils::createTemporaryFile('typescript_out');
 
-        mkdir($inputDirPath);
         file_put_contents($inputPath, $asset->getContent());
 
         $pb->add($inputPath)->add('--out')->add($outputPath);

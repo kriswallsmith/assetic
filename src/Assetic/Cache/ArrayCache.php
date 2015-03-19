@@ -33,7 +33,7 @@ class ArrayCache implements CacheInterface
      */
     public function get($key)
     {
-        if(!$this->has($key)) {
+        if (!$this->has($key)) {
             throw new \RuntimeException('There is no cached value for '.$key);
         }
 

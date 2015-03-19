@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * UglifyJs filter.
@@ -29,10 +30,11 @@ class UglifyJsFilter extends BaseNodeFilter
     private $beautify;
     private $unsafe;
     private $mangle;
+    private $defines;
 
     /**
      * @param string $uglifyjsBin Absolute path to the uglifyjs executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
+     * @param string $nodeBin     Absolute path to the folder containg node.js executable
      */
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -76,6 +78,11 @@ class UglifyJsFilter extends BaseNodeFilter
         $this->mangle = $mangle;
     }
 
+    public function setDefines(array $defines)
+    {
+        $this->defines = $defines;
+    }
+
     /**
      * @see Assetic\Filter\FilterInterface::filterLoad()
      */
@@ -90,9 +97,11 @@ class UglifyJsFilter extends BaseNodeFilter
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $pb = $this->createProcessBuilder(
+            $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin));
+            : array($this->uglifyjsBin)
+        );
 
         if ($this->noCopyright) {
             $pb->add('--no-copyright');
@@ -110,9 +119,15 @@ class UglifyJsFilter extends BaseNodeFilter
             $pb->add('--no-mangle');
         }
 
+        if ($this->defines) {
+            foreach ($this->defines as $define) {
+                $pb->add('-d')->add($define);
+            }
+        }
+
         // input and output files
-        $input = tempnam(sys_get_temp_dir(), 'input');
-        $output = tempnam(sys_get_temp_dir(), 'output');
+        $input  = FilesystemUtils::createTemporaryFile('uglifyjs_in');
+        $output = FilesystemUtils::createTemporaryFile('uglifyjs_out');
 
         file_put_contents($input, $asset->getContent());
         $pb->add('-o')->add($output)->add($input);

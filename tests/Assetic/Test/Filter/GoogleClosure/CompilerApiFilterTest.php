@@ -59,7 +59,6 @@ EOF;
 
         $this->assertEquals($expected, $asset->getContent());
 
-
         $input = <<<EOF
 (function() {
     var int = 123;

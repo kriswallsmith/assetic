@@ -11,7 +11,6 @@
 
 namespace Assetic\Test\Filter\Sass;
 
-use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\Sass\SassFilter;
@@ -52,7 +51,7 @@ EOF;
         $this->filter->setStyle(SassFilter::STYLE_COMPACT);
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals("body { color: red; }\n", $asset->getContent(), '->filterLoad() parses the sass');
+        $this->assertEquals("body { color: #F00; }\n", $asset->getContent(), '->filterLoad() parses the sass');
     }
 
     /**
@@ -69,15 +68,13 @@ $red: #F00;
 
 EOF;
 
-        $expected = '.foo { color: red; }';
-
         $asset = new StringAsset($input, array(), null, 'foo.scss');
         $asset->load();
 
         $this->filter->setStyle(SassFilter::STYLE_COMPACT);
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals(".foo { color: red; }\n", $asset->getContent(), '->filterLoad() detects SCSS based on source path extension');
+        $this->assertEquals(".foo { color: #F00; }\n", $asset->getContent(), '->filterLoad() detects SCSS based on source path extension');
     }
 
     public function testGetChildrenCatchesSassImports()

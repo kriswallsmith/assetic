@@ -34,7 +34,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
             array(
                 'locale'  => array('en', 'de', 'fr'),
                 'browser' => array('ie', 'firefox', 'other'),
-                'gzip'    => array('gzip', '')
+                'gzip'    => array('gzip', ''),
             )
         );
 
@@ -48,7 +48,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
         // no variables
         $tests[] = array(
             array(),
-            array(array())
+            array(array()),
         );
 
         // one variables
@@ -58,7 +58,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
                 array('locale' => 'en'),
                 array('locale' => 'de'),
                 array('locale' => 'fr'),
-            )
+            ),
         );
 
         // two variables
@@ -74,7 +74,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
                 array('locale' => 'en', 'browser' => 'other'),
                 array('locale' => 'de', 'browser' => 'other'),
                 array('locale' => 'fr', 'browser' => 'other'),
-            )
+            ),
         );
 
         // three variables
@@ -99,7 +99,7 @@ class VarUtilsTest extends \PHPUnit_Framework_TestCase
                 array('locale' => 'en', 'browser' => 'other', 'gzip' => ''),
                 array('locale' => 'de', 'browser' => 'other', 'gzip' => ''),
                 array('locale' => 'fr', 'browser' => 'other', 'gzip' => ''),
-            )
+            ),
         );
 
         return $tests;

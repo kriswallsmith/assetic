@@ -13,6 +13,7 @@ namespace Assetic\Factory\Loader;
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Loads asset formulae from PHP files.
@@ -59,10 +60,10 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             $current = self::tokenToString($token);
             // loop through each prototype (by reference)
             foreach (array_keys($this->prototypes) as $i) {
-                $prototype =& $this->prototypes[$i][0];
+                $prototype = & $this->prototypes[$i][0];
                 $options = $this->prototypes[$i][1];
-                $buffer =& $buffers[$i];
-                $level =& $bufferLevels[$i];
+                $buffer = & $buffers[$i];
+                $level = & $bufferLevels[$i];
 
                 if (isset($buffersInWildcard[$i])) {
                     switch ($current) {
@@ -101,7 +102,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
 
     private function processCall($call, array $protoOptions = array())
     {
-        $tmp = tempnam(sys_get_temp_dir(), 'assetic');
+        $tmp = FilesystemUtils::createTemporaryFile('php_formula_loader');
         file_put_contents($tmp, implode("\n", array(
             '<?php',
             $this->registerSetupCode(),
