@@ -287,4 +287,44 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(456, $this->factory->getLastModified($asset));
     }
+
+    public function testApplyWorkers()
+    {
+        $assetLeaf = $this->getMock('Assetic\Asset\AssetInterface');
+        $worker = $this->getMockBuilder('Assetic\Factory\Worker\EnsureFilterWorker')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $assetCollection = $this->getMockBuilder('Assetic\Asset\AssetCollection')
+            ->setConstructorArgs(array(
+                array($assetLeaf)
+            ))
+            ->setMethods(array('replaceLeaf'))
+            ->getMock();
+
+        // test loops
+        $worker->expects($this->exactly(2))
+            ->method('process')
+            ->with($this->anything())
+            ->will($this->returnCallback(function($asset) {
+                if ($asset instanceof \Assetic\Asset\AssetInterface) {
+                    $asset->test = 123;
+                    return $asset;
+                }
+            }));
+
+        $assetCollection->expects($this->once())
+            ->method('replaceLeaf')
+            ->with($this->isInstanceOf('Assetic\Asset\AssetInterface'), $this->isInstanceOf('Assetic\Asset\AssetInterface'));
+
+        // reflection
+        $factoryReflection = new \ReflectionClass(get_class($this->factory));
+
+        $workers = $factoryReflection->getProperty('workers');
+        $workers->setAccessible(true);
+        $workers->setValue($this->factory, array($worker));
+
+        $applyWorkers = $factoryReflection->getMethod('applyWorkers');
+        $applyWorkers->setAccessible(true);
+        $this->assertInstanceOf('Assetic\Asset\AssetCollection', $applyWorkers->invoke($this->factory, $assetCollection));
+    }
 }
