@@ -16,6 +16,7 @@ class ReactJsxFilter extends BaseNodeFilter
 {
     private $jsxBin;
     private $nodeBin;
+    private $options = [];
 
     public function __construct($jsxBin = '/usr/bin/jsx', $nodeBin = null)
     {
@@ -42,6 +43,10 @@ class ReactJsxFilter extends BaseNodeFilter
             ->add($outputDir)
             ->add('--no-cache-dir')
         ;
+
+        foreach ($this->options as $option) {
+            $builder->add($option);
+        }
 
         $proc = $builder->getProcess();
         $code = $proc->run();
@@ -71,5 +76,25 @@ class ReactJsxFilter extends BaseNodeFilter
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    /**
+     * Set options used by the process builder
+     *
+     * @param array $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * Add option used by the process builder
+     *
+     * @param string $option
+     */
+    public function addOption($option)
+    {
+        $this->options[] = $option;
     }
 }
