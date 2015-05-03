@@ -81,13 +81,16 @@ class CoffeeScriptFilter extends BaseNodeFilter
         unlink($input.'.js.map');
 
         $content = str_replace("\n".'//# sourceMappingURL='.basename($input).'.js.map'."\n", '', $content);
+
+
         $asset->setContent($content);
 
         $contentMap = json_decode($contentMap);
         unset($contentMap->file);
         unset($contentMap->sourceRoot);
         $contentMap->sources[0] = $asset->getSourceRoot().'/'.$asset->getSourcePath();
-        $asset->setContentSourceMap(new \Kwf_SourceMaps_SourceMap($contentMap, $content));
+        $map = new \Kwf_SourceMaps_SourceMap($contentMap, $content);
+        $asset->setContent($map->getFileContentsInlineMap());
     }
 
     public function filterDump(AssetInterface $asset)

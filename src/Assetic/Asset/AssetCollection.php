@@ -152,23 +152,29 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             $parts[] = $asset->dump($additionalFilter);
         }
 
-        return implode("\n", $parts);
-    }
-
-    public function dumpSourceMap(FilterInterface $additionalFilter = null)
-    {
-        $map = \Kwf_SourceMaps_SourceMap::createEmptyMap('');
-
-        // loop through leaves and dump each asset
-        foreach ($this as $asset) {
-            $m = $asset->dumpSourceMap($additionalFilter);
-            if (!$m) {
-                $m = \Kwf_SourceMaps_SourceMap::createEmptyMap($asset->dump($additionalFilter));
+        //if at least one leave has sourcemaps create one
+        $createMap = false;
+        foreach ($parts as $part) {
+            if (\Kwf_SourceMaps_SourceMap::hasInline($part)) {
+                $createMap = true;
+                break;
             }
-            $map->concat($m);
         }
 
-        return $map;
+        if ($createMap) {
+            $map = \Kwf_SourceMaps_SourceMap::createEmptyMap('');
+            foreach ($parts as $part) {
+                if (\Kwf_SourceMaps_SourceMap::hasInline($part)) {
+                    $m = Kwf_SourceMaps_SourceMap::createFromInline($part);
+                } else {
+                    $m = \Kwf_SourceMaps_SourceMap::createEmptyMap($part);
+                }
+                $map->concat($m);
+            }
+            return $map->getFileContentsInlineMap();
+        } else {
+            return implode("\n", $parts);
+        }
     }
 
     public function getContent()
@@ -176,19 +182,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         return $this->content;
     }
 
-    public function getContentSourceMap()
-    {
-        return $this->contentSourceMap;
-    }
-
     public function setContent($content)
     {
         $this->content = $content;
-    }
-
-    public function setContentSourceMap(\Kwf_SourceMaps_SourceMap $contentSourceMap)
-    {
-        $this->contentSourceMap = $contentSourceMap;
     }
 
     public function getSourceRoot()

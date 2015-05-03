@@ -94,7 +94,6 @@ abstract class BaseAsset implements AssetInterface
 
         $filter->filterLoad($asset);
         $this->content = $asset->getContent();
-        $this->contentSourceMap = $asset->getContentSourceMap();
 
         $this->loaded = true;
     }
@@ -116,41 +115,14 @@ abstract class BaseAsset implements AssetInterface
         return $asset->getContent();
     }
 
-    public function dumpSourceMap(FilterInterface $additionalFilter = null)
-    {
-        if (!$this->loaded) {
-            $this->load();
-        }
-
-        $filter = clone $this->filters;
-        if ($additionalFilter) {
-            $filter->ensure($additionalFilter);
-        }
-
-        $asset = clone $this;
-        $filter->filterDump($asset);
-
-        return $asset->getContentSourceMap();
-    }
-
     public function getContent()
     {
         return $this->content;
     }
 
-    public function getContentSourceMap()
-    {
-        return $this->contentSourceMap;
-    }
-
     public function setContent($content)
     {
         $this->content = $content;
-    }
-
-    public function setContentSourceMap(\Kwf_SourceMaps_SourceMap $sourceMap)
-    {
-        $this->contentSourceMap = $sourceMap;
     }
 
     public function getSourceRoot()

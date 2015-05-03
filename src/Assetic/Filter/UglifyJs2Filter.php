@@ -121,16 +121,20 @@ class UglifyJs2Filter extends BaseNodeFilter
         $outputSourceMap = tempnam(sys_get_temp_dir(), 'outputSourceMap');
         $pb->add('--source-map')->add($outputSourceMap);
 
-        $inputSourceMap = $asset->getContentSourceMap();
-        if ($inputSourceMap) {
+        $inputContents = $asset->getContent();
+
+        $inputSourceMap = false;
+        if (\Kwf_SourceMaps_SourceMap::hasInline($inputContents)) {
+            $inputSourceMap = \Kwf_SourceMaps_SourceMap::createFromInline($inputContents);
             $inputSourceMapTempFile = tempnam(sys_get_temp_dir(), 'inputSourceMap');
             file_put_contents($inputSourceMapTempFile, $inputSourceMap->getMapContents(false));
             $pb->add('--in-source-map')->add($inputSourceMapTempFile);
+            $inputContents = $inputSourceMap->getFileContents();
         }
 
         // input and output files
         $input = tempnam(sys_get_temp_dir(), 'input');
-        file_put_contents($input, $asset->getContent());
+        file_put_contents($input, $inputContents);
         $output = tempnam(sys_get_temp_dir(), 'output');
         $pb->add('-o')->add($output)->add($input);
 
@@ -159,7 +163,7 @@ class UglifyJs2Filter extends BaseNodeFilter
 
         $content = file_get_contents($output);
         $content = str_replace("\n".'//# sourceMappingURL='.$outputSourceMap, '', $content);
-        $asset->setContent($content);
+
 
         $contentMap = json_decode(file_get_contents($outputSourceMap));
         unset($contentMap->file);
@@ -168,7 +172,9 @@ class UglifyJs2Filter extends BaseNodeFilter
         } else {
             $contentMap->sources[0] = $asset->getSourceRoot().'/'.$asset->getSourcePath();
         }
-        $asset->setContentSourceMap(new \Kwf_SourceMaps_SourceMap($contentMap, $content));
+
+        $map = new \Kwf_SourceMaps_SourceMap($contentMap, $content);
+        $asset->setContent($map->getFileContentsInlineMap());
 
         unlink($output);
         unlink($outputSourceMap);
