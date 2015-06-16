@@ -191,7 +191,7 @@ class CompassFilter extends BaseSassFilter
             $loadPaths[] = $dir;
         }
 
-        $tempDir = FilesystemUtils::getTemporaryDirectory();
+        $tempDir = $this->cacheLocation ? $this->cacheLocation : FilesystemUtils::getTemporaryDirectory();
 
         $compassProcessArgs = array(
             $this->compassPath,
