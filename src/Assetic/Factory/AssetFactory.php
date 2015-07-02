@@ -172,6 +172,10 @@ class AssetFactory
             $options['debug'] = $this->debug;
         }
 
+        if (!isset($options['name'])) {
+            $options['name'] = $this->generateAssetName($inputs, $filters, $options);
+        }
+
         if (!isset($options['root'])) {
             $options['root'] = array($this->root);
         } else {
@@ -180,10 +184,6 @@ class AssetFactory
             }
 
             $options['root'][] = $this->root;
-        }
-
-        if (!isset($options['name'])) {
-            $options['name'] = $this->generateAssetName($inputs, $filters, $options);
         }
 
         $asset = $this->createAssetCollection(array(), $options);
