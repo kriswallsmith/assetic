@@ -53,6 +53,7 @@ class StylusFilterTest extends FilterTestCase
         $this->filter->filterLoad($asset);
 
         $this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}", $asset->getContent(), '->filterLoad() parses the content and compress it');
+
     }
 
     public function testFilterLoadWithUseNib()
