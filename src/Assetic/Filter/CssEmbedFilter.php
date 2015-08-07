@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * CSSEmbed filter
@@ -120,7 +121,7 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
         }
 
         // input
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_cssembed'));
+        $pb->add($input = FilesystemUtils::createTemporaryFile('cssembed'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();

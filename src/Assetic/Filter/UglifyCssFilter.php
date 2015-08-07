@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * UglifyCss filter.
@@ -97,7 +98,7 @@ class UglifyCssFilter extends BaseNodeFilter
         }
 
         // input and output files
-        $input = tempnam(sys_get_temp_dir(), 'input');
+        $input = FilesystemUtils::createTemporaryFile('uglifycss');
 
         file_put_contents($input, $asset->getContent());
         $pb->add($input);

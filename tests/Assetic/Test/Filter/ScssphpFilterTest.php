@@ -67,9 +67,9 @@ EOF;
     {
         $expected = <<<EOF
 .shadow {
-  -webkit-box-shadow : 10px 10px 8px red;
-  -moz-box-shadow : 10px 10px 8px red;
-  box-shadow : 10px 10px 8px red; }
+  -webkit-box-shadow: 10px 10px 8px red;
+  -moz-box-shadow: 10px 10px 8px red;
+  box-shadow: 10px 10px 8px red; }
 
 EOF;
 
@@ -135,7 +135,7 @@ EOF;
         $filter->setFormatter("scss_formatter_compressed");
         $filter->filterLoad($actual);
 
-        $expected = new StringAsset('.foo{color:#fff;}');
+        $expected = new StringAsset('.foo{color:#fff}');
         $expected->load();
 
         $this->assertEquals(

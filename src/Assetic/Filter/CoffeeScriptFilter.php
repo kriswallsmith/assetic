@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Compiles CoffeeScript into Javascript.
@@ -47,7 +48,7 @@ class CoffeeScriptFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = tempnam(sys_get_temp_dir(), 'assetic_coffeescript');
+        $input = FilesystemUtils::createTemporaryFile('coffee');
         file_put_contents($input, $asset->getContent());
 
         $pb = $this->createProcessBuilder($this->nodeBin

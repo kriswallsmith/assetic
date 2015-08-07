@@ -12,6 +12,7 @@
 namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
+use Assetic\Asset\StringAsset;
 use Assetic\Filter\HandlebarsFilter;
 
 /**
@@ -19,7 +20,6 @@ use Assetic\Filter\HandlebarsFilter;
  */
 class HandlebarsFilterTest extends FilterTestCase
 {
-    private $asset;
     private $filter;
 
     protected function setUp()
@@ -31,41 +31,57 @@ class HandlebarsFilterTest extends FilterTestCase
             $this->markTestSkipped('Unable to find `handlebars` executable.');
         }
 
-        $this->asset = new FileAsset(__DIR__.'/fixtures/handlebars/template.handlebars');
-        $this->asset->load();
-
         $this->filter = new HandlebarsFilter($handlebarsBin, $nodeBin);
     }
 
     protected function tearDown()
     {
-        $this->asset = null;
         $this->filter = null;
     }
 
     public function testHandlebars()
     {
-        $this->filter->filterLoad($this->asset);
+        $asset = new FileAsset(__DIR__.'/fixtures/handlebars/template.handlebars');
+        $asset->load();
 
-        $this->assertNotContains('{{ var }}', $this->asset->getContent());
-        $this->assertContains('(function() {', $this->asset->getContent());
+        $this->filter->filterLoad($asset);
+
+        $this->assertNotContains('{{ var }}', $asset->getContent());
+        $this->assertContains('(function() {', $asset->getContent());
     }
 
     public function testSimpleHandlebars()
     {
-        $this->filter->setSimple(true);
-        $this->filter->filterLoad($this->asset);
+        $asset = new FileAsset(__DIR__.'/fixtures/handlebars/template.handlebars');
+        $asset->load();
 
-        $this->assertNotContains('{{ var }}', $this->asset->getContent());
-        $this->assertNotContains('(function() {', $this->asset->getContent());
+        $this->filter->setSimple(true);
+        $this->filter->filterLoad($asset);
+
+        $this->assertNotContains('{{ var }}', $asset->getContent());
+        $this->assertNotContains('(function() {', $asset->getContent());
     }
 
     public function testMinimizeHandlebars()
     {
-        $this->filter->setMinimize(true);
-        $this->filter->filterLoad($this->asset);
+        $asset = new FileAsset(__DIR__.'/fixtures/handlebars/template.handlebars');
+        $asset->load();
 
-        $this->assertNotContains('{{ var }}', $this->asset->getContent());
-        $this->assertNotContains("\n", $this->asset->getContent());
+        $this->filter->setMinimize(true);
+        $this->filter->filterLoad($asset);
+
+        $this->assertNotContains('{{ var }}', $asset->getContent());
+        $this->assertNotContains("\n", $asset->getContent());
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testStringAssset()
+    {
+        $asset = new StringAsset(file_get_contents(__DIR__.'/fixtures/handlebars/template.handlebars'));
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
     }
 }

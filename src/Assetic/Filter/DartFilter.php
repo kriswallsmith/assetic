@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Compiles Dart into Javascript.
@@ -30,8 +31,8 @@ class DartFilter extends BaseProcessFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input  = tempnam(sys_get_temp_dir(), 'assetic_dart');
-        $output = tempnam(sys_get_temp_dir(), 'assetic_dart');
+        $input  = FilesystemUtils::createTemporaryFile('dart');
+        $output = FilesystemUtils::createTemporaryFile('dart');
 
         file_put_contents($input, $asset->getContent());
 

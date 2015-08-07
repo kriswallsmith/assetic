@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through Jpegoptim.
@@ -62,7 +63,7 @@ class JpegoptimFilter extends BaseProcessFilter
             $pb->add('--max='.$this->max);
         }
 
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim'));
+        $pb->add($input = FilesystemUtils::createTemporaryFile('jpegoptim'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();
