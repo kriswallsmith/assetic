@@ -30,6 +30,7 @@
         "kamicane/packager": "*",
         "joliclic/javascript-packer": "*",
         "patchwork/jsqueeze": "~1.0",
+        "ianbogda/cssqueeze": "~1.0",
         "psr/log": "~1.0"
     },
     "suggest": {
@@ -38,7 +39,8 @@
         "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
         "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
-        "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor"
+        "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor",
+        "ianbogda/cssqueeze": "Assetic provides the integration with the CSSqueeze CSS compressor"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
