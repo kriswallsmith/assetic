@@ -18,8 +18,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~4",
-        "twig/twig": "~1.6",
-        "leafo/lessphp": "*",
+        "twig/twig": "~1.8",
+        "leafo/lessphp": "^0.3.7",
         "leafo/scssphp": "*@dev",
         "ptachoire/cssembed": "*",
         "leafo/scssphp-compass": "*@dev",
