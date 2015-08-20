@@ -1,10 +1,11 @@
 language: php
 
 addons:
-    packages:
-        - jpegoptim
-        - libjpeg-progs
-        - optipng
+    apt:
+        packages:
+            - jpegoptim
+            - libjpeg-progs
+            - optipng
 
 sudo: false
 
