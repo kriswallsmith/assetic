@@ -48,7 +48,7 @@ class AsseticExtension extends \Twig_Extension
     {
         $functions = array();
         foreach ($this->functions as $function => $filter) {
-            $functions[$function] = new AsseticFilterFunction($function);
+            $functions[] = new AsseticFilterFunction($function);
         }
 
         return $functions;
