@@ -1,6 +1,5 @@
 {
     "name": "kriswallsmith/assetic",
-    "minimum-stability": "dev",
     "description": "Asset Management for PHP",
     "keywords": [ "assets", "compression", "minification" ],
     "homepage": "https://github.com/kriswallsmith/assetic",
@@ -21,15 +20,15 @@
         "phpunit/phpunit": "~4",
         "twig/twig": "~1.6",
         "leafo/lessphp": "*",
-        "leafo/scssphp": "*",
+        "leafo/scssphp": "*@dev",
         "ptachoire/cssembed": "*",
-        "leafo/scssphp-compass": "*",
+        "leafo/scssphp-compass": "*@dev",
 
         "cssmin/cssmin": "*",
         "mrclay/minify": "*",
         "kamicane/packager": "*",
         "joliclic/javascript-packer": "*",
-        "patchwork/jsqueeze": "~1.0",
+        "patchwork/jsqueeze": "~1.0|~2.0",
         "psr/log": "~1.0"
     },
     "suggest": {

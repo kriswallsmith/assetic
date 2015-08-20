@@ -1,20 +1,40 @@
 language: php
 
+addons:
+    packages:
+        - jpegoptim
+        - libjpeg-progs
+        - optipng
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache/files
+
 php:
     - 5.3
     - 5.4
     - 5.5
     - 5.6
+    - 7.0
     - hhvm
 
 matrix:
     allow_failures:
         - php: hhvm
+        - php: 7.0
+    include:
+        - php: 5.3
+          env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
+        - php: 5.6
+          env: DEPENDENCIES=dev
 
 before_script:
     # php deps
     - composer self-update
-    - composer install --dev
+    - if [ "$DEPENDENCIES" = "dev" ]; then perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json; fi;
+    - composer update $COMPOSER_FLAGS
 
     # node deps
     - npm install uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
@@ -38,7 +58,6 @@ before_script:
     - bundle install
 
     # other deps
-    - sudo apt-get install jpegoptim libjpeg-progs optipng
 
     - wget -q http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip && unzip dartsdk-linux-x64-release.zip && mv dart-sdk vendor
     - export DART_BIN=vendor/dart-sdk/bin/dart2js
