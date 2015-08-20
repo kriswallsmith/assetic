@@ -22,7 +22,7 @@ use MatthiasMullie\Minify\CSS;
  * @link http://www.minifier.org
  * @author Matthias Mullie <minify@mullie.eu>
  */
-class MinifyFilter implements FilterInterface
+class MMMinifyFilter implements FilterInterface
 {
     public function filterLoad(AssetInterface $asset)
     {
@@ -57,7 +57,7 @@ class MinifyFilter implements FilterInterface
      * @param  AssetInterface $asset
      * @return CSS|JS
      */
-    protected function getMinifier(AssetInterface $asset)
+    private function getMinifier(AssetInterface $asset)
     {
         // figure out if CSS or JS file based on file extension
         $path = $asset->getSourcePath();

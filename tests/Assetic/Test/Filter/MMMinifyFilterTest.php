@@ -12,12 +12,12 @@
 namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
-use Assetic\Filter\MinifyFilter;
+use Assetic\Filter\MMMinifyFilter;
 
 /**
  * @group integration
  */
-class MinifyFilterTest extends \PHPUnit_Framework_TestCase
+class MMMinifyFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -39,7 +39,7 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
      */
     protected function getMinifier(FileAsset $asset)
     {
-        $filter = new MinifyFilter();
+        $filter = new MMMinifyFilter();
         $object = new \ReflectionObject($filter);
         $method = $object->getMethod('getMinifier');
         $method->setAccessible(true);
@@ -49,7 +49,7 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectJSFromFilename()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/minify/js.js');
+        $asset = new FileAsset(__DIR__.'/fixtures/mmminify/js.js');
         $asset->load();
 
         $minifier = $this->getMinifier($asset);
@@ -59,7 +59,7 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectCSSFromFilename()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/minify/css.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/mmminify/css.css');
         $asset->load();
 
         $minifier = $this->getMinifier($asset);
@@ -69,7 +69,7 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectJSFromContent()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/minify/js.txt');
+        $asset = new FileAsset(__DIR__.'/fixtures/mmminify/js.txt');
         $asset->load();
 
         $minifier = $this->getMinifier($asset);
@@ -79,7 +79,7 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectCSSFromContent()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/minify/css.txt');
+        $asset = new FileAsset(__DIR__.'/fixtures/mmminify/css.txt');
         $asset->load();
 
         $minifier = $this->getMinifier($asset);
@@ -92,25 +92,21 @@ class MinifyFilterTest extends \PHPUnit_Framework_TestCase
         $asset = new FileAsset(__DIR__.'/fixtures/cssmin/main.css');
         $asset->load();
 
-        $filter = new MinifyFilter(__DIR__.'/fixtures/cssmin');
+        $filter = new MMMinifyFilter(__DIR__.'/fixtures/cssmin');
         $filter->filterDump($asset);
 
         $this->assertEquals('body{color:white}body{background:black}', $asset->getContent());
     }
 
     /**
-     * This method has a horrible function name, there are no relative URLs
-     * to be imported.
-     * I assume some JS minifier lifted this from the CSS tests, but didn't
-     * bother changing the name and now they all share this name?
-     * Anyway, I'm keeping it, it's similar to all other JS minifier tests.
+     * This is similar to other minifier test's testRelativeJSSourceUrlImportImports
      */
-    public function testRelativeJSSourceUrlImportImports()
+    public function testCommonJSSnippet()
     {
         $asset = new FileAsset(__DIR__.'/fixtures/jsmin/js.js');
         $asset->load();
 
-        $filter = new MinifyFilter();
+        $filter = new MMMinifyFilter();
         $filter->filterDump($asset);
 
         $this->assertEquals('var a="abc";var bbb="u"', $asset->getContent());
