@@ -58,8 +58,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
 
-        $this->twig = new \Twig_Environment();
-        $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
+        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
         $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
     }
 

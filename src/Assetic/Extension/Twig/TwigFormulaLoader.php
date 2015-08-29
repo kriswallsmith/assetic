@@ -71,9 +71,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 ),
             );
         } elseif ($node instanceof \Twig_Node_Expression_Function) {
-            $name = version_compare(\Twig_Environment::VERSION, '1.2.0-DEV', '<')
-                ? $node->getNode('name')->getAttribute('name')
-                : $node->getAttribute('name');
+            $name = $node->getAttribute('name');
 
             if ($this->twig->getFunction($name) instanceof AsseticFilterFunction) {
                 $arguments = array();
