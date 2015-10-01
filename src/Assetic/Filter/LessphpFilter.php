@@ -31,6 +31,7 @@ class LessphpFilter implements DependencyExtractorInterface
     private $formatter;
     private $preserveComments;
     private $customFunctions = array();
+    private $options = array();
 
     /**
      * Lessphp Load Paths
@@ -62,6 +63,11 @@ class LessphpFilter implements DependencyExtractorInterface
     public function setPresets(array $presets)
     {
         $this->presets = $presets;
+    }
+    
+    public function setOptions(array $options)
+    {
+    	$this->options = $options;
     }
 
     /**
@@ -101,6 +107,10 @@ class LessphpFilter implements DependencyExtractorInterface
 
         if (null !== $this->preserveComments) {
             $lc->setPreserveComments($this->preserveComments);
+        }
+        
+        if (method_exists($lc, 'setOptions') && count($this->options) > 0 ) {
+        	$lc->setOptions($this->options);
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
