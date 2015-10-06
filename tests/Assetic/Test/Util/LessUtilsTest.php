@@ -77,7 +77,31 @@ EOF;
 
     public function testFilterCommentlessLess()
     {
-        $content = "ACE // foo /* bar */\nbla";
+        $content = <<<EOF
+@import 'some/*-dir-*/file.jpg';
+@import 'any//file.ico';
+@import "sprites/*.png";
+/* some comment */
+// inline comment
+/* multi-line
+// comment */.finished {color: red;}
+.foo {color: green;}// /* inline comment 2
+#shown {color: /*red*/blue;}
+.bar {font-family: /*"*/"*/any";}
+
+EOF;
+        $expected = <<<EOF
+@import 'some/*-dir-*/file.jpg';
+@import 'any//file.ico';
+@import "sprites/*.png";
+
+
+.finished {color: red;}
+.foo {color: green;}
+#shown {color: blue;}
+.bar {font-family: "*/any";}
+
+EOF;
 
         $filtered = '';
         $result = LessUtils::filterCommentless($content, function ($part) use (&$filtered) {
@@ -86,7 +110,7 @@ EOF;
             return $part;
         });
 
-        $this->assertEquals("ACE \nbla", $filtered);
+        $this->assertEquals($expected, $filtered);
         $this->assertEquals($content, $result);
     }
 
