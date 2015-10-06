@@ -49,7 +49,20 @@ CSS;
 
     public function testFilterCommentless()
     {
-        $content = 'A/*B*/C/*D*/E';
+        $content = <<<EOF
+@import 'some/*-dir-*/file.jpg';
+@import "sprites/*.png";
+/* some comment */
+.foo {font-family: /*"*/"*/any";}
+
+EOF;
+        $expected = <<<EOF
+@import 'some/*-dir-*/file.jpg';
+@import "sprites/*.png";
+
+.foo {font-family: "*/any";}
+
+EOF;
 
         $filtered = '';
         $result = LessUtils::filterCommentless($content, function ($part) use (&$filtered) {
@@ -58,7 +71,7 @@ CSS;
             return $part;
         });
 
-        $this->assertEquals('ACE', $filtered);
+        $this->assertEquals($expected, $filtered);
         $this->assertEquals($content, $result);
     }
 
