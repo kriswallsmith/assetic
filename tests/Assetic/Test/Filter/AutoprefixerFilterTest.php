@@ -26,7 +26,7 @@ class AutoprefixerFilterTest extends FilterTestCase
 
     protected function setUp()
     {
-        $autoprefixerBin = $this->findExecutable('autoprefixer', 'AUTOPREFIXER_BIN');
+        $autoprefixerBin = $this->findExecutable('autoprefixer-cli', 'AUTOPREFIXER_BIN');
 
         if (!$autoprefixerBin) {
             $this->markTestSkipped('Unable to find `autoprefixer` executable.');

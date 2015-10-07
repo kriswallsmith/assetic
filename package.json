@@ -10,6 +10,7 @@
     "handlebars": "*",
     "uglify-js": "*",
     "autoprefixer": "*",
+    "autoprefixer-cli": "*",
     "roole": "*",
     "react-tools": "*",
     "clean-css": "*"
