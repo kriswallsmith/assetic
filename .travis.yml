@@ -40,8 +40,9 @@ before_script:
     # node deps
     - npm install uglify-js@1 && mkdir -p vendor/uglifyjs && mv node_modules vendor/uglifyjs
     - npm install
+    - export NODE_VERSION=$(node -v | egrep -o "[0-9]+.[0-9]+.[0-9]+")
     - export UGLIFYJS_BIN=vendor/uglifyjs/node_modules/uglify-js/bin/uglifyjs
-    - export AUTOPREFIXER_BIN=node_modules/.bin/autoprefixer
+    - if [[ "$NODE_VERSION" =~ ^0.[0-9].[0-9]+$|^0.10.[0-9]+$|^0.11.[0-9]$|^0.11.1[0-2]$ ]]; then export AUTOPREFIXER_BIN=node_modules/.bin/autoprefixer; else export AUTOPREFIXER_BIN=node_modules/.bin/autoprefixer-cli; fi;
 
     # java deps
     - mkdir -p vendor/java
