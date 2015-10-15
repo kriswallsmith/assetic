@@ -12,6 +12,6 @@
     "autoprefixer": "*",
     "roole": "*",
     "react-tools": "*",
-    "clean-css": "3.4.5"
+    "clean-css": "*"
   }
 }
