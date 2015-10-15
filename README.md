@@ -80,6 +80,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `CssEmbedFilter`: embeds image data in your stylesheets
  * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
+ * `CleanCssFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
  * `DartFilter`: compiles Javascript using dart2js
  * `EmberPrecompileFilter`: precompiles Handlebars templates into Javascript for use in the Ember.js framework

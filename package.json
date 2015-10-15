@@ -11,6 +11,7 @@
     "uglify-js": "*",
     "autoprefixer": "*",
     "roole": "*",
-    "react-tools": "*"
+    "react-tools": "*",
+    "clean-css": "3.4.5"
   }
 }
