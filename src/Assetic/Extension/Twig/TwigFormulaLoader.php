@@ -41,6 +41,10 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $this->logger->error(sprintf('The template "%s" contains an error: %s', $resource, $e->getMessage()));
             }
 
+            if ($this->twig->isStrictVariables()) {
+                throw $e;
+            }
+
             return array();
         }
 
