@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "babel-cli": "*",
     "uglifycss": "*",
     "coffee-script": "*",
     "stylus": "*",
