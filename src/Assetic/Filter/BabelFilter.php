@@ -27,7 +27,7 @@ class BabelFilter extends BaseNodeFilter
     private $babelBin;
     private $nodeBin;
 
-    public function __construct($babelBin = '/usr/local/bin/babel', $nodeBin = null)
+    public function __construct($babelBin = '/usr/bin/babel', $nodeBin = null)
     {
         $this->babelBin = $babelBin;
         $this->nodeBin = $nodeBin;
