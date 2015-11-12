@@ -91,8 +91,8 @@ EOF;
     public function testCompassExtensionCanBeDisabled()
     {
         $this->setExpectedExceptionRegExp(
-            "Exception",
-            "/Undefined mixin box\-shadow\: failed at `@include box\-shadow\(10px 10px 8px red\);`.*? line 4/"
+            'Exception',
+            '/Undefined mixin box\-shadow\: failed at `@include box\-shadow\(10px 10px 8px red\);`.*? line 4/'
         );
 
         $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
@@ -135,7 +135,29 @@ EOF;
         $actual->load();
 
         $filter = $this->getFilter();
-        $filter->setFormatter("scss_formatter_compressed");
+        $filter->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+        $filter->filterLoad($actual);
+
+        $expected = new StringAsset('.foo{color:#fff}');
+        $expected->load();
+
+        $this->assertEquals(
+            $expected->getContent(),
+            $actual->getContent(),
+            'scss_formatter can be changed'
+        );
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSetFormatterWithLegacyName()
+    {
+        $actual = new StringAsset(".foo {\n  color: #fff;\n}");
+        $actual->load();
+
+        $filter = $this->getFilter();
+        $filter->setFormatter('scss_formatter_compressed');
         $filter->filterLoad($actual);
 
         $expected = new StringAsset('.foo{color:#fff}');
