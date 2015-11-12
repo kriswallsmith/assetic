@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------
+
+by WouterJ at 2015-11-11T13:15:22Z
+
+build failures are unrelated to changes in this PR
+
+---------------------------------------------------------------------------
+
+by JHGitty at 2015-11-12T00:21:13Z
+
+This issue will fix this deprecation (found in Symfony 2.8.x-dev):
+```
+Defining the getGlobals() method in the "assetic" extension is deprecated without explicitly implementing Twig_Extension_GlobalsInterface.
+```
