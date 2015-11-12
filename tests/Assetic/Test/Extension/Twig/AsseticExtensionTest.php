@@ -203,6 +203,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
             ->with('some_filter')
             ->will($this->returnValue($filter));
 
+        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
         $this->twig->addExtension(new AsseticExtension($this->factory, array(
             'some_func' => array(
                 'filter' => 'some_filter',
