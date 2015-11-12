@@ -23,8 +23,8 @@ class ScssphpFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        if (!class_exists('scssc')) {
-            $this->markTestSkipped('scssphp is not installed');
+        if (!class_exists('Leafo\ScssPhp\Compiler')) {
+            $this->markTestSkipped('leafo/scssphp is not installed');
         }
     }
 
@@ -65,6 +65,10 @@ EOF;
 
     public function testCompassExtensionCanBeEnabled()
     {
+        if (!class_exists('scss_compass')) {
+            $this->markTestSkipped('leafo/scssphp-compass is not installed');
+        }
+
         $expected = <<<EOF
 .shadow {
   -webkit-box-shadow: 10px 10px 8px red;
