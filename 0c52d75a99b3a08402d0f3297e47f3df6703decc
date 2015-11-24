@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-11-05T12:45:40Z
+
+you need to bump the min Twig version though
+
+---------------------------------------------------------------------------
+
+by Titome at 2015-11-05T13:00:56Z
+
+Hum sorry, I'm not used to collaborate at projects... Where I need to bump the min Twig version ? In the composer.json ? Thank for your help.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-11-05T14:58:58Z
+
+yes
+
+---------------------------------------------------------------------------
+
+by Titome at 2015-11-06T09:35:30Z
+
+I update the composer.json :)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-11-24T11:49:38Z
+
+please rebase your branch to fix conflicts
+
+---------------------------------------------------------------------------
+
+by Titome at 2015-11-24T14:31:14Z
+
+Done! :)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-11-24T14:36:58Z
+
+Most change have actually disappeared because of the merge of https://github.com/kriswallsmith/assetic/pull/772
+
+I will still merge this PR to update the lowest bound of the dev requirement
