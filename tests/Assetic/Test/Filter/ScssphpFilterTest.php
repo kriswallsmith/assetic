@@ -23,8 +23,8 @@ class ScssphpFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        if (!class_exists('scssc')) {
-            $this->markTestSkipped('scssphp is not installed');
+        if (!class_exists('Leafo\ScssPhp\Compiler')) {
+            $this->markTestSkipped('leafo/scssphp is not installed');
         }
     }
 
@@ -65,6 +65,10 @@ EOF;
 
     public function testCompassExtensionCanBeEnabled()
     {
+        if (!class_exists('scss_compass')) {
+            $this->markTestSkipped('leafo/scssphp-compass is not installed');
+        }
+
         $expected = <<<EOF
 .shadow {
   -webkit-box-shadow: 10px 10px 8px red;
@@ -87,8 +91,8 @@ EOF;
     public function testCompassExtensionCanBeDisabled()
     {
         $this->setExpectedExceptionRegExp(
-            "Exception",
-            "/Undefined mixin box\-shadow\: failed at `@include box\-shadow\(10px 10px 8px red\);`.*? line 4/"
+            'Exception',
+            '/Undefined mixin box\-shadow\: failed at `@include box\-shadow\(10px 10px 8px red\);`.*? line:? 4/'
         );
 
         $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
@@ -106,7 +110,7 @@ EOF;
         $asset->load();
         $filter->filterLoad($asset);
 
-        $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), 'Import paths are correctly used');
+        $this->assertContains('color: red', $asset->getContent(), 'Import paths are correctly used');
     }
 
     public function testRegisterFunction()
@@ -118,11 +122,7 @@ EOF;
         $filter->registerFunction('bar',function () { return 'red';});
         $filter->filterLoad($asset);
 
-        $expected = new StringAsset('.foo{ color: red;}');
-        $expected->load();
-        $filter->filterLoad($expected);
-
-        $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
+        $this->assertContains('color: red', $asset->getContent(), 'custom function can be registered');
     }
 
     public function testSetFormatter()
@@ -131,14 +131,30 @@ EOF;
         $actual->load();
 
         $filter = $this->getFilter();
-        $filter->setFormatter("scss_formatter_compressed");
+        $filter->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
         $filter->filterLoad($actual);
 
-        $expected = new StringAsset('.foo{color:#fff}');
-        $expected->load();
+        $this->assertRegExp(
+            '/^\.foo{color:#fff;?}$/',
+            $actual->getContent(),
+            'scss_formatter can be changed'
+        );
+    }
 
-        $this->assertEquals(
-            $expected->getContent(),
+    /**
+     * @group legacy
+     */
+    public function testSetFormatterWithLegacyName()
+    {
+        $actual = new StringAsset(".foo {\n  color: #fff;\n}");
+        $actual->load();
+
+        $filter = $this->getFilter();
+        $filter->setFormatter('scss_formatter_compressed');
+        $filter->filterLoad($actual);
+
+        $this->assertRegExp(
+            '/^\.foo{color:#fff;?}$/',
             $actual->getContent(),
             'scss_formatter can be changed'
         );
@@ -175,7 +191,7 @@ EOF;
         $asset->load();
         $filter->filterLoad($asset);
 
-        $this->assertEquals("#test {\n  color: red; }\n", $asset->getContent(), "Variables can be added");
+        $this->assertContains('color: red', $asset->getContent(), 'Variables can be added');
     }
 
     // private
