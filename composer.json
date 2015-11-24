@@ -22,7 +22,7 @@
     "require-dev": {
         "phpunit/phpunit": "~4.8",
         "symfony/phpunit-bridge": "~2.7|~3.0",
-        "twig/twig": "~1.8|~2.0",
+        "twig/twig": "~1.23|~2.0",
         "leafo/lessphp": "^0.3.7",
         "leafo/scssphp": "~0.1",
         "ptachoire/cssembed": "~1.0",
