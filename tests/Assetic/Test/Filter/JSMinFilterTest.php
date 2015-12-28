@@ -21,7 +21,7 @@ class JSMinFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        if (!class_exists('JSMin')) {
+        if (!class_exists('JSMin\JSMin')) {
             $this->markTestSkipped('JSMin is not installed.');
         }
     }
