@@ -27,6 +27,6 @@ class SeparatorFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new SeparatorFilter('+');
         $filter->filterDump($asset);
 
-        $this->assertEquals('foobar+', $asset->getContent());
+        $this->assertEquals('+foobar', $asset->getContent());
     }
 }
