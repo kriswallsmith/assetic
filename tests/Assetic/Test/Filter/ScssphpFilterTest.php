@@ -90,9 +90,9 @@ EOF;
 
     public function testCompassExtensionCanBeDisabled()
     {
-        $this->setExpectedException(
+        $this->setExpectedExceptionRegExp(
             'Exception',
-            'Undefined mixin box-shadow: line: 4'
+            '/^Undefined mixin box-shadow:.*line:* 4$/'
         );
 
         $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
