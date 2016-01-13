@@ -18,5 +18,5 @@ namespace Assetic\Util;
  */
 abstract class SassUtils extends CssUtils
 {
-    const REGEX_COMMENTS        = '/((?:\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\/)|\/\/[^\n]+)/';
+    const REGEX_COMMENTS = '/((?:\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\/)|\/\/[^\n]+)/';
 }
