@@ -93,6 +93,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `JSMinFilter`: minifies Javascript
  * `JSMinPlusFilter`: minifies Javascript
  * `JSqueezeFilter`: compresses Javascript
+ * `MMMinifyFilter`: minifies both Javascript and CSS
  * `LessFilter`: parses LESS into CSS (using less.js with node.js)
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
  * `OptiPngFilter`: optimize your PNGs
