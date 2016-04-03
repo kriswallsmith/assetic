@@ -21,7 +21,7 @@ use Assetic\Filter\LessphpFilter;
  */
 class LessphpFilterTest extends FilterTestCase
 {
-    protected $filter;
+    private $filter;
 
     protected function setUp()
     {
@@ -30,6 +30,11 @@ class LessphpFilterTest extends FilterTestCase
         }
 
         $this->filter = new LessphpFilter();
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     /**

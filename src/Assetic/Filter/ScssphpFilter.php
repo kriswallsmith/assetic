@@ -45,6 +45,19 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function setFormatter($formatter)
     {
+        $legacyFormatters = array(
+            'scss_formatter' => 'Leafo\ScssPhp\Formatter\Expanded',
+            'scss_formatter_nested' => 'Leafo\ScssPhp\Formatter\Nested',
+            'scss_formatter_compressed' => 'Leafo\ScssPhp\Formatter\Compressed',
+            'scss_formatter_crunched' => 'Leafo\ScssPhp\Formatter\Crunched',
+        );
+
+        if (isset($legacyFormatters[$formatter])) {
+            @trigger_error(sprintf('The scssphp formatter `%s` is deprecated. Use `%s` instead.', $formatter, $legacyFormatters[$formatter]), E_USER_DEPRECATED);
+
+            $formatter = $legacyFormatters[$formatter];
+        }
+
         $this->formatter = $formatter;
     }
 
@@ -68,7 +81,7 @@ class ScssphpFilter implements DependencyExtractorInterface
         $this->importPaths[] = $path;
     }
 
-    public function registerFunction($name,$callable)
+    public function registerFunction($name, $callable)
     {
         $this->customFunctions[$name] = $callable;
     }
@@ -111,7 +124,10 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         $sc = new Compiler();
-        $sc->addImportPath($loadPath);
+        if ($loadPath !== null) {
+            $sc->addImportPath($loadPath);
+        }
+
         foreach ($this->importPaths as $path) {
             $sc->addImportPath($path);
         }

@@ -33,13 +33,19 @@ class RooleFilterTest extends FilterTestCase
         $this->filter = new RooleFilter($rooleBin, $nodeBin);
     }
 
+    protected function tearDown()
+    {
+        $this->filter = null;
+    }
+
     public function testFilterLoad()
     {
-        $source = <<<ROOLE
-\$margin = 30px
+        $source = <<<'ROOLE'
+$margin = 30px;
 
-body
-  margin: \$margin
+body {
+  margin: $margin;
+}
 
 ROOLE;
 

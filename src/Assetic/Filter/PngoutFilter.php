@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through pngout.
@@ -104,10 +105,10 @@ class PngoutFilter extends BaseProcessFilter
             $pb->add('-b'.$this->blockSplitThreshold);
         }
 
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_pngout'));
+        $pb->add($input = FilesystemUtils::createTemporaryFile('pngout_in'));
         file_put_contents($input, $asset->getContent());
 
-        $output = tempnam(sys_get_temp_dir(), 'assetic_pngout');
+        $output = FilesystemUtils::createTemporaryFile('pngout_out');
         unlink($output);
         $pb->add($output .= '.png');
 

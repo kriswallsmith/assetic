@@ -58,9 +58,17 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
 
-        $this->twig = new \Twig_Environment();
-        $this->twig->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
+        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
         $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
+    }
+
+    protected function tearDown()
+    {
+        $this->am = null;
+        $this->fm = null;
+        $this->factory = null;
+        $this->twig = null;
+        $this->valueSupplier = null;
     }
 
     public function testReference()
@@ -195,6 +203,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
             ->with('some_filter')
             ->will($this->returnValue($filter));
 
+        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
         $this->twig->addExtension(new AsseticExtension($this->factory, array(
             'some_func' => array(
                 'filter' => 'some_filter',

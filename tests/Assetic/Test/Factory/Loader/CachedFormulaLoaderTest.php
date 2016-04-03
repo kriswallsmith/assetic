@@ -28,6 +28,13 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $this->resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
     }
 
+    protected function tearDown()
+    {
+        $this->loader = null;
+        $this->configCache = null;
+        $this->resource = null;
+    }
+
     public function testNotDebug()
     {
         $expected = array(

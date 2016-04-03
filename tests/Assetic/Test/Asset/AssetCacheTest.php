@@ -27,6 +27,13 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
         $this->asset = new AssetCache($this->inner, $this->cache);
     }
 
+    protected function tearDown()
+    {
+        $this->inner = null;
+        $this->cache = null;
+        $this->asset = null;
+    }
+
     public function testLoadFromCache()
     {
         $content = 'asdf';

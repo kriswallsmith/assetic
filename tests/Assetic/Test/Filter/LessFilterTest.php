@@ -23,7 +23,7 @@ class LessFilterTest extends FilterTestCase
     /**
      * @var LessFilter
      */
-    protected $filter;
+    private $filter;
 
     protected function setUp()
     {
@@ -36,6 +36,11 @@ class LessFilterTest extends FilterTestCase
         }
 
         $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+    }
+
+    protected function tearDown()
+    {
+        $this->filter = null;
     }
 
     public function testFilterLoad()

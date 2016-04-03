@@ -31,12 +31,16 @@ class CssImportFilterTest extends \PHPUnit_Framework_TestCase
 /* main.css */
 /* import.css */
 body { color: red; }
+
 /* more/evenmore/deep1.css */
 /* more/evenmore/deep2.css */
 body {
     background: url(../more/evenmore/bg.gif);
 }
+
+
 body { color: black; }
+
 CSS;
 
         $this->assertEquals($expected, $asset->dump(), '->filterLoad() inlines CSS imports');
@@ -83,7 +87,10 @@ CSS;
 body {
     background: url(../more/evenmore/bg.gif);
 }
+
+
 body { color: black; }
+
 CSS;
 
         $this->assertEquals($expected, $asset->dump(), '->filterLoad() inlines CSS imports');

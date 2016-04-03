@@ -12,23 +12,26 @@
 namespace Assetic\Test\Cache;
 
 use Assetic\Cache\ConfigCache;
+use Assetic\Test\TestCase;
 
-class ConfigCacheTest extends \PHPUnit_Framework_TestCase
+class ConfigCacheTest extends TestCase
 {
     private $dir;
     private $cache;
 
     protected function setUp()
     {
-        $this->dir = sys_get_temp_dir().'/assetic/tests/config_cache';
+        $this->dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_config_cache');
+        mkdir($this->dir);
+
         $this->cache = new ConfigCache($this->dir);
     }
 
     protected function tearDown()
     {
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->dir, \FilesystemIterator::SKIP_DOTS)) as $file) {
-            unlink($file->getPathname());
-        }
+        self::removeDirectory($this->dir);
+        $this->dir = null;
+        $this->cache = null;
     }
 
     public function testCache()

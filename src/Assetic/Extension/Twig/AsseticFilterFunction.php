@@ -11,19 +11,14 @@
 
 namespace Assetic\Extension\Twig;
 
-class AsseticFilterFunction extends \Twig_Function
+class AsseticFilterFunction extends \Twig_SimpleFunction
 {
-    private $filter;
-
-    public function __construct($filter, $options = array())
+    public function __construct($name, $options = array())
     {
-        $this->filter = $filter;
-
-        parent::__construct($options);
-    }
-
-    public function compile()
-    {
-        return sprintf('$this->env->getExtension(\'assetic\')->getFilterInvoker(\'%s\')->invoke', $this->filter);
+        parent::__construct($name, null, array_merge($options, array(
+            'needs_environment' => false,
+            'needs_context' => false,
+            'node_class' => '\Assetic\Extension\Twig\AsseticFilterNode',
+        )));
     }
 }

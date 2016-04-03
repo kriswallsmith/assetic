@@ -19,7 +19,10 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 {
     private $am;
     private $fm;
-    private $twig;
+    /**
+     * @var TwigFormulaLoader
+     */
+    private $loader;
 
     protected function setUp()
     {
@@ -34,7 +37,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         $factory->setAssetManager($this->am);
         $factory->setFilterManager($this->fm);
 
-        $twig = new \Twig_Environment();
+        $twig = new \Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new AsseticExtension($factory, array(
             'some_func' => array(
                 'filter' => 'some_filter',
@@ -43,6 +46,12 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
         )));
 
         $this->loader = new TwigFormulaLoader($twig);
+    }
+
+    protected function tearDown()
+    {
+        $this->am = null;
+        $this->fm = null;
     }
 
     public function testMixture()

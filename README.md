@@ -80,6 +80,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `CssEmbedFilter`: embeds image data in your stylesheets
  * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
+ * `CleanCssFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
  * `DartFilter`: compiles Javascript using dart2js
  * `EmberPrecompileFilter`: precompiles Handlebars templates into Javascript for use in the Ember.js framework
@@ -99,9 +100,12 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `PackerFilter`: compresses Javascript using Dean Edwards's Packer
  * `PhpCssEmbedFilter`: embeds image data in your stylesheet
  * `PngoutFilter`: optimize your PNGs
+ * `ReactJsxFilter`: compiles React JSX into JavaScript
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
+ * `SassphpFilter`: parses Sass into CSS using the sassphp bindings for Libsass
  * `ScssphpFilter`: parses SCSS using scssphp
+ * `SeparatorFilter`: inserts a separator between assets to prevent merge failures
  * `SprocketsFilter`: Sprockets Javascript dependency management
  * `StylusFilter`: parses STYL into CSS
  * `TypeScriptFilter`: parses TypeScript into Javascript

@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Filter\Sass\BaseSassFilter;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Loads Compass files.
@@ -58,7 +59,7 @@ class CompassFilter extends BaseSassFilter
     {
         $this->compassPath = $compassPath;
         $this->rubyPath = $rubyPath;
-        $this->cacheLocation = sys_get_temp_dir();
+        $this->cacheLocation = FilesystemUtils::getTemporaryDirectory();
 
         if ('cli' !== php_sapi_name()) {
             $this->boring = true;
@@ -190,8 +191,7 @@ class CompassFilter extends BaseSassFilter
             $loadPaths[] = $dir;
         }
 
-        // compass does not seems to handle symlink, so we use realpath()
-        $tempDir = realpath(sys_get_temp_dir());
+        $tempDir = $this->cacheLocation ? $this->cacheLocation : FilesystemUtils::getTemporaryDirectory();
 
         $compassProcessArgs = array(
             $this->compassPath,
@@ -340,7 +340,7 @@ class CompassFilter extends BaseSassFilter
 
         if ($this->homeEnv) {
             // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
-            $pb->setEnv('HOME', sys_get_temp_dir());
+            $pb->setEnv('HOME', FilesystemUtils::getTemporaryDirectory());
             $this->mergeEnv($pb);
         }
 

@@ -1,6 +1,5 @@
 {
     "name": "kriswallsmith/assetic",
-    "minimum-stability": "dev",
     "description": "Asset Management for PHP",
     "keywords": [ "assets", "compression", "minification" ],
     "homepage": "https://github.com/kriswallsmith/assetic",
@@ -15,21 +14,24 @@
     ],
     "require": {
         "php": ">=5.3.1",
-        "symfony/process": "~2.1"
+        "symfony/process": "~2.1|~3.0"
+    },
+    "conflict": {
+        "twig/twig": "<1.23"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4",
-        "twig/twig": "~1.6",
-        "leafo/lessphp": "*",
-        "leafo/scssphp": "*",
-        "ptachoire/cssembed": "*",
-        "leafo/scssphp-compass": "*",
+        "phpunit/phpunit": "~4.8",
+        "symfony/phpunit-bridge": "~2.7|~3.0",
+        "twig/twig": "~1.23|~2.0",
+        "leafo/lessphp": "^0.3.7",
+        "leafo/scssphp": "~0.1",
+        "ptachoire/cssembed": "~1.0",
 
-        "cssmin/cssmin": "*",
-        "mrclay/minify": "*",
-        "kamicane/packager": "*",
-        "joliclic/javascript-packer": "*",
-        "patchwork/jsqueeze": "~1.0",
+        "cssmin/cssmin": "3.0.1",
+        "mrclay/minify": "~2.2",
+        "kamicane/packager": "1.0",
+        "joliclic/javascript-packer": "1.1",
+        "patchwork/jsqueeze": "~1.0|~2.0",
         "psr/log": "~1.0"
     },
     "suggest": {
@@ -49,7 +51,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.2-dev"
+            "dev-master": "1.4-dev"
         }
     },
     "repositories": [

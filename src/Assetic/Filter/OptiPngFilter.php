@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through OptiPNG.
@@ -52,10 +53,10 @@ class OptiPngFilter extends BaseProcessFilter
             $pb->add('-o')->add($this->level);
         }
 
-        $pb->add('-out')->add($output = tempnam(sys_get_temp_dir(), 'assetic_optipng'));
+        $pb->add('-out')->add($output = FilesystemUtils::createTemporaryFile('optipng_out'));
         unlink($output);
 
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_optipng'));
+        $pb->add($input = FilesystemUtils::createTemporaryFile('optinpg_in'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();
