@@ -11,7 +11,6 @@
 
 namespace Assetic\Test\Filter;
 
-use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\TypeScriptFilter;
 

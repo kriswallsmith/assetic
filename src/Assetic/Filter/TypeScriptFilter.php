@@ -31,7 +31,7 @@ class TypeScriptFilter extends BaseNodeFilter
      */
     private $useRealPath = false;
 
-    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null, $options = array())
+    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null, array $options = array())
     {
         $this->tscBin = $tscBin;
         $this->nodeBin = $nodeBin;
@@ -56,7 +56,6 @@ class TypeScriptFilter extends BaseNodeFilter
         $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
         $outputPath = FilesystemUtils::createTemporaryFile('typescript_out');
 
-        mkdir($inputDirPath);
         file_put_contents($inputPath, $this->getAssetContent($asset));
 
         $pb->add($inputPath)->add('--out')->add($outputPath);
