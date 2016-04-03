@@ -25,19 +25,17 @@ class TypeScriptFilter extends BaseNodeFilter
 {
     private $tscBin;
     private $nodeBin;
+    private $useAbsolutePath = false;
 
-    /**
-     * @var bool
-     */
-    private $useRealPath = false;
-
-    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null, array $options = array())
+    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null)
     {
         $this->tscBin = $tscBin;
         $this->nodeBin = $nodeBin;
-        if (isset($options['use_real_path'])) {
-            $this->useRealPath = $options['use_real_path'] == true;
-        }
+    }
+    
+    public function setUseAbsolutePath($useAbsolutePath)
+    {
+        $this->useAbsolutePath = $useAbsolutePath;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -88,9 +86,9 @@ class TypeScriptFilter extends BaseNodeFilter
 
     private function getAssetContent(AssetInterface $asset)
     {
-        if ($this->useRealPath && $asset->getSourcePath() && $asset->getSourceRoot()) {
-            $pathInfo = pathinfo($asset->getSourcePath());
-            $dir = $asset->getSourceRoot() . DIRECTORY_SEPARATOR . $pathInfo['dirname'];
+        if ($this->useAbsolutePath && $asset->getSourcePath() && $asset->getSourceRoot()) {
+            $sourceDirName = pathinfo($asset->getSourcePath(), PATHINFO_DIRNAME);
+            $dir = $asset->getSourceRoot() . DIRECTORY_SEPARATOR . $sourceDirName;
 
             $func = function ($matches) use ($dir) {
                 $path = realpath($dir . DIRECTORY_SEPARATOR . $matches[2]);

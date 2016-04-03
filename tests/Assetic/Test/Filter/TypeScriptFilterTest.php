@@ -11,6 +11,7 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\TypeScriptFilter;
 
@@ -24,20 +25,16 @@ class TypeScriptFilterTest extends FilterTestCase
      */
     private $filter;
 
-    private $tscBin;
-
-    private $nodeBin;
-
     protected function setUp()
     {
-        $this->tscBin = $this->findExecutable('tsc', 'TSC_BIN');
-        $this->nodeBin = $this->findExecutable('node', 'NODE_BIN');
+        $tscBin = $this->findExecutable('tsc', 'TSC_BIN');
+        $nodeBin = $this->findExecutable('node', 'NODE_BIN');
 
-        if (!$this->tscBin) {
+        if (!$tscBin) {
             $this->markTestSkipped('Unable to find `tsc` executable.');
         }
 
-        $this->filter = new TypeScriptFilter($this->tscBin, $this->nodeBin);
+        $this->filter = new TypeScriptFilter($tscBin, $nodeBin);
     }
 
     protected function tearDown()
@@ -75,35 +72,24 @@ TYPESCRIPT;
     /**
      * @dataProvider relativeToAbsolutePathsDataProvider
      */
-    public function testRelativeToAbsolutePaths($referenceCode)
+    public function testRelativeToAbsolutePaths($sourceFile)
     {
-        // Create file that is going to be referenced
-        $tmpDir = sys_get_temp_dir();
-        $tmpName = uniqid('php_assetic_test') . '.ts';
-        $tmpFile = $tmpDir.DIRECTORY_SEPARATOR.$tmpName;
-        file_put_contents($tmpFile, "var a = 'test';");
-        $referenceCode = str_replace('%tmp_file%', $tmpFile, $referenceCode);
+        $this->filter->setUseAbsolutePath(true);
+        $asset = new FileAsset($sourceFile);
+        $asset->load($this->filter);
 
-        // Load filter with use_real_path
-        $asset = new StringAsset($referenceCode, array(), $tmpDir, 'test');
-        $asset->load();
-        $filter = new TypeScriptFilter($this->tscBin, $this->nodeBin, array('use_real_path' => true));
-        $filter->filterLoad($asset);
-
-        unlink($tmpFile);
-
-        $this->assertEquals("var a = 'test';\n", $asset->getContent(), 'File should be included by reference');
+        $this->assertStringStartsWith("var a = 'test';", $asset->getContent());
     }
 
     public function relativeToAbsolutePathsDataProvider()
     {
         return array(
-            array('/// <reference path="%tmp_file%" />'),
-            array('/// <reference path="%tmp_file%"         />'),
-            array('///<reference path="%tmp_file%" />'),
-            array('///<reference path="%tmp_file%"/>'),
-            array('///<reference      path="%tmp_file%" />'),
-            array('    /// <reference path="%tmp_file%" />')
+            array(__DIR__ . '/fixtures/typescript/relative_path/test1.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test2.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test3.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test4.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test5.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test6.ts'),
         );
     }
 }
