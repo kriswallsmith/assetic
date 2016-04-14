@@ -29,8 +29,9 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider providePathExpectations
      */
-    public function shouldApplyHash()
+    public function shouldApplyHash($target, $expectedStart, $expectedEnd)
     {
         $asset = $this->getMock('Assetic\Asset\AssetInterface');
         $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
@@ -39,18 +40,33 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
 
         $asset->expects($this->any())
             ->method('getTargetPath')
-            ->will($this->returnValue('css/main.css'));
+            ->will($this->returnValue($target));
         $factory->expects($this->any())
             ->method('getLastModified')
             ->will($this->returnValue(1234));
         $asset->expects($this->once())
             ->method('setTargetPath')
             ->with($this->logicalAnd(
-                $this->stringStartsWith('css/main-'),
-                $this->stringEndsWith('.css')
+                $this->stringStartsWith($expectedStart),
+                $this->stringEndsWith($expectedEnd),
+                $this->matchesRegularExpression('/^'.preg_quote($expectedStart, '/').'[a-z0-9]{7}'.preg_quote($expectedEnd, '/').'$/')
             ));
 
         $this->worker->process($asset, $factory);
+    }
+
+    public function providePathExpectations()
+    {
+        return array(
+            array('main.js', 'main-', '.js'),
+            array('css/main.css', 'css/main-', '.css'),
+            array('css/file-nothash_.css', 'css/file-nothash_-', '.css'),
+
+            // Strip parent hash
+            array('main-32d5523_leaf.js', 'main_leaf-', '.js'),
+            array('main-32d5523_love-my6char_file.js', 'main_love-my6char_file-', '.js'),
+            array('css-7110eda_css/main-7110eda_leaf.css', 'css-7110eda_css/main_leaf-', '.css'),
+        );
     }
 
     /**
