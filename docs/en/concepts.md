@@ -32,6 +32,7 @@ filter:
  * pngout
  * SASS
  * Sprockets (version 1)
+ * Sprockets3 (version 3)
  * Stylus
  * YUI Compressor
 
