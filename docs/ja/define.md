@@ -123,16 +123,17 @@ $formulae = $loader->load(new FileResource('/path/to/template.php'));
 このサービスは、アセットファクトリと、1つ以上のフォーミュラローダーから成っており、
 裏方のサービス間のグルとして動作しますが、表面上では、通常のアセットマネージャーと同じように使用することができます。
 
-    use Assetic\Asset\FileAsset;
-    use Assetic\Factory\LazyAssetManager;
-    use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
-    use Assetic\Factory\Resource\DirectoryResource;
+```PHP
+use Assetic\Asset\FileAsset;
+use Assetic\Factory\LazyAssetManager;
+use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
+use Assetic\Factory\Resource\DirectoryResource;
 
-    $am = new LazyAssetManager($factory);
-    $am->set('jquery', new FileAsset('/path/to/jquery.js'));
-    $am->setLoader('php', new FunctionCallsFormulaLoader($factory));
-    $am->addResource(new DirectoryResource('/path/to/templates', '/\.php$/'), 'php');
-
+$am = new LazyAssetManager($factory);
+$am->set('jquery', new FileAsset('/path/to/jquery.js'));
+$am->setLoader('php', new FunctionCallsFormulaLoader($factory));
+$am->addResource(new DirectoryResource('/path/to/templates', '/\.php$/'), 'php');
+```
 ### アセットライター
 
 作成したアセットマネージャーが、テンプレート内で定義した全てのアセットを把握したら、
