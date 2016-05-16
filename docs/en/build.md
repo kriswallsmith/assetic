@@ -9,24 +9,24 @@ The is the simplest approach to using Assetic. It involves two steps:
 
 For example, you could create a file in your web directory at
 `assets/javascripts.php` with the following code:
+```PHP
+ use Assetic\Asset\AssetCollection;
+ use Assetic\Asset\FileAsset;
+ use Assetic\Filter\Yui\JsCompressorFilter as YuiCompressorFilter;
 
-    use Assetic\Asset\AssetCollection;
-    use Assetic\Asset\FileAsset;
-    use Assetic\Filter\Yui\JsCompressorFilter as YuiCompressorFilter;
+ $js = new AssetCollection(array(
+     new FileAsset(__DIR__.'/jquery.js'),
+     new FileAsset(__DIR__.'/application.js'),
+ ), array(
+     new YuiCompressorFilter('/path/to/yuicompressor.jar'),
+ ));
 
-    $js = new AssetCollection(array(
-        new FileAsset(__DIR__.'/jquery.js'),
-        new FileAsset(__DIR__.'/application.js'),
-    ), array(
-        new YuiCompressorFilter('/path/to/yuicompressor.jar'),
-    ));
-
-    header('Content-Type: application/js');
-    echo $js->dump();
-
+ header('Content-Type: application/js');
+ echo $js->dump();
+```
 In your HTML template you would include this generated Javascript using a
 simple `<script>` tag:
-
-    <script src="/assets/javascripts.php"></script>
-
+```HTML
+  <script src="/assets/javascripts.php"></script>
+```
 Next: [Basic Concepts](concepts.md)
