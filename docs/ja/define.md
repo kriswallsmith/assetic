@@ -139,10 +139,11 @@ $am->addResource(new DirectoryResource('/path/to/templates', '/\.php$/'), 'php')
 作成したアセットマネージャーが、テンプレート内で定義した全てのアセットを把握したら、
 アセットライターを使用して、テンプレートが参照することになる実際のファイルを作成します。
 
-    use Assetic\AssetWriter;
+```PHP
+use Assetic\AssetWriter;
 
-    $writer = new AssetWriter('/path/to/web');
-    $writer->writeManagerAssets($am);
-
+$writer = new AssetWriter('/path/to/web');
+$writer->writeManagerAssets($am);
+```
 上記のスクリプトを実行すると、アセットマネージャー内のすべてのアセットがメモリに読み込まれ、
 指定したフィルタが適用された後、公開領域に静的ファイルとしてダンプされ、準備完了となります。
