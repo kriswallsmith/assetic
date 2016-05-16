@@ -8,23 +8,24 @@ Asseticを使う一番単純な方法は、次の2ステップからなります
 
 例えば、公開領域内に`assets/javascripts.php`ファイルを作成し、
 下記のようなコードを記述します。
+```PHP
+ use Assetic\Asset\AssetCollection;
+ use Assetic\Asset\FileAsset;
+ use Assetic\Filter\Yui\JsCompressorFilter as YuiCompressorFilter;
 
-    use Assetic\Asset\AssetCollection;
-    use Assetic\Asset\FileAsset;
-    use Assetic\Filter\Yui\JsCompressorFilter as YuiCompressorFilter;
+ $js = new AssetCollection(array(
+     new FileAsset(__DIR__.'/jquery.js'),
+     new FileAsset(__DIR__.'/application.js'),
+ ), array(
+     new YuiCompressorFilter('/path/to/yuicompressor.jar'),
+ ));
 
-    $js = new AssetCollection(array(
-        new FileAsset(__DIR__.'/jquery.js'),
-        new FileAsset(__DIR__.'/application.js'),
-    ), array(
-        new YuiCompressorFilter('/path/to/yuicompressor.jar'),
-    ));
-
-    header('Content-Type: application/js');
-    echo $js->dump();
-
+ header('Content-Type: application/js');
+ echo $js->dump();
+```
 HTMLテンプレート側では、単に`<script>`タグを用いて、生成されたJavascriptをインクルードすることになります。
-
-    <script src="/assets/javascripts.php"></script>
+```HTML
+<script src="/assets/javascripts.php"></script>
+```
 
 Next: [コンセプト](concepts.md)
