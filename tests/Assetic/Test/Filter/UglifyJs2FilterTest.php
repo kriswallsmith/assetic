@@ -69,6 +69,15 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->assertContains('console.log', $this->asset->getContent());
     }
 
+    public function testReserved()
+    {
+        $this->filter->filterDump($this->asset);
+        $this->assertNotContains('var2', $this->asset->getContent());
+
+        $this->filter->setReserved(array('var2'));
+        $this->assertContains('var2', $this->asset->getContent());
+    }
+
     public function testMutiplieDefines()
     {
         $this->filter->setDefines(array('DEBUG=false', 'FOO=2'));

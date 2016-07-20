@@ -32,6 +32,7 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $comments;
     private $wrap;
     private $defines;
+    private $reserved;
 
     public function __construct($uglifyjsBin = '/usr/bin/uglifyjs', $nodeBin = null)
     {
@@ -72,6 +73,11 @@ class UglifyJs2Filter extends BaseNodeFilter
     public function setDefines(array $defines)
     {
         $this->defines = $defines;
+    }
+
+    public function setReserved(array $reserved)
+    {
+        $this->reserved = $reserved;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -116,6 +122,10 @@ class UglifyJs2Filter extends BaseNodeFilter
 
         if ($this->defines) {
             $pb->add('--define')->add(implode(',', $this->defines));
+        }
+
+        if ($this->reserved) {
+            $pb->add('--reserved')->add(implode(',', $this->reserved));
         }
 
         // input and output files
