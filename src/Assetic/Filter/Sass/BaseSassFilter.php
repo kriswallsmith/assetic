@@ -6,7 +6,7 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\BaseProcessFilter;
 use Assetic\Filter\DependencyExtractorInterface;
-use Assetic\Util\CssUtils;
+use Assetic\Util\SassUtils;
 
 abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExtractorInterface
 {
@@ -34,7 +34,7 @@ abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExt
         }
 
         $children = array();
-        foreach (CssUtils::extractImports($content) as $reference) {
+        foreach (SassUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
                 // todo: skip imports with media queries

@@ -103,6 +103,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `ReactJsxFilter`: compiles React JSX into JavaScript
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
+ * `SassphpFilter`: parses Sass into CSS using the sassphp bindings for Libsass
  * `ScssphpFilter`: parses SCSS using scssphp
  * `SeparatorFilter`: inserts a separator between assets to prevent merge failures
  * `SprocketsFilter`: Sprockets Javascript dependency management
