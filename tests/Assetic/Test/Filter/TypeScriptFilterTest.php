@@ -11,6 +11,7 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\TypeScriptFilter;
 
@@ -60,6 +61,17 @@ document.body.innerHTML = greeter(user);
 TYPESCRIPT;
 
         $asset = new StringAsset($typescript);
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertContains('function greeter(person)', $asset->getContent());
+        $this->assertNotContains('interface Person', $asset->getContent());
+    }
+
+    public function testReferenceDirective()
+    {
+        $asset = new FileAsset(__DIR__.'/fixtures/typescript/person.ts');
         $asset->load();
 
         $this->filter->filterLoad($asset);
