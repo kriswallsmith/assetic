@@ -18,7 +18,7 @@ use Assetic\Util\FilesystemUtils;
 /**
  * Compiles TypeScript into JavaScript.
  *
- * @link http://www.typescriptlang.org/
+ * @link   http://www.typescriptlang.org/
  * @author Jarrod Nettles <jarrod.nettles@icloud.com>
  */
 class TypeScriptFilter extends BaseNodeFilter
@@ -38,17 +38,20 @@ class TypeScriptFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->tscBin)
             : array($this->tscBin));
 
+        $assetFilename = 'asset';
         if ($sourcePath = $asset->getSourcePath()) {
-            $templateName = basename($sourcePath);
-        } else {
-            $templateName = 'asset';
+            $assetFilename = basename($sourcePath);
         }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('typescript_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
+        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$assetFilename.'.ts';
         $outputPath = FilesystemUtils::createTemporaryFile('typescript_out');
 
-        file_put_contents($inputPath, $asset->getContent());
+        $from = '/\/\/\/ <reference path="/';
+        $to = '/// <reference path="'.$asset->getSourceDirectory().'/';
+        $assetContent = preg_replace($from, $to, $asset->getContent());
+
+        file_put_contents($inputPath, $assetContent);
 
         $pb->add($inputPath)->add('--out')->add($outputPath);
 
