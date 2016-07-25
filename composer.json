@@ -28,7 +28,7 @@
         "ptachoire/cssembed": "~1.0",
 
         "cssmin/cssmin": "3.0.1",
-        "mrclay/minify": "~2.2",
+        "mrclay/minify": "~2.2.1",
         "kamicane/packager": "1.0",
         "joliclic/javascript-packer": "1.1",
         "patchwork/jsqueeze": "~1.0|~2.0",
@@ -47,7 +47,8 @@
         "files": [ "src/functions.php" ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "secure-http": false
     },
     "extra": {
         "branch-alias": {
