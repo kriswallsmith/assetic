@@ -46,7 +46,6 @@ CSS;
         $expected = <<<CSS
 a {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
