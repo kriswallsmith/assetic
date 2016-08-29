@@ -47,7 +47,8 @@
         "files": [ "src/functions.php" ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "secure-http": false
     },
     "extra": {
         "branch-alias": {
@@ -60,7 +61,10 @@
             "package": {
                 "name": "cssmin/cssmin",
                 "version": "3.0.1",
-                "dist": { "url": "http://cssmin.googlecode.com/files/cssmin-v3.0.1.php", "type": "file" },
+                "dist": {
+                    "url": "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/cssmin/cssmin-v3.0.1.php",
+                    "type": "file"
+                },
                 "autoload": { "classmap": [ "cssmin-v3.0.1.php" ] }
             }
         },
