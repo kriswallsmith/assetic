@@ -34,7 +34,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
     public function load(ResourceInterface $resource)
     {
         try {
-            $tokens = $this->twig->tokenize($resource->getContent(), (string) $resource);
+            $tokens = $this->twig->tokenize(new \Twig_Source($resource->getContent(), (string) $resource));
             $nodes  = $this->twig->parse($tokens);
         } catch (\Exception $e) {
             if ($this->logger) {
