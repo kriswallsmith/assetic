@@ -32,7 +32,9 @@ class TwigResource implements ResourceInterface
     public function getContent()
     {
         try {
-            return $this->loader->getSource($this->name);
+            return method_exists($this->loader, 'getSourceContext')
+                ? $this->loader->getSourceContext($this->name)->getCode()
+                : $this->loader->getSource($this->name);
         } catch (\Twig_Error_Loader $e) {
             return '';
         }

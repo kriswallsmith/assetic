@@ -24,6 +24,11 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidTemplateNameGetContent()
     {
+        if (!method_exists('Twig_LoaderInterface', 'getSource'))
+        {
+            $this->markTestSkipped('Twig_LoaderInterface does not have method getSource');
+        }
+
         $loader = $this->getMock('Twig_LoaderInterface');
         $loader->expects($this->once())
             ->method('getSource')
