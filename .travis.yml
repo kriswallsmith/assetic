@@ -46,10 +46,10 @@ before_script:
 
     # java deps
     - mkdir -p vendor/java
-    - wget http://dl.google.com/closure-compiler/compiler-latest.zip && unzip compiler-latest.zip -d vendor/java/compiler
+    - wget http://dl.google.com/closure-compiler/compiler-latest.zip && unzip compiler-latest.zip -d vendor/java/compiler && mv vendor/java/compiler/closure-compiler-*.jar vendor/java/compiler/compiler.jar
     - export CLOSURE_JAR=vendor/java/compiler/compiler.jar
-    - wget http://closure-stylesheets.googlecode.com/files/closure-stylesheets-20111230.jar && mv closure-stylesheets-20111230.jar vendor/java
-    - export GSS_JAR=vendor/java/closure-stylesheets-20111230.jar
+    - wget https://github.com/google/closure-stylesheets/releases/download/v1.4.0/closure-stylesheets.jar && mv closure-stylesheets.jar vendor/java
+    - export GSS_JAR=vendor/java/closure-stylesheets.jar
 #    TODO find the new URL for the cssembed JAR
 #    - wget https://github.com/downloads/nzakas/cssembed/cssembed-0.4.5.jar && mv cssembed-0.4.5.jar vendor/java
 #    - export CSSEMBED_JAR=vendor/java/cssembed-0.4.5.jar
