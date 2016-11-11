@@ -24,9 +24,29 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidTemplateNameGetContent()
     {
-        if (!method_exists('Twig_LoaderInterface', 'getSource'))
-        {
-            $this->markTestSkipped('Twig_LoaderInterface does not have method getSource');
+        if (method_exists('Twig_LoaderInterface', 'getSourceContext')) {
+            $loaderType = 'Twig_LoaderInterface';
+        } else {
+            $loaderType = array('Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface');
+        }
+
+        $loader = $this->getMock($loaderType);
+        $loader->expects($this->once())
+            ->method('getSourceContext')
+            ->with('asdf')
+            ->will($this->throwException(new \Twig_Error_Loader('')));
+
+        $resource = new TwigResource($loader, 'asdf');
+        $this->assertEquals('', $resource->getContent());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testInvalidTemplateNameGetContentWithLegacyLoader()
+    {
+        if (!method_exists('Twig_LoaderInterface', 'getSource')) {
+            $this->markTestSkipped('This test does not make sense on Twig 2.x.');
         }
 
         $loader = $this->getMock('Twig_LoaderInterface');
