@@ -12,11 +12,14 @@
 namespace Assetic\Test;
 
 use Assetic\Asset\FileAsset;
-use Assetic\AssetManager;
 use Assetic\AssetWriter;
 
 class AssetWriterTest extends \PHPUnit_Framework_TestCase
 {
+    private $dir;
+    /** @var AssetWriter */
+    private $writer;
+
     protected function setUp()
     {
         $this->dir = sys_get_temp_dir().'/assetic_tests_'.rand(11111, 99999);
@@ -36,8 +39,8 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteManagerAssets()
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
-        $am = $this->getMock('Assetic\\AssetManager');
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
 
         $am->expects($this->once())
             ->method('getNames')
@@ -67,7 +70,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteAssetWithVars()
     {
-        $asset = $this->getMock('Assetic\Asset\AssetInterface');
+        $asset = $this->getMockBuilder('Assetic\Asset\AssetInterface')->getMock();
         $asset->expects($this->atLeastOnce())
             ->method('getVars')
             ->will($this->returnValue(array('locale')));

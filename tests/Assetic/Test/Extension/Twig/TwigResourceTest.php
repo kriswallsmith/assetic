@@ -44,7 +44,7 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('This test does not make sense on Twig 2.x.');
         }
 
-        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
         $loader->expects($this->once())
             ->method('getSource')
             ->with('asdf')
@@ -56,7 +56,7 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidTemplateNameIsFresh()
     {
-        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
         $loader->expects($this->once())
             ->method('isFresh')
             ->with('asdf', 1234)

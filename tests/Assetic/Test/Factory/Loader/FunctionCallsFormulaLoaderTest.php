@@ -22,7 +22,7 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInput($function, $inputs, $name, $expected)
     {
-        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
         $factory = $this->getMockBuilder('Assetic\\Factory\\AssetFactory')
             ->disableOriginalConstructor()
             ->getMock();
