@@ -30,14 +30,14 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Twig is not installed.');
         }
 
-        $this->am = $this->getMock('Assetic\\AssetManager');
-        $this->fm = $this->getMock('Assetic\\FilterManager');
+        $this->am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
+        $this->fm = $this->getMockBuilder('Assetic\\FilterManager')->getMock();
 
         $factory = new AssetFactory(__DIR__.'/templates');
         $factory->setAssetManager($this->am);
         $factory->setFilterManager($this->fm);
 
-        $twig = new \Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig = new \Twig_Environment(new \Twig_Loader_Array(array()));
         $twig->addExtension(new AsseticExtension($factory, array(
             'some_func' => array(
                 'filter' => 'some_filter',
@@ -56,7 +56,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testMixture()
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
 
         $expected = array(
             'mixture' => array(
@@ -72,7 +72,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/mixture.twig')));
@@ -95,7 +95,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/function.twig')));
@@ -106,7 +106,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testUnclosedTag()
     {
-        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/unclosed_tag.twig')));
@@ -131,7 +131,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = $this->getMock('Assetic\\Factory\\Resource\\ResourceInterface');
+        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/embed.twig')));

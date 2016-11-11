@@ -15,6 +15,7 @@ use Assetic\AssetManager;
 
 class AssetManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var AssetManager */
     private $am;
 
     protected function setUp()
@@ -24,7 +25,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAsset()
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
         $this->am->set('foo', $asset);
         $this->assertSame($asset, $this->am->get('foo'), '->get() returns an asset');
     }
@@ -37,7 +38,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
         $this->am->set('foo', $asset);
 
         $this->assertTrue($this->am->has('foo'), '->has() returns true if the asset is set');
@@ -48,12 +49,12 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $this->am->set('@foo', $this->getMock('Assetic\\Asset\\AssetInterface'));
+        $this->am->set('@foo', $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock());
     }
 
     public function testClear()
     {
-        $this->am->set('foo', $this->getMock('Assetic\Asset\AssetInterface'));
+        $this->am->set('foo', $this->getMockBuilder('Assetic\Asset\AssetInterface')->getMock());
         $this->am->clear();
 
         $this->assertFalse($this->am->has('foo'));

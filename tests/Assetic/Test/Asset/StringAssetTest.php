@@ -23,7 +23,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadAppliesFilters()
     {
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
         $filter->expects($this->once())->method('filterLoad');
 
         $asset = new StringAsset('foo', array($filter));
@@ -32,7 +32,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testAutomaticLoad()
     {
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
         $filter->expects($this->once())->method('filterLoad');
 
         $asset = new StringAsset('foo', array($filter));
@@ -50,7 +50,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset('');
         $asset->load();
 
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
         $filter->expects($this->once())
             ->method('filterLoad')
             ->with($asset);
@@ -62,7 +62,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
     {
         $asset = new StringAsset('');
 
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
         $filter->expects($this->once())
             ->method('filterDump')
             ->with($asset);

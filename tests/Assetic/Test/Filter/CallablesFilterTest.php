@@ -28,7 +28,7 @@ class CallablesFilterTest extends \PHPUnit_Framework_TestCase
     {
         $nb = 0;
         $filter = new CallablesFilter(function ($asset) use (&$nb) { $nb++; });
-        $filter->filterLoad($this->getMock('Assetic\\Asset\\AssetInterface'));
+        $filter->filterLoad($this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock());
         $this->assertEquals(1, $nb, '->filterLoad() calls the loader callable');
     }
 
@@ -36,7 +36,7 @@ class CallablesFilterTest extends \PHPUnit_Framework_TestCase
     {
         $nb = 0;
         $filter = new CallablesFilter(null, function ($asset) use (&$nb) { $nb++; });
-        $filter->filterDump($this->getMock('Assetic\\Asset\\AssetInterface'));
+        $filter->filterDump($this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock());
         $this->assertEquals(1, $nb, '->filterDump() calls the loader callable');
     }
 

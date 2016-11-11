@@ -21,7 +21,7 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->am = $this->getMock('Assetic\\AssetManager');
+        $this->am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
         $this->ref = new AssetReference($this->am, 'foo');
     }
 
@@ -36,7 +36,7 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
      */
     public function testMethods($method, $returnValue)
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
 
         $this->am->expects($this->once())
             ->method('get')
@@ -63,12 +63,12 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
     public function testLazyFilters()
     {
         $this->am->expects($this->never())->method('get');
-        $this->ref->ensureFilter($this->getMock('Assetic\\Filter\\FilterInterface'));
+        $this->ref->ensureFilter($this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock());
     }
 
     public function testFilterFlush()
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
 
         $this->am->expects($this->exactly(2))
             ->method('get')
@@ -79,14 +79,14 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
             ->method('getFilters')
             ->will($this->returnValue(array()));
 
-        $this->ref->ensureFilter($this->getMock('Assetic\\Filter\\FilterInterface'));
+        $this->ref->ensureFilter($this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock());
 
         $this->assertInternalType('array', $this->ref->getFilters(), '->getFilters() flushes and returns filters');
     }
 
     public function testSetContent()
     {
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
 
         $this->am->expects($this->once())
             ->method('get')
@@ -101,8 +101,8 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 
     public function testLoad()
     {
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
 
         $this->am->expects($this->exactly(2))
             ->method('get')
@@ -117,8 +117,8 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 
     public function testDump()
     {
-        $filter = $this->getMock('Assetic\\Filter\\FilterInterface');
-        $asset = $this->getMock('Assetic\\Asset\\AssetInterface');
+        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
 
         $this->am->expects($this->exactly(2))
             ->method('get')
@@ -133,9 +133,9 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 
     public function testClone()
     {
-        $filter1 = $this->getMock('Assetic\\Filter\\FilterInterface');
-        $filter2 = $this->getMock('Assetic\\Filter\\FilterInterface');
-        $filter3 = $this->getMock('Assetic\\Filter\\FilterInterface');
+        $filter1 = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter2 = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter3 = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
 
         $asset = new StringAsset('');
         $this->am->expects($this->any())
