@@ -24,19 +24,14 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidTemplateNameGetContent()
     {
-        if (method_exists('Twig_LoaderInterface', 'getSourceContext')) {
-            $loaderType = 'Twig_LoaderInterface';
-        } else {
-            $loaderType = array('Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface');
+        $loader = $this->prophesize('Twig_LoaderInterface');
+        if (!method_exists('Twig_LoaderInterface', 'getSourceContext')) {
+            $loader->willImplement('Twig_SourceContextLoaderInterface');
         }
 
-        $loader = $this->getMock($loaderType);
-        $loader->expects($this->once())
-            ->method('getSourceContext')
-            ->with('asdf')
-            ->will($this->throwException(new \Twig_Error_Loader('')));
+        $loader->getSourceContext('asdf')->willThrow(new \Twig_Error_Loader(''));
 
-        $resource = new TwigResource($loader, 'asdf');
+        $resource = new TwigResource($loader->reveal(), 'asdf');
         $this->assertEquals('', $resource->getContent());
     }
 
