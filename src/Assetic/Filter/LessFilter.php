@@ -147,12 +147,12 @@ EOF;
 
         $proc = $pb->getProcess();
         $code = $proc->run();
-        unlink($input);
 
         if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 
+        unlink($input);
         $asset->setContent($proc->getOutput());
     }
 
