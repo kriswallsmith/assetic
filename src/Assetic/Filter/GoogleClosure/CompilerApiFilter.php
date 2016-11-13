@@ -40,6 +40,7 @@ class CompilerApiFilter extends BaseCompilerFilter
             'js_code'       => $asset->getContent(),
             'output_format' => 'json',
             'output_info'   => 'compiled_code',
+            'language'      => self::LANGUAGE_ECMASCRIPT3,
         );
 
         if (null !== $this->compilationLevel) {
