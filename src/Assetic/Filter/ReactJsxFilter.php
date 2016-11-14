@@ -17,8 +17,22 @@ class ReactJsxFilter extends BaseNodeFilter
     private $jsxBin;
     private $nodeBin;
 
-    public function __construct($jsxBin = '/usr/bin/jsx', $nodeBin = null)
+    public function __construct($jsxBin = '/usr/bin/jsx', $nodeBin = null, array $nodePaths = array())
     {
+        $this->setNodePaths($nodePaths);
+
+        if (!file_exists($jsxBin)) {
+            $localBins = array('/.bin/jsx', '/react-tools/bin/jsx');
+            foreach ($this->getNodePaths() as $nodePath) {
+                foreach ($localBins as $localBin) {
+                    if (file_exists($localJsxBin = $nodePath . $localBin)) {
+                        $jsxBin = $localJsxBin;
+                        break 2;
+                    }
+                }
+            }
+        }
+
         $this->jsxBin = $jsxBin;
         $this->nodeBin = $nodeBin;
     }
