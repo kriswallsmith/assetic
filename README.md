@@ -95,6 +95,8 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `JSqueezeFilter`: compresses Javascript
  * `LessFilter`: parses LESS into CSS (using less.js with node.js)
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
+ * `MatthiasMullieCssFilter`: minifies CSS (using https://github.com/matthiasmullie/minify)
+ * `MatthiasMullieJsFilter`: minifies JS (using https://github.com/matthiasmullie/minify)
  * `OptiPngFilter`: optimize your PNGs
  * `PackagerFilter`: parses Javascript for packager tags
  * `PackerFilter`: compresses Javascript using Dean Edwards's Packer
