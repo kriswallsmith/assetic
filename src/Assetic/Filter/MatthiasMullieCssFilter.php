@@ -15,9 +15,9 @@ use Assetic\Asset\AssetInterface;
 use MatthiasMullie\Minify;
 
 /**
- * Filters assets through Phpwee.
+ * Filters assets through matthiasmullie/minify.
  *
- * @link https://github.com/searchturbine/phpwee-php-minifier
+ * @link https://github.com/matthiasmullie/minify
  * @author Dany Henriquez <dany.henriquez@outlook.com>
  */
 
