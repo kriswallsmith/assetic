@@ -54,9 +54,24 @@ class CssCacheBustingFilter extends BaseCssFilter
                     return $matches[0];
                 }
 
+                $query = parse_url($matches['url'], PHP_URL_QUERY);
+                $fragment = parse_url($matches['url'], PHP_URL_FRAGMENT);
+
+                // Remove fragment and query parameters from URL
+                $url = preg_replace('/(?:#|\?).*$/', '', $matches['url']);
+
+                $suffix = $version;
+                if ($query !== null) {
+                    $suffix .= "&{$query}";
+                }
+
+                if ($fragment !== null) {
+                    $suffix .= "#{$fragment}";
+                }
+
                 return str_replace(
                     $matches['url'],
-                    sprintf($format, $matches['url'], $version),
+                    sprintf($format, $url, $suffix),
                     $matches[0]
                 );
             }

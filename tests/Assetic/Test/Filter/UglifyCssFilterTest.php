@@ -50,6 +50,6 @@ class UglifyCssFilterTest extends FilterTestCase
 @import url("fonts.css");body{background:black}
 
 CSS;
-        $this->assertSame($expected, $this->asset->getContent());
+        $this->assertEquals($expected, $this->asset->getContent());
     }
 }
