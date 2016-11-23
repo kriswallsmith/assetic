@@ -46,7 +46,8 @@
         "files": [ "src/functions.php" ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "secure-http": false
     },
     "extra": {
         "branch-alias": {
