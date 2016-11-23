@@ -196,7 +196,11 @@ class AssetFactory
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
                 $asset->add($this->parseInput($input, $options));
-                $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+                $extension = pathinfo($input, PATHINFO_EXTENSION);
+                if (($extension !== '') && ($extension !== null) && ($extension !== false)) {
+                    // filter out assets without extensions (like other packages)
+                    $extensions[$extension] = true;
+                }
             }
         }
 
