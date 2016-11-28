@@ -53,6 +53,7 @@ class CompassFilter extends BaseSassFilter
     private $httpGeneratedImagesPath;
     private $generatedImagesPath;
     private $httpJavascriptsPath;
+    private $cachePath;
     private $homeEnv = true;
 
     public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
@@ -173,6 +174,11 @@ class CompassFilter extends BaseSassFilter
     {
         $this->httpJavascriptsPath = $httpJavascriptsPath;
     }
+    
+    public function setCachePath($cachePath)
+    {
+        $this->cachePath = $cachePath;
+    }
 
     public function setHomeEnv($homeEnv)
     {
@@ -288,6 +294,10 @@ class CompassFilter extends BaseSassFilter
 
         if ($this->httpJavascriptsPath) {
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
+        }
+        
+        if ($this->cachePath) {
+            $optionsConfig['cache_path'] = $this->cachePath;
         }
 
         // options in configuration file
