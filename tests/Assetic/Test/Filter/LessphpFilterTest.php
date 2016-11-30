@@ -98,6 +98,18 @@ EOF;
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() adds load paths to include paths');
     }
 
+    public function testSetVariables()
+    {
+        $filter = $this->filter;
+        $filter->setVariables(array('color' => 'red'));
+
+        $asset = new StringAsset("#test { color: @color; }");
+        $asset->load();
+        $filter->filterLoad($asset);
+
+        $this->assertContains('color: red', $asset->getContent(), 'Variables can be added');
+    }
+
     /**
      * @group integration
      */
