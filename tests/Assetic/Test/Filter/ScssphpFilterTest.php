@@ -195,14 +195,14 @@ EOF;
     }
     
     public function testIgnorePartials() {
-    	$asset = new FileAsset(__DIR__.'/fixtures/sass/_include.scss');
-    	$asset->load();
-    	
-    	$filter = $this->getFilter();
-    	$filter->ignorePartial(true);
-    	$filter->filterLoad($asset);
-    	 
-    	$this->assertEquals(' ', $asset->getContent(), '->filterLoad() should ignore partial scss files');
+        $asset = new FileAsset(__DIR__.'/fixtures/sass/_include.scss');
+        $asset->load();
+
+        $filter = $this->getFilter();
+        $filter->ignorePartial(true);
+        $filter->filterLoad($asset);
+
+        $this->assertEquals(' ', $asset->getContent(), '->filterLoad() should ignore partial scss files');
     }
 
     // private
