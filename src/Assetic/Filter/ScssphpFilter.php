@@ -28,10 +28,21 @@ use Leafo\ScssPhp\Compiler;
 class ScssphpFilter implements DependencyExtractorInterface
 {
     private $compass = false;
+    private $ignorePartials = false;
     private $importPaths = array();
     private $customFunctions = array();
     private $formatter;
     private $variables = array();
+    
+    public function ignorePartial($enable = true)
+    {
+    	$this->ignorePartials = (Boolean) $enable;
+    }
+    
+    public function isPartialIgnored()
+    {
+    	return $this->ignorePartials;
+    }
 
     public function enableCompass($enable = true)
     {
@@ -88,6 +99,16 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
+    	if($this->ignorePartials) {
+	        $path = $asset->getSourceRoot() . '/' . $asset->getSourcePath();
+	        $file = basename($path);
+	        
+	        if(strrpos($file, '_', -strlen($file)) !== false) {
+	            $asset->setContent(" ");
+	            return;
+	        }
+    	}
+        
         $sc = new Compiler();
 
         if ($this->compass) {
