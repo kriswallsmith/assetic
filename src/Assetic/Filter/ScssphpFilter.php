@@ -36,12 +36,12 @@ class ScssphpFilter implements DependencyExtractorInterface
     
     public function ignorePartial($enable = true)
     {
-    	$this->ignorePartials = (Boolean) $enable;
+        $this->ignorePartials = (Boolean) $enable;
     }
     
     public function isPartialIgnored()
     {
-    	return $this->ignorePartials;
+        return $this->ignorePartials;
     }
 
     public function enableCompass($enable = true)
@@ -99,15 +99,15 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-    	if($this->ignorePartials) {
-	        $path = $asset->getSourceRoot() . '/' . $asset->getSourcePath();
-	        $file = basename($path);
-	        
-	        if(strrpos($file, '_', -strlen($file)) !== false) {
-	            $asset->setContent(" ");
-	            return;
-	        }
-    	}
+        if($this->ignorePartials) {
+            $path = $asset->getSourceRoot() . '/' . $asset->getSourcePath();
+            $file = basename($path);
+
+            if(strrpos($file, '_', -strlen($file)) !== false) {
+                $asset->setContent(" ");
+                return;
+            }
+        }
         
         $sc = new Compiler();
 
