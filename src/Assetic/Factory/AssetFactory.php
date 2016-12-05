@@ -310,16 +310,17 @@ class AssetFactory
             return $this->createHttpAsset($input, $options['vars']);
         }
 
+        $root = self::findRootDir($input, $options['root']);
         if (self::isAbsolutePath($input)) {
-            if ($root = self::findRootDir($input, $options['root'])) {
+            if (!empty($root)) {
                 $path = ltrim(substr($input, strlen($root)), '/');
             } else {
                 $path = null;
             }
         } else {
-            $root  = $this->root;
+            $root  = empty($root) ? $this->root : $root;
             $path  = $input;
-            $input = $this->root.'/'.$path;
+            $input = $root.'/'.$path;
         }
 
         if (false !== strpos($input, '*')) {
