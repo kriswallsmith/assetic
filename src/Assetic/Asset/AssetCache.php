@@ -24,6 +24,7 @@ class AssetCache implements AssetInterface
 {
     private $asset;
     private $cache;
+    private $lastModified;
 
     public function __construct(AssetInterface $asset, CacheInterface $cache)
     {
@@ -48,7 +49,7 @@ class AssetCache implements AssetInterface
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'load');
+        $cacheKey = self::getCacheKey($this, $additionalFilter, 'load');
         if ($this->cache->has($cacheKey)) {
             $this->asset->setContent($this->cache->get($cacheKey));
 
@@ -61,7 +62,7 @@ class AssetCache implements AssetInterface
 
     public function dump(FilterInterface $additionalFilter = null)
     {
-        $cacheKey = self::getCacheKey($this->asset, $additionalFilter, 'dump');
+        $cacheKey = self::getCacheKey($this, $additionalFilter, 'dump');
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
@@ -107,9 +108,14 @@ class AssetCache implements AssetInterface
         $this->asset->setTargetPath($targetPath);
     }
 
+    public function setLastModified($lastModified)
+    {
+        $this->lastModified = $lastModified;
+    }
+
     public function getLastModified()
     {
-        return $this->asset->getLastModified();
+        return max($this->asset->getLastModified(), $this->lastModified);
     }
 
     public function getVars()
