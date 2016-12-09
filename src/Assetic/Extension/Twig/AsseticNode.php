@@ -91,11 +91,36 @@ class AsseticNode extends \Twig_Node
     }
 
     protected function compileDebug(\Twig_Compiler $compiler)
-    {
+    {  
         $i = 0;
         foreach ($this->getAttribute('asset') as $leaf) {
+            $useSource  = (pathinfo($leaf->getSourcePath(), PATHINFO_EXTENSION) == 'css');
+
+            if ($useSource) { 
+              $compiler
+                ->write("if (isset(\$context['assetic']['debug']) && \$context['assetic']['debug']) {\n")
+                ->indent()
+                  ->write('$context[')
+                  ->repr($this->getAttribute('var_name'))
+                  ->raw("] = '/")
+                  ->raw($leaf->getSourcePath())
+                  ->raw("';\n")
+                  ->subcompile($this->getNode('body'))
+                ->outdent()
+                ->write("} else {\n")
+                ->indent()
+              ;
+            }
+
             $leafName = $this->getAttribute('name').'_'.$i++;
             $this->compileAsset($compiler, $leaf, $leafName);
+
+            if ($useSource) { 
+              $compiler
+                  ->outdent()
+                  ->write("}\n")
+              ;
+            }
         }
     }
 
