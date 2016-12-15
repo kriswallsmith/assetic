@@ -226,7 +226,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     {
         $this->values = $values;
 
-        foreach ($this as $asset) {
+        foreach ($this->assets as $asset) {
             $asset->setValues(array_intersect_key($values, array_flip($asset->getVars())));
         }
     }
