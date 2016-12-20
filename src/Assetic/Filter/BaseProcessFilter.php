@@ -51,6 +51,9 @@ abstract class BaseProcessFilter implements FilterInterface
     protected function mergeEnv(ProcessBuilder $pb)
     {
         foreach (array_filter($_SERVER, 'is_scalar') as $key => $value) {
+            if (preg_match('/^[a-z][a-z0-9_]*$/i', $key) === 0) {
+                continue;
+            }
             $pb->setEnv($key, $value);
         }
     }

@@ -69,4 +69,24 @@ class CompassFilterTest extends FilterTestCase
 
         $this->assertContains('text-decoration', $asset->getContent());
     }
+
+    public function testEnvironment()
+    {
+        $_SERVER = [
+            'GOOD_ENV_VAR' => 'scalar',
+            'NOT_SCALAR_VAR' => [],
+            'good_minus_env_var' => 'scalar',
+            'bad-env-bar' => 'scalar',
+            '3_BAD_NUMBER_ENV_VAR' => 'scalar',
+            'BAD_$CHARACTER_ENV_VAR' => 'scalar',
+            'GOD_NUMBER_3_ENV_VAR' => 'scalar',
+        ];
+
+        $asset = new FileAsset(__DIR__.'/fixtures/compass/stylesheet.sass');
+        $asset->load();
+
+        $this->filter->filterLoad($asset);
+
+        $this->assertContains('.test-class', $asset->getContent());
+    }
 }
