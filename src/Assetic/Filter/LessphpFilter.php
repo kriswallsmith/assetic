@@ -113,7 +113,9 @@ class LessphpFilter implements DependencyExtractorInterface
         	$lc->setOptions($this->options);
         }
 
-        $asset->setContent($lc->parse($asset->getContent(), $this->presets));
+        $lc->setVariables($this->presets);
+
+        $asset->setContent($lc->parse($asset->getContent()));
     }
 
     public function registerFunction($name, $callable)
