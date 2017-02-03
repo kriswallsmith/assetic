@@ -144,7 +144,7 @@ class AssetCache implements AssetInterface
      *
      * @return string A key for identifying the current asset
      */
-    private static function getCacheKey(AssetInterface $asset, FilterInterface $additionalFilter = null, $salt = '')
+    public static function getCacheKey(AssetInterface $asset, FilterInterface $additionalFilter = null, $salt = '')
     {
         if ($additionalFilter) {
             $asset = clone $asset;
