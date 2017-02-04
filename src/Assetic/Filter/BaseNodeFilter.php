@@ -38,6 +38,12 @@ abstract class BaseNodeFilter extends BaseProcessFilter
             $this->mergeEnv($pb);
             $pb->setEnv('NODE_PATH', implode(PATH_SEPARATOR, $this->nodePaths));
         }
+        
+        // node.js needs the ENV variable 'SystemRoot' on windows, which is not set automatically
+        // by the Symfony Process Component. See https://github.com/joyent/node/issues/1943#issuecomment-2533452
+        if (isset($_SERVER['SystemRoot'])) {
+            $pb->setEnv('SystemRoot', $_SERVER['SystemRoot']);
+        }
 
         return $pb;
     }
