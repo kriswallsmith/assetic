@@ -263,7 +263,7 @@ class CompassFilter extends BaseSassFilter
         }
 
         if ($this->noCache) {
-            $optionsConfig['sass_options']['no_cache'] = true;
+            $optionsConfig['sass_options']['cache'] = true;
         }
 
         if ($this->httpPath) {
