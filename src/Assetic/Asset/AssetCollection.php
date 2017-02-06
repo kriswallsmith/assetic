@@ -151,7 +151,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
             $parts[] = $asset->dump($additionalFilter);
         }
 
-        return implode("\n", $parts);
+        return implode("\n;", $parts);
     }
 
     public function getContent()
