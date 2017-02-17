@@ -11,6 +11,8 @@
 
 namespace Assetic\Filter;
 
+use Assetic\Asset\AssetInterface;
+
 /**
  * A filter can implement a hash function
  *
@@ -23,5 +25,5 @@ interface HashableInterface
      *
      * @return string Object hash
      */
-    public function hash();
+    public function hash(AssetInterface $asset);
 }
