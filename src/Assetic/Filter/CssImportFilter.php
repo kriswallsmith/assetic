@@ -47,7 +47,8 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
             }
 
             $importRoot = $sourceRoot;
-
+            $matches['url'] = trim($matches['url']);//fix bug with processing @import url( some.css );
+            
             if (false !== strpos($matches['url'], '://')) {
                 // absolute
                 list($importScheme, $tmp) = explode('://', $matches['url'], 2);
