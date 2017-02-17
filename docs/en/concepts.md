@@ -34,6 +34,7 @@ filter:
  * Sprockets (version 1)
  * Stylus
  * YUI Compressor
+ * SmartSprites
 
 ### Using Assets and Filters
 
