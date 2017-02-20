@@ -41,7 +41,7 @@ class ExpiringCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->inner->expects($this->once())
             ->method('has')
-            ->with($key)
+            ->with($expiresKey)
             ->will($this->returnValue(true));
         $this->inner->expects($this->once())
             ->method('get')
@@ -65,7 +65,7 @@ class ExpiringCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->inner->expects($this->once())
             ->method('has')
-            ->with($key)
+            ->with($expiresKey)
             ->will($this->returnValue(true));
         $this->inner->expects($this->once())
             ->method('get')
@@ -105,14 +105,50 @@ class ExpiringCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->cache->remove($key);
     }
-
-    public function testGet()
+   
+    public function testGetExpired()
     {
+        $key = 'asdf';
+        $expiresKey = 'asdf.expires';
+        $thePast = 0;
+
+        $this->inner->expects($this->once())
+            ->method('has')
+            ->with($expiresKey)
+            ->will($this->returnValue(true));
         $this->inner->expects($this->once())
             ->method('get')
-            ->with('foo')
-            ->will($this->returnValue('bar'));
+            ->with($expiresKey)
+            ->will($this->returnValue($thePast));
+        $this->inner->expects($this->at(2))
+            ->method('remove')
+            ->with($expiresKey);
+        $this->inner->expects($this->at(3))
+            ->method('remove')
+            ->with($key);
 
-        $this->assertEquals('bar', $this->cache->get('foo'), '->get() returns the cached value');
+        $this->assertNull($this->cache->get($key), '->get() returns null if an expired value exists');
     }
+
+    public function testGetNotExpired()
+    {
+        $key = 'asdf';
+        $expiresKey = 'asdf.expires';
+        $theFuture = time() * 2;
+
+        $this->inner->expects($this->once())
+            ->method('has')
+            ->with($expiresKey)
+            ->will($this->returnValue(true));
+        $this->inner->expects($this->at(1))
+            ->method('get')
+            ->with($expiresKey)
+            ->will($this->returnValue($theFuture));
+        $this->inner->expects($this->at(2))
+            ->method('get')
+            ->with($key)
+            ->will($this->returnValue('bar'));
+                
+        $this->assertEquals('bar', $this->cache->get($key), '->get() returns the cached value');
+    }    
 }
