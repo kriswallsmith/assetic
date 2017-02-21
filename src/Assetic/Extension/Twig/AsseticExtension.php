@@ -48,7 +48,11 @@ class AsseticExtension extends \Twig_Extension implements \Twig_Extension_Global
     {
         $functions = array();
         foreach ($this->functions as $function => $filter) {
-            $functions[] = new AsseticFilterFunction($function);
+            $functions[] = new \Twig_SimpleFunction($function, null, array(
+                'needs_environment' => false,
+                'needs_context' => false,
+                'node_class' => '\Assetic\Extension\Twig\AsseticFilterNode',
+            ));
         }
 
         return $functions;
