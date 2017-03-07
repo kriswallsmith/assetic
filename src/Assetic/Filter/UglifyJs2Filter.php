@@ -29,6 +29,7 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $beautify;
     private $mangle;
     private $screwIe8;
+    private $supportIe8;
     private $comments;
     private $wrap;
     private $defines;
@@ -57,6 +58,11 @@ class UglifyJs2Filter extends BaseNodeFilter
     public function setScrewIe8($screwIe8)
     {
         $this->screwIe8 = $screwIe8;
+    }
+
+    public function setSupportIe8($supportIe8)
+    {
+        $this->supportIe8 = $supportIe8;
     }
 
     public function setComments($comments)
@@ -104,6 +110,10 @@ class UglifyJs2Filter extends BaseNodeFilter
 
         if ($this->screwIe8) {
             $pb->add('--screw-ie8');
+        }
+
+        if ($this->supportIe8) {
+            $pb->add('--support-ie8');
         }
 
         if ($this->comments) {
