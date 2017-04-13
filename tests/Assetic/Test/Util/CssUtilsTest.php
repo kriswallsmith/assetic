@@ -37,10 +37,16 @@ class CssUtilsTest extends \PHPUnit_Framework_TestCase
         $content = <<<CSS
 @import 'custom.css';
 @import "common.css" screen, projection;
+@import    "spaces.css";
+@import url("url1.css");
+@import url("url2.css");
+@import   url('url3.css');
+@import-once 'once.css';
+@import-once    url("once-url.css");
 body { background: url(../images/bg.gif); }
 CSS;
 
-        $expected = array('common.css', 'custom.css');
+        $expected = array('common.css', 'custom.css', 'spaces.css', 'url1.css', 'url2.css', 'url3.css', 'once.css', 'once-url.css');
         $actual = CssUtils::extractImports($content);
 
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
