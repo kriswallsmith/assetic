@@ -41,6 +41,7 @@ class SassFilter extends BaseSassFilter
     private $cacheLocation;
     private $noCache;
     private $compass;
+    private $precision;
 
     public function __construct($sassPath = '/usr/bin/sass', $rubyPath = null)
     {
@@ -104,6 +105,11 @@ class SassFilter extends BaseSassFilter
         $this->compass = $compass;
     }
 
+    public function setPrecision($precision)
+    {
+        $this->precision = (int) $precision;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
         $sassProcessArgs = array($this->sassPath);
@@ -163,6 +169,10 @@ class SassFilter extends BaseSassFilter
 
         if ($this->compass) {
             $pb->add('--compass');
+        }
+
+        if ($this->precision) {
+            $pb->add('--precision')->add($this->precision);
         }
 
         // input
