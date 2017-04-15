@@ -58,7 +58,7 @@ class ConfigCache
             // @codeCoverageIgnoreEnd
         }
 
-        if (false === @file_put_contents($path, sprintf("<?php\n\n// $resource\nreturn %s;\n", var_export($value, true)))) {
+        if (false === @file_put_contents($path, sprintf("<?php\n\n// $resource\nreturn %s;\n", var_export($value, true)), LOCK_EX)) {
             // @codeCoverageIgnoreStart
             throw new \RuntimeException('Unable to write file '.$path);
             // @codeCoverageIgnoreEnd
