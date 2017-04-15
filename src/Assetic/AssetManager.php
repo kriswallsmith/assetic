@@ -62,7 +62,7 @@ class AssetManager
      */
     public function set($name, AssetInterface $asset)
     {
-        if (!ctype_alnum(str_replace('_', '', $name))) {
+        if (!ctype_alnum(str_replace(array('_', '-', '.'), '', $name))) {
             throw new \InvalidArgumentException(sprintf('The name "%s" is invalid.', $name));
         }
 
