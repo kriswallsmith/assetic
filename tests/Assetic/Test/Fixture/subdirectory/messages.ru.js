@@ -1,0 +1,1 @@
+var messages = {"text.greeting": "Привет %name%!"};
