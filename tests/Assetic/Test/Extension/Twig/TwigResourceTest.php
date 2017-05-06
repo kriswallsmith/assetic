@@ -24,7 +24,27 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidTemplateNameGetContent()
     {
-        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader = $this->prophesize('Twig_LoaderInterface');
+        if (!method_exists('Twig_LoaderInterface', 'getSourceContext')) {
+            $loader->willImplement('Twig_SourceContextLoaderInterface');
+        }
+
+        $loader->getSourceContext('asdf')->willThrow(new \Twig_Error_Loader(''));
+
+        $resource = new TwigResource($loader->reveal(), 'asdf');
+        $this->assertEquals('', $resource->getContent());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testInvalidTemplateNameGetContentWithLegacyLoader()
+    {
+        if (!method_exists('Twig_LoaderInterface', 'getSource')) {
+            $this->markTestSkipped('This test does not make sense on Twig 2.x.');
+        }
+
+        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
         $loader->expects($this->once())
             ->method('getSource')
             ->with('asdf')
@@ -36,7 +56,7 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidTemplateNameIsFresh()
     {
-        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
         $loader->expects($this->once())
             ->method('isFresh')
             ->with('asdf', 1234)
