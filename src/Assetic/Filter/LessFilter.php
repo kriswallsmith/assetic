@@ -105,7 +105,6 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     {
         static $format = <<<'EOF'
 var less = require('less');
-var sys  = require(process.binding('natives').util ? 'util' : 'sys');
 
 less.render(%s, %s, function(error, css) {
     if (error) {
@@ -114,9 +113,9 @@ less.render(%s, %s, function(error, css) {
     }
     try {
         if (typeof css == 'string') {
-            sys.print(css);
+            process.stdout.write(css);
         } else {
-            sys.print(css.css);
+            process.stdout.write(css.css);
         }
     } catch (e) {
         less.writeError(error);
