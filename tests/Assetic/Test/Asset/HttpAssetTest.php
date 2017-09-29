@@ -39,14 +39,14 @@ class HttpAssetTest extends TestCase
 
     public function testMalformedUrl()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         new HttpAsset(__FILE__);
     }
 
     public function testInvalidUrl()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->expectException('RuntimeException');
 
         $asset = new HttpAsset('http://invalid.com/foobar');
         $asset->load();

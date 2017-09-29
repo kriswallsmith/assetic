@@ -33,7 +33,7 @@ class AssetManagerTest extends TestCase
 
     public function testGetInvalidAsset()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $this->am->get('foo');
     }
 
@@ -48,7 +48,7 @@ class AssetManagerTest extends TestCase
 
     public function testInvalidName()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->am->set('@foo', $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock());
     }

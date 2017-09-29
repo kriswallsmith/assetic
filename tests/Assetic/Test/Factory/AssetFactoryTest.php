@@ -40,7 +40,8 @@ class AssetFactoryTest extends TestCase
 
     public function testNoAssetManagerReference()
     {
-        $this->setExpectedException('LogicException', 'There is no asset manager.');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('There is no asset manager.');
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('@foo'));
@@ -54,7 +55,9 @@ class AssetFactoryTest extends TestCase
 
     public function testNoFilterManager()
     {
-        $this->setExpectedException('LogicException', 'There is no filter manager.');
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('There is no filter manager.');
+
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('foo'), array('foo'));
@@ -142,7 +145,7 @@ class AssetFactoryTest extends TestCase
 
     public function testInvalidFilter()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->fm->expects($this->once())
             ->method('get')

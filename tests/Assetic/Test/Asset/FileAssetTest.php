@@ -41,7 +41,9 @@ class FileAssetTest extends TestCase
     {
         $asset = new FileAsset(__DIR__."/foo/bar/baz.css");
 
-        $this->setExpectedException("RuntimeException", "The source file");
+        $this->expectException("RuntimeException");
+        $this->expectExceptionMessage("The source file");
+
         $asset->getLastModified();
     }
 
@@ -68,7 +70,7 @@ class FileAssetTest extends TestCase
 
     public function testInvalidBase()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $asset = new FileAsset(__FILE__, array(), __DIR__.'/foo');
     }

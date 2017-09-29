@@ -310,7 +310,7 @@ class AssetCollectionTest extends TestCase
 
     public function testRemoveInvalidLeaf()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $coll = new AssetCollection();
         $coll->removeLeaf(new StringAsset('asdf'));
@@ -338,7 +338,7 @@ class AssetCollectionTest extends TestCase
 
     public function testReplaceInvalidLeaf()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $coll = new AssetCollection();
         $coll->replaceLeaf(new StringAsset('foo'), new StringAsset('bar'));
