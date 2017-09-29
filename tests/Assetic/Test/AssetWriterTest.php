@@ -13,8 +13,9 @@ namespace Assetic\Test;
 
 use Assetic\Asset\FileAsset;
 use Assetic\AssetWriter;
+use PHPUnit\Framework\TestCase;
 
-class AssetWriterTest extends \PHPUnit_Framework_TestCase
+class AssetWriterTest extends TestCase
 {
     private $dir;
     /** @var AssetWriter */

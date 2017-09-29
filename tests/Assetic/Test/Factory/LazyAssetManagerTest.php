@@ -12,8 +12,9 @@
 namespace Assetic\Test\Factory;
 
 use Assetic\Factory\LazyAssetManager;
+use PHPUnit\Framework\TestCase;
 
-class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
+class LazyAssetManagerTest extends TestCase
 {
     private $factory;
     private $am;

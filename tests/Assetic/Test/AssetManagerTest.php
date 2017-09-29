@@ -12,8 +12,9 @@
 namespace Assetic\Test;
 
 use Assetic\AssetManager;
+use PHPUnit\Framework\TestCase;
 
-class AssetManagerTest extends \PHPUnit_Framework_TestCase
+class AssetManagerTest extends TestCase
 {
     /** @var AssetManager */
     private $am;

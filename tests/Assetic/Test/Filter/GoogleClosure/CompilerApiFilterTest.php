@@ -13,12 +13,13 @@ namespace Assetic\Test\Filter\GoogleClosure;
 
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerApiFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  * @group http
  */
-class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
+class CompilerApiFilterTest extends TestCase
 {
     public function testRoundTrip()
     {

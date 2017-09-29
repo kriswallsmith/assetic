@@ -13,8 +13,9 @@ namespace Assetic\Test\Factory;
 
 use Assetic\Asset\AssetCollection;
 use Assetic\Factory\AssetFactory;
+use PHPUnit\Framework\TestCase;
 
-class AssetFactoryTest extends \PHPUnit_Framework_TestCase
+class AssetFactoryTest extends TestCase
 {
     private $am;
     private $fm;

@@ -13,11 +13,12 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\JSMinPlusFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class JSMinPlusFilterTest extends \PHPUnit_Framework_TestCase
+class JSMinPlusFilterTest extends TestCase
 {
     protected function setUp()
     {

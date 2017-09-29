@@ -13,8 +13,9 @@ namespace Assetic\Test\Asset;
 
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\StringAsset;
+use PHPUnit\Framework\TestCase;
 
-class AssetReferenceTest extends \PHPUnit_Framework_TestCase
+class AssetReferenceTest extends TestCase
 {
     private $am;
     private $ref;

@@ -12,8 +12,9 @@
 namespace Assetic\Test\Asset;
 
 use Assetic\Asset\HttpAsset;
+use PHPUnit\Framework\TestCase;
 
-class HttpAssetTest extends \PHPUnit_Framework_TestCase
+class HttpAssetTest extends TestCase
 {
     const JQUERY = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js';
 

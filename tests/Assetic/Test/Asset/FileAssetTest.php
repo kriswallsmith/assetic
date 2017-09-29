@@ -12,8 +12,9 @@
 namespace Assetic\Test\Asset;
 
 use Assetic\Asset\FileAsset;
+use PHPUnit\Framework\TestCase;
 
-class FileAssetTest extends \PHPUnit_Framework_TestCase
+class FileAssetTest extends TestCase
 {
     public function testInterface()
     {

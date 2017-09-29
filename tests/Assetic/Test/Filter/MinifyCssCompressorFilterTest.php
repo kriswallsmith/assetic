@@ -13,11 +13,12 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\MinifyCssCompressorFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class MinifyCssCompressorFilterTest extends \PHPUnit_Framework_TestCase
+class MinifyCssCompressorFilterTest extends TestCase
 {
     protected function setUp()
     {

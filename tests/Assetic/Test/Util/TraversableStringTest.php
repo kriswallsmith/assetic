@@ -12,8 +12,9 @@
 namespace Assetic\Test\Util;
 
 use Assetic\Util\TraversableString;
+use PHPUnit\Framework\TestCase;
 
-class TraversableStringTest extends \PHPUnit_Framework_TestCase
+class TraversableStringTest extends TestCase
 {
     public function testString()
     {

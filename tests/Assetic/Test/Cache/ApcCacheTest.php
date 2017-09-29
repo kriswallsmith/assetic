@@ -12,11 +12,12 @@
 namespace Assetic\Test\Cache;
 
 use Assetic\Cache\ApcCache;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class ApcCacheTest extends \PHPUnit_Framework_TestCase
+class ApcCacheTest extends TestCase
 {
     protected function setUp()
     {

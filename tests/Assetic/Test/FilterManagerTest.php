@@ -12,8 +12,9 @@
 namespace Assetic\Test;
 
 use Assetic\FilterManager;
+use PHPUnit\Framework\TestCase;
 
-class FilterManagerTest extends \PHPUnit_Framework_TestCase
+class FilterManagerTest extends TestCase
 {
     /** @var FilterManager */
     private $fm;

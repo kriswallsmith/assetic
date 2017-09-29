@@ -15,11 +15,12 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\ScssphpFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class ScssphpFilterTest extends \PHPUnit_Framework_TestCase
+class ScssphpFilterTest extends TestCase
 {
     protected function setUp()
     {
