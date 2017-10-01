@@ -13,8 +13,9 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssRewriteFilter;
+use PHPUnit\Framework\TestCase;
 
-class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
+class CssRewriteFilterTest extends TestCase
 {
     /**
      * @dataProvider provideUrls

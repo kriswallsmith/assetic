@@ -2,7 +2,9 @@
 
 namespace Assetic\Test;
 
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
 {
     protected static function removeDirectory($dir)
     {

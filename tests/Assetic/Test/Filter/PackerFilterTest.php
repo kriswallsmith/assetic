@@ -13,11 +13,12 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\PackerFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class PackerFilterTest extends \PHPUnit_Framework_TestCase
+class PackerFilterTest extends TestCase
 {
     protected function setUp()
     {

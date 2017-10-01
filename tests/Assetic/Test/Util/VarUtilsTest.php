@@ -12,8 +12,9 @@
 namespace Assetic\Test\Util;
 
 use Assetic\Util\VarUtils;
+use PHPUnit\Framework\TestCase;
 
-class VarUtilsTest extends \PHPUnit_Framework_TestCase
+class VarUtilsTest extends TestCase
 {
     public function testResolve()
     {

@@ -12,8 +12,9 @@
 namespace Assetic\Test\Extension\Twig;
 
 use Assetic\Extension\Twig\TwigResource;
+use PHPUnit\Framework\TestCase;
 
-class TwigResourceTest extends \PHPUnit_Framework_TestCase
+class TwigResourceTest extends TestCase
 {
     protected function setUp()
     {

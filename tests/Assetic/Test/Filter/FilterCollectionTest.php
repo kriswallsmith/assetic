@@ -12,8 +12,9 @@
 namespace Assetic\Test\Filter;
 
 use Assetic\Filter\FilterCollection;
+use PHPUnit\Framework\TestCase;
 
-class FilterCollectionTest extends \PHPUnit_Framework_TestCase
+class FilterCollectionTest extends TestCase
 {
     public function testInterface()
     {

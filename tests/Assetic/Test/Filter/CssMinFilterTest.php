@@ -13,11 +13,12 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\CssMinFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class CssMinFilterTest extends \PHPUnit_Framework_TestCase
+class CssMinFilterTest extends TestCase
 {
     protected function setUp()
     {

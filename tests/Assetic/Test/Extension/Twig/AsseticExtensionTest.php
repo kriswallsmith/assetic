@@ -15,8 +15,9 @@ use Assetic\Factory\AssetFactory;
 use Assetic\Extension\Twig\AsseticExtension;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
+use PHPUnit\Framework\TestCase;
 
-class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
+class AsseticExtensionTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\AssetManager

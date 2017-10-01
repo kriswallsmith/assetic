@@ -12,8 +12,9 @@
 namespace Assetic\Test;
 
 use Assetic\FilterManager;
+use PHPUnit\Framework\TestCase;
 
-class FilterManagerTest extends \PHPUnit_Framework_TestCase
+class FilterManagerTest extends TestCase
 {
     /** @var FilterManager */
     private $fm;
@@ -25,7 +26,7 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidName()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->fm->get('foo');
     }
@@ -53,7 +54,7 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidAlias()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $this->fm->set('@foo', $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock());
     }
 }

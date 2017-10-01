@@ -13,11 +13,12 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\PhpCssEmbedFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
+class PhpCssEmbedFilterTest extends TestCase
 {
     protected function setUp()
     {
