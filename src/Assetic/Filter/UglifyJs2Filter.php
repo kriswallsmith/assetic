@@ -28,6 +28,7 @@ class UglifyJs2Filter extends BaseNodeFilter
     private $compress;
     private $beautify;
     private $mangle;
+    private $mangleProps;
     private $screwIe8;
     private $comments;
     private $wrap;
@@ -52,6 +53,11 @@ class UglifyJs2Filter extends BaseNodeFilter
     public function setMangle($mangle)
     {
         $this->mangle = $mangle;
+    }
+
+    public function setMangleProps($mangleProps)
+    {
+        $this->mangleProps = $mangleProps;
     }
 
     public function setScrewIe8($screwIe8)
@@ -100,6 +106,10 @@ class UglifyJs2Filter extends BaseNodeFilter
 
         if ($this->mangle) {
             $pb->add('--mangle');
+        }
+
+        if ($this->mangleProps) {
+            $pb->add('--mangle-props');
         }
 
         if ($this->screwIe8) {
