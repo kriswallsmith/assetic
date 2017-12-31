@@ -155,4 +155,12 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->assertContains('    foo', $this->asset->getContent());
         $this->assertNotContains('/**', $this->asset->getContent());
     }
+
+    public function testAddMangleProps()
+    {
+        $this->filter->setMangleProps("debug");
+        $this->filter->filterDump($this->asset);
+
+        $this->contains("debug", $this->asset->getContent());
+    }
 }
