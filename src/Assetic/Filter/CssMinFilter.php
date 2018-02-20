@@ -26,8 +26,8 @@ class CssMinFilter implements FilterInterface
 
     public function __construct()
     {
-        $this->filters = array();
-        $this->plugins = array();
+        $this->filters = [];
+        $this->plugins = [];
     }
 
     public function setFilters(array $filters)
@@ -61,7 +61,7 @@ class CssMinFilter implements FilterInterface
 
         if (isset($filters['ImportImports']) && true === $filters['ImportImports']) {
             if ($dir = $asset->getSourceDirectory()) {
-                $filters['ImportImports'] = array('BasePath' => $dir);
+                $filters['ImportImports'] = ['BasePath' => $dir];
             } else {
                 unset($filters['ImportImports']);
             }

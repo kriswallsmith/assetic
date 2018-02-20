@@ -26,8 +26,8 @@ class ReactJsxFilter extends BaseNodeFilter
     public function filterLoad(AssetInterface $asset)
     {
         $builder = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->jsxBin)
-            : array($this->jsxBin));
+            ? [$this->nodeBin, $this->jsxBin]
+            : [$this->jsxBin]);
 
         $inputDir = FilesystemUtils::createThrowAwayDirectory('jsx_in');
         $inputFile = $inputDir.DIRECTORY_SEPARATOR.'asset.js';

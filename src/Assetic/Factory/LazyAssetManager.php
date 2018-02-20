@@ -36,12 +36,12 @@ class LazyAssetManager extends AssetManager
      * @param AssetFactory $factory The asset factory
      * @param array        $loaders An array of loaders indexed by alias
      */
-    public function __construct(AssetFactory $factory, $loaders = array())
+    public function __construct(AssetFactory $factory, $loaders = [])
     {
         $this->factory = $factory;
-        $this->loaders = array();
-        $this->resources = array();
-        $this->formulae = array();
+        $this->loaders = [];
+        $this->resources = [];
+        $this->formulae = [];
         $this->loaded = false;
         $this->loading = false;
 
@@ -81,7 +81,7 @@ class LazyAssetManager extends AssetManager
      */
     public function getResources()
     {
-        $resources = array();
+        $resources = [];
         foreach ($this->resources as $r) {
             $resources = array_merge($resources, $r);
         }

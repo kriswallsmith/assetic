@@ -20,9 +20,9 @@ use Assetic\Asset\AssetInterface;
  */
 class FilterCollection implements FilterInterface, \IteratorAggregate, \Countable
 {
-    private $filters = array();
+    private $filters = [];
 
-    public function __construct($filters = array())
+    public function __construct($filters = [])
     {
         foreach ($filters as $filter) {
             $this->ensure($filter);
@@ -53,7 +53,7 @@ class FilterCollection implements FilterInterface, \IteratorAggregate, \Countabl
 
     public function clear()
     {
-        $this->filters = array();
+        $this->filters = [];
     }
 
     public function filterLoad(AssetInterface $asset)

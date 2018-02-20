@@ -42,7 +42,7 @@ abstract class BaseAsset implements AssetInterface
      * @param string $sourcePath The asset path
      * @param array  $vars
      */
-    public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
+    public function __construct($filters = [], $sourceRoot = null, $sourcePath = null, array $vars = [])
     {
         $this->filters = new FilterCollection($filters);
         $this->sourceRoot = $sourceRoot;
@@ -51,7 +51,7 @@ abstract class BaseAsset implements AssetInterface
             $this->sourceDir = dirname("$sourceRoot/$sourcePath");
         }
         $this->vars = $vars;
-        $this->values = array();
+        $this->values = [];
         $this->loaded = false;
     }
 

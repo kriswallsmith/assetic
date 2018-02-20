@@ -31,7 +31,7 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
      * @param array                   $visited  An array of visited asset objects
      * @param array                   $sources  An array of visited source strings
      */
-    public function __construct(AssetCollectionIterator $iterator, array $visited = array(), array $sources = array())
+    public function __construct(AssetCollectionIterator $iterator, array $visited = [], array $sources = [])
     {
         parent::__construct($iterator);
 

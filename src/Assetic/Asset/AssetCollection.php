@@ -40,9 +40,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
      * @param string $sourceRoot The root directory
      * @param array  $vars
      */
-    public function __construct($assets = array(), $filters = array(), $sourceRoot = null, array $vars = array())
+    public function __construct($assets = [], $filters = [], $sourceRoot = null, array $vars = [])
     {
-        $this->assets = array();
+        $this->assets = [];
         foreach ($assets as $asset) {
             $this->add($asset);
         }
@@ -51,7 +51,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->sourceRoot = $sourceRoot;
         $this->clones = new \SplObjectStorage();
         $this->vars = $vars;
-        $this->values = array();
+        $this->values = [];
     }
 
     public function __clone()
@@ -73,8 +73,8 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function removeLeaf(AssetInterface $needle, $graceful = false)
     {
         foreach ($this->assets as $i => $asset) {
-            $clone = isset($this->clones[$asset]) ? $this->clones[$asset] : null;
-            if (in_array($needle, array($asset, $clone), true)) {
+            $clone = $this->clones[$asset] ?? null;
+            if (in_array($needle, [$asset, $clone], true)) {
                 unset($this->clones[$asset], $this->assets[$i]);
 
                 return true;
@@ -95,8 +95,8 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function replaceLeaf(AssetInterface $needle, AssetInterface $replacement, $graceful = false)
     {
         foreach ($this->assets as $i => $asset) {
-            $clone = isset($this->clones[$asset]) ? $this->clones[$asset] : null;
-            if (in_array($needle, array($asset, $clone), true)) {
+            $clone = $this->clones[$asset] ?? null;
+            if (in_array($needle, [$asset, $clone], true)) {
                 unset($this->clones[$asset]);
                 $this->assets[$i] = $replacement;
 
@@ -134,7 +134,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function load(FilterInterface $additionalFilter = null)
     {
         // loop through leaves and load each asset
-        $parts = array();
+        $parts = [];
         foreach ($this as $asset) {
             $asset->load($additionalFilter);
             $parts[] = $asset->getContent();
@@ -146,7 +146,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function dump(FilterInterface $additionalFilter = null)
     {
         // loop through leaves and dump each asset
-        $parts = array();
+        $parts = [];
         foreach ($this as $asset) {
             $parts[] = $asset->dump($additionalFilter);
         }

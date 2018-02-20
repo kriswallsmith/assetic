@@ -82,13 +82,13 @@ class GssFilter extends BaseProcessFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $cleanup = array();
+        $cleanup = [];
 
-        $pb = $this->createProcessBuilder(array(
+        $pb = $this->createProcessBuilder([
             $this->javaPath,
             '-jar',
             $this->jarPath,
-        ));
+        ]);
 
         if (null !== $this->allowUnrecognizedFunctions) {
             $pb->add('--allow-unrecognized-functions');

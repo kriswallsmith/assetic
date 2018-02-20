@@ -34,7 +34,7 @@ class FileAsset extends BaseAsset
      *
      * @throws \InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
-    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
+    public function __construct($source, $filters = [], $sourceRoot = null, $sourcePath = null, array $vars = [])
     {
         if (null === $sourceRoot) {
             $sourceRoot = dirname($source);

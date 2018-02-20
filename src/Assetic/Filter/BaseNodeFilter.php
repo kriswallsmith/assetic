@@ -13,7 +13,7 @@ namespace Assetic\Filter;
 
 abstract class BaseNodeFilter extends BaseProcessFilter
 {
-    private $nodePaths = array();
+    private $nodePaths = [];
 
     public function getNodePaths()
     {
@@ -30,7 +30,7 @@ abstract class BaseNodeFilter extends BaseProcessFilter
         $this->nodePaths[] = $nodePath;
     }
 
-    protected function createProcessBuilder(array $arguments = array())
+    protected function createProcessBuilder(array $arguments = [])
     {
         $pb = parent::createProcessBuilder($arguments);
 

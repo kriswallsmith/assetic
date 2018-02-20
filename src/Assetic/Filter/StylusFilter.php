@@ -34,7 +34,7 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
      * @param string $nodeBin   The path to the node binary
      * @param array  $nodePaths An array of node paths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = [])
     {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
@@ -81,9 +81,9 @@ stylus(%s, %s)%s.render(function(e, css){
 EOF;
 
         // parser options
-        $parserOptions = array();
+        $parserOptions = [];
         if ($dir = $asset->getSourceDirectory()) {
-            $parserOptions['paths'] = array($dir);
+            $parserOptions['paths'] = [$dir];
             $parserOptions['filename'] = basename($asset->getSourcePath());
         }
 
@@ -121,6 +121,6 @@ EOF;
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo
-        return array();
+        return [];
     }
 }

@@ -82,8 +82,8 @@ class UglifyCssFilter extends BaseNodeFilter
     public function filterDump(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->uglifycssBin)
-            : array($this->uglifycssBin));
+            ? [$this->nodeBin, $this->uglifycssBin]
+            : [$this->uglifycssBin]);
 
         if ($this->expandVars) {
             $pb->add('--expand-vars');

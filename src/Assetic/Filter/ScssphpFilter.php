@@ -28,10 +28,10 @@ use Leafo\ScssPhp\Compiler;
 class ScssphpFilter implements DependencyExtractorInterface
 {
     private $compass = false;
-    private $importPaths = array();
-    private $customFunctions = array();
+    private $importPaths = [];
+    private $customFunctions = [];
     private $formatter;
-    private $variables = array();
+    private $variables = [];
 
     public function enableCompass($enable = true)
     {
@@ -45,12 +45,12 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function setFormatter($formatter)
     {
-        $legacyFormatters = array(
+        $legacyFormatters = [
             'scss_formatter' => 'Leafo\ScssPhp\Formatter\Expanded',
             'scss_formatter_nested' => 'Leafo\ScssPhp\Formatter\Nested',
             'scss_formatter_compressed' => 'Leafo\ScssPhp\Formatter\Compressed',
             'scss_formatter_crunched' => 'Leafo\ScssPhp\Formatter\Crunched',
-        );
+        ];
 
         if (isset($legacyFormatters[$formatter])) {
             @trigger_error(sprintf('The scssphp formatter `%s` is deprecated. Use `%s` instead.', $formatter, $legacyFormatters[$formatter]), E_USER_DEPRECATED);
@@ -132,11 +132,11 @@ class ScssphpFilter implements DependencyExtractorInterface
             $sc->addImportPath($path);
         }
 
-        $children = array();
+        $children = [];
         foreach (CssUtils::extractImports($content) as $match) {
             $file = $sc->findImport($match);
             if ($file) {
-                $children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));
+                $children[] = $child = $factory->createAsset($file, [], ['root' => $loadPath]);
                 $child->load();
                 $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
             }

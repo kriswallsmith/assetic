@@ -28,19 +28,19 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
     public function __construct(AssetFactory $factory)
     {
         $this->factory = $factory;
-        $this->prototypes = array();
+        $this->prototypes = [];
 
         foreach ($this->registerPrototypes() as $prototype => $options) {
             $this->addPrototype($prototype, $options);
         }
     }
 
-    public function addPrototype($prototype, array $options = array())
+    public function addPrototype($prototype, array $options = [])
     {
         $tokens = token_get_all('<?php '.$prototype);
         array_shift($tokens);
 
-        $this->prototypes[$prototype] = array($tokens, $options);
+        $this->prototypes[$prototype] = [$tokens, $options];
     }
 
     public function load(ResourceInterface $resource)
@@ -51,10 +51,10 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
 
         $buffers = array_fill(0, $nbProtos, '');
         $bufferLevels = array_fill(0, $nbProtos, 0);
-        $buffersInWildcard = array();
+        $buffersInWildcard = [];
 
         $tokens = token_get_all($resource->getContent());
-        $calls = array();
+        $calls = [];
 
         while ($token = array_shift($tokens)) {
             $current = self::tokenToString($token);
@@ -74,7 +74,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
                     $buffer .= $current;
 
                     if (!$level) {
-                        $calls[] = array($buffer.';', $options);
+                        $calls[] = [$buffer.';', $options];
                         $buffer = '';
                         unset($buffersInWildcard[$i]);
                     }
@@ -92,29 +92,29 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             }
         }
 
-        $formulae = array();
+        $formulae = [];
         foreach ($calls as $call) {
-            $formulae += call_user_func_array(array($this, 'processCall'), $call);
+            $formulae += call_user_func_array([$this, 'processCall'], $call);
         }
 
         return $formulae;
     }
 
-    private function processCall($call, array $protoOptions = array())
+    private function processCall($call, array $protoOptions = [])
     {
         $tmp = FilesystemUtils::createTemporaryFile('php_formula_loader');
-        file_put_contents($tmp, implode("\n", array(
+        file_put_contents($tmp, implode("\n", [
             '<?php',
             $this->registerSetupCode(),
             $call,
             'echo serialize($_call);',
-        )));
+        ]));
         $args = unserialize(shell_exec('php '.escapeshellarg($tmp)));
         unlink($tmp);
 
-        $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : array();
-        $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
-        $options = isset($args[2]) ? $args[2] : array();
+        $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : [];
+        $filters = isset($args[1]) ? self::argumentToArray($args[1]) : [];
+        $options = $args[2] ?? [];
 
         if (!isset($options['debug'])) {
             $options['debug'] = $this->factory->isDebug();
@@ -131,7 +131,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             $options['name'] = $this->factory->generateAssetName($inputs, $filters, $options);
         }
 
-        return array($options['name'] => array($inputs, $filters, $options));
+        return [$options['name'] => [$inputs, $filters, $options]];
     }
 
     /**

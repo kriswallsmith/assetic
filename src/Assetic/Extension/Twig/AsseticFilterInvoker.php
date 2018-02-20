@@ -26,12 +26,11 @@ class AsseticFilterInvoker
     {
         $this->factory = $factory;
 
+        $this->filters = (array) $filter;
+        $this->options = [];
         if (is_array($filter) && isset($filter['filter'])) {
             $this->filters = (array) $filter['filter'];
-            $this->options = isset($filter['options']) ? (array) $filter['options'] : array();
-        } else {
-            $this->filters = (array) $filter;
-            $this->options = array();
+            $this->options = (array) $filter['options'] ?? [];
         }
     }
 
@@ -50,7 +49,7 @@ class AsseticFilterInvoker
         return $this->options;
     }
 
-    public function invoke($input, array $options = array())
+    public function invoke($input, array $options = [])
     {
         $asset = $this->factory->createAsset($input, $this->filters, $options + $this->options);
 

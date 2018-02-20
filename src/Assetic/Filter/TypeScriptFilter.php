@@ -35,8 +35,8 @@ class TypeScriptFilter extends BaseNodeFilter
     public function filterLoad(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->tscBin)
-            : array($this->tscBin));
+            ? [$this->nodeBin, $this->tscBin]
+            : [$this->tscBin)];
 
         if ($sourcePath = $asset->getSourcePath()) {
             $templateName = basename($sourcePath);

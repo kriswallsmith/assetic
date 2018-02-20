@@ -36,11 +36,11 @@ class CompilerApiFilter extends BaseCompilerFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $query = array(
+        $query = [
             'js_code'       => $asset->getContent(),
             'output_format' => 'json',
             'output_info'   => 'compiled_code',
-        );
+        ];
 
         if (null !== $this->compilationLevel) {
             $query['compilation_level'] = $this->compilationLevel;
@@ -75,11 +75,13 @@ class CompilerApiFilter extends BaseCompilerFilter
         }
 
         if (preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))) {
-            $contextOptions = array('http' => array(
-                'method'  => 'POST',
-                'header'  => 'Content-Type: application/x-www-form-urlencoded',
-                'content' => http_build_query($query),
-            ));
+            $contextOptions = [
+                'http' => [
+                    'method'  => 'POST',
+                    'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                    'content' => http_build_query($query),
+                ]
+            ];
             if (null !== $this->timeout) {
                 $contextOptions['http']['timeout'] = $this->timeout;
             }
@@ -94,7 +96,7 @@ class CompilerApiFilter extends BaseCompilerFilter
         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
             $ch = curl_init('http://closure-compiler.appspot.com/compile');
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/x-www-form-urlencoded']);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);

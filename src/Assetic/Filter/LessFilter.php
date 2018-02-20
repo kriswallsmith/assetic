@@ -44,7 +44,7 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
      *
      * @var array
      */
-    protected $loadPaths = array();
+    protected $loadPaths = [];
 
     /**
      * Constructor.
@@ -52,12 +52,12 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
      * @param string $nodeBin   The path to the node binary
      * @param array  $nodePaths An array of node paths
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
+    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = [])
     {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
-        $this->treeOptions = array();
-        $this->parserOptions = array();
+        $this->treeOptions = [];
+        $this->parserOptions = [];
     }
 
     /**
@@ -129,7 +129,7 @@ EOF;
         // parser options
         $parserOptions = $this->parserOptions;
         if ($dir = $asset->getSourceDirectory()) {
-            $parserOptions['paths'] = array($dir);
+            $parserOptions['paths'] = [$dir];
             $parserOptions['filename'] = basename($asset->getSourcePath());
         }
 
@@ -172,10 +172,10 @@ EOF;
         }
 
         if (empty($loadPaths)) {
-            return array();
+            return [];
         }
 
-        $children = array();
+        $children = [];
         foreach (LessUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
@@ -189,7 +189,7 @@ EOF;
 
             foreach ($loadPaths as $loadPath) {
                 if (file_exists($file = $loadPath.'/'.$reference)) {
-                    $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
+                    $coll = $factory->createAsset($file, [], ['root' => $loadPath]);
                     foreach ($coll as $leaf) {
                         $leaf->ensureFilter($this);
                         $children[] = $leaf;

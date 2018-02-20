@@ -38,7 +38,7 @@ function assetic_init(AssetFactory $factory)
  *
  * @return array An array of javascript URLs
  */
-function assetic_javascripts($inputs = array(), $filters = array(), array $options = array())
+function assetic_javascripts($inputs = [], $filters = [], array $options = [])
 {
     if (!isset($options['output'])) {
         $options['output'] = 'js/*.js';
@@ -56,7 +56,7 @@ function assetic_javascripts($inputs = array(), $filters = array(), array $optio
  *
  * @return array An array of stylesheet URLs
  */
-function assetic_stylesheets($inputs = array(), $filters = array(), array $options = array())
+function assetic_stylesheets($inputs = [], $filters = [], array $options = [])
 {
     if (!isset($options['output'])) {
         $options['output'] = 'css/*.css';
@@ -74,7 +74,7 @@ function assetic_stylesheets($inputs = array(), $filters = array(), array $optio
  *
  * @return string An image URL
  */
-function assetic_image($input, $filters = array(), array $options = array())
+function assetic_image($input, $filters = [], array $options = [])
 {
     if (!isset($options['output'])) {
         $options['output'] = 'images/*';
@@ -94,7 +94,7 @@ function assetic_image($input, $filters = array(), array $options = array())
  *
  * @return array An array of URLs
  */
-function _assetic_urls($inputs = array(), $filters = array(), array $options = array())
+function _assetic_urls($inputs = [], $filters = [], array $options = [])
 {
     global $_assetic;
 
@@ -113,9 +113,9 @@ function _assetic_urls($inputs = array(), $filters = array(), array $options = a
 
     $one = $coll->getTargetPath();
     if ($combine) {
-        $many = array($one);
+        $many = [$one];
     } else {
-        $many = array();
+        $many = [];
         foreach ($coll as $leaf) {
             $many[] = $leaf->getTargetPath();
         }

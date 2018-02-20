@@ -18,7 +18,7 @@ namespace Assetic\Cache;
  */
 class ArrayCache implements CacheInterface
 {
-    private $cache = array();
+    private $cache = [];
 
     /**
      * @see CacheInterface::has()

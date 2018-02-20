@@ -157,11 +157,10 @@ class AssetCache implements AssetInterface
         $cacheKey .= $asset->getLastModified();
 
         foreach ($asset->getFilters() as $filter) {
-            if ($filter instanceof HashableInterface) {
-                $cacheKey .= $filter->hash();
-            } else {
-                $cacheKey .= serialize($filter);
-            }
+
+            $cacheKey .= $filter instanceof HashableInterface
+                ? $filter->hash()
+                : serialize($filter);
         }
 
         if ($values = $asset->getValues()) {

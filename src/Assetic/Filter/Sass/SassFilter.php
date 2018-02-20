@@ -106,7 +106,7 @@ class SassFilter extends BaseSassFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $sassProcessArgs = array($this->sassPath);
+        $sassProcessArgs = [$this->sassPath];
         if (null !== $this->rubyPath) {
             $sassProcessArgs = array_merge(explode(' ', $this->rubyPath), $sassProcessArgs);
         }

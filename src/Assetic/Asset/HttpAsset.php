@@ -34,7 +34,7 @@ class HttpAsset extends BaseAsset
      *
      * @throws \InvalidArgumentException If the first argument is not an URL
      */
-    public function __construct($sourceUrl, $filters = array(), $ignoreErrors = false, array $vars = array())
+    public function __construct($sourceUrl, $filters = [], $ignoreErrors = false, array $vars = [])
     {
         if (0 === strpos($sourceUrl, '//')) {
             $sourceUrl = 'http:'.$sourceUrl;
@@ -66,7 +66,7 @@ class HttpAsset extends BaseAsset
 
     public function getLastModified()
     {
-        if (false !== @file_get_contents($this->sourceUrl, false, stream_context_create(array('http' => array('method' => 'HEAD'))))) {
+        if (false !== @file_get_contents($this->sourceUrl, false, stream_context_create(['http' => ['method' => 'HEAD']]))) {
             foreach ($http_response_header as $header) {
                 if (0 === stripos($header, 'Last-Modified: ')) {
                     list(, $mtime) = explode(':', $header, 2);

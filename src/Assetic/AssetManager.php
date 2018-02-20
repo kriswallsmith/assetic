@@ -20,7 +20,7 @@ use Assetic\Asset\AssetInterface;
  */
 class AssetManager
 {
-    private $assets = array();
+    private $assets = [];
 
     /**
      * Gets an asset by name.
@@ -84,6 +84,6 @@ class AssetManager
      */
     public function clear()
     {
-        $this->assets = array();
+        $this->assets = [];
     }
 }

@@ -10,7 +10,7 @@ use Assetic\Util\SassUtils;
 
 abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExtractorInterface
 {
-    protected $loadPaths = array();
+    protected $loadPaths = [];
 
     public function setLoadPaths(array $loadPaths)
     {
@@ -30,10 +30,10 @@ abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExt
         }
 
         if (!$loadPaths) {
-            return array();
+            return [];
         }
 
-        $children = array();
+        $children = [];
         foreach (SassUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
@@ -42,24 +42,22 @@ abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExt
             }
 
             // the reference may or may not have an extension or be a partial
-            if (pathinfo($reference, PATHINFO_EXTENSION)) {
-                $needles = array(
+            $needles = pathinfo($reference, PATHINFO_EXTENSION)
+                ? [
                     $reference,
                     self::partialize($reference),
-                );
-            } else {
-                $needles = array(
+                ]
+                : [
                     $reference.'.scss',
                     $reference.'.sass',
                     self::partialize($reference).'.scss',
                     self::partialize($reference).'.sass',
-                );
-            }
+                ];
 
             foreach ($loadPaths as $loadPath) {
                 foreach ($needles as $needle) {
                     if (file_exists($file = $loadPath.'/'.$needle)) {
-                        $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
+                        $coll = $factory->createAsset($file, [], ['root' => $loadPath]);
                         foreach ($coll as $leaf) {
                             /** @var $leaf AssetInterface */
                             $leaf->ensureFilter($this);
@@ -80,11 +78,9 @@ abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExt
     {
         $parts = pathinfo($reference);
 
-        if ('.' === $parts['dirname']) {
-            $partial = '_'.$parts['filename'];
-        } else {
-            $partial = $parts['dirname'].DIRECTORY_SEPARATOR.'_'.$parts['filename'];
-        }
+        $partial = '.' === $parts['dirname']
+            ? '_'.$parts['filename']
+            : $parts['dirname'].DIRECTORY_SEPARATOR.'_'.$parts['filename'];
 
         if (isset($parts['extension'])) {
             $partial .= '.'.$parts['extension'];

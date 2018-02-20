@@ -43,7 +43,7 @@ class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorIn
     {
         $this->sprocketsLib = $sprocketsLib;
         $this->rubyBin = $rubyBin;
-        $this->includeDirs = array();
+        $this->includeDirs = [];
     }
 
     public function addIncludeDir($directory)
@@ -103,10 +103,10 @@ EOF;
             $more
         ));
 
-        $pb = $this->createProcessBuilder(array(
+        $pb = $this->createProcessBuilder([
             $this->rubyBin,
             $input,
-        ));
+        ]);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
@@ -127,7 +127,7 @@ EOF;
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo
-        return array();
+        return [];
     }
 
     private function getHack(AssetInterface $asset)
