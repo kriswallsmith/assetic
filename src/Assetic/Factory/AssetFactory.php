@@ -196,7 +196,11 @@ class AssetFactory
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
                 $asset->add($this->parseInput($input, $options));
-                $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+                // avoid empty extension if inner asset is something like
+                // http://fonts.googleapis.com/css?family=Abel
+                if(pathinfo($input, PATHINFO_EXTENSION)!='') {
+                    $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
+                }
             }
         }
 
