@@ -13,7 +13,7 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\UglifyJs2Filter;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * @group integration
@@ -39,7 +39,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         }
 
         // verify uglifyjs version
-        $pb = new ProcessBuilder($nodeBin ? array($nodeBin, $uglifyjsBin) : array($uglifyjsBin));
+        $pb = new Process($nodeBin ? array($nodeBin, $uglifyjsBin) : array($uglifyjsBin));
         $pb->add('--version');
         if (isset($_SERVER['NODE_PATH'])) {
             $pb->setEnv('NODE_PATH', $_SERVER['NODE_PATH']);

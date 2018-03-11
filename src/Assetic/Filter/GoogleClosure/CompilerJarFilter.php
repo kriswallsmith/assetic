@@ -14,7 +14,7 @@ namespace Assetic\Filter\GoogleClosure;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * Filter for the Google Closure Compiler JAR.
@@ -44,7 +44,7 @@ class CompilerJarFilter extends BaseCompilerFilter
         $is64bit = PHP_INT_SIZE === 8;
         $cleanup = array();
 
-        $pb = new ProcessBuilder(array_merge(
+        $pb = new Process(array_merge(
             array($this->javaPath),
             $is64bit
                 ? array('-server', '-XX:+TieredCompilation')
