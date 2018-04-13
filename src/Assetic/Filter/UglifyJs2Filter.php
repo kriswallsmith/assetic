@@ -14,11 +14,12 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * UglifyJs2 filter.
  *
- * @link http://lisperator.net/uglifyjs
+ * @link   http://lisperator.net/uglifyjs
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class UglifyJs2Filter extends BaseNodeFilter
@@ -80,52 +81,50 @@ class UglifyJs2Filter extends BaseNodeFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(
-            $this->nodeBin
-            ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
-        );
+        $commandline = $this->nodeBin
+                ? array($this->nodeBin, $this->uglifyjsBin)
+                : array($this->uglifyjsBin);
 
         if ($this->compress) {
-            $pb->add('--compress');
+            array_push($commandline,'--compress');
 
             if (is_string($this->compress) && !empty($this->compress)) {
-                $pb->add($this->compress);
+                array_push($commandline,$this->compress);
             }
         }
 
         if ($this->beautify) {
-            $pb->add('--beautify');
+            array_push($commandline,'--beautify');
         }
 
         if ($this->mangle) {
-            $pb->add('--mangle');
+            array_push($commandline,'--mangle');
         }
 
         if ($this->screwIe8) {
-            $pb->add('--screw-ie8');
+            array_push($commandline,'--screw-ie8');
         }
 
         if ($this->comments) {
-            $pb->add('--comments')->add(true === $this->comments ? 'all' : $this->comments);
+            array_push($commandline,'--comments', true === $this->comments ? 'all' : $this->comments);
         }
 
         if ($this->wrap) {
-            $pb->add('--wrap')->add($this->wrap);
+            array_push($commandline,'--wrap',$this->wrap);
         }
 
         if ($this->defines) {
-            $pb->add('--define')->add(implode(',', $this->defines));
+            array_push($commandline,'--define', implode(',', $this->defines));
         }
 
         // input and output files
-        $input  = FilesystemUtils::createTemporaryFile('uglifyjs2_in');
+        $input = FilesystemUtils::createTemporaryFile('uglifyjs2_in');
         $output = FilesystemUtils::createTemporaryFile('uglifyjs2_out');
 
         file_put_contents($input, $asset->getContent());
-        $pb->add('-o')->add($output)->add($input);
+        array_push($commandline,'-o',$output,$input);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Runs assets through jpegtran.
@@ -69,28 +70,28 @@ class JpegtranFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->jpegtranBin));
+        $commandline = array($this->jpegtranBin);
 
         if ($this->optimize) {
-            $pb->add('-optimize');
+            array_push($commandline,'-optimize');
         }
 
         if ($this->copy) {
-            $pb->add('-copy')->add($this->copy);
+            array_push($commandline,'-copy', $this->copy);
         }
 
         if ($this->progressive) {
-            $pb->add('-progressive');
+            array_push($commandline,'-progressive');
         }
 
         if (null !== $this->restart) {
-            $pb->add('-restart')->add($this->restart);
+            array_push($commandline,'-restart', $this->restart);
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('jpegtran'));
+        array_push($commandline, $input = FilesystemUtils::createTemporaryFile('jpegtran'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

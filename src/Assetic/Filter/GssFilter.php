@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Filter for the Google Closure Stylesheets Compiler JAR.
@@ -84,48 +85,48 @@ class GssFilter extends BaseProcessFilter
     {
         $cleanup = array();
 
-        $pb = $this->createProcessBuilder(array(
+        $commandline =array(
             $this->javaPath,
             '-jar',
             $this->jarPath,
-        ));
+        );
 
         if (null !== $this->allowUnrecognizedFunctions) {
-            $pb->add('--allow-unrecognized-functions');
+            array_push($commandline, '--allow-unrecognized-functions');
         }
 
         if (null !== $this->allowedNonStandardFunctions) {
-            $pb->add('--allowed_non_standard_functions')->add($this->allowedNonStandardFunctions);
+            array_push($commandline, '--allowed_non_standard_functions', $this->allowedNonStandardFunctions);
         }
 
         if (null !== $this->copyrightNotice) {
-            $pb->add('--copyright-notice')->add($this->copyrightNotice);
+            array_push($commandline, '--copyright-notice', $this->copyrightNotice);
         }
 
         if (null !== $this->define) {
-            $pb->add('--define')->add($this->define);
+            array_push($commandline, '--define', $this->define);
         }
 
         if (null !== $this->gssFunctionMapProvider) {
-            $pb->add('--gss-function-map-provider')->add($this->gssFunctionMapProvider);
+            array_push($commandline, '--gss-function-map-provider', $this->gssFunctionMapProvider);
         }
 
         if (null !== $this->inputOrientation) {
-            $pb->add('--input-orientation')->add($this->inputOrientation);
+            array_push($commandline, '--input-orientation', $this->inputOrientation);
         }
 
         if (null !== $this->outputOrientation) {
-            $pb->add('--output-orientation')->add($this->outputOrientation);
+            array_push($commandline, '--output-orientation', $this->outputOrientation);
         }
 
         if (null !== $this->prettyPrint) {
-            $pb->add('--pretty-print');
+            array_push($commandline, '--pretty-print');
         }
 
-        $pb->add($cleanup[] = $input = FilesystemUtils::createTemporaryFile('gss'));
+        array_push($commandline, $cleanup[] = $input = FilesystemUtils::createTemporaryFile('gss'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         array_map('unlink', $cleanup);
 

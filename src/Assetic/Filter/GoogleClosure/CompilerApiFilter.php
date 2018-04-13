@@ -40,6 +40,7 @@ class CompilerApiFilter extends BaseCompilerFilter
             'js_code'       => $asset->getContent(),
             'output_format' => 'json',
             'output_info'   => 'compiled_code',
+            'language'      => self::LANGUAGE_ECMASCRIPT3,
         );
 
         if (null !== $this->compilationLevel) {
@@ -89,10 +90,10 @@ class CompilerApiFilter extends BaseCompilerFilter
             }
             $context = stream_context_create($contextOptions);
 
-            $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
+            $response = file_get_contents('https://closure-compiler.appspot.com/compile', false, $context);
             $data = json_decode($response);
         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
-            $ch = curl_init('http://closure-compiler.appspot.com/compile');
+            $ch = curl_init('https://closure-compiler.appspot.com/compile');
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded'));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Runs assets through pngout.
@@ -87,32 +88,32 @@ class PngoutFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->pngoutBin));
+        $commandline =array($this->pngoutBin);
 
         if (null !== $this->color) {
-            $pb->add('-c'.$this->color);
+            array_push($commandline, '-c'.$this->color);
         }
 
         if (null !== $this->filter) {
-            $pb->add('-f'.$this->filter);
+            array_push($commandline, '-f'.$this->filter);
         }
 
         if (null !== $this->strategy) {
-            $pb->add('-s'.$this->strategy);
+            array_push($commandline, '-s'.$this->strategy);
         }
 
         if (null !== $this->blockSplitThreshold) {
-            $pb->add('-b'.$this->blockSplitThreshold);
+            array_push($commandline, '-b'.$this->blockSplitThreshold);
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('pngout_in'));
+        array_push($commandline, $input = FilesystemUtils::createTemporaryFile('pngout_in'));
         file_put_contents($input, $asset->getContent());
 
         $output = FilesystemUtils::createTemporaryFile('pngout_out');
         unlink($output);
-        $pb->add($output .= '.png');
+        array_push($commandline, $output .= '.png');
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
 
         if (0 !== $code) {

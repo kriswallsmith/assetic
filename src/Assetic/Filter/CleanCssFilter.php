@@ -13,11 +13,12 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Symfony\Component\Process\Process;
 
 /**
  * CleanCss filter.
  *
- * @link https://github.com/jakubpawlowicz/clean-css
+ * @link   https://github.com/jakubpawlowicz/clean-css
  * @author Jakub Pawlowicz <http://JakubPawlowicz.com>
  */
 class CleanCssFilter extends BaseNodeFilter
@@ -47,8 +48,8 @@ class CleanCssFilter extends BaseNodeFilter
 
 
     /**
-     * @param string $cleanCssBin  Absolute path to the cleancss executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
+     * @param string $cleanCssBin Absolute path to the cleancss executable
+     * @param string $nodeBin     Absolute path to the folder containg node.js executable
      */
     public function __construct($cleanCssBin = '/usr/bin/cleancss', $nodeBin = null)
     {
@@ -58,6 +59,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Keep line breaks
+     *
      * @param bool $keepLineBreaks True to enable
      */
     public function setKeepLineBreaks($keepLineBreaks)
@@ -67,6 +69,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Remove all special comments
+     *
      * @param bool $removeSpecialComments True to enable
      */ // i.e.  /*! comment */
     public function setRemoveSpecialComments($removeSpecialComments)
@@ -76,14 +79,17 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Remove all special comments except the first one
+     *
      * @param bool $onlyKeepFirstSpecialComment True to enable
      */
     public function setOnlyKeepFirstSpecialComment($onlyKeepFirstSpecialComment)
     {
         $this->onlyKeepFirstSpecialComment = $onlyKeepFirstSpecialComment;
     }
+
     /**
      * Enables unsafe mode by assuming BEM-like semantic stylesheets (warning, this may break your styling!)
+     *
      * @param bool $semanticMerging True to enable
      */
     public function setSemanticMerging($semanticMerging)
@@ -93,6 +99,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * A root path to which resolve absolute @import rules
+     *
      * @param string $rootPath
      */
     public function setRootPath($rootPath)
@@ -102,14 +109,17 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable @import processing
+     *
      * @param bool $skipImport True to enable
      */
     public function setSkipImport($skipImport)
     {
         $this->skipImport = $skipImport;
     }
+
     /**
      * Per connection timeout when fetching remote @imports; defaults to 5 seconds
+     *
      * @param int $timeout
      */
     public function setTimeout($timeout)
@@ -119,6 +129,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable URLs rebasing
+     *
      * @param bool $skipRebase True to enable
      */
     public function setSkipRebase($skipRebase)
@@ -128,6 +139,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable restructuring optimizations
+     *
      * @param bool $skipRestructuring True to enable
      */
     public function setSkipRestructuring($skipRestructuring)
@@ -137,6 +149,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable shorthand compacting
+     *
      * @param bool $skipShorthandCompacting True to enable
      */
     public function setSkipShorthandCompacting($skipShorthandCompacting)
@@ -146,6 +159,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Enables building input's source map
+     *
      * @param bool $sourceMap True to enable
      */
     public function setSourceMap($sourceMap)
@@ -155,6 +169,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Enables inlining sources inside source maps
+     *
      * @param bool $sourceMapInlineSources True to enable
      */
     public function setSourceMapInlineSources($sourceMapInlineSources)
@@ -164,6 +179,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable advanced optimizations - selector & property merging, reduction, etc.
+     *
      * @param bool $skipAdvanced True to enable
      */
     public function setSkipAdvanced($skipAdvanced)
@@ -173,6 +189,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable properties merging based on their order
+     *
      * @param bool $skipAggresiveMerging True to enable
      */
     public function setSkipAggresiveMerging($skipAggresiveMerging)
@@ -182,6 +199,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable @import processing for specified rules
+     *
      * @param string $skipImportFrom
      */
     public function setSkipImportFrom($skipImportFrom)
@@ -191,6 +209,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Disable @media merging
+     *
      * @param bool $mediaMerging True to enable
      */
     public function setMediaMerging($mediaMerging)
@@ -200,6 +219,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Rounds to `N` decimal places. Defaults to 2. -1 disables rounding.
+     *
      * @param int $roundingPrecision
      */
     public function setRoundingPrecision($roundingPrecision)
@@ -209,6 +229,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Force compatibility mode (see https://github.com/jakubpawlowicz/clean-css/blob/master/README.md#how-to-set-compatibility-mode for advanced examples)
+     *
      * @param string $compatibility
      */
     public function setCompatibility($compatibility)
@@ -218,6 +239,7 @@ class CleanCssFilter extends BaseNodeFilter
 
     /**
      * Shows debug information (minification time & compression efficiency)
+     *
      * @param bool $debug True to enable
      */
     public function setDebug($debug)
@@ -227,7 +249,7 @@ class CleanCssFilter extends BaseNodeFilter
 
 
     /**
-     * @see Assetic\Filter\FilterInterface::filterLoad()
+     * @see FilterInterface::filterLoad()
      */
     public function filterLoad(AssetInterface $asset)
     {
@@ -237,96 +259,96 @@ class CleanCssFilter extends BaseNodeFilter
     /**
      * Run the asset through CleanCss
      *
-     * @see Assetic\Filter\FilterInterface::filterDump()
+     * @see FilterInterface::filterDump()
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $commandline = $this->nodeBin
             ? array($this->nodeBin, $this->cleanCssBin)
-            : array($this->cleanCssBin));
+            : array($this->cleanCssBin);
 
         if ($this->keepLineBreaks) {
-            $pb->add('--keep-line-breaks');
+            array_push($commandline, '--keep-line-breaks');
         }
 
         if ($this->compatibility) {
-            $pb->add('--compatibility ' .$this->compatibility);
+            array_push($commandline, '--compatibility ' . $this->compatibility);
         }
 
         if ($this->debug) {
-            $pb->add('--debug');
+            array_push($commandline, '--debug');
         }
 
         if ($this->rootPath) {
-            $pb->add('--root ' .$this->rootPath);
+            array_push($commandline, '--root ' . $this->rootPath);
         }
 
         if ($this->skipImport) {
-            $pb->add('--skip-import');
+            array_push($commandline, '--skip-import');
         }
 
         if ($this->timeout) {
-            $pb->add('--timeout ' .$this->timeout);
+            array_push($commandline, '--timeout ' . $this->timeout);
         }
 
         if ($this->roundingPrecision) {
-            $pb->add('--rounding-precision ' .$this->roundingPrecision);
+            array_push($commandline, '--rounding-precision ' . $this->roundingPrecision);
         }
 
         if ($this->removeSpecialComments) {
-            $pb->add('--s0');
+            array_push($commandline, '--s0');
         }
 
         if ($this->onlyKeepFirstSpecialComment) {
-            $pb->add('--s1');
+            array_push($commandline, '--s1');
         }
 
         if ($this->semanticMerging) {
-            $pb->add('--semantic-merging');
+            array_push($commandline, '--semantic-merging');
         }
 
         if ($this->skipAdvanced) {
-            $pb->add('--skip-advanced');
+            array_push($commandline, '--skip-advanced');
         }
 
         if ($this->skipAggresiveMerging) {
-            $pb->add('--skip-aggressive-merging');
+            array_push($commandline, '--skip-aggressive-merging');
         }
 
         if ($this->skipImportFrom) {
-            $pb->add('--skip-import-from ' .$this->skipImportFrom);
+            array_push($commandline, '--skip-import-from ' . $this->skipImportFrom);
         }
 
         if ($this->mediaMerging) {
-            $pb->add('--skip-media-merging');
+            array_push($commandline, '--skip-media-merging');
         }
 
         if ($this->skipRebase) {
-            $pb->add('--skip-rebase');
+            array_push($commandline, '--skip-rebase');
         }
 
         if ($this->skipRestructuring) {
-            $pb->add('--skip-restructuring');
+            array_push($commandline, '--skip-restructuring');
         }
 
         if ($this->skipShorthandCompacting) {
-            $pb->add('--skip-shorthand-compacting');
+            array_push($commandline, '--skip-shorthand-compacting');
         }
 
         if ($this->sourceMap) {
-            $pb->add('--source-map');
+            array_push($commandline, '--source-map');
         }
 
         if ($this->sourceMapInlineSources) {
-            $pb->add('--source-map-inline-sources');
+            array_push($commandline, '--source-map-inline-sources');
         }
         // input and output files
         $input = tempnam(sys_get_temp_dir(), 'input');
 
         file_put_contents($input, $asset->getContent());
-        $pb->add($input);
+        array_push($commandline, $input);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

@@ -14,11 +14,12 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Compiles TypeScript into JavaScript.
  *
- * @link http://www.typescriptlang.org/
+ * @link   http://www.typescriptlang.org/
  * @author Jarrod Nettles <jarrod.nettles@icloud.com>
  */
 class TypeScriptFilter extends BaseNodeFilter
@@ -34,9 +35,9 @@ class TypeScriptFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $commandline = $this->nodeBin
             ? array($this->nodeBin, $this->tscBin)
-            : array($this->tscBin));
+            : array($this->tscBin);
 
         if ($sourcePath = $asset->getSourcePath()) {
             $templateName = basename($sourcePath);
@@ -45,14 +46,14 @@ class TypeScriptFilter extends BaseNodeFilter
         }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('typescript_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
+        $inputPath = $inputDirPath . DIRECTORY_SEPARATOR . $templateName . '.ts';
         $outputPath = FilesystemUtils::createTemporaryFile('typescript_out');
 
         file_put_contents($inputPath, $asset->getContent());
 
-        $pb->add($inputPath)->add('--out')->add($outputPath);
+        array_push($commandline, $inputPath, '--out', $outputPath);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($inputPath);
         rmdir($inputDirPath);

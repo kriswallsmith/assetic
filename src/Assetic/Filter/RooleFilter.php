@@ -15,6 +15,7 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Loads Roole files.
@@ -46,13 +47,13 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
 
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $commandline =$this->nodeBin
             ? array($this->nodeBin, $this->rooleBin)
-            : array($this->rooleBin));
+            : array($this->rooleBin);
 
-        $pb->add($input);
+        array_push($commandline, $input);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

@@ -5,11 +5,12 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Compiles JSX (for use with React) into JavaScript.
  *
- * @link http://facebook.github.io/react/docs/jsx-in-depth.html
+ * @link   http://facebook.github.io/react/docs/jsx-in-depth.html
  * @author Douglas Greenshields <dgreenshields@gmail.com>
  */
 class ReactJsxFilter extends BaseNodeFilter
@@ -25,25 +26,24 @@ class ReactJsxFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $builder = $this->createProcessBuilder($this->nodeBin
+        $commandline = $this->nodeBin
             ? array($this->nodeBin, $this->jsxBin)
-            : array($this->jsxBin));
+            : array($this->jsxBin);
 
         $inputDir = FilesystemUtils::createThrowAwayDirectory('jsx_in');
-        $inputFile = $inputDir.DIRECTORY_SEPARATOR.'asset.js';
+        $inputFile = $inputDir . DIRECTORY_SEPARATOR . 'asset.js';
         $outputDir = FilesystemUtils::createThrowAwayDirectory('jsx_out');
-        $outputFile = $outputDir.DIRECTORY_SEPARATOR.'asset.js';
+        $outputFile = $outputDir . DIRECTORY_SEPARATOR . 'asset.js';
 
         // create the asset file
         file_put_contents($inputFile, $asset->getContent());
 
-        $builder
-            ->add($inputDir)
-            ->add($outputDir)
-            ->add('--no-cache-dir')
-        ;
+        array_push($commandline,
+            $inputDir,
+            $outputDir,
+            '--no-cache-dir');
 
-        $proc = $builder->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
 
         // remove the input directory and asset file

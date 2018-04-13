@@ -15,6 +15,7 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Loads STYL files.
@@ -91,16 +92,16 @@ EOF;
             $parserOptions['compress'] = $this->compress;
         }
 
-        $pb = $this->createProcessBuilder();
+        $commandline =array();
 
-        $pb->add($this->nodeBin)->add($input = FilesystemUtils::createTemporaryFile('stylus'));
+        array_push($commandline, $this->nodeBin, $input = FilesystemUtils::createTemporaryFile('stylus'));
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
             json_encode($parserOptions),
             $this->useNib ? '.use(require(\'nib\')())' : ''
         ));
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

@@ -15,11 +15,12 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Filter\Sass\BaseSassFilter;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Loads Compass files.
  *
- * @link http://compass-style.org/
+ * @link   http://compass-style.org/
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
 class CompassFilter extends BaseSassFilter
@@ -193,54 +194,53 @@ class CompassFilter extends BaseSassFilter
 
         $tempDir = $this->cacheLocation ? $this->cacheLocation : FilesystemUtils::getTemporaryDirectory();
 
-        $compassProcessArgs = array(
+        $commandline = array(
             $this->compassPath,
             'compile',
             $tempDir,
         );
+
         if (null !== $this->rubyPath) {
-            $compassProcessArgs = array_merge(explode(' ', $this->rubyPath), $compassProcessArgs);
+            $commandline = array_merge(explode(' ', $this->rubyPath), $commandline);
         }
 
-        $pb = $this->createProcessBuilder($compassProcessArgs);
-
         if ($this->force) {
-            $pb->add('--force');
+            array_push($commandline, '--force');
         }
 
         if ($this->style) {
-            $pb->add('--output-style')->add($this->style);
+            array_push($commandline, '--output-style', $this->style);
         }
 
         if ($this->quiet) {
-            $pb->add('--quiet');
+            array_push($commandline, '--quiet');
         }
 
         if ($this->boring) {
-            $pb->add('--boring');
+            array_push($commandline, '--boring');
         }
 
         if ($this->noLineComments) {
-            $pb->add('--no-line-comments');
+            array_push($commandline, '--no-line-comments');
         }
 
         // these three options are not passed into the config file
         // because like this, compass adapts this to be xxx_dir or xxx_path
         // whether it's an absolute path or not
         if ($this->imagesDir) {
-            $pb->add('--images-dir')->add($this->imagesDir);
+            array_push($commandline, '--images-dir', $this->imagesDir);
         }
 
         if ($this->relativeAssets) {
-            $pb->add('--relative-assets');
+            array_push($commandline, '--relative-assets');
         }
 
         if ($this->javascriptsDir) {
-            $pb->add('--javascripts-dir')->add($this->javascriptsDir);
+            array_push($commandline, '--javascripts-dir', $this->javascriptsDir);
         }
 
         if ($this->fontsDir) {
-            $pb->add('--fonts-dir')->add($this->fontsDir);
+            array_push($commandline, '--fonts-dir', $this->fontsDir);
         }
 
         // options in config file
@@ -305,11 +305,11 @@ class CompassFilter extends BaseSassFilter
             }
 
             $configFile = tempnam($tempDir, 'assetic_compass');
-            file_put_contents($configFile, implode("\n", $config)."\n");
-            $pb->add('--config')->add($configFile);
+            file_put_contents($configFile, implode("\n", $config) . "\n");
+            array_push($commandline, '--config', $configFile);
         }
 
-        $pb->add('--sass-dir')->add('')->add('--css-dir')->add('');
+        array_push($commandline, '--sass-dir', '', '--css-dir', '');
 
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
@@ -325,26 +325,28 @@ class CompassFilter extends BaseSassFilter
         unlink($tempName); // FIXME: don't use tempnam() here
 
         // input
-        $input = $tempName.'.'.$type;
+        $input = $tempName . '.' . $type;
 
         // work-around for https://github.com/chriseppstein/compass/issues/748
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $input = str_replace('\\', '/', $input);
         }
 
-        $pb->add($input);
+        array_push($commandline, $input);
         file_put_contents($input, $asset->getContent());
 
         // output
-        $output = $tempName.'.css';
+        $output = $tempName . '.css';
+
+
+        $proc = new Process($commandline);
 
         if ($this->homeEnv) {
             // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
-            $pb->setEnv('HOME', FilesystemUtils::getTemporaryDirectory());
-            $this->mergeEnv($pb);
+            $proc->setEnv(array('HOME' => FilesystemUtils::getTemporaryDirectory()));
+            $this->mergeEnv($proc);
         }
 
-        $proc = $pb->getProcess();
         $code = $proc->run();
 
         if (0 !== $code) {
@@ -378,12 +380,12 @@ class CompassFilter extends BaseSassFilter
             foreach ($array as $name => $value) {
                 $output[] = sprintf('    :%s => "%s"', $name, addcslashes($value, '\\'));
             }
-            $output = "{\n".implode(",\n", $output)."\n}";
+            $output = "{\n" . implode(",\n", $output) . "\n}";
         } else {
             foreach ($array as $name => $value) {
                 $output[] = sprintf('    "%s"', addcslashes($value, '\\'));
             }
-            $output = "[\n".implode(",\n", $output)."\n]";
+            $output = "[\n" . implode(",\n", $output) . "\n]";
         }
 
         return $output;

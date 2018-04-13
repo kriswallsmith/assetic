@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Compiles CoffeeScript into Javascript.
@@ -51,22 +52,22 @@ class CoffeeScriptFilter extends BaseNodeFilter
         $input = FilesystemUtils::createTemporaryFile('coffee');
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $commandline =$this->nodeBin
             ? array($this->nodeBin, $this->coffeeBin)
-            : array($this->coffeeBin));
+            : array($this->coffeeBin);
 
-        $pb->add('-cp');
+        array_push($commandline, '-cp');
 
         if ($this->bare) {
-            $pb->add('--bare');
+            array_push($commandline, '--bare');
         }
 
         if ($this->noHeader) {
-            $pb->add('--no-header');
+            array_push($commandline, '--no-header');
         }
 
-        $pb->add($input);
-        $proc = $pb->getProcess();
+        array_push($commandline, $input);
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

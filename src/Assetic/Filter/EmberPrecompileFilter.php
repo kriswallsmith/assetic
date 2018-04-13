@@ -14,13 +14,14 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Precompiles Handlebars templates for use in the Ember.js framework. This filter
  * requires that the npm package ember-precompile be installed. You can find this
  * package at https://github.com/gabrielgrant/node-ember-precompile.
  *
- * @link http://www.emberjs.com/
+ * @link   http://www.emberjs.com/
  * @author Jarrod Nettles <jarrod.nettles@icloud.com>
  */
 class EmberPrecompileFilter extends BaseNodeFilter
@@ -36,9 +37,9 @@ class EmberPrecompileFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $commandline = $this->nodeBin
             ? array($this->nodeBin, $this->emberBin)
-            : array($this->emberBin));
+            : array($this->emberBin);
 
         if ($sourcePath = $asset->getSourcePath()) {
             $templateName = basename($sourcePath);
@@ -47,14 +48,14 @@ class EmberPrecompileFilter extends BaseNodeFilter
         }
 
         $inputDirPath = FilesystemUtils::createThrowAwayDirectory('ember_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName;
+        $inputPath = $inputDirPath . DIRECTORY_SEPARATOR . $templateName;
         $outputPath = FilesystemUtils::createTemporaryFile('ember_out');
 
         file_put_contents($inputPath, $asset->getContent());
 
-        $pb->add($inputPath)->add('-f')->add($outputPath);
+        array_push($commandline, $inputPath, '-f', $outputPath);
 
-        $process = $pb->getProcess();
+        $process = new Process($commandline);
         $returnCode = $process->run();
 
         unlink($inputPath);

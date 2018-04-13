@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Parses CSS and adds vendor prefixes to rules using values from the Can I Use website
@@ -57,17 +58,18 @@ class AutoprefixerFilter extends BaseNodeFilter
     public function filterLoad(AssetInterface $asset)
     {
         $input = $asset->getContent();
-        $pb = $this->createProcessBuilder(array($this->autoprefixerBin));
+        $commandline = array($this->autoprefixerBin);
 
-        $pb->setInput($input);
         if ($this->browsers) {
-            $pb->add('-b')->add(implode(',', $this->browsers));
+            array_push($commandline, '-b', implode(',', $this->browsers));
         }
 
         $output = FilesystemUtils::createTemporaryFile('autoprefixer');
-        $pb->add('-o')->add($output);
+        array_push($commandline, '-o', $output);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
+        $proc->setInput($input);
+
         if (0 !== $proc->run()) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }

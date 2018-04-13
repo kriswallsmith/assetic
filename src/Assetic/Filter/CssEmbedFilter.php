@@ -15,11 +15,12 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * CSSEmbed filter
  *
- * @link https://github.com/nzakas/cssembed
+ * @link   https://github.com/nzakas/cssembed
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
 class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInterface
@@ -81,50 +82,50 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array(
+        $commandline = array(
             $this->javaPath,
             '-jar',
             $this->jarPath,
-        ));
+        );
 
         if (null !== $this->charset) {
-            $pb->add('--charset')->add($this->charset);
+            array_push($commandline, '--charset', $this->charset);
         }
 
         if ($this->mhtml) {
-            $pb->add('--mhtml');
+            array_push($commandline, '--mhtml');
         }
 
         if (null !== $this->mhtmlRoot) {
-            $pb->add('--mhtmlroot')->add($this->mhtmlRoot);
+            array_push($commandline, '--mhtmlroot', $this->mhtmlRoot);
         }
 
         // automatically define root if not already defined
         if (null === $this->root) {
             if ($dir = $asset->getSourceDirectory()) {
-                $pb->add('--root')->add($dir);
+                array_push($commandline, '--root', $dir);
             }
         } else {
-            $pb->add('--root')->add($this->root);
+            array_push($commandline, '--root', $this->root);
         }
 
         if ($this->skipMissing) {
-            $pb->add('--skip-missing');
+            array_push($commandline, '--skip-missing');
         }
 
         if (null !== $this->maxUriLength) {
-            $pb->add('--max-uri-length')->add($this->maxUriLength);
+            array_push($commandline, '--max-uri-length', $this->maxUriLength);
         }
 
         if (null !== $this->maxImageSize) {
-            $pb->add('--max-image-size')->add($this->maxImageSize);
+            array_push($commandline, '--max-image-size', $this->maxImageSize);
         }
 
         // input
-        $pb->add($input = FilesystemUtils::createTemporaryFile('cssembed'));
+        array_push($commandline, $input = FilesystemUtils::createTemporaryFile('cssembed'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

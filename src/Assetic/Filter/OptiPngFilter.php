@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Runs assets through OptiPNG.
@@ -47,19 +48,19 @@ class OptiPngFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->optipngBin));
+        $commandline =array($this->optipngBin);
 
         if (null !== $this->level) {
-            $pb->add('-o')->add($this->level);
+            array_push($commandline, '-o', $this->level);
         }
 
-        $pb->add('-out')->add($output = FilesystemUtils::createTemporaryFile('optipng_out'));
+        array_push($commandline, '-out', $output = FilesystemUtils::createTemporaryFile('optipng_out'));
         unlink($output);
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('optinpg_in'));
+        array_push($commandline, $input = FilesystemUtils::createTemporaryFile('optinpg_in'));
         file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
 
         if (0 !== $code) {
