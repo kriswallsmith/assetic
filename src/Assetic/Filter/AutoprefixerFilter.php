@@ -60,6 +60,9 @@ class AutoprefixerFilter extends BaseNodeFilter
         $pb = $this->createProcessBuilder(array($this->autoprefixerBin));
 
         $pb->setInput($input);
+        
+        $pb->add('--use')->add('autoprefixer');
+        
         if ($this->browsers) {
             $pb->add('-b')->add(implode(',', $this->browsers));
         }
