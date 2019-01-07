@@ -27,7 +27,7 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "symfony/process": "~3.4 || ~4.0 || ~5.0"
+        "symfony/process": "~3.4 || ~4.0 || ~5.0|~4.0"
     },
     "conflict": {
         "twig/twig": "<1.27"
@@ -42,7 +42,7 @@
         "phpunit/phpunit": "^8.0",
         "psr/log": "^1.0",
         "ptachoire/cssembed": "^1.0",
-        "symfony/phpunit-bridge": "^2.7 || ^3.0",
+        "symfony/phpunit-bridge": "^2.7 || ^3.0|~4.0",
         "twig/twig": "^2.11",
         "twig/extensions": "^1.5"
     },
