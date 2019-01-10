@@ -18,6 +18,7 @@ use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
 use Assetic\Asset\HttpAsset;
+use Assetic\Asset\HttpAssetWithProxy;
 use Assetic\AssetManager;
 use Assetic\Factory\Worker\WorkerInterface;
 use Assetic\Filter\DependencyExtractorInterface;
@@ -36,6 +37,10 @@ class AssetFactory
     private $workers;
     private $am;
     private $fm;
+
+    // for HttpAsset
+    private $proxy;
+    private $proxy_port;
 
     /**
      * Constructor.
@@ -132,6 +137,17 @@ class AssetFactory
     }
 
     /**
+     *
+     * @access public
+     * @return
+     **/
+    public function setProxy($proxy, $port=null)
+    {
+        if(strlen($proxy)) $this->proxy = $proxy;
+        if(strlen($port))  $this->proxy_port = $port;
+    }   // end function setProxy()
+    
+    /**
      * Creates a new asset.
      *
      * Prefixing a filter name with a question mark will cause it to be
@@ -196,13 +212,10 @@ class AssetFactory
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
                 $asset->add($this->parseInput($input, $options));
-                // avoid empty extension if inner asset is something like
-                // http://fonts.googleapis.com/css?family=Abel
-                if(pathinfo($input, PATHINFO_EXTENSION)!='') {
+                if(pathinfo($input, PATHINFO_EXTENSION)!='')
                     $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
                 }
             }
-        }
 
         // filters
         foreach ($filters as $filter) {
@@ -349,6 +362,8 @@ class AssetFactory
 
     protected function createHttpAsset($sourceUrl, $vars)
     {
+        if(!empty($this->proxy))
+            return new HttpAssetWithProxy($sourceUrl, array(), false, $vars, $this->proxy, $this->proxy_port);
         return new HttpAsset($sourceUrl, array(), false, $vars);
     }
 
