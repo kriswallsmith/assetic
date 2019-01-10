@@ -212,7 +212,7 @@ class AssetFactory
                 $asset->add(call_user_func_array(array($this, 'createAsset'), $input));
             } else {
                 $asset->add($this->parseInput($input, $options));
-                if(pathinfo($input, PATHINFO_EXTENSION)!='')
+                if(pathinfo($input, PATHINFO_EXTENSION)!='') {
                     $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
                 }
             }
