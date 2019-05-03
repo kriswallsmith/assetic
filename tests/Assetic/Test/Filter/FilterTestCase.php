@@ -13,7 +13,7 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Test\TestCase;
 use Symfony\Component\Process\ExecutableFinder;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 abstract class FilterTestCase extends TestCase
 {
@@ -49,13 +49,13 @@ abstract class FilterTestCase extends TestCase
             $this->markTestSkipped('Unable to find `node` executable.');
         }
 
-        $pb = new ProcessBuilder(array($bin, '-e', 'require(\''.$module.'\')'));
+        $pb = new Process(array($bin, '-e', 'require(\''.$module.'\')'));
 
         if (isset($_SERVER['NODE_PATH'])) {
-            $pb->setEnv('NODE_PATH', $_SERVER['NODE_PATH']);
+            $pb->setEnv(['NODE_PATH' => $_SERVER['NODE_PATH']]);
         }
 
-        return 0 === $pb->getProcess()->run();
+        return 0 === $pb->run();
     }
 
     private function ensurePaths($current, array $paths)
