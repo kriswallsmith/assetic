@@ -21,7 +21,7 @@
     },
     "require-dev": {
         "leafo/lessphp": "^0.3.7",
-        "leafo/scssphp": "~0.1",
+        "scssphp/scssphp": "~1.0",
         "meenie/javascript-packer": "^1.1",
         "mrclay/minify": "<2.3",
         "natxet/cssmin": "3.0.4",
