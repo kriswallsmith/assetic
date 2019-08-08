@@ -25,9 +25,9 @@ class ReactJsxFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $builder = $this->createProcessBuilder($this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->jsxBin)
-            : array($this->jsxBin));
+            : array($this->jsxBin);
 
         $inputDir = FilesystemUtils::createThrowAwayDirectory('jsx_in');
         $inputFile = $inputDir.DIRECTORY_SEPARATOR.'asset.js';
@@ -37,14 +37,12 @@ class ReactJsxFilter extends BaseNodeFilter
         // create the asset file
         file_put_contents($inputFile, $asset->getContent());
 
-        $builder
-            ->add($inputDir)
-            ->add($outputDir)
-            ->add('--no-cache-dir')
-        ;
+        $args[] = $inputDir;
+        $args[] = $outputDir;
+        $args[] = '--no-cache-dir';
 
-        $proc = $builder->getProcess();
-        $code = $proc->run();
+        $process = $this->createProcessBuilder($args);
+        $code = $process->run();
 
         // remove the input directory and asset file
         unlink($inputFile);
@@ -59,7 +57,7 @@ class ReactJsxFilter extends BaseNodeFilter
                 rmdir($outputDir);
             }
 
-            throw FilterException::fromProcess($proc);
+            throw FilterException::fromProcess($process);
         }
 
         $asset->setContent(file_get_contents($outputFile));

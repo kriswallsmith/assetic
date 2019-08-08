@@ -46,14 +46,16 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
 
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->rooleBin)
-            : array($this->rooleBin));
+            : array($this->rooleBin);
 
-        $pb->add($input);
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $args[] = $input;
+
+        $process = $this->createProcessBuilder($args);
+
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
@@ -61,7 +63,7 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
                 unlink($output);
             }
 
-            throw FilterException::fromProcess($proc);
+            throw FilterException::fromProcess($process);
         }
 
         if (!file_exists($output)) {

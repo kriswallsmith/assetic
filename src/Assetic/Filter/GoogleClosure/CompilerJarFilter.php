@@ -14,7 +14,7 @@ namespace Assetic\Filter\GoogleClosure;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * Filter for the Google Closure Compiler JAR.
@@ -44,69 +44,78 @@ class CompilerJarFilter extends BaseCompilerFilter
         $is64bit = PHP_INT_SIZE === 8;
         $cleanup = array();
 
-        $pb = new ProcessBuilder(array_merge(
+        $args = array_merge(
             array($this->javaPath),
             $is64bit
                 ? array('-server', '-XX:+TieredCompilation')
                 : array('-client', '-d32'),
             array('-jar', $this->jarPath)
-        ));
-
-        if (null !== $this->timeout) {
-            $pb->setTimeout($this->timeout);
-        }
+        );
 
         if (null !== $this->compilationLevel) {
-            $pb->add('--compilation_level')->add($this->compilationLevel);
+            $args[] = '--compilation_level';
+            $args[] = $this->compilationLevel;
         }
 
         if (null !== $this->jsExterns) {
             $cleanup[] = $externs = FilesystemUtils::createTemporaryFile('google_closure');
             file_put_contents($externs, $this->jsExterns);
-            $pb->add('--externs')->add($externs);
+            $args[] = '--externs';
+            $args[] = $externs;
         }
 
         if (null !== $this->externsUrl) {
             $cleanup[] = $externs = FilesystemUtils::createTemporaryFile('google_closure');
             file_put_contents($externs, file_get_contents($this->externsUrl));
-            $pb->add('--externs')->add($externs);
+            $args[] = '--externs';
+            $args[] = $externs;
         }
 
         if (null !== $this->excludeDefaultExterns) {
-            $pb->add('--use_only_custom_externs');
+            $args[] = '--use_only_custom_externs';
         }
 
         if (null !== $this->formatting) {
-            $pb->add('--formatting')->add($this->formatting);
+            $args[] = '--formatting';
+            $args[] = $this->formatting;
         }
 
         if (null !== $this->useClosureLibrary) {
-            $pb->add('--manage_closure_dependencies');
+            $args[] = '--manage_closure_dependencies';
         }
 
         if (null !== $this->warningLevel) {
-            $pb->add('--warning_level')->add($this->warningLevel);
+            $args[] = '--warning_level';
+            $args[] = $this->warningLevel;
         }
 
         if (null !== $this->language) {
-            $pb->add('--language_in')->add($this->language);
+            $args[] = '--language_in';
+            $args[] = $this->language;
         }
 
         if (null !== $this->flagFile) {
-            $pb->add('--flagfile')->add($this->flagFile);
+            $args[] = '--flagfile';
+            $args[] = $this->flagFile;
         }
 
-        $pb->add('--js')->add($cleanup[] = $input = FilesystemUtils::createTemporaryFile('google_closure'));
+        $args[] = '--js';
+        $args[] = $cleanup[] = $input = FilesystemUtils::createTemporaryFile('google_closure');
         file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $process = new Process($args);
+
+        if (null !== $this->timeout) {
+            $process->setTimeout($this->timeout);
+        }
+
+        $code = $process->run();
         array_map('unlink', $cleanup);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 }

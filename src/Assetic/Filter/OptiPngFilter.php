@@ -47,24 +47,26 @@ class OptiPngFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->optipngBin));
+        $args = [$this->optipngBin];
 
         if (null !== $this->level) {
-            $pb->add('-o')->add($this->level);
+            $args[] = '-o';
+            $args[] = $this->level;
         }
 
-        $pb->add('-out')->add($output = FilesystemUtils::createTemporaryFile('optipng_out'));
+        $args[] = '-out';
+        $args[] = $output = FilesystemUtils::createTemporaryFile('optipng_out');
         unlink($output);
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('optinpg_in'));
+        $args[] = $input = FilesystemUtils::createTemporaryFile('optinpg_in');
         file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $process = $this->createProcessBuilder($args);
+        $code = $process->run();
 
         if (0 !== $code) {
             unlink($input);
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
         $asset->setContent(file_get_contents($output));

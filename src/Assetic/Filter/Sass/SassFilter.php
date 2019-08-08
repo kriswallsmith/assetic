@@ -111,73 +111,82 @@ class SassFilter extends BaseSassFilter
             $sassProcessArgs = array_merge(explode(' ', $this->rubyPath), $sassProcessArgs);
         }
 
-        $pb = $this->createProcessBuilder($sassProcessArgs);
+        $args = [];
 
         if ($dir = $asset->getSourceDirectory()) {
-            $pb->add('--load-path')->add($dir);
+            $args[] = '--load-path';
+            $args[] = $dir;
         }
 
         if ($this->unixNewlines) {
-            $pb->add('--unix-newlines');
+            $args[] = '--unix-newlines';
         }
 
         if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($asset->getSourcePath(), PATHINFO_EXTENSION))) {
-            $pb->add('--scss');
+            $args[] = '--scss';
         }
 
         if ($this->style) {
-            $pb->add('--style')->add($this->style);
+            $args[] = '--style';
+            $args[] = $this->style;
         }
 
         if ($this->precision) {
-            $pb->add('--precision')->add($this->precision);
+            $args[] = '--precision';
+            $args[] = $this->precision;
         }
 
         if ($this->quiet) {
-            $pb->add('--quiet');
+            $args[] = '--quiet';
         }
 
         if ($this->debugInfo) {
-            $pb->add('--debug-info');
+            $args[] = '--debug-info';
         }
 
         if ($this->lineNumbers) {
-            $pb->add('--line-numbers');
+            $args[] = '--line-numbers';
         }
 
         if ($this->sourceMap) {
-            $pb->add('--sourcemap');
+            $args[] = '--sourcemap';
         }
 
         foreach ($this->loadPaths as $loadPath) {
-            $pb->add('--load-path')->add($loadPath);
+            $args[] = '--load-path';
+            $args[] = $loadPath;
         }
 
         if ($this->cacheLocation) {
-            $pb->add('--cache-location')->add($this->cacheLocation);
+            $args[] = '--cache-location';
+            $args[] = $this->cacheLocation;
         }
 
         if ($this->noCache) {
-            $pb->add('--no-cache');
+            $args[] = '--no-cache';
         }
 
         if ($this->compass) {
-            $pb->add('--compass');
+            $args[] = '--compass';
         }
 
-        // input
-        $pb->add($input = FilesystemUtils::createTemporaryFile('sass'));
-        file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+
+        // input
+        $input = FilesystemUtils::createTemporaryFile('sass');
+        file_put_contents($input, $asset->getContent());
+        $args[] = $input;
+
+        $process = $this->createProcessBuilder(array_merge($sassProcessArgs, $args));
+
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

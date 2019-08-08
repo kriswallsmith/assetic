@@ -34,9 +34,9 @@ class TypeScriptFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->tscBin)
-            : array($this->tscBin));
+            : array($this->tscBin);
 
         if ($sourcePath = $asset->getSourcePath()) {
             $templateName = basename($sourcePath);
@@ -50,10 +50,13 @@ class TypeScriptFilter extends BaseNodeFilter
 
         file_put_contents($inputPath, $asset->getContent());
 
-        $pb->add($inputPath)->add('--out')->add($outputPath);
+        $args[] = $inputPath;
+        $args[] = '--out';
+        $args[] = $outputPath;
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+
+        $process = $this->createProcessBuilder($args);
+        $code = $process->run();
         unlink($inputPath);
         rmdir($inputDirPath);
 
@@ -61,7 +64,7 @@ class TypeScriptFilter extends BaseNodeFilter
             if (file_exists($outputPath)) {
                 unlink($outputPath);
             }
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
         if (!file_exists($outputPath)) {

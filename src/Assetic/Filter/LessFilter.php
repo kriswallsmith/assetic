@@ -137,23 +137,21 @@ EOF;
             $parserOptions['paths'][] = $loadPath;
         }
 
-        $pb = $this->createProcessBuilder();
+        $process = $this->createProcessBuilder([$this->nodeBin, $input = FilesystemUtils::createTemporaryFile('less')]);
 
-        $pb->add($this->nodeBin)->add($input = FilesystemUtils::createTemporaryFile('less'));
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
             json_encode(array_merge($parserOptions, $this->treeOptions))
         ));
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)
@@ -161,6 +159,10 @@ EOF;
     }
 
     /**
+     * @param AssetFactory $factory
+     * @param $content
+     * @param null $loadPath
+     * @return array
      * @todo support for import-once
      * @todo support for import (less) "lib.css"
      */

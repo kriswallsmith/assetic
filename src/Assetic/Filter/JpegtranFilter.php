@@ -69,35 +69,37 @@ class JpegtranFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->jpegtranBin));
+        $args[] = $this->jpegtranBin;
 
         if ($this->optimize) {
-            $pb->add('-optimize');
+            $args[] = '-optimize';
         }
 
         if ($this->copy) {
-            $pb->add('-copy')->add($this->copy);
+            $args[] = '-copy';
+            $args[] = $this->copy;
         }
 
         if ($this->progressive) {
-            $pb->add('-progressive');
+            $args[] = '-progressive';
         }
 
         if (null !== $this->restart) {
-            $pb->add('-restart')->add($this->restart);
+            $args[] = '-restart';
+            $args[] = $this->restart;
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('jpegtran'));
+        $args[] = $input = FilesystemUtils::createTemporaryFile('jpegtran');
         file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $process = $this->createProcessBuilder($args);
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 }

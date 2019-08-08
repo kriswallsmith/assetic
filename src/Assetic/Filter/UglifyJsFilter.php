@@ -97,31 +97,30 @@ class UglifyJsFilter extends BaseNodeFilter
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(
-            $this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
-        );
+            : array($this->uglifyjsBin);
 
         if ($this->noCopyright) {
-            $pb->add('--no-copyright');
+            $args[] = '--no-copyright';
         }
 
         if ($this->beautify) {
-            $pb->add('--beautify');
+            $args[] = '--beautify';
         }
 
         if ($this->unsafe) {
-            $pb->add('--unsafe');
+            $args[] = '--unsafe';
         }
 
         if (false === $this->mangle) {
-            $pb->add('--no-mangle');
+            $args[] = '--no-mangle';
         }
 
         if ($this->defines) {
             foreach ($this->defines as $define) {
-                $pb->add('-d')->add($define);
+                $args[] = '-d';
+                $args[] = $define;
             }
         }
 
@@ -130,10 +129,13 @@ class UglifyJsFilter extends BaseNodeFilter
         $output = FilesystemUtils::createTemporaryFile('uglifyjs_out');
 
         file_put_contents($input, $asset->getContent());
-        $pb->add('-o')->add($output)->add($input);
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $args[] = '-o';
+        $args[] = $output;
+        $args[] = $input;
+
+        $process = $this->createProcessBuilder($args);
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
@@ -145,7 +147,7 @@ class UglifyJsFilter extends BaseNodeFilter
                 throw new \RuntimeException('Path to node executable could not be resolved.');
             }
 
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
         if (!file_exists($output)) {

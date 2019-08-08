@@ -57,19 +57,24 @@ class AutoprefixerFilter extends BaseNodeFilter
     public function filterLoad(AssetInterface $asset)
     {
         $input = $asset->getContent();
-        $pb = $this->createProcessBuilder(array($this->autoprefixerBin));
 
-        $pb->setInput($input);
-        if ($this->browsers) {
-            $pb->add('-b')->add(implode(',', $this->browsers));
-        }
+        $args = [$this->autoprefixerBin];
 
         $output = FilesystemUtils::createTemporaryFile('autoprefixer');
-        $pb->add('-o')->add($output);
+        $args[] = '-o';
+        $args[] = $output;
 
-        $proc = $pb->getProcess();
-        if (0 !== $proc->run()) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+        if ($this->browsers) {
+            $args[] = '-b';
+            $args[] = implode(',', $this->browsers);
+        }
+
+        $process = $this->createProcessBuilder($args);
+
+        $process->setInput($input);
+
+        if (0 !== $process->run()) {
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
         $asset->setContent(file_get_contents($output));

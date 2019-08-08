@@ -51,30 +51,32 @@ class CoffeeScriptFilter extends BaseNodeFilter
         $input = FilesystemUtils::createTemporaryFile('coffee');
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->coffeeBin)
-            : array($this->coffeeBin));
+            : array($this->coffeeBin);
 
-        $pb->add('-cp');
+        $args[] = '-cp';
 
         if ($this->bare) {
-            $pb->add('--bare');
+            $args[] = '--bare';
         }
 
         if ($this->noHeader) {
-            $pb->add('--no-header');
+            $args[] = '--no-header';
         }
 
-        $pb->add($input);
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $args[] = $input;
+
+        $process = $this->createProcessBuilder($args);
+
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 
     public function filterDump(AssetInterface $asset)

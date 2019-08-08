@@ -81,30 +81,31 @@ class UglifyCssFilter extends BaseNodeFilter
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->uglifycssBin)
-            : array($this->uglifycssBin));
+            : array($this->uglifycssBin);
 
         if ($this->expandVars) {
-            $pb->add('--expand-vars');
+            $args[] = '--expand-vars';
         }
 
         if ($this->uglyComments) {
-            $pb->add('--ugly-comments');
+            $args[] = '--ugly-comments';
         }
 
         if ($this->cuteComments) {
-            $pb->add('--cute-comments');
+            $args[] = '--cute-comments';
         }
 
         // input and output files
         $input = FilesystemUtils::createTemporaryFile('uglifycss');
 
         file_put_contents($input, $asset->getContent());
-        $pb->add($input);
+        $args[] = $input;
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $process = $this->createProcessBuilder($args);
+
+        $code = $process->run();
         unlink($input);
 
         if (127 === $code) {
@@ -112,9 +113,9 @@ class UglifyCssFilter extends BaseNodeFilter
         }
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 }

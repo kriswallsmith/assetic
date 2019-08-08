@@ -91,24 +91,24 @@ EOF;
             $parserOptions['compress'] = $this->compress;
         }
 
-        $pb = $this->createProcessBuilder();
+        $input = FilesystemUtils::createTemporaryFile('stylus');
 
-        $pb->add($this->nodeBin)->add($input = FilesystemUtils::createTemporaryFile('stylus'));
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
             json_encode($parserOptions),
             $this->useNib ? '.use(require(\'nib\')())' : ''
         ));
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $process = $this->createProcessBuilder([$this->nodeBin, $input]);
+
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($process->getOutput());
     }
 
     /**
