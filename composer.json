@@ -1,8 +1,8 @@
 {
-    "name": "kriswallsmith/assetic",
+    "name": "JaxWilko/assetic",
     "description": "Asset Management for PHP",
     "keywords": [ "assets", "compression", "minification" ],
-    "homepage": "https://github.com/kriswallsmith/assetic",
+    "homepage": "https://github.com/JaxWilko/assetic",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -10,6 +10,11 @@
             "name": "Kris Wallsmith",
             "email": "kris.wallsmith@gmail.com",
             "homepage": "http://kriswallsmith.net/"
+        },
+        {
+            "name": "Jack Wilkinson",
+            "email": "me@jackwilky.com",
+            "homepage": "https://jackwilky.com/"
         }
     ],
     "require": {
@@ -42,6 +47,9 @@
         "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
         "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
         "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor"
+    },
+    "replace": {
+        "kriswallsmith/assetic": "*"
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
