@@ -27,6 +27,7 @@ class UglifyJsFilter extends BaseNodeFilter
     private $nodeBin;
 
     private $noCopyright;
+    private $comments;
     private $beautify;
     private $unsafe;
     private $mangle;
@@ -49,6 +50,15 @@ class UglifyJsFilter extends BaseNodeFilter
     public function setNoCopyright($noCopyright)
     {
         $this->noCopyright = $noCopyright;
+    }
+
+    /**
+     * Allow comments
+     * @param mixed $comments True to enable all comments
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
     }
 
     /**
@@ -103,6 +113,11 @@ class UglifyJsFilter extends BaseNodeFilter
 
         if ($this->noCopyright) {
             $args[] = '--no-copyright';
+        }
+
+        if ($this->comments) {
+            $args[] = '--comments';
+            $args[] = true === $this->comments ? 'all' : $this->comments;
         }
 
         if ($this->beautify) {
