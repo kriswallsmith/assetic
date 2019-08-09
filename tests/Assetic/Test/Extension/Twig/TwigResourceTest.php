@@ -35,25 +35,6 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $resource->getContent());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testInvalidTemplateNameGetContentWithLegacyLoader()
-    {
-        if (!method_exists('Twig_LoaderInterface', 'getSource')) {
-            $this->markTestSkipped('This test does not make sense on Twig 2.x.');
-        }
-
-        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
-        $loader->expects($this->once())
-            ->method('getSource')
-            ->with('asdf')
-            ->will($this->throwException(new \Twig_Error_Loader('')));
-
-        $resource = new TwigResource($loader, 'asdf');
-        $this->assertEquals('', $resource->getContent());
-    }
-
     public function testInvalidTemplateNameIsFresh()
     {
         $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
