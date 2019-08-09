@@ -63,19 +63,6 @@ EOF;
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
 
-    public function testCompassExtensionCanBeDisabled()
-    {
-        $this->setExpectedExceptionRegExp(
-            'Exception',
-            '/^Undefined mixin box-shadow:.*line:* 4$/'
-        );
-
-        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
-        $asset->load();
-
-        $this->getFilter(false)->filterLoad($asset);
-    }
-
     public function testSetImportPath()
     {
         $filter = $this->getFilter();
