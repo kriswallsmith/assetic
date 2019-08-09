@@ -91,10 +91,10 @@ class CompilerApiFilter extends BaseCompilerFilter
             }
             $context = stream_context_create($contextOptions);
 
-            $response = file_get_contents(self::CLOSURE_COMPILER_API, false, $context);
+            $response = file_get_contents(static::CLOSURE_COMPILER_API, false, $context);
             $data = json_decode($response);
         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
-            $ch = curl_init(self::CLOSURE_COMPILER_API);
+            $ch = curl_init(static::CLOSURE_COMPILER_API);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded'));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
