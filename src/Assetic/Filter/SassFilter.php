@@ -21,7 +21,7 @@ use Assetic\Util\CssUtils;
  *
  * @author Mikey Clarke <mikey.clarke@me.com>
  */
-class SassphpFilter implements DependencyExtractorInterface
+class SassFilter implements DependencyExtractorInterface
 {
     private $includePaths = array();
     private $outputStyle;

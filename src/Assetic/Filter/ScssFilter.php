@@ -25,7 +25,7 @@ use Leafo\ScssPhp\Compiler;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssphpFilter implements DependencyExtractorInterface
+class ScssFilter implements DependencyExtractorInterface
 {
     private $compass = false;
     private $importPaths = array();

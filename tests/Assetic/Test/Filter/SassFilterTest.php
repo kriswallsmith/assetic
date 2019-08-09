@@ -14,9 +14,9 @@ namespace Assetic\Test\Filter;
 use Assetic\Factory\AssetFactory;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
-use Assetic\Filter\SassphpFilter;
+use Assetic\Filter\SassFilter;
 
-class SassphpFilterTest extends \PHPUnit_Framework_TestCase
+class SassFilterTest extends \PHPUnit_Framework_TestCase
 {
     private $filter;
 
@@ -26,7 +26,7 @@ class SassphpFilterTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Sass extension is not installed');
         }
 
-        $this->filter = new SassphpFilter();
+        $this->filter = new SassFilter();
         $this->filter->setOutputStyle(\Sass::STYLE_COMPRESSED);
     }
 

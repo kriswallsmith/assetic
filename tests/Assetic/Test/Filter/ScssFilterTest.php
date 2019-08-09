@@ -14,12 +14,12 @@ namespace Assetic\Test\Filter;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
-use Assetic\Filter\ScssphpFilter;
+use Assetic\Filter\ScssFilter;
 
 /**
  * @group integration
  */
-class ScssphpFilterTest extends \PHPUnit_Framework_TestCase
+class ScssFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -198,7 +198,7 @@ EOF;
 
     private function getFilter($compass = false)
     {
-        $filter = new ScssphpFilter();
+        $filter = new ScssFilter();
 
         if ($compass) {
             $filter->enableCompass();
