@@ -53,7 +53,7 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
 
         $args[] = $input;
 
-        $process = $this->createProcessBuilder($args);
+        $process = $this->createProcess($args);
 
         $code = $process->run();
         unlink($input);

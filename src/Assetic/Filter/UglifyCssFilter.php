@@ -103,7 +103,7 @@ class UglifyCssFilter extends BaseNodeFilter
         file_put_contents($input, $asset->getContent());
         $args[] = $input;
 
-        $process = $this->createProcessBuilder($args);
+        $process = $this->createProcess($args);
 
         $code = $process->run();
         unlink($input);

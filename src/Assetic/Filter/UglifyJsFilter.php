@@ -149,7 +149,7 @@ class UglifyJsFilter extends BaseNodeFilter
         $args[] = $output;
         $args[] = $input;
 
-        $process = $this->createProcessBuilder($args);
+        $process = $this->createProcess($args);
         $code = $process->run();
         unlink($input);
 

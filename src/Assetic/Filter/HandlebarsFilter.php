@@ -75,7 +75,7 @@ class HandlebarsFilter extends BaseNodeFilter
             $args[] = '--simple';
         }
 
-        $process = $this->createProcessBuilder($args);
+        $process = $this->createProcess($args);
 
         $returnCode = $process->run();
 

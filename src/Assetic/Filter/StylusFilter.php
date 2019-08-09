@@ -99,7 +99,7 @@ EOF;
             $this->useNib ? '.use(require(\'nib\')())' : ''
         ));
 
-        $process = $this->createProcessBuilder([$this->nodeBin, $input]);
+        $process = $this->createProcess([$this->nodeBin, $input]);
 
         $code = $process->run();
         unlink($input);

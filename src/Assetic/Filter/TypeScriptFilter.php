@@ -55,7 +55,7 @@ class TypeScriptFilter extends BaseNodeFilter
         $args[] = $outputPath;
 
 
-        $process = $this->createProcessBuilder($args);
+        $process = $this->createProcess($args);
         $code = $process->run();
         unlink($inputPath);
         rmdir($inputDirPath);

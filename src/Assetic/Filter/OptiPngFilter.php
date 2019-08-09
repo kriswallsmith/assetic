@@ -61,7 +61,7 @@ class OptiPngFilter extends BaseProcessFilter
         $args[] = $input = FilesystemUtils::createTemporaryFile('optinpg_in');
         file_put_contents($input, $asset->getContent());
 
-        $process = $this->createProcessBuilder($args);
+        $process = $this->createProcess($args);
         $code = $process->run();
 
         if (0 !== $code) {

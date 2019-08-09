@@ -37,7 +37,7 @@ abstract class BaseProcessFilter implements FilterInterface
      *
      * @return Process A new process builder
      */
-    protected function createProcessBuilder(array $arguments = array())
+    protected function createProcess(array $arguments = array())
     {
         $pb = new Process($arguments);
 

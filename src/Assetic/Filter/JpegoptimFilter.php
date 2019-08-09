@@ -68,7 +68,7 @@ class JpegoptimFilter extends BaseProcessFilter
 
         $args[] = $input;
 
-        $process = $this->createProcessBuilder($args);
+        $process = $this->createProcess($args);
         $process->run();
 
         if (false !== strpos($process->getOutput(), 'ERROR')) {
