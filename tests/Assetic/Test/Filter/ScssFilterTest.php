@@ -63,31 +63,6 @@ EOF;
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
 
-    public function testCompassExtensionCanBeEnabled()
-    {
-        if (!class_exists('scss_compass')) {
-            $this->markTestSkipped('leafo/scssphp-compass is not installed');
-        }
-
-        $expected = <<<EOF
-.shadow {
-  -webkit-box-shadow: 10px 10px 8px red;
-  -moz-box-shadow: 10px 10px 8px red;
-  box-shadow: 10px 10px 8px red; }
-
-EOF;
-
-        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
-        $asset->load();
-
-        $this->getFilter(true)->filterLoad($asset);
-        $this->assertEquals(
-            $expected,
-            $asset->getContent(),
-            'compass plugin can be enabled'
-        );
-    }
-
     public function testCompassExtensionCanBeDisabled()
     {
         $this->setExpectedExceptionRegExp(
