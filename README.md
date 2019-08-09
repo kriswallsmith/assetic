@@ -47,13 +47,13 @@ use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
 use Assetic\Filter\LessFilter;
-use Assetic\Filter\Yui;
+use Assetic\Filter\UglifyCssFilter;
 
 $css = new AssetCollection(array(
     new FileAsset('/path/to/src/styles.less', array(new LessFilter())),
     new GlobAsset('/path/to/css/*'),
 ), array(
-    new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'),
+    new UglifyCssFilter('/path/to/uglifycss'),
 ));
 
 // this will echo CSS compiled by LESS and compressed by YUI
@@ -112,8 +112,6 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `UglifyCssFilter`: minifies CSS
  * `UglifyJs2Filter`: minifies Javascript
  * `UglifyJsFilter`: minifies Javascript
- * `Yui\CssCompressorFilter`: compresses CSS using the YUI compressor
- * `Yui\JsCompressorFilter`: compresses Javascript using the YUI compressor
 
 Asset Manager
 -------------
