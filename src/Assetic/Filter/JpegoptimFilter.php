@@ -66,8 +66,6 @@ class JpegoptimFilter extends BaseProcessFilter
         $input = FilesystemUtils::createTemporaryFile('jpegoptim');
         file_put_contents($input, $asset->getContent());
 
-        file_put_contents('/tmp/jack.log', base64_encode(file_get_contents($input)));
-
         $args[] = $input;
 
         $process = $this->createProcessBuilder($args);
