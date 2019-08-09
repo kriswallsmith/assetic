@@ -5,3 +5,4 @@ phpunit.xml
 vendor/
 node_modules/
 Gemfile.lock
+.idea/
