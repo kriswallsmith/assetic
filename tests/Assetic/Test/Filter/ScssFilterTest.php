@@ -23,8 +23,8 @@ class ScssFilterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        if (!class_exists('Leafo\ScssPhp\Compiler')) {
-            $this->markTestSkipped('leafo/scssphp is not installed');
+        if (!class_exists('ScssPhp\ScssPhp\Compiler')) {
+            $this->markTestSkipped('scssphp/scssphp is not installed');
         }
     }
 
@@ -93,7 +93,7 @@ EOF;
         $actual->load();
 
         $filter = $this->getFilter();
-        $filter->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+        $filter->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
         $filter->filterLoad($actual);
 
         $this->assertRegExp(
