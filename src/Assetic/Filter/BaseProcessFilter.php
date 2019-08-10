@@ -39,19 +39,19 @@ abstract class BaseProcessFilter implements FilterInterface
      */
     protected function createProcess(array $arguments = array())
     {
-        $pb = new Process($arguments);
+        $process = new Process($arguments);
 
         if (null !== $this->timeout) {
-            $pb->setTimeout($this->timeout);
+            $process->setTimeout($this->timeout);
         }
 
-        return $pb;
+        return $process;
     }
 
-    protected function mergeEnv(Process $pb)
+    protected function mergeEnv(Process $process)
     {
         foreach (array_filter($_SERVER, 'is_scalar') as $key => $value) {
-            $pb->setEnv([$key => $value]);
+            $process->setEnv([$key => $value]);
         }
     }
 }
