@@ -89,8 +89,7 @@ class JpegtranFilter extends BaseProcessFilter
             $args[] = $this->restart;
         }
 
-        $args[] = $input = FilesystemUtils::createTemporaryFile('jpegtran');
-        file_put_contents($input, $asset->getContent());
+        $args[] = $input = FilesystemUtils::createTemporaryFileAndWrite('jpegtran', $asset->getContent());
 
         $process = $this->createProcess($args);
         $code = $process->run();

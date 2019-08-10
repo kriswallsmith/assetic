@@ -41,10 +41,8 @@ class RooleFilter extends BaseNodeFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = FilesystemUtils::createTemporaryFile('roole');
+        $input = FilesystemUtils::createTemporaryFileAndWrite('roole', $asset->getContent());
         $output = $input.'.css';
-
-        file_put_contents($input, $asset->getContent());
 
         $args = $this->nodeBin
             ? array($this->nodeBin, $this->rooleBin)

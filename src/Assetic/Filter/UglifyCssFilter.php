@@ -98,9 +98,8 @@ class UglifyCssFilter extends BaseNodeFilter
         }
 
         // input and output files
-        $input = FilesystemUtils::createTemporaryFile('uglifycss');
+        $input = FilesystemUtils::createTemporaryFileAndWrite('uglifycss', $asset->getContent());
 
-        file_put_contents($input, $asset->getContent());
         $args[] = $input;
 
         $process = $this->createProcess($args);

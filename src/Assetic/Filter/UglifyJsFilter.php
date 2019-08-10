@@ -140,10 +140,8 @@ class UglifyJsFilter extends BaseNodeFilter
         }
 
         // input and output files
-        $input  = FilesystemUtils::createTemporaryFile('uglifyjs_in');
+        $input  = FilesystemUtils::createTemporaryFileAndWrite('uglifyjs_in', $asset->getContent());
         $output = FilesystemUtils::createTemporaryFile('uglifyjs_out');
-
-        file_put_contents($input, $asset->getContent());
 
         $args[] = '-o';
         $args[] = $output;

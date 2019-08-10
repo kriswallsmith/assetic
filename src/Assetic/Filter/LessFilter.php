@@ -137,12 +137,12 @@ EOF;
             $parserOptions['paths'][] = $loadPath;
         }
 
-        $process = $this->createProcess([$this->nodeBin, $input = FilesystemUtils::createTemporaryFile('less')]);
-
-        file_put_contents($input, sprintf($format,
+        $input = FilesystemUtils::createTemporaryFileAndWrite('less', sprintf($format,
             json_encode($asset->getContent()),
             json_encode(array_merge($parserOptions, $this->treeOptions))
         ));
+
+        $process = $this->createProcess([$this->nodeBin, $input]);
 
         $code = $process->run();
         unlink($input);
