@@ -11,7 +11,7 @@
 
 namespace Assetic\Asset;
 
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * Represents a string asset.

@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Filter;
+namespace Assetic\Contracts\Filter;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 
 /**

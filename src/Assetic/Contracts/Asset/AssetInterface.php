@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Asset;
+namespace Assetic\Contracts\Asset;
 
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * An asset has a mutable URL and content and can be loaded and dumped.

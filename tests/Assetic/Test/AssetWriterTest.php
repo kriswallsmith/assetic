@@ -39,7 +39,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteManagerAssets()
     {
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
         $am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
 
         $am->expects($this->once())
@@ -70,7 +70,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteAssetWithVars()
     {
-        $asset = $this->getMockBuilder('Assetic\Asset\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
         $asset->expects($this->atLeastOnce())
             ->method('getVars')
             ->will($this->returnValue(array('locale')));

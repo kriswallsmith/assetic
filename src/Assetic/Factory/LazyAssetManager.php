@@ -11,10 +11,10 @@
 
 namespace Assetic\Factory;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\AssetManager;
-use Assetic\Factory\Loader\FormulaLoaderInterface;
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 
 /**
  * A lazy asset manager is a composition of a factory and many formula loaders.

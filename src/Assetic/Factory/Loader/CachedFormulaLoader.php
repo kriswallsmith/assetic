@@ -12,8 +12,9 @@
 namespace Assetic\Factory\Loader;
 
 use Assetic\Cache\ConfigCache;
-use Assetic\Factory\Resource\IteratorResourceInterface;
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Resource\IteratorResourceInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
 
 /**
  * Adds a caching layer to a loader.

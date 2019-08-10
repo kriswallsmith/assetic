@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Filter;
+namespace Assetic\Contracts\Filter;
 
 /**
  * A filter can implement a hash function

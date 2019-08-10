@@ -11,8 +11,10 @@
 
 namespace Assetic\Filter;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 
 /**
  * A filter that wraps callables.

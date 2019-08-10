@@ -52,7 +52,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $count = 0;
         foreach ($resource as $r) {
             ++$count;
-            $this->assertInstanceOf('Assetic\\Factory\\Resource\\ResourceInterface', $r);
+            $this->assertInstanceOf('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface', $r);
         }
 
         if ($empty) {

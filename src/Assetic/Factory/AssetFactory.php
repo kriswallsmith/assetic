@@ -12,15 +12,15 @@
 namespace Assetic\Factory;
 
 use Assetic\Asset\AssetCollection;
-use Assetic\Asset\AssetCollectionInterface;
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetCollectionInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
 use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
-use Assetic\Factory\Worker\WorkerInterface;
-use Assetic\Filter\DependencyExtractorInterface;
+use Assetic\Contracts\Factory\Worker\WorkerInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\FilterManager;
 
 /**

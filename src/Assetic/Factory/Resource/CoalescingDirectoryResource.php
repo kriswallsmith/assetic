@@ -11,6 +11,9 @@
 
 namespace Assetic\Factory\Resource;
 
+use Assetic\Contracts\Factory\Resource\IteratorResourceInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
+
 /**
  * Coalesces multiple directories together into one merged resource.
  *

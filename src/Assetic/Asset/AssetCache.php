@@ -11,9 +11,10 @@
 
 namespace Assetic\Asset;
 
-use Assetic\Cache\CacheInterface;
-use Assetic\Filter\FilterInterface;
-use Assetic\Filter\HashableInterface;
+use Assetic\Contracts\Cache\CacheInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Filter\HashableInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Caches an asset to avoid the cost of loading and dumping.

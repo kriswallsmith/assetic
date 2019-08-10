@@ -11,6 +11,7 @@
 
 namespace Assetic\Exception;
 
+use Assetic\Contracts\Exception\Exception;
 use Symfony\Component\Process\Process;
 
 /**

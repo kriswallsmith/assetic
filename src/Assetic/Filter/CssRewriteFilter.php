@@ -11,7 +11,7 @@
 
 namespace Assetic\Filter;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Fixes relative CSS urls.

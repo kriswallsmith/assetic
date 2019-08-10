@@ -52,7 +52,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
         $this->fm = $this->getMockBuilder('Assetic\\FilterManager')->getMock();
 
-        $this->valueSupplier = $this->getMockBuilder('Assetic\ValueSupplierInterface')->getMock();
+        $this->valueSupplier = $this->getMockBuilder('Assetic\\Contracts\\ValueSupplierInterface')->getMock();
 
         $this->factory = new AssetFactory(__DIR__.'/templates');
         $this->factory->setAssetManager($this->am);
@@ -73,7 +73,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testReference()
     {
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
         $this->am->expects($this->any())
             ->method('get')
             ->with('foo')
@@ -100,7 +100,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testFilters()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
 
         $this->fm->expects($this->at(0))
             ->method('get')
@@ -118,7 +118,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testOptionalFilter()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')
@@ -147,7 +147,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testMixture()
     {
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
         $this->am->expects($this->any())
             ->method('get')
             ->with('foo')
@@ -160,7 +160,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testDebug()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')
@@ -175,7 +175,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testCombine()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')
@@ -196,7 +196,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterFunction()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')

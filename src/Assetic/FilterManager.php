@@ -11,7 +11,7 @@
 
 namespace Assetic;
 
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * Manages the available filters.

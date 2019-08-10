@@ -12,6 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Util\CssUtils;
+use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * An abstract filter for dealing with CSS.

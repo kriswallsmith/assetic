@@ -11,7 +11,8 @@
 
 namespace Assetic\Filter;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * Runs assets through Packager, a JavaScript Compressor/Obfuscator.

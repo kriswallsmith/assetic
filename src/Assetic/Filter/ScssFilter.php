@@ -11,7 +11,8 @@
 
 namespace Assetic\Filter;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\CssUtils;
 use ScssPhp\ScssPhp\Compiler;

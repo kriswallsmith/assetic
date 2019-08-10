@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Factory\Worker;
+namespace Assetic\Contracts\Factory\Worker;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 
 /**

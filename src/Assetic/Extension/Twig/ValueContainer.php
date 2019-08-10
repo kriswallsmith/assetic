@@ -11,7 +11,7 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\ValueSupplierInterface;
+use Assetic\Contracts\ValueSupplierInterface;
 
 /**
  * Container for values initialized lazily from a ValueSupplierInterface.

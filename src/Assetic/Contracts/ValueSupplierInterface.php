@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic;
+namespace Assetic\Contracts;
 
 /**
  * Value Supplier Interface.

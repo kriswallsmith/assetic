@@ -12,7 +12,7 @@
 namespace Assetic\Extension\Twig;
 
 use Assetic\Factory\AssetFactory;
-use Assetic\ValueSupplierInterface;
+use Assetic\Contracts\ValueSupplierInterface;
 
 class AsseticExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {

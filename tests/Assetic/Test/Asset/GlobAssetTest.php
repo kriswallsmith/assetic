@@ -19,7 +19,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $asset = new GlobAsset(__DIR__.'/*.php');
-        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
+        $this->assertInstanceOf('Assetic\\Contracts\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
     }
 
     public function testIteration()

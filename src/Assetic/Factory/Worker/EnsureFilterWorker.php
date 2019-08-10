@@ -11,9 +11,10 @@
 
 namespace Assetic\Factory\Worker;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Factory\Worker\WorkerInterface;
 
 /**
  * Applies a filter to an asset based on a source and/or target path match.

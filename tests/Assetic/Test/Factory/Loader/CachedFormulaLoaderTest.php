@@ -21,11 +21,11 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->loader = $this->getMockBuilder('Assetic\\Factory\\Loader\\FormulaLoaderInterface')->getMock();
+        $this->loader = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Loader\\FormulaLoaderInterface')->getMock();
         $this->configCache = $this->getMockBuilder('Assetic\\Cache\\ConfigCache')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
+        $this->resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
     }
 
     protected function tearDown()

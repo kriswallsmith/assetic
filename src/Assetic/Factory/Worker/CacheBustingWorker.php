@@ -11,8 +11,9 @@
 
 namespace Assetic\Factory\Worker;
 
-use Assetic\Asset\AssetCollectionInterface;
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetCollectionInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Factory\Worker\WorkerInterface;
 use Assetic\Factory\AssetFactory;
 
 /**

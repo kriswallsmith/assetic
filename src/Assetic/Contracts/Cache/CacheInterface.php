@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Cache;
+namespace Assetic\Contracts\Cache;
 
 /**
  * Interface for a cache backend.

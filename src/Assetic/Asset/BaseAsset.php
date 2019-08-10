@@ -12,7 +12,8 @@
 namespace Assetic\Asset;
 
 use Assetic\Filter\FilterCollection;
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * A base abstract asset.

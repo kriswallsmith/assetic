@@ -12,8 +12,8 @@
 namespace Assetic\Filter;
 
 use Assetic\Factory\AssetFactory;
-use Assetic\Asset\AssetInterface;
-use Assetic\Filter\DependencyExtractorInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\Util\CssUtils;
 
 /**

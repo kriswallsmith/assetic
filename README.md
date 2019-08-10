@@ -194,7 +194,7 @@ The `AssetFactory` is constructed with a root directory which is used as the bas
 Prefixing a filter name with a question mark, as `yui_css` is here, will cause
 that filter to be omitted when the factory is in debug mode.
 
-You can also register [Workers](src/Assetic/Factory/Worker/WorkerInterface.php) on the factory and all assets created
+You can also register [Workers](src/Assetic/Contracts/Factory/Worker/WorkerInterface.php) on the factory and all assets created
 by it will be passed to the worker's `process()` method before being returned. See _Cache Busting_ below for an example.
 
 Dumping Assets to static files

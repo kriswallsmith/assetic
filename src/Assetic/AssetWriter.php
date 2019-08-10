@@ -11,7 +11,7 @@
 
 namespace Assetic;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Util\VarUtils;
 
 /**

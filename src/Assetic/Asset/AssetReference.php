@@ -12,7 +12,8 @@
 namespace Assetic\Asset;
 
 use Assetic\AssetManager;
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * A reference to an asset in the asset manager.

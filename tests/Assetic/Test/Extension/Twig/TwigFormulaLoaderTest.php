@@ -56,7 +56,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testMixture()
     {
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
 
         $expected = array(
             'mixture' => array(
@@ -72,7 +72,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
+        $resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/mixture.twig')));
@@ -95,7 +95,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
+        $resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/function.twig')));
@@ -106,7 +106,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testUnclosedTag()
     {
-        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
+        $resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/unclosed_tag.twig')));
@@ -131,7 +131,7 @@ class TwigFormulaLoaderTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
+        $resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
         $resource->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue(file_get_contents(__DIR__.'/templates/embed.twig')));

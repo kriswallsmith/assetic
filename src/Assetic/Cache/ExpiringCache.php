@@ -11,6 +11,8 @@
 
 namespace Assetic\Cache;
 
+use Assetic\Contracts\Cache\CacheInterface;
+
 /**
  * Adds expiration to a cache backend.
  *

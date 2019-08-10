@@ -12,8 +12,9 @@
 namespace Assetic\Factory\Loader;
 
 use Assetic\Factory\AssetFactory;
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Util\FilesystemUtils;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
 
 /**
  * Loads asset formulae from PHP files.

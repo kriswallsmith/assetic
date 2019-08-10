@@ -11,7 +11,7 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 
 class AsseticTokenParser extends \Twig_TokenParser

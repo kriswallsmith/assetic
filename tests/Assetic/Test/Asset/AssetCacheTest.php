@@ -22,8 +22,8 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->inner = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
-        $this->cache = $this->getMockBuilder('Assetic\\Cache\\CacheInterface')->getMock();
+        $this->inner = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $this->cache = $this->getMockBuilder('Assetic\\Contracts\\Cache\\CacheInterface')->getMock();
 
         $this->asset = new AssetCache($this->inner, $this->cache);
     }
@@ -38,7 +38,7 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
     public function testLoadFromCache()
     {
         $content = 'asdf';
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
 
         $this->inner->expects($this->once())
             ->method('getFilters')
@@ -122,7 +122,7 @@ class AssetCacheTest extends \PHPUnit_Framework_TestCase
 
     public function testEnsureFilter()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
         $this->inner->expects($this->once())->method('ensureFilter');
         $this->asset->ensureFilter($filter);
     }

@@ -18,13 +18,13 @@ class FilterCollectionTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $filter = new FilterCollection();
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'FilterCollection implements FilterInterface');
+        $this->assertInstanceOf('Assetic\\Contracts\\Filter\\FilterInterface', $filter, 'FilterCollection implements FilterInterface');
     }
 
     public function testEnsure()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
 
         $filter->expects($this->once())->method('filterLoad');
 
@@ -37,8 +37,8 @@ class FilterCollectionTest extends \PHPUnit_Framework_TestCase
     public function testAll()
     {
         $filter = new FilterCollection(array(
-            $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock(),
-            $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock(),
+            $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock(),
+            $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock(),
         ));
 
         $this->assertInternalType('array', $filter->all(), '->all() returns an array');
@@ -52,7 +52,7 @@ class FilterCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testCountable()
     {
-        $filters = new FilterCollection(array($this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock()));
+        $filters = new FilterCollection(array($this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock()));
 
         $this->assertEquals(1, count($filters), 'Countable returns the count');
     }

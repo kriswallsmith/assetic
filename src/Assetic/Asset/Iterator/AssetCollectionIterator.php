@@ -11,7 +11,7 @@
 
 namespace Assetic\Asset\Iterator;
 
-use Assetic\Asset\AssetCollectionInterface;
+use Assetic\Contracts\Asset\AssetCollectionInterface;
 
 /**
  * Iterates over an asset collection.

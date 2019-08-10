@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Factory\Resource;
+namespace Assetic\Contracts\Factory\Resource;
 
 /**
  * A resource is something formulae can be loaded from.

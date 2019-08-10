@@ -11,7 +11,7 @@
 
 namespace Assetic\Filter\GoogleClosure;
 
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Filter for the Google Closure Compiler API.

@@ -11,8 +11,8 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\Factory\Loader\FormulaLoaderInterface;
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Psr\Log\LoggerInterface;
 
 /**

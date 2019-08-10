@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Assetic\Factory\Loader;
+namespace Assetic\Contracts\Factory\Loader;
 
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 
 /**
  * Loads formulae.

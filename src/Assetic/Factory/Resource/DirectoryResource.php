@@ -11,6 +11,8 @@
 
 namespace Assetic\Factory\Resource;
 
+use Assetic\Contracts\Factory\Resource\IteratorResourceInterface;
+
 /**
  * A resource is something formulae can be loaded from.
  *
