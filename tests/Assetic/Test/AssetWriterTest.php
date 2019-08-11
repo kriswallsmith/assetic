@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test;
 
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
 use Assetic\AssetWriter;
 
@@ -28,7 +29,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteManagerAssets()
     {
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
         $am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
 
         $am->expects($this->once())
@@ -59,7 +60,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteAssetWithVars()
     {
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
         $asset->expects($this->atLeastOnce())
             ->method('getVars')
             ->will($this->returnValue(array('locale')));

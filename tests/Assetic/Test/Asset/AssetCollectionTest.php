@@ -1,5 +1,7 @@
 <?php namespace Assetic\Test\Asset;
 
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\StringAsset;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\AssetCollection;
@@ -10,12 +12,12 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $coll = new AssetCollection();
-        $this->assertInstanceOf('Assetic\\Contracts\\Asset\\AssetInterface', $coll, 'AssetCollection implements AssetInterface');
+        $this->assertInstanceOf(AssetInterface::class, $coll, 'AssetCollection implements AssetInterface');
     }
 
     public function testLoadFilter()
     {
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())->method('filterLoad');
 
         $coll = new AssetCollection(array(new StringAsset('')), array($filter));
@@ -24,7 +26,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testDumpFilter()
     {
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())->method('filterDump');
 
         $coll = new AssetCollection(array(new StringAsset('')), array($filter));
@@ -143,7 +145,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
         $assets = array();
 
         for ($i = 0; $i < count($timestamps); $i++) {
-            $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+            $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
             $asset->expects($this->once())
                 ->method('getLastModified')
                 ->will($this->returnValue($timestamps[$i]));
@@ -181,10 +183,10 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testRecursiveIteration()
     {
-        $asset1 = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $asset2 = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $asset3 = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $asset4 = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $asset1 = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $asset2 = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $asset3 = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $asset4 = $this->getMockBuilder(AssetInterface::class)->getMock();
 
         $coll3 = new AssetCollection(array($asset1, $asset2));
         $coll2 = new AssetCollection(array($asset3, $coll3));
@@ -200,7 +202,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testRecursiveDeduplication()
     {
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
 
         $coll3 = new AssetCollection(array($asset, $asset));
         $coll2 = new AssetCollection(array($asset, $coll3));

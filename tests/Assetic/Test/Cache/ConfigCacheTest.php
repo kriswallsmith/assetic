@@ -38,13 +38,13 @@ class ConfigCacheTest extends TestCase
 
     public function testInvalidValue()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->setExpectedException(\RuntimeException::class);
         $this->cache->get('_invalid');
     }
 
     public function testInvalidTimestamp()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->setExpectedException(\RuntimeException::class);
         $this->cache->getTimestamp('_invalid');
     }
 

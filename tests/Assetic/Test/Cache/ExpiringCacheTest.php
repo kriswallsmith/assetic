@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Cache;
 
+use Assetic\Contracts\Cache\CacheInterface;
 use Assetic\Cache\ExpiringCache;
 
 class ExpiringCacheTest extends \PHPUnit_Framework_TestCase
@@ -10,7 +11,7 @@ class ExpiringCacheTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->inner = $this->getMockBuilder('Assetic\\Contracts\\Cache\\CacheInterface')->getMock();
+        $this->inner = $this->getMockBuilder(CacheInterface::class)->getMock();
         $this->lifetime = 3600;
         $this->cache = new ExpiringCache($this->inner, $this->lifetime);
     }

@@ -1,5 +1,8 @@
 <?php namespace Assetic\Test\Filter;
 
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CallablesFilter;
 use Assetic\Factory\AssetFactory;
@@ -9,15 +12,15 @@ class CallablesFilterTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $filter = new CallablesFilter();
-        $this->assertInstanceOf('Assetic\\Contracts\\Filter\\FilterInterface', $filter, 'CallablesFilter implements FilterInterface');
-        $this->assertInstanceOf('Assetic\\Contracts\\Filter\\DependencyExtractorInterface', $filter, 'CallablesFilter implements DependencyExtractorInterface');
+        $this->assertInstanceOf(FilterInterface::class, $filter, 'CallablesFilter implements FilterInterface');
+        $this->assertInstanceOf(DependencyExtractorInterface::class, $filter, 'CallablesFilter implements DependencyExtractorInterface');
     }
 
     public function testLoader()
     {
         $nb = 0;
         $filter = new CallablesFilter(function ($asset) use (&$nb) { $nb++; });
-        $filter->filterLoad($this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock());
+        $filter->filterLoad($this->getMockBuilder(AssetInterface::class)->getMock());
         $this->assertEquals(1, $nb, '->filterLoad() calls the loader callable');
     }
 
@@ -25,7 +28,7 @@ class CallablesFilterTest extends \PHPUnit_Framework_TestCase
     {
         $nb = 0;
         $filter = new CallablesFilter(null, function ($asset) use (&$nb) { $nb++; });
-        $filter->filterDump($this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock());
+        $filter->filterDump($this->getMockBuilder(AssetInterface::class)->getMock());
         $this->assertEquals(1, $nb, '->filterDump() calls the loader callable');
     }
 

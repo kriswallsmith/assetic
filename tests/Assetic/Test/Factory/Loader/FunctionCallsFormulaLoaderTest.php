@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Factory\Loader;
 
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
 use Assetic\Factory\Resource\FileResource;
@@ -11,8 +12,8 @@ class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInput($function, $inputs, $name, $expected)
     {
-        $resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\\Factory\\AssetFactory')
+        $resource = $this->getMockBuilder(ResourceInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
 

@@ -1,6 +1,10 @@
 <?php namespace Assetic\Test\Factory;
 
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\LazyAssetManager;
+use Assetic\Factory\AssetFactory;
 
 class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,7 +13,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->factory = $this->getMockBuilder('Assetic\\Factory\\AssetFactory')
+        $this->factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -24,9 +28,9 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFromLoader()
     {
-        $resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
-        $loader = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Loader\\FormulaLoaderInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $resource = $this->getMockBuilder(ResourceInterface::class)->getMock();
+        $loader = $this->getMockBuilder(FormulaLoaderInterface::class)->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
 
         $formula = array(
             array('js/core.js', 'js/more.js'),
@@ -55,8 +59,8 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetResources()
     {
         $resources = array(
-            $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock(),
-            $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock(),
+            $this->getMockBuilder(ResourceInterface::class)->getMock(),
+            $this->getMockBuilder(ResourceInterface::class)->getMock(),
         );
 
         $this->am->addResource($resources[0], 'foo');
@@ -92,7 +96,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetLastModified()
     {
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
 
         $this->factory->expects($this->once())
             ->method('getLastModified')

@@ -1,5 +1,8 @@
 <?php namespace Assetic\Test\Factory\Loader;
 
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
+use Assetic\Cache\ConfigCache;
 use Assetic\Factory\Loader\CachedFormulaLoader;
 
 class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
@@ -10,11 +13,11 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->loader = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Loader\\FormulaLoaderInterface')->getMock();
-        $this->configCache = $this->getMockBuilder('Assetic\\Cache\\ConfigCache')
+        $this->loader = $this->getMockBuilder(FormulaLoaderInterface::class)->getMock();
+        $this->configCache = $this->getMockBuilder(ConfigCache::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->resource = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface')->getMock();
+        $this->resource = $this->getMockBuilder(ResourceInterface::class)->getMock();
     }
 
     protected function tearDown()

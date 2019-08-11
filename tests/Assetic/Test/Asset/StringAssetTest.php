@@ -1,5 +1,7 @@
 <?php namespace Assetic\Test\Asset;
 
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\StringAsset;
 
 class StringAssetTest extends \PHPUnit_Framework_TestCase
@@ -7,12 +9,12 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $asset = new StringAsset('');
-        $this->assertInstanceOf('Assetic\\Contracts\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
+        $this->assertInstanceOf(AssetInterface::class, $asset, 'Asset implements AssetInterface');
     }
 
     public function testLoadAppliesFilters()
     {
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())->method('filterLoad');
 
         $asset = new StringAsset('foo', array($filter));
@@ -21,7 +23,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testAutomaticLoad()
     {
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())->method('filterLoad');
 
         $asset = new StringAsset('foo', array($filter));
@@ -39,7 +41,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset('');
         $asset->load();
 
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())
             ->method('filterLoad')
             ->with($asset);
@@ -51,7 +53,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
     {
         $asset = new StringAsset('');
 
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())
             ->method('filterDump')
             ->with($asset);

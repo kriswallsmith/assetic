@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Factory\Resource;
 
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Factory\Resource\DirectoryResource;
 
 class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
@@ -41,7 +42,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $count = 0;
         foreach ($resource as $r) {
             ++$count;
-            $this->assertInstanceOf('Assetic\\Contracts\\Factory\\Resource\\ResourceInterface', $r);
+            $this->assertInstanceOf(ResourceInterface::class, $r);
         }
 
         if ($empty) {

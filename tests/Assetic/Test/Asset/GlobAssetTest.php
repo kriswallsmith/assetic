@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Asset;
 
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\GlobAsset;
 use Assetic\Util\VarUtils;
 
@@ -8,7 +9,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $asset = new GlobAsset(__DIR__.'/*.php');
-        $this->assertInstanceOf('Assetic\\Contracts\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
+        $this->assertInstanceOf(AssetInterface::class, $asset, 'Asset implements AssetInterface');
     }
 
     public function testIteration()

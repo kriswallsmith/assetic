@@ -1,14 +1,17 @@
 <?php namespace Assetic\Test\Factory\Worker;
 
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Worker\EnsureFilterWorker;
 
 class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
 {
     public function testMatch()
     {
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\\Factory\\AssetFactory')
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -25,9 +28,9 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function testNonMatch()
     {
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\\Factory\\AssetFactory')
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
 

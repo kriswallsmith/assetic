@@ -1,6 +1,16 @@
 <?php namespace Assetic\Test\Factory;
 
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetCollectionInterface;
+use Assetic\Contracts\Factory\Worker\WorkerInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
+use Assetic\AssetManager;
+use Assetic\FilterManager;
+use Assetic\Asset\HttpAsset;
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetReference;
 use Assetic\Factory\AssetFactory;
 
 class AssetFactoryTest extends \PHPUnit_Framework_TestCase
@@ -11,8 +21,8 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
-        $this->fm = $this->getMockBuilder('Assetic\\FilterManager')->getMock();
+        $this->am = $this->getMockBuilder(AssetManager::class)->getMock();
+        $this->fm = $this->getMockBuilder(FilterManager::class)->getMock();
 
         $this->factory = new AssetFactory(__DIR__);
         $this->factory->setAssetManager($this->am);
@@ -28,7 +38,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testNoAssetManagerReference()
     {
-        $this->setExpectedException('LogicException', 'There is no asset manager.');
+        $this->setExpectedException(\LogicException::class, 'There is no asset manager.');
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('@foo'));
@@ -37,12 +47,12 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
     public function testNoAssetManagerNotReference()
     {
         $factory = new AssetFactory('.');
-        $this->assertInstanceOf('Assetic\\Contracts\\Asset\\AssetInterface', $factory->createAsset(array('foo')));
+        $this->assertInstanceOf(AssetInterface::class, $factory->createAsset(array('foo')));
     }
 
     public function testNoFilterManager()
     {
-        $this->setExpectedException('LogicException', 'There is no filter manager.');
+        $this->setExpectedException(\LogicException::class, 'There is no filter manager.');
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('foo'), array('foo'));
@@ -50,7 +60,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateAssetReference()
     {
-        $referenced = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $referenced = $this->getMockBuilder(AssetInterface::class)->getMock();
 
         $this->am->expects($this->any())
             ->method('get')
@@ -59,7 +69,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
         $assets = $this->factory->createAsset(array('@jquery'));
         $arr = iterator_to_array($assets);
-        $this->assertInstanceOf('Assetic\\Asset\\AssetReference', $arr[0], '->createAsset() creates a reference');
+        $this->assertInstanceOf(AssetReference::class, $arr[0], '->createAsset() creates a reference');
     }
 
     /**
@@ -69,7 +79,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $assets = $this->factory->createAsset(array($sourceUrl));
         $arr = iterator_to_array($assets);
-        $this->assertInstanceOf('Assetic\\Asset\\HttpAsset', $arr[0], '->createAsset() creates an HTTP asset');
+        $this->assertInstanceOf(HttpAsset::class, $arr[0], '->createAsset() creates an HTTP asset');
     }
 
     public function getHttpUrls()
@@ -85,14 +95,14 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $assets = $this->factory->createAsset(array(basename(__FILE__)));
         $arr = iterator_to_array($assets);
-        $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $arr[0], '->createAsset() creates a file asset');
+        $this->assertInstanceOf(FileAsset::class, $arr[0], '->createAsset() creates a file asset');
     }
 
     public function testCreateGlobAsset()
     {
         $assets = $this->factory->createAsset(array('*'));
         $arr = iterator_to_array($assets);
-        $this->assertInstanceOf('Assetic\\Asset\\FileAsset', $arr[0], '->createAsset() uses a glob to create a file assets');
+        $this->assertInstanceOf(FileAsset::class, $arr[0], '->createAsset() uses a glob to create a file assets');
     }
 
     public function testCreateGlobAssetAndLoadFiles()
@@ -122,7 +132,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->fm->expects($this->once())
             ->method('get')
             ->with('foo')
-            ->will($this->returnValue($this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock()));
+            ->will($this->returnValue($this->getMockBuilder(FilterInterface::class)->getMock()));
 
         $asset = $this->factory->createAsset(array(), array('foo'));
         $this->assertEquals(1, count($asset->getFilters()), '->createAsset() adds filters');
@@ -154,19 +164,19 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->fm->expects($this->once())
             ->method('get')
             ->with('foo')
-            ->will($this->returnValue($this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock()));
+            ->will($this->returnValue($this->getMockBuilder(FilterInterface::class)->getMock()));
 
         $this->factory->createAsset(array('foo.css'), array('?foo'));
     }
 
     public function testWorkers()
     {
-        $worker = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Worker\\WorkerInterface')->getMock();
+        $worker = $this->getMockBuilder(WorkerInterface::class)->getMock();
 
         // called once on the collection and once on each leaf
         $worker->expects($this->exactly(3))
             ->method('process')
-            ->with($this->isInstanceOf('Assetic\\Contracts\\Asset\\AssetInterface'));
+            ->with($this->isInstanceOf(AssetInterface::class));
 
         $this->factory->addWorker($worker);
         $this->factory->createAsset(array('foo.js', 'bar.js'));
@@ -174,12 +184,12 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testWorkerReturn()
     {
-        $worker = $this->getMockBuilder('Assetic\\Contracts\\Factory\\Worker\\WorkerInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
+        $worker = $this->getMockBuilder(WorkerInterface::class)->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
 
         $worker->expects($this->at(2))
             ->method('process')
-            ->with($this->isInstanceOf('Assetic\\Contracts\\Asset\\AssetCollectionInterface'))
+            ->with($this->isInstanceOf(AssetCollectionInterface::class))
             ->will($this->returnValue($asset));
 
         $this->factory->addWorker($worker);
@@ -193,7 +203,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->fm->expects($this->once())
             ->method('get')
             ->with('foo')
-            ->will($this->returnValue($this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock()));
+            ->will($this->returnValue($this->getMockBuilder(FilterInterface::class)->getMock()));
 
         $inputs = array(
             'css/main.css',
@@ -216,10 +226,10 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetLastModified()
     {
-        $asset = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $child = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $filter1 = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
-        $filter2 = $this->getMockBuilder('Assetic\\Contracts\\Filter\\DependencyExtractorInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $child = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $filter1 = $this->getMockBuilder(FilterInterface::class)->getMock();
+        $filter2 = $this->getMockBuilder(DependencyExtractorInterface::class)->getMock();
 
         $asset->expects($this->any())
             ->method('getLastModified')
@@ -246,10 +256,10 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetLastModifiedCollection()
     {
-        $leaf = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $child = $this->getMockBuilder('Assetic\\Contracts\\Asset\\AssetInterface')->getMock();
-        $filter1 = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
-        $filter2 = $this->getMockBuilder('Assetic\\Contracts\\Filter\\DependencyExtractorInterface')->getMock();
+        $leaf = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $child = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $filter1 = $this->getMockBuilder(FilterInterface::class)->getMock();
+        $filter2 = $this->getMockBuilder(DependencyExtractorInterface::class)->getMock();
 
         $asset = new AssetCollection();
         $asset->add($leaf);

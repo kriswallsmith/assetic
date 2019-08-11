@@ -27,14 +27,14 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testMalformedUrl()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException(\InvalidArgumentException::class);
 
         new HttpAsset(__FILE__);
     }
 
     public function testInvalidUrl()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->setExpectedException(\RuntimeException::class);
 
         $asset = new HttpAsset('http://invalid.com/foobar');
         $asset->load();

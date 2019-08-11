@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Asset;
 
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
 
 class FileAssetTest extends \PHPUnit_Framework_TestCase
@@ -7,7 +8,7 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $asset = new FileAsset(__FILE__);
-        $this->assertInstanceOf('Assetic\\Contracts\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
+        $this->assertInstanceOf(AssetInterface::class, $asset, 'Asset implements AssetInterface');
     }
 
     public function testLazyLoading()
@@ -56,7 +57,7 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidBase()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException(\InvalidArgumentException::class);
 
         $asset = new FileAsset(__FILE__, array(), __DIR__.'/foo');
     }

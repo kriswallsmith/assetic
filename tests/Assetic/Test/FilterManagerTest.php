@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test;
 
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\FilterManager;
 
 class FilterManagerTest extends \PHPUnit_Framework_TestCase
@@ -21,7 +22,7 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFilter()
     {
-        $filter = $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $name = 'foo';
 
         $this->fm->set($name, $filter);
@@ -31,7 +32,7 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $this->fm->set('foo', $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock());
+        $this->fm->set('foo', $this->getMockBuilder(FilterInterface::class)->getMock());
         $this->assertTrue($this->fm->has('foo'), '->has() returns true if the filter is set');
     }
 
@@ -43,6 +44,6 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
     public function testInvalidAlias()
     {
         $this->setExpectedException('InvalidArgumentException');
-        $this->fm->set('@foo', $this->getMockBuilder('Assetic\\Contracts\\Filter\\FilterInterface')->getMock());
+        $this->fm->set('@foo', $this->getMockBuilder(FilterInterface::class)->getMock());
     }
 }
