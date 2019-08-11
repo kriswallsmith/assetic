@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
+<?php namespace Assetic\Filter;
 
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\DependencyExtractorInterface;
@@ -65,7 +54,7 @@ class LessphpFilter implements DependencyExtractorInterface
     {
         $this->presets = $presets;
     }
-    
+
     public function setOptions(array $options)
     {
     	$this->options = $options;
@@ -109,7 +98,7 @@ class LessphpFilter implements DependencyExtractorInterface
         if (null !== $this->preserveComments) {
             $lc->setPreserveComments($this->preserveComments);
         }
-        
+
         if (method_exists($lc, 'setOptions') && count($this->options) > 0 ) {
         	$lc->setOptions($this->options);
         }
