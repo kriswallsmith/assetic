@@ -1,13 +1,13 @@
 language: php
 
+dist: bionic
+
 addons:
     apt:
         packages:
             - jpegoptim
             - libjpeg-progs
             - optipng
-            - pngout
-            - cleancss
             - php-sass
 
 sudo: false
