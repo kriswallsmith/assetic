@@ -26,6 +26,7 @@
         "php": ">=7.2",
         "ext-curl": "*",
         "ext-json": "*",
+        "ext-simplexml": "*",
         "symfony/process": "~4.0"
     },
     "conflict": {
