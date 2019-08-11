@@ -1,5 +1,11 @@
 {
-  "devDependencies": {
+  "name": "assetic",
+  "version": "1.0.0",
+  "description": "Asset Management for PHP",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
     "autoprefixer": "*",
     "autoprefixer-5": "^1.x",
     "autoprefixer-cli": "*",
@@ -16,5 +22,20 @@
     "typescript": "*",
     "uglify-js": "*",
     "uglifycss": "*"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaxWilko/assetic.git"
+  },
+  "keywords": [
+    "php7"
+  ],
+  "author": "JaxWilko <me@jackwilky.com>",
+  "license": "SEE LICENSE IN LICENCE",
+  "bugs": {
+    "url": "https://github.com/JaxWilko/assetic/issues"
+  },
+  "homepage": "https://github.com/JaxWilko/assetic#readme"
 }
