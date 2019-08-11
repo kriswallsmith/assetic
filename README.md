@@ -1,6 +1,9 @@
-# Assetic [![Build Status](https://travis-ci.org/JaxWilko/assetic.png?branch=master)](https://travis-ci.org/kriswallsmith/assetic) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/JaxWilko/assetic.svg)](http://isitmaintained.com/project/JaxWilko/assetic "Average time to resolve an issue") http://isitmaintained.com/badge/open/JaxWilko/assetic.svg #
+# Assetic
+[![Build Status](https://travis-ci.org/assetic-php/assetic.png?branch=master)](https://travis-ci.org/assetic-php/assetic)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/assetic-php/assetic.svg)](http://isitmaintained.com/project/assetic-php/assetic "Average time to resolve an issue")
+[![Percentage of issues still open](https://isitmaintained.com/badge/open/assetic-php/assetic.svg)](https://isitmaintained.com/project/assetic-php/assetic "Percentage of issues still open")
 
-Assetic is an asset management framework for PHP.
+Assetic is an asset management framework for PHP maintained by the [OctoberCMS team](https://github.com/octobercms).
 
 ``` php
 <?php
