@@ -6,6 +6,9 @@ addons:
             - jpegoptim
             - libjpeg-progs
             - optipng
+            - pngout
+            - cleancss
+            - php-sass
 
 sudo: false
 
