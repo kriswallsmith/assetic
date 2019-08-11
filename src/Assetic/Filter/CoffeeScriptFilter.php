@@ -37,7 +37,7 @@ class CoffeeScriptFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = FilesystemUtils::createTemporaryFileAndWrite('coffee', $asset->getContent());
+        $input = FilesystemUtils::createTemporaryFile('coffee', $asset->getContent());
 
         $args = $this->nodeBin
             ? array($this->nodeBin, $this->coffeeBin)

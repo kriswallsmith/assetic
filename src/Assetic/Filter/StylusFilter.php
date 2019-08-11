@@ -81,7 +81,7 @@ EOF;
             $parserOptions['compress'] = $this->compress;
         }
 
-        $input = FilesystemUtils::createTemporaryFileAndWrite('stylus', sprintf($format,
+        $input = FilesystemUtils::createTemporaryFile('stylus', sprintf($format,
             json_encode($asset->getContent()),
             json_encode($parserOptions),
             $this->useNib ? '.use(require(\'nib\')())' : ''

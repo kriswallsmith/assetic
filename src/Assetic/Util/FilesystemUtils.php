@@ -48,40 +48,36 @@ class FilesystemUtils
      */
     public static function createThrowAwayDirectory($prefix)
     {
-        $directory = self::getTemporaryDirectory() . DIRECTORY_SEPARATOR . uniqid('assetic_' . $prefix);
+        $directory = static::getTemporaryDirectory() . DIRECTORY_SEPARATOR . uniqid('assetic_' . $prefix);
         mkdir($directory);
 
         return $directory;
     }
 
     /**
-     * Creates a temporary file.
+     * Creates a temporary file and optionally writes to it.
      *
      * @param string $prefix A prefix for the file name
+     * @param string|null $contents Contents to be written to the file, optional
      *
      * @return string The file path
      */
-    public static function createTemporaryFile($prefix)
+    public static function createTemporaryFile($prefix, $contents = null)
     {
-        return tempnam(self::getTemporaryDirectory(), 'assetic_' . $prefix);
+        $tmpFile = tempnam(static::getTemporaryDirectory(), 'assetic_' . $prefix);
+
+        if (!is_null($contents)) {
+            file_put_contents($tmpFile, $contents);
+        }
+
+        return $tmpFile;
     }
 
     /**
-     * Creates a temporary file and writes to it.
+     * Gets the path to the temporary directory
      *
-     * @param string $prefix A prefix for the file name
-     * @param string $string Contents to be written
-     *
-     * @return string The file path
+     * @return string
      */
-
-    public static function createTemporaryFileAndWrite($prefix, $string)
-    {
-        $filePath = static::createTemporaryFile($prefix);
-        file_put_contents($filePath, $string);
-        return $filePath;
-    }
-
     public static function getTemporaryDirectory()
     {
         return realpath(sys_get_temp_dir());

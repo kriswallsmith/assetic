@@ -25,7 +25,7 @@ class FilesystemUtilsTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateTemporaryFileAndWrite()
     {
-        $filePath = FilesystemUtils::createTemporaryFileAndWrite(__METHOD__, 'hello world');
+        $filePath = FilesystemUtils::createTemporaryFile(__METHOD__, 'hello world');
         $this->assertFileExists($filePath);
         $result = file_get_contents($filePath);
         $this->assertEquals('hello world', $result);

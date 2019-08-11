@@ -127,7 +127,7 @@ EOF;
             $parserOptions['paths'][] = $loadPath;
         }
 
-        $input = FilesystemUtils::createTemporaryFileAndWrite('less', sprintf($format,
+        $input = FilesystemUtils::createTemporaryFile('less', sprintf($format,
             json_encode($asset->getContent()),
             json_encode(array_merge($parserOptions, $this->treeOptions))
         ));
