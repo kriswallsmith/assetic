@@ -47,6 +47,7 @@
         "yfix/packager": "dev-master"
     },
     "suggest": {
+        "ext-sass": "Assetic provides the integration with the sass php extension",
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
         "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
         "scss/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
