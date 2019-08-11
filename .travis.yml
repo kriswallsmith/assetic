@@ -14,18 +14,13 @@ cache:
         - $HOME/.composer/cache/files
 
 php:
-    - 5.3
-    - 5.4
-    - 5.5
-    - 5.6
-    - 7.0
-    - 7.1
-    - hhvm
+    - 7.2
+    - 7.3
+    - nightly
 
 matrix:
     allow_failures:
-        - php: hhvm
-        - php: 7.1
+        - php: nightly
     include:
         - php: 5.3
           env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable' SYMFONY_DEPRECATIONS_HELPER=weak

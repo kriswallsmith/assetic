@@ -4,7 +4,7 @@ concepts of Assetic: assets and filters.
 ### What is an Asset?
 
 As asset is an object that has content and metadata which can be loaded and
-dumped. Your assets will probably fall into three categories: Javascripts,
+dumped. Your assets will probably fall into three categories: Javascript,
 stylesheets and images. Most assets will be loaded from files in your
 filesystem, but they can also be loaded via HTTP, a database, from a string,
 or virtually anything else. All that an asset has to do is fulfill Assetic's
@@ -14,7 +14,7 @@ basic asset interface.
 
 A filter is an object that acts upon an asset's content when that asset is
 loaded and/or dumped. Similar to assets, a filter can do virtually anything,
-as long as it implements Assetic's filter interface. 
+as long as it implements Assetic's filter interface.
 
 Here is a list of some of the tools that can be applied to assets using a
 filter:
