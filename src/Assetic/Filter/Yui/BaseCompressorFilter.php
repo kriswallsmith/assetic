@@ -91,7 +91,7 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $input = tempnam($tempDir, 'assetic_yui_input');
         $output = tempnam($tempDir, 'assetic_yui_output');
         file_put_contents($input, $content);
-        array_push($arguments, '-o', '--type', $type, $input);
+        array_push($arguments, '-o', $output, '--type', $type, $input);
 
         $proc = $this->createProcessBuilder($arguments);
         $code = $proc->run();
