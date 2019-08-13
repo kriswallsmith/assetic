@@ -2,8 +2,9 @@
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Contracts\ValueSupplierInterface;
+use Twig\Extension\GlobalsInterface;
 
-class AsseticExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class AsseticExtension extends \Twig_Extension implements GlobalsInterface
 {
     protected $factory;
     protected $functions;
@@ -37,7 +38,7 @@ class AsseticExtension extends \Twig_Extension implements \Twig_Extension_Global
     {
         $functions = array();
         foreach ($this->functions as $function => $filter) {
-            $functions[] = new AsseticFilterFunction($function);
+            $functions[] = AsseticFilterFunction::make($this, $function);
         }
 
         return $functions;

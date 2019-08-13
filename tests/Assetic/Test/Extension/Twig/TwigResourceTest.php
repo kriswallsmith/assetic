@@ -18,7 +18,7 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
             $loader->willImplement('Twig_SourceContextLoaderInterface');
         }
 
-        $loader->getSourceContext('asdf')->willThrow(new \Twig_Error_Loader(''));
+        $loader->getSourceContext('asdf')->willThrow(new \Twig\Error\LoaderError(''));
 
         $resource = new TwigResource($loader->reveal(), 'asdf');
         $this->assertEquals('', $resource->getContent());
@@ -30,7 +30,7 @@ class TwigResourceTest extends \PHPUnit_Framework_TestCase
         $loader->expects($this->once())
             ->method('isFresh')
             ->with('asdf', 1234)
-            ->will($this->throwException(new \Twig_Error_Loader('')));
+            ->will($this->throwException(new \Twig\Error\LoaderError('')));
 
         $resource = new TwigResource($loader, 'asdf');
         $this->assertFalse($resource->isFresh(1234));
