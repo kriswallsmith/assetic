@@ -27,7 +27,8 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "symfony/process": "~4.0"
+        "symfony/process": "~4.0",
+        "twig/extensions": "^1.5"
     },
     "conflict": {
         "twig/twig": "<1.27"
@@ -43,7 +44,7 @@
         "psr/log": "~1.0",
         "ptachoire/cssembed": "~1.0",
         "symfony/phpunit-bridge": "~2.7|~3.0",
-        "twig/twig": "~1.23|~2.0",
+        "twig/twig": "~2.11",
         "yfix/packager": "dev-master"
     },
     "suggest": {
