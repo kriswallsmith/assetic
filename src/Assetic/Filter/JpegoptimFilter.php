@@ -2,7 +2,6 @@
 
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through Jpegoptim.
@@ -12,19 +11,22 @@ use Assetic\Util\FilesystemUtils;
  */
 class JpegoptimFilter extends BaseProcessFilter
 {
-    private $jpegoptimBin;
-    private $stripAll;
-    private $max;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/jpegoptim';
 
     /**
-     * Constructor.
-     *
-     * @param string $jpegoptimBin Path to the jpegoptim binary
+     * @var bool Flag to indicate that the process will output the result to the input file
      */
-    public function __construct($jpegoptimBin = '/usr/bin/jpegoptim')
-    {
-        $this->jpegoptimBin = $jpegoptimBin;
-    }
+    protected $useInputAsOutput = true;
+
+    /*
+     * Filter Options
+     */
+
+    private $stripAll;
+    private $max;
 
     public function setStripAll($stripAll)
     {
@@ -42,7 +44,7 @@ class JpegoptimFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $args = [$this->jpegoptimBin];
+        $args = [];
 
         if ($this->stripAll) {
             $args[] = '--strip-all';
@@ -52,20 +54,16 @@ class JpegoptimFilter extends BaseProcessFilter
             $args[] = '--max=' . $this->max;
         }
 
-        $input = FilesystemUtils::createTemporaryFile('jpegoptim', $asset->getContent());
+        $args[] = '{INPUT}';
 
-        $args[] = $input;
+        // Run the filter
+        $result = $this->runProcess($asset->getContent(), $args);
 
-        $process = $this->createProcess($args);
-        $process->run();
-
-        if (false !== strpos($process->getOutput(), 'ERROR')) {
-            unlink($input);
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
+        // Check for any issues
+        if (strpos($result, 'ERROR') !== false) {
+            throw FilterException::fromProcess($this->getProcess())->setInput($asset->getContent());
         }
 
-        $asset->setContent(file_get_contents($input));
-
-        unlink($input);
+        $asset->setContent($result);
     }
 }
