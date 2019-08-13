@@ -85,6 +85,8 @@ abstract class BaseProcessFilter implements FilterInterface
      * @param string $input The input to provide the process
      * @param array $arguments The arguments to provide the process
      * @return string The ouput created by the process
+     * @throws FilterException
+     * @throws Exception
      */
     protected function runProcess(string $input, array $arguments = [])
     {
@@ -113,6 +115,8 @@ abstract class BaseProcessFilter implements FilterInterface
                 }
             }
         }
+
+        $args = array_merge($args, $arguments);
 
         // Run the process
         $process = $this->createProcess($args);
