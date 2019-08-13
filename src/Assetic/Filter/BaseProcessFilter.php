@@ -104,11 +104,11 @@ abstract class BaseProcessFilter implements FilterInterface
         // Process the input and output argument locations
         foreach ($arguments as &$arg) {
             if (is_string($arg)) {
-                str_replace('{INPUT}', $inputFile);
+                $arg = str_replace('{INPUT}', $inputFile, $arg);
 
                 // Only some processes output to file, others just use $process->getOutput()
                 if (strpos($arg, '{OUTPUT}') !== false) {
-                    str_replace('{OUTPUT}', $outputFile);
+                    $arg = str_replace('{OUTPUT}', $outputFile, $arg);
                     $outputToFile = true;
                 }
             }
