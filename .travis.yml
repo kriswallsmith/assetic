@@ -8,7 +8,6 @@ addons:
             - jpegoptim
             - libjpeg-progs
             - optipng
-            - php-sass
 
 sudo: false
 
