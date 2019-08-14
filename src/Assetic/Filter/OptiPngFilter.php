@@ -12,18 +12,21 @@ use Assetic\Util\FilesystemUtils;
  */
 class OptiPngFilter extends BaseProcessFilter
 {
-    private $optipngBin;
-    private $level;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/optipng';
 
     /**
-     * Constructor.
-     *
-     * @param string $optipngBin Path to the optipng binary
+     * @var boolean Flag to indicate that the output file should not exist before the process is run
      */
-    public function __construct($optipngBin = '/usr/bin/optipng')
-    {
-        $this->optipngBin = $optipngBin;
-    }
+    protected $deleteOutputFile = true;
+
+    /*
+     * Filter Options
+     */
+
+    private $level;
 
     public function setLevel($level)
     {
@@ -36,30 +39,20 @@ class OptiPngFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $args = [$this->optipngBin];
+        $args = [];
 
-        if (null !== $this->level) {
+        if (!is_null($this->level)) {
             $args[] = '-o';
             $args[] = $this->level;
         }
 
         $args[] = '-out';
-        $args[] = $output = FilesystemUtils::createTemporaryFile('optipng_out');
-        unlink($output);
+        $args[] = '{OUTPUT}';
+        $args[] = '{INPUT}';
 
-        $args[] = $input = FilesystemUtils::createTemporaryFile('optinpg_in', $asset->getContent());
+        // Run the filter
+        $result = $this->runProcess($asset->getContent(), $args);
 
-        $process = $this->createProcess($args);
-        $code = $process->run();
-
-        if (0 !== $code) {
-            unlink($input);
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
-        }
-
-        $asset->setContent(file_get_contents($output));
-
-        unlink($input);
-        unlink($output);
+        $asset->setContent($result);
     }
 }
