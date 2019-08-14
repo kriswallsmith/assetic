@@ -1,14 +1,15 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\JSMinFilter;
 
 /**
  * @group integration
  */
-class JSMinFilterTest extends \PHPUnit_Framework_TestCase
+class JSMinFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('JSMin')) {
             $this->markTestSkipped('JSMin is not installed.');

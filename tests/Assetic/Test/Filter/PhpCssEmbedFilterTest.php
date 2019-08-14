@@ -1,14 +1,15 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\PhpCssEmbedFilter;
 
 /**
  * @group integration
  */
-class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
+class PhpCssEmbedFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('CssEmbed\CssEmbed')) {
             $this->markTestSkipped('PhpCssEmbed is not installed');
@@ -25,6 +26,6 @@ class PhpCssEmbedFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new PhpCssEmbedFilter();
         $filter->filterLoad($asset);
 
-        $this->assertContains('url(data:image/png;base64,'.$data, $asset->getContent());
+        $this->assertStringContainsString('url(data:image/png;base64,'.$data, $asset->getContent());
     }
 }

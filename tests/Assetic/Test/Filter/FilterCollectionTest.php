@@ -1,10 +1,11 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Filter\FilterCollection;
 
-class FilterCollectionTest extends \PHPUnit_Framework_TestCase
+class FilterCollectionTest extends TestCase
 {
     public function testInterface()
     {
@@ -32,13 +33,13 @@ class FilterCollectionTest extends \PHPUnit_Framework_TestCase
             $this->getMockBuilder(FilterInterface::class)->getMock(),
         ));
 
-        $this->assertInternalType('array', $filter->all(), '->all() returns an array');
+        $this->assertIsArray($filter->all(), '->all() returns an array');
     }
 
     public function testEmptyAll()
     {
         $filter = new FilterCollection();
-        $this->assertInternalType('array', $filter->all(), '->all() returns an array');
+        $this->assertIsArray($filter->all(), '->all() returns an array');
     }
 
     public function testCountable()

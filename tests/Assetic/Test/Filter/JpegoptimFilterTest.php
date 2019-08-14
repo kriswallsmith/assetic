@@ -10,7 +10,7 @@ class JpegoptimFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$jpegoptimBin = $this->findExecutable('jpegoptim', 'JPEGOPTIM_BIN')) {
             $this->markTestSkipped('Unable to find `jpegoptim` executable.');
@@ -19,7 +19,7 @@ class JpegoptimFilterTest extends FilterTestCase
         $this->filter = new JpegoptimFilter($jpegoptimBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }

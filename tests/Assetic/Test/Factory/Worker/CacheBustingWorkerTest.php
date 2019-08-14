@@ -1,19 +1,20 @@
 <?php namespace Assetic\Test\Factory\Worker;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Worker\CacheBustingWorker;
 
-class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
+class CacheBustingWorkerTest extends TestCase
 {
     private $worker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->worker = new CacheBustingWorker();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->worker = null;
     }

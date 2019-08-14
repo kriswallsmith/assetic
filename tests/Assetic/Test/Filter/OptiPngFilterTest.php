@@ -10,7 +10,7 @@ class OptiPngFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$optipngBin = $this->findExecutable('optipng', 'OPTIPNG_BIN')) {
             $this->markTestSkipped('Unable to find `optipng` executable.');
@@ -19,7 +19,7 @@ class OptiPngFilterTest extends FilterTestCase
         $this->filter = new OptiPngFilter($optipngBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }

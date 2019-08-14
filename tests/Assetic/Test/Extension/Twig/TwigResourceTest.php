@@ -1,10 +1,11 @@
 <?php namespace Assetic\Test\Extension\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Extension\Twig\TwigResource;
 
-class TwigResourceTest extends \PHPUnit_Framework_TestCase
+class TwigResourceTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('Twig_Environment')) {
             $this->markTestSkipped('Twig is not installed.');

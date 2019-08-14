@@ -10,7 +10,7 @@ class JpegtranFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$jpegtranBin = $this->findExecutable('jpegtran', 'JPEGTRAN_BIN')) {
             $this->markTestSkipped('Unable to find `jpegtran` executable.');
@@ -19,7 +19,7 @@ class JpegtranFilterTest extends FilterTestCase
         $this->filter = new JpegtranFilter($jpegtranBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }

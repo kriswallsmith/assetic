@@ -1,14 +1,14 @@
 <?php namespace Assetic\Test\Cache;
 
-use Assetic\Cache\ConfigCache;
 use Assetic\Test\TestCase;
+use Assetic\Cache\ConfigCache;
 
 class ConfigCacheTest extends TestCase
 {
     private $dir;
     private $cache;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('assetic_config_cache');
         mkdir($this->dir);
@@ -16,7 +16,7 @@ class ConfigCacheTest extends TestCase
         $this->cache = new ConfigCache($this->dir);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         self::removeDirectory($this->dir);
         $this->dir = null;
@@ -32,19 +32,19 @@ class ConfigCacheTest extends TestCase
     public function testTimestamp()
     {
         $this->cache->set('bar', array(4, 5, 6));
-        $this->assertInternalType('integer', $time = $this->cache->getTimestamp('bar'), '->getTimestamp() returns an integer');
+        $this->assertIsInt($time = $this->cache->getTimestamp('bar'), '->getTimestamp() returns an integer');
         $this->assertNotEmpty($time, '->getTimestamp() returns a non-empty number');
     }
 
     public function testInvalidValue()
     {
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->cache->get('_invalid');
     }
 
     public function testInvalidTimestamp()
     {
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->cache->getTimestamp('_invalid');
     }
 

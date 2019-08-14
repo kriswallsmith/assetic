@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\DependencyExtractorInterface;
@@ -7,7 +8,7 @@ use Assetic\Asset\StringAsset;
 use Assetic\Filter\CallablesFilter;
 use Assetic\Factory\AssetFactory;
 
-class CallablesFilterTest extends \PHPUnit_Framework_TestCase
+class CallablesFilterTest extends TestCase
 {
     public function testInterface()
     {

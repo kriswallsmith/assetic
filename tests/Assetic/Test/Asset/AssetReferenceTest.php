@@ -1,23 +1,24 @@
 <?php namespace Assetic\Test\Asset;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\StringAsset;
 use Assetic\AssetManager;
 
-class AssetReferenceTest extends \PHPUnit_Framework_TestCase
+class AssetReferenceTest extends TestCase
 {
     private $am;
     private $ref;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->am = $this->getMockBuilder(AssetManager::class)->getMock();
         $this->ref = new AssetReference($this->am, 'foo');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->am = null;
         $this->ref = null;
@@ -73,7 +74,7 @@ class AssetReferenceTest extends \PHPUnit_Framework_TestCase
 
         $this->ref->ensureFilter($this->getMockBuilder(FilterInterface::class)->getMock());
 
-        $this->assertInternalType('array', $this->ref->getFilters(), '->getFilters() flushes and returns filters');
+        $this->assertIsArray($this->ref->getFilters(), '->getFilters() flushes and returns filters');
     }
 
     public function testSetContent()

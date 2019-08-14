@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
@@ -8,9 +9,9 @@ use Assetic\Filter\ScssFilter;
 /**
  * @group integration
  */
-class ScssFilterTest extends \PHPUnit_Framework_TestCase
+class ScssFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('ScssPhp\ScssPhp\Compiler')) {
             $this->markTestSkipped('scssphp/scssphp is not installed');
@@ -61,7 +62,7 @@ EOF;
         $asset->load();
         $filter->filterLoad($asset);
 
-        $this->assertContains('color: red', $asset->getContent(), 'Import paths are correctly used');
+        $this->assertStringContainsString('color: red', $asset->getContent(), 'Import paths are correctly used');
     }
 
     public function testRegisterFunction()
@@ -73,7 +74,7 @@ EOF;
         $filter->registerFunction('bar',function () { return 'red';});
         $filter->filterLoad($asset);
 
-        $this->assertContains('color: red', $asset->getContent(), 'custom function can be registered');
+        $this->assertStringContainsString('color: red', $asset->getContent(), 'custom function can be registered');
     }
 
     public function testSetFormatter()
@@ -142,7 +143,7 @@ EOF;
         $asset->load();
         $filter->filterLoad($asset);
 
-        $this->assertContains('color: red', $asset->getContent(), 'Variables can be added');
+        $this->assertStringContainsString('color: red', $asset->getContent(), 'Variables can be added');
     }
 
     // private

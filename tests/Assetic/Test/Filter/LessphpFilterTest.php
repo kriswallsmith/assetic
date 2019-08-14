@@ -12,7 +12,7 @@ class LessphpFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('lessc')) {
             $this->markTestSkipped('LessPHP is not installed');
@@ -21,7 +21,7 @@ class LessphpFilterTest extends FilterTestCase
         $this->filter = new LessphpFilter();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }
@@ -98,7 +98,7 @@ EOF;
         $this->filter->setPresets(array('bar' => 'green'));
         $this->filter->filterLoad($asset);
 
-        $this->assertContains('green', $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+        $this->assertStringContainsString('green', $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
     }
 
     /**
@@ -130,7 +130,7 @@ EOF;
         $this->filter->setFormatter('lessjs');
         $this->filter->filterLoad($asset);
 
-        $this->assertContains("\n  color", $asset->getContent(), '->setFormatter("lessjs")');
+        $this->assertStringContainsString("\n  color", $asset->getContent(), '->setFormatter("lessjs")');
     }
 
     /**
@@ -144,7 +144,7 @@ EOF;
         $this->filter->setFormatter('compressed');
         $this->filter->filterLoad($asset);
 
-        $this->assertContains('color:green', $asset->getContent(), '->setFormatter("compressed")');
+        $this->assertStringContainsString('color:green', $asset->getContent(), '->setFormatter("compressed")');
     }
 
     /**
@@ -158,7 +158,7 @@ EOF;
         $this->filter->setFormatter('classic');
         $this->filter->filterLoad($asset);
 
-        $this->assertContains('{ color:green; }', $asset->getContent(), '->setFormatter("classic")');
+        $this->assertStringContainsString('{ color:green; }', $asset->getContent(), '->setFormatter("classic")');
     }
 
     /**
@@ -172,7 +172,7 @@ EOF;
         $this->filter->setPreserveComments(true);
         $this->filter->filterLoad($asset);
 
-        $this->assertContains('/* Line 1 */', $asset->getContent(), '->setPreserveComments(true)');
+        $this->assertStringContainsString('/* Line 1 */', $asset->getContent(), '->setPreserveComments(true)');
     }
 
     /**
@@ -186,7 +186,7 @@ EOF;
         $this->filter->setPreserveComments(false);
         $this->filter->filterLoad($asset);
 
-        $this->assertNotContains('/* Line 1 */', $asset->getContent(), '->setPreserveComments(false)');
+        $this->assertStringNotContainsString('/* Line 1 */', $asset->getContent(), '->setPreserveComments(false)');
     }
 
     /**

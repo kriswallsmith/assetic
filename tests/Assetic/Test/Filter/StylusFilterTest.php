@@ -10,7 +10,7 @@ class StylusFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
             $this->markTestSkipped('Unable to find `node` executable.');
@@ -23,7 +23,7 @@ class StylusFilterTest extends FilterTestCase
         $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }

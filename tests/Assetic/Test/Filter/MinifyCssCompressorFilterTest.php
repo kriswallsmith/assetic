@@ -1,14 +1,15 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\MinifyCssCompressorFilter;
 
 /**
  * @group integration
  */
-class MinifyCssCompressorFilterTest extends \PHPUnit_Framework_TestCase
+class MinifyCssCompressorFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('Minify_CSS_Compressor')) {
             $this->markTestSkipped('MinifyCssCompressor is not installed.');

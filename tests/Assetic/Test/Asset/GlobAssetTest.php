@@ -1,10 +1,11 @@
 <?php namespace Assetic\Test\Asset;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\GlobAsset;
 use Assetic\Util\VarUtils;
 
-class GlobAssetTest extends \PHPUnit_Framework_TestCase
+class GlobAssetTest extends TestCase
 {
     public function testInterface()
     {
@@ -27,7 +28,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     public function testGetLastModifiedType()
     {
         $assets = new GlobAsset(__DIR__.'/*.php');
-        $this->assertInternalType('integer', $assets->getLastModified(), '->getLastModified() returns an integer');
+        $this->assertIsInt($assets->getLastModified(), '->getLastModified() returns an integer');
     }
 
     public function testGetLastModifiedValue()
@@ -58,7 +59,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
 
         foreach ($globasset as $asset) {
             $target = VarUtils::resolve($asset->getTargetPath(), $asset->getVars(), $asset->getValues());
-            $this->assertContains('works', $target);
+            $this->assertStringContainsString('works', $target);
         }
     }
 }

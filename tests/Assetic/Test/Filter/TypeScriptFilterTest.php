@@ -13,7 +13,7 @@ class TypeScriptFilterTest extends FilterTestCase
      */
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $tscBin = $this->findExecutable('tsc', 'TSC_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -25,7 +25,7 @@ class TypeScriptFilterTest extends FilterTestCase
         $this->filter = new TypeScriptFilter($tscBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }
@@ -53,7 +53,7 @@ TYPESCRIPT;
 
         $this->filter->filterLoad($asset);
 
-        $this->assertContains('function greeter(person)', $asset->getContent());
-        $this->assertNotContains('interface Person', $asset->getContent());
+        $this->assertStringContainsString('function greeter(person)', $asset->getContent());
+        $this->assertStringNotContainsString('interface Person', $asset->getContent());
     }
 }

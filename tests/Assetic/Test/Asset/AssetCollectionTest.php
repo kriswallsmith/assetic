@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Asset;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\StringAsset;
@@ -7,7 +8,7 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\AssetCollection;
 use Assetic\Filter\CallablesFilter;
 
-class AssetCollectionTest extends \PHPUnit_Framework_TestCase
+class AssetCollectionTest extends TestCase
 {
     public function testInterface()
     {
@@ -164,11 +165,14 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
         $coll = new AssetCollection(array($asset), array(), null, $vars);
         $coll->setValues(array('locale' => 'en'));
+        $mtime = null;
         try {
-            $coll->getLastModified();
+            $mtime = $coll->getLastModified();
         } catch (\InvalidArgumentException $e) {
             $this->fail("->getLastModified() shouldn't fail for assets with vars");
         }
+
+        $this->assertNotNull($mtime);
     }
 
     public function getTimestampsAndExpected()
@@ -300,7 +304,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveInvalidLeaf()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $coll = new AssetCollection();
         $coll->removeLeaf(new StringAsset('asdf'));
@@ -328,7 +332,7 @@ class AssetCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testReplaceInvalidLeaf()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $coll = new AssetCollection();
         $coll->replaceLeaf(new StringAsset('foo'), new StringAsset('bar'));

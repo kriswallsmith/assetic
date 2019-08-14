@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Filter\GoogleClosure;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerApiFilter;
 
@@ -7,7 +8,7 @@ use Assetic\Filter\GoogleClosure\CompilerApiFilter;
  * @group integration
  * @group http
  */
-class CompilerApiFilterTest extends \PHPUnit_Framework_TestCase
+class CompilerApiFilterTest extends TestCase
 {
     public function testRoundTrip()
     {

@@ -19,7 +19,7 @@ class UglifyJs2FilterTest extends FilterTestCase
      */
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $uglifyjsBin = $this->findExecutable('uglifyjs', 'UGLIFYJS2_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -42,7 +42,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter = new UglifyJs2Filter($uglifyjsBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->asset = null;
         $this->filter = null;
@@ -53,8 +53,8 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setDefines(array('DEBUG=false'));
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('FOO', $this->asset->getContent());
-        $this->assertNotContains('console.log', $this->asset->getContent());
+        $this->assertStringContainsString('FOO', $this->asset->getContent());
+        $this->assertStringNotContainsString('console.log', $this->asset->getContent());
     }
 
     public function testMutiplieDefines()
@@ -62,18 +62,18 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setDefines(array('DEBUG=false', 'FOO=2'));
         $this->filter->filterDump($this->asset);
 
-        $this->assertNotContains('DEBUG', $this->asset->getContent());
-        $this->assertNotContains('FOO', $this->asset->getContent());
-        $this->assertContains('Array(2,2,3,4)', $this->asset->getContent());
-        $this->assertNotContains('console.log', $this->asset->getContent());
+        $this->assertStringNotContainsString('DEBUG', $this->asset->getContent());
+        $this->assertStringNotContainsString('FOO', $this->asset->getContent());
+        $this->assertStringContainsString('Array(2,2,3,4)', $this->asset->getContent());
+        $this->assertStringNotContainsString('console.log', $this->asset->getContent());
     }
 
     public function testUglify()
     {
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('function', $this->asset->getContent());
-        $this->assertNotContains('/**', $this->asset->getContent());
+        $this->assertStringContainsString('function', $this->asset->getContent());
+        $this->assertStringNotContainsString('/**', $this->asset->getContent());
     }
 
     public function testCompress()
@@ -81,8 +81,8 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setCompress(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('var bar', $this->asset->getContent());
-        $this->assertNotContains('var var1', $this->asset->getContent());
+        $this->assertStringContainsString('var bar', $this->asset->getContent());
+        $this->assertStringNotContainsString('var var1', $this->asset->getContent());
     }
 
     public function testCompressOptions()
@@ -90,7 +90,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setCompress('drop_console');
         $this->filter->filterDump($this->asset);
 
-        $this->assertNotContains('console.log', $this->asset->getContent());
+        $this->assertStringNotContainsString('console.log', $this->asset->getContent());
     }
 
     public function testMangle()
@@ -98,8 +98,8 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setMangle(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('new Array(FOO,2,3,4)', $this->asset->getContent());
-        $this->assertNotContains('var var2', $this->asset->getContent());
+        $this->assertStringContainsString('new Array(FOO,2,3,4)', $this->asset->getContent());
+        $this->assertStringNotContainsString('var var2', $this->asset->getContent());
     }
 
     public function testCompressAndMangle()
@@ -108,9 +108,9 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setMangle(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertNotContains('var var1', $this->asset->getContent());
-        $this->assertNotContains('var var2', $this->asset->getContent());
-        $this->assertContains('Array(FOO,2,3,4)', $this->asset->getContent());
+        $this->assertStringNotContainsString('var var1', $this->asset->getContent());
+        $this->assertStringNotContainsString('var var2', $this->asset->getContent());
+        $this->assertStringContainsString('Array(FOO,2,3,4)', $this->asset->getContent());
     }
 
     public function testDefinesAndCompress()
@@ -119,8 +119,8 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setDefines(array('DEBUG=false'));
         $this->filter->filterDump($this->asset);
 
-        $this->assertNotContains('DEBUG', $this->asset->getContent());
-        $this->assertNotContains('console.log', $this->asset->getContent());
+        $this->assertStringNotContainsString('DEBUG', $this->asset->getContent());
+        $this->assertStringNotContainsString('console.log', $this->asset->getContent());
     }
 
     public function testMutipleDefines()
@@ -129,10 +129,10 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setDefines(array('DEBUG=false', 'FOO=2'));
         $this->filter->filterDump($this->asset);
 
-        $this->assertNotContains('DEBUG', $this->asset->getContent());
-        $this->assertNotContains('FOO', $this->asset->getContent());
-        $this->assertContains('Array(2,2,3,4)', $this->asset->getContent());
-        $this->assertNotContains('console.log', $this->asset->getContent());
+        $this->assertStringNotContainsString('DEBUG', $this->asset->getContent());
+        $this->assertStringNotContainsString('FOO', $this->asset->getContent());
+        $this->assertStringContainsString('Array(2,2,3,4)', $this->asset->getContent());
+        $this->assertStringNotContainsString('console.log', $this->asset->getContent());
     }
 
     public function testBeautify()
@@ -140,7 +140,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setBeautify(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('    foo', $this->asset->getContent());
-        $this->assertNotContains('/**', $this->asset->getContent());
+        $this->assertStringContainsString('    foo', $this->asset->getContent());
+        $this->assertStringNotContainsString('/**', $this->asset->getContent());
     }
 }

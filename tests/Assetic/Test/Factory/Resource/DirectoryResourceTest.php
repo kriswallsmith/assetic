@@ -1,9 +1,10 @@
 <?php namespace Assetic\Test\Factory\Resource;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Factory\Resource\DirectoryResource;
 
-class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
+class DirectoryResourceTest extends TestCase
 {
     public function testIsFresh()
     {
@@ -20,7 +21,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $resource = new DirectoryResource(__DIR__, $pattern);
         $content = $resource->getContent();
 
-        $this->assertInternalType('string', $content);
+        $this->assertIsString($content);
     }
 
     public function getPatterns()
@@ -113,7 +114,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(7, $count);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (is_dir(__DIR__.'/Fixtures/dir3') && is_link(__DIR__.'/Fixtures/dir3')) {
             if (defined('PHP_WINDOWS_VERSION_MAJOR')) {

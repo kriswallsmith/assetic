@@ -1,10 +1,11 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Filter\BaseProcessFilter;
 use Assetic\Contracts\Asset\AssetInterface;
 
-class BaseProcessFilterTest extends \PHPUnit_Framework_TestCase
+class BaseProcessFilterTest extends TestCase
 {
     public function testInterface()
     {

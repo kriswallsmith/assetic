@@ -1,11 +1,12 @@
 <?php namespace Assetic\Test\Cache;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Cache\ArrayCache;
 
 /**
  * @group integration
  */
-class ArrayCacheTest extends \PHPUnit_Framework_TestCase
+class ArrayCacheTest extends TestCase
 {
     public function testCache()
     {

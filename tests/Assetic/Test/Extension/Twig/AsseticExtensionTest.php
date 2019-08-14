@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Extension\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Contracts\ValueSupplierInterface;
@@ -12,8 +13,7 @@ use Assetic\AssetManager;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-
-class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
+class AsseticExtensionTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|AssetManager
@@ -40,7 +40,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private $valueSupplier;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('\Twig\Environment')) {
             $this->markTestSkipped('Twig is not installed.');
@@ -59,7 +59,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->am = null;
         $this->fm = null;
@@ -240,11 +240,9 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException \Twig_Error_Syntax
-     */
     public function testUnclosedTag()
     {
+        $this->expectException(\Twig_Error_Syntax::class);
         $this->renderXml('unclosed_tag.twig');
     }
 

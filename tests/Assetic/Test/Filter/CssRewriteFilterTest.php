@@ -1,9 +1,10 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssRewriteFilter;
 
-class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
+class CssRewriteFilterTest extends TestCase
 {
     /**
      * @dataProvider provideUrls
@@ -111,7 +112,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new CssRewriteFilter();
         $filter->filterDump($asset);
 
-        $this->assertContains('http://www.example.com/images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
+        $this->assertStringContainsString('http://www.example.com/images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
     }
 
     public function testEmptySrcAttributeSelector()
@@ -123,7 +124,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new CssRewriteFilter();
         $filter->filterDump($asset);
 
-        // no error is thrown
+        $this->assertEquals('img[src=""] { border: red; }', $asset->getContent());
     }
 
     public function testEmptyUrl()
@@ -135,6 +136,6 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new CssRewriteFilter();
         $filter->filterDump($asset);
 
-        // no error is thrown
+        $this->assertEquals('body { background: url(); }', $asset->getContent());
     }
 }

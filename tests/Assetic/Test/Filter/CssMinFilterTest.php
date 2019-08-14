@@ -1,14 +1,15 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\CssMinFilter;
 
 /**
  * @group integration
  */
-class CssMinFilterTest extends \PHPUnit_Framework_TestCase
+class CssMinFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('CssMin')) {
             $this->markTestSkipped('CssMin is not installed.');

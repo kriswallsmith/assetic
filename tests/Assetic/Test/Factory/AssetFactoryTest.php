@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Factory;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Asset\AssetCollectionInterface;
 use Assetic\Contracts\Factory\Worker\WorkerInterface;
@@ -13,13 +14,13 @@ use Assetic\Asset\AssetCollection;
 use Assetic\Asset\AssetReference;
 use Assetic\Factory\AssetFactory;
 
-class AssetFactoryTest extends \PHPUnit_Framework_TestCase
+class AssetFactoryTest extends TestCase
 {
     private $am;
     private $fm;
     private $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->am = $this->getMockBuilder(AssetManager::class)->getMock();
         $this->fm = $this->getMockBuilder(FilterManager::class)->getMock();
@@ -29,7 +30,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory->setFilterManager($this->fm);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->am = null;
         $this->fm = null;
@@ -38,7 +39,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testNoAssetManagerReference()
     {
-        $this->setExpectedException(\LogicException::class, 'There is no asset manager.');
+        $this->expectException(\LogicException::class, 'There is no asset manager.');
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('@foo'));
@@ -52,7 +53,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testNoFilterManager()
     {
-        $this->setExpectedException(\LogicException::class, 'There is no filter manager.');
+        $this->expectException(\LogicException::class, 'There is no filter manager.');
 
         $factory = new AssetFactory('.');
         $factory->createAsset(array('foo'), array('foo'));
@@ -140,7 +141,7 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidFilter()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->fm->expects($this->once())
             ->method('get')

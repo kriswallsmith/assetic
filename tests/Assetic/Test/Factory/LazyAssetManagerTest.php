@@ -1,17 +1,18 @@
 <?php namespace Assetic\Test\Factory;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\LazyAssetManager;
 use Assetic\Factory\AssetFactory;
 
-class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
+class LazyAssetManagerTest extends TestCase
 {
     private $factory;
     private $am;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
@@ -20,7 +21,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->am = new LazyAssetManager($this->factory);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->factory = null;
         $this->am = null;
@@ -75,7 +76,7 @@ class LazyAssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResourcesEmpty()
     {
-        $this->am->getResources();
+        $this->assertIsArray($this->am->getResources());
     }
 
     public function testSetFormula()

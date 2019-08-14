@@ -1,14 +1,15 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\JSqueezeFilter;
 
 /**
  * @group integration
  */
-class JSqueezeFilterTest extends \PHPUnit_Framework_TestCase
+class JSqueezeFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('JSqueeze') && !class_exists('Patchwork\JSqueeze')) {
             $this->markTestSkipped('JSqueeze is not installed.');

@@ -1,10 +1,11 @@
 <?php namespace Assetic\Test\Asset;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\StringAsset;
 
-class StringAssetTest extends \PHPUnit_Framework_TestCase
+class StringAssetTest extends TestCase
 {
     public function testInterface()
     {
@@ -33,7 +34,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
     public function testGetFilters()
     {
         $asset = new StringAsset('');
-        $this->assertInternalType('array', $asset->getFilters(), '->getFilters() returns an array');
+        $this->assertIsArray($asset->getFilters(), '->getFilters() returns an array');
     }
 
     public function testLoadAppliesAdditionalFilter()

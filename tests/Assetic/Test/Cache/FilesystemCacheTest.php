@@ -1,8 +1,9 @@
 <?php namespace Assetic\Test\Cache;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Cache\FilesystemCache;
 
-class FilesystemCacheTest extends \PHPUnit_Framework_TestCase
+class FilesystemCacheTest extends TestCase
 {
     public function testWithExistingDir()
     {

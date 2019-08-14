@@ -1,14 +1,15 @@
 <?php namespace Assetic\Test;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\AssetManager;
 
-class AssetManagerTest extends \PHPUnit_Framework_TestCase
+class AssetManagerTest extends TestCase
 {
     /** @var AssetManager */
     private $am;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->am = new AssetManager();
     }
@@ -22,7 +23,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInvalidAsset()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $this->am->get('foo');
     }
 
@@ -37,7 +38,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidName()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->am->set('@foo', $this->getMockBuilder(AssetInterface::class)->getMock());
     }

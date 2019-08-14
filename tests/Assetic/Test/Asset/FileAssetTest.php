@@ -1,9 +1,10 @@
 <?php namespace Assetic\Test\Asset;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
 
-class FileAssetTest extends \PHPUnit_Framework_TestCase
+class FileAssetTest extends TestCase
 {
     public function testInterface()
     {
@@ -23,14 +24,14 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
     public function testGetLastModifiedType()
     {
         $asset = new FileAsset(__FILE__);
-        $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
+        $this->assertIsInt($asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
     public function testGetLastModifiedTypeFileNotFound()
     {
         $asset = new FileAsset(__DIR__."/foo/bar/baz.css");
 
-        $this->setExpectedException("RuntimeException", "The source file");
+        $this->expectException("RuntimeException", "The source file");
         $asset->getLastModified();
     }
 
@@ -57,7 +58,7 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidBase()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $asset = new FileAsset(__FILE__, array(), __DIR__.'/foo');
     }

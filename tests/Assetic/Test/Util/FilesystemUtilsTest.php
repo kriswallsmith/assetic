@@ -1,8 +1,9 @@
 <?php namespace Assetic\Test\Util;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Util\FilesystemUtils;
 
-class FilesystemUtilsTest extends \PHPUnit_Framework_TestCase
+class FilesystemUtilsTest extends TestCase
 {
     public function testGetTemporaryDirectory()
     {

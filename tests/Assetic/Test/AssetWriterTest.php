@@ -1,16 +1,17 @@
 <?php namespace Assetic\Test;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
 use Assetic\AssetWriter;
 
-class AssetWriterTest extends \PHPUnit_Framework_TestCase
+class AssetWriterTest extends TestCase
 {
     private $dir;
     /** @var AssetWriter */
     private $writer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dir = sys_get_temp_dir().'/assetic_tests_'.rand(11111, 99999);
         mkdir($this->dir);
@@ -21,7 +22,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         array_map('unlink', glob($this->dir.'/*'));
         rmdir($this->dir);

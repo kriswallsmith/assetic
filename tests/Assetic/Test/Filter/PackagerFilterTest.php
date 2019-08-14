@@ -1,14 +1,15 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\PackagerFilter;
 
 /**
  * @group integration
  */
-class PackagerFilterTest extends \PHPUnit_Framework_TestCase
+class PackagerFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('Packager')) {
             $this->markTestSkipped('Packager is not available.');

@@ -12,7 +12,7 @@ class UglifyJsFilterTest extends FilterTestCase
     private $asset;
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $uglifyjsBin = $this->findExecutable('uglifyjs', 'UGLIFYJS_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -26,7 +26,7 @@ class UglifyJsFilterTest extends FilterTestCase
         $this->filter = new UglifyJsFilter($uglifyjsBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->asset = null;
         $this->filter = null;

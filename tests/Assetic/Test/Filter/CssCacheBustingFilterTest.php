@@ -1,5 +1,6 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssCacheBustingFilter;
 
@@ -8,7 +9,7 @@ use Assetic\Filter\CssCacheBustingFilter;
  * @package Assetic\Test\Filter
  * @author Maximilian Reichel <info@phramz.com>
  */
-class CssCacheBustingFilterTest extends \PHPUnit_Framework_TestCase
+class CssCacheBustingFilterTest extends TestCase
 {
     /**
      * @dataProvider provideUrls

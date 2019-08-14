@@ -1,11 +1,12 @@
 <?php namespace Assetic\Test\Factory\Worker;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Worker\EnsureFilterWorker;
 
-class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
+class EnsureFilterWorkerTest extends TestCase
 {
     public function testMatch()
     {

@@ -11,7 +11,7 @@ class UglifyCssFilterTest extends FilterTestCase
     private $asset;
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $uglifycssBin = $this->findExecutable('uglifycss', 'UGLIFYCSS_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -25,7 +25,7 @@ class UglifyCssFilterTest extends FilterTestCase
         $this->filter = new UglifyCssFilter($uglifycssBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->asset = null;
         $this->filter = null;

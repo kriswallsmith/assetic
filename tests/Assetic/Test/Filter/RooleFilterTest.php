@@ -10,7 +10,7 @@ class RooleFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $rooleBin = $this->findExecutable('roole', 'ROOLE_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -22,7 +22,7 @@ class RooleFilterTest extends FilterTestCase
         $this->filter = new RooleFilter($rooleBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }
@@ -44,7 +44,7 @@ ROOLE;
         $this->filter->filterLoad($asset);
 
         $content = $asset->getContent();
-        $this->assertNotContains('$margin', $content);
-        $this->assertContains('margin: 30px;', $content);
+        $this->assertStringNotContainsString('$margin', $content);
+        $this->assertStringContainsString('margin: 30px;', $content);
     }
 }

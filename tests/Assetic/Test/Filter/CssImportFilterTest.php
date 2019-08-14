@@ -1,10 +1,11 @@
 <?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\CssImportFilter;
 use Assetic\Filter\CssRewriteFilter;
 
-class CssImportFilterTest extends \PHPUnit_Framework_TestCase
+class CssImportFilterTest extends TestCase
 {
     /**
      * @dataProvider getFilters

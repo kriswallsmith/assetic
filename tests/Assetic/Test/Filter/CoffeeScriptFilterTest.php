@@ -13,7 +13,7 @@ class CoffeeScriptFilterTest extends FilterTestCase
      */
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $coffeeBin = $this->findExecutable('coffee', 'COFFEE_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -25,7 +25,7 @@ class CoffeeScriptFilterTest extends FilterTestCase
         $this->filter = new CoffeeScriptFilter($coffeeBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }
