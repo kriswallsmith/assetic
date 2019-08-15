@@ -12,18 +12,17 @@ use Assetic\Util\FilesystemUtils;
  */
 class CoffeeScriptFilter extends BaseNodeFilter
 {
-    private $coffeeBin;
-    private $nodeBin;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/coffee';
 
-    // coffee options
+    /*
+     * Filter Options
+     */
+
     private $bare;
     private $noHeader;
-
-    public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null)
-    {
-        $this->coffeeBin = $coffeeBin;
-        $this->nodeBin = $nodeBin;
-    }
 
     public function setBare($bare)
     {
@@ -37,11 +36,7 @@ class CoffeeScriptFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = FilesystemUtils::createTemporaryFile('coffee', $asset->getContent());
-
-        $args = $this->nodeBin
-            ? array($this->nodeBin, $this->coffeeBin)
-            : array($this->coffeeBin);
+        $args = [];
 
         $args[] = '-cp';
 
@@ -53,18 +48,11 @@ class CoffeeScriptFilter extends BaseNodeFilter
             $args[] = '--no-header';
         }
 
-        $args[] = $input;
+        $args[] = '{INPUT}';
 
-        $process = $this->createProcess($args);
+        $result = $this->runProcess($asset->getContent(), $args);
 
-        $code = $process->run();
-        unlink($input);
-
-        if (0 !== $code) {
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
-        }
-
-        $asset->setContent($process->getOutput());
+        $asset->setContent($result);
     }
 
     public function filterDump(AssetInterface $asset)
