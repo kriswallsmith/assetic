@@ -59,7 +59,7 @@ $css = new AssetCollection(array(
     new UglifyCssFilter('/path/to/uglifycss'),
 ));
 
-// this will echo CSS compiled by LESS and compressed by YUI
+// this will echo CSS compiled by LESS and compressed by uglifycss
 echo $css->dump();
 ```
 
@@ -70,7 +70,7 @@ iterate over it.
 <?php
 
 foreach ($css as $leaf) {
-    // each leaf is compressed by YUI
+    // each leaf is compressed by uglifycss
     echo $leaf->dump();
 }
 ```
