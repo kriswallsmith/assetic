@@ -34,11 +34,11 @@ class FunctionCallsFormulaLoaderTest extends TestCase
     public function getJavascriptInputs()
     {
         return array(
-            array('assetic_javascripts', '"js/core.js"',        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
-            array('assetic_javascripts', "'js/core.js'",        'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
-            array('assetic_javascripts', "array('js/core.js')", 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
-            array('assetic_javascripts', 'array("js/core.js")', 'asdf', array('asdf' => array(array('js/core.js'), array(), array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
-            array('assetic_image',       '"images/logo.gif"',   'asdf', array('asdf' => array(array('images/logo.gif'), array(), array('debug' => false, 'output' => 'images/*', 'name' => 'asdf')))),
+            array('assetic_javascripts', '"js/core.js"',        'asdf', array('asdf' => array(array('js/core.js'), [], array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
+            array('assetic_javascripts', "'js/core.js'",        'asdf', array('asdf' => array(array('js/core.js'), [], array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
+            array('assetic_javascripts', "array('js/core.js')", 'asdf', array('asdf' => array(array('js/core.js'), [], array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
+            array('assetic_javascripts', 'array("js/core.js")', 'asdf', array('asdf' => array(array('js/core.js'), [], array('debug' => false, 'output' => 'js/*.js', 'name' => 'asdf')))),
+            array('assetic_image',       '"images/logo.gif"',   'asdf', array('asdf' => array(array('images/logo.gif'), [], array('debug' => false, 'output' => 'images/*', 'name' => 'asdf')))),
         );
     }
 

@@ -47,7 +47,7 @@ var bar = foo();
 
 EOF;
 
-        $asset = new FileAsset(__DIR__.'/fixtures/packager/app/application.js', array(), __DIR__.'/fixtures/packager/app', 'application.js');
+        $asset = new FileAsset(__DIR__.'/fixtures/packager/app/application.js', [], __DIR__.'/fixtures/packager/app', 'application.js');
         $asset->load();
 
         $filter = new PackagerFilter();

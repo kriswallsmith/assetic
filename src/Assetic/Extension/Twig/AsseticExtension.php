@@ -10,10 +10,10 @@ class AsseticExtension extends \Twig_Extension implements GlobalsInterface
     protected $functions;
     protected $valueSupplier;
 
-    public function __construct(AssetFactory $factory, $functions = array(), ValueSupplierInterface $valueSupplier = null)
+    public function __construct(AssetFactory $factory, $functions = [], ValueSupplierInterface $valueSupplier = null)
     {
         $this->factory = $factory;
-        $this->functions = array();
+        $this->functions = [];
         $this->valueSupplier = $valueSupplier;
 
         foreach ($functions as $function => $options) {
@@ -36,7 +36,7 @@ class AsseticExtension extends \Twig_Extension implements GlobalsInterface
 
     public function getFunctions()
     {
-        $functions = array();
+        $functions = [];
         foreach ($this->functions as $function => $filter) {
             $functions[] = AsseticFilterFunction::make($this, $function);
         }
@@ -49,7 +49,7 @@ class AsseticExtension extends \Twig_Extension implements GlobalsInterface
         return array(
             'assetic' => array(
                 'debug' => $this->factory->isDebug(),
-                'vars'  => null !== $this->valueSupplier ? new ValueContainer($this->valueSupplier) : array(),
+                'vars'  => null !== $this->valueSupplier ? new ValueContainer($this->valueSupplier) : [],
             ),
         );
     }

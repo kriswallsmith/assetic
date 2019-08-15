@@ -7,7 +7,7 @@ abstract class BaseNodeFilter extends BaseProcessFilter
      */
     protected $nodeBinaryPath;
 
-    private $nodePaths = array();
+    private $nodePaths = [];
 
     /**
      * Constructor
@@ -50,7 +50,7 @@ abstract class BaseNodeFilter extends BaseProcessFilter
         $this->nodePaths[] = $nodePath;
     }
 
-    protected function createProcess(array $arguments = array())
+    protected function createProcess(array $arguments = [])
     {
         $pb = parent::createProcess($arguments);
 

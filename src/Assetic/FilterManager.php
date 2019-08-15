@@ -9,7 +9,7 @@ use Assetic\Contracts\Filter\FilterInterface;
  */
 class FilterManager
 {
-    private $filters = array();
+    private $filters = [];
 
     public function set($alias, FilterInterface $filter)
     {

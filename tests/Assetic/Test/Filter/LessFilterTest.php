@@ -24,7 +24,7 @@ class LessFilterTest extends FilterTestCase
             $this->markTestSkipped('The "less" module is not installed.');
         }
 
-        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : []);
     }
 
     protected function tearDown(): void

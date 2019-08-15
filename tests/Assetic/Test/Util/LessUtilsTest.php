@@ -9,7 +9,7 @@ class LessUtilsTest extends TestCase
     {
         $content = 'body { background: url(../images/bg.gif); }';
 
-        $matches = array();
+        $matches = [];
         $actual = LessUtils::filterUrls($content, function ($match) use (&$matches) {
             $matches[] = $match['url'];
         });
@@ -34,7 +34,7 @@ CSS;
         $actual = LessUtils::extractImports($content);
 
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
-        $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
+        $this->assertEquals([], array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
 
     public function testFilterCommentless()
@@ -83,6 +83,6 @@ LESS;
         $actual = LessUtils::extractImports($content);
 
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
-        $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
+        $this->assertEquals([], array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
 }

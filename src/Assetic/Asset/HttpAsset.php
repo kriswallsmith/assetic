@@ -23,7 +23,7 @@ class HttpAsset extends BaseAsset
      *
      * @throws \InvalidArgumentException If the first argument is not an URL
      */
-    public function __construct($sourceUrl, $filters = array(), $ignoreErrors = false, array $vars = array())
+    public function __construct($sourceUrl, $filters = [], $ignoreErrors = false, array $vars = [])
     {
         if (0 === strpos($sourceUrl, '//')) {
             $sourceUrl = 'http:'.$sourceUrl;

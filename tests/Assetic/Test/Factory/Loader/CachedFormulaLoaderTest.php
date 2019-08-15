@@ -31,8 +31,8 @@ class CachedFormulaLoaderTest extends TestCase
     public function testNotDebug()
     {
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())
@@ -54,8 +54,8 @@ class CachedFormulaLoaderTest extends TestCase
     public function testNotDebugCached()
     {
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())
@@ -77,8 +77,8 @@ class CachedFormulaLoaderTest extends TestCase
     {
         $timestamp = 123;
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())
@@ -108,8 +108,8 @@ class CachedFormulaLoaderTest extends TestCase
     {
         $timestamp = 123;
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())

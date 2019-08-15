@@ -56,7 +56,7 @@ class AsseticExtensionTest extends TestCase
         $this->factory->setFilterManager($this->fm);
 
         $this->twig = new Environment(new FilesystemLoader(__DIR__.'/templates'));
-        $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
+        $this->twig->addExtension(new AsseticExtension($this->factory, [], $this->valueSupplier));
     }
 
     protected function tearDown(): void
@@ -228,9 +228,9 @@ class AsseticExtensionTest extends TestCase
     public function testMultipleSameVariableValues()
     {
         $vars = array('locale');
-        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', array(), null, null, $vars);
+        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', [], null, null, $vars);
 
-        $coll = new AssetCollection(array($asset), array(), null, $vars);
+        $coll = new AssetCollection(array($asset), [], null, $vars);
 
         $coll->setTargetPath('output.{locale}.js');
 
@@ -246,7 +246,7 @@ class AsseticExtensionTest extends TestCase
         $this->renderXml('unclosed_tag.twig');
     }
 
-    private function renderXml($name, $context = array())
+    private function renderXml($name, $context = [])
     {
         return new \SimpleXMLElement($this->twig->loadTemplate($name)->render($context));
     }

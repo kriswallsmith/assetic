@@ -93,6 +93,6 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo
-        return array();
+        return [];
     }
 }

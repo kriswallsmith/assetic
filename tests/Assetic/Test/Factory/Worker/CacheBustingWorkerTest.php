@@ -54,7 +54,7 @@ class CacheBustingWorkerTest extends TestCase
         $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $paths = array();
+        $paths = [];
 
         $asset->expects($this->any())
             ->method('getTargetPath')

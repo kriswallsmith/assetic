@@ -57,6 +57,6 @@ class CallablesFilterTest extends TestCase
         $this->assertEquals(1, $nb, '->getChildren() calls the extractor callable');
 
         $filter = new CallablesFilter();
-        $this->assertEquals(array(), $filter->getChildren($assetFactoryMock, 'ignored', 'ignored'), '-> without an extractor callable, the filter just returns an empty array (of assets)');
+        $this->assertEquals([], $filter->getChildren($assetFactoryMock, 'ignored', 'ignored'), '-> without an extractor callable, the filter just returns an empty array (of assets)');
     }
 }

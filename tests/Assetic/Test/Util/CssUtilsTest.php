@@ -9,7 +9,7 @@ class CssUtilsTest extends TestCase
     {
         $content = 'body { background: url(../images/bg.gif); }';
 
-        $matches = array();
+        $matches = [];
         $actual = CssUtils::filterUrls($content, function ($match) use (&$matches) {
             $matches[] = $match['url'];
         });
@@ -34,7 +34,7 @@ CSS;
         $actual = CssUtils::extractImports($content);
 
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
-        $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
+        $this->assertEquals([], array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
 
     public function testFilterCommentless()

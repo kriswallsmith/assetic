@@ -113,7 +113,7 @@ abstract class CssUtils
      */
     public static function extractImports($content)
     {
-        $imports = array();
+        $imports = [];
         static::filterImports($content, function ($matches) use (&$imports) {
             $imports[] = $matches['url'];
         });

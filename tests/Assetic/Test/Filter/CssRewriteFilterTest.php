@@ -11,7 +11,7 @@ class CssRewriteFilterTest extends TestCase
      */
     public function testUrls($format, $sourcePath, $targetPath, $inputUrl, $expectedUrl)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl), array(), null, $sourcePath);
+        $asset = new StringAsset(sprintf($format, $inputUrl), [], null, $sourcePath);
         $asset->setTargetPath($targetPath);
         $asset->load();
 
@@ -62,7 +62,7 @@ class CssRewriteFilterTest extends TestCase
      */
     public function testMultipleUrls($format, $sourcePath, $targetPath, $inputUrl1, $inputUrl2, $expectedUrl1, $expectedUrl2)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2), array(), null, $sourcePath);
+        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2), [], null, $sourcePath);
         $asset->setTargetPath($targetPath);
         $asset->load();
 
@@ -105,7 +105,7 @@ class CssRewriteFilterTest extends TestCase
 
     public function testExternalSource()
     {
-        $asset = new StringAsset('body { background: url(../images/bg.gif); }', array(), 'http://www.example.com', 'css/main.css');
+        $asset = new StringAsset('body { background: url(../images/bg.gif); }', [], 'http://www.example.com', 'css/main.css');
         $asset->setTargetPath('css/packed/main.css');
         $asset->load();
 
@@ -117,7 +117,7 @@ class CssRewriteFilterTest extends TestCase
 
     public function testEmptySrcAttributeSelector()
     {
-        $asset = new StringAsset('img[src=""] { border: red; }', array(), 'http://www.example.com', 'css/main.css');
+        $asset = new StringAsset('img[src=""] { border: red; }', [], 'http://www.example.com', 'css/main.css');
         $asset->setTargetPath('css/packed/main.css');
         $asset->load();
 
@@ -129,7 +129,7 @@ class CssRewriteFilterTest extends TestCase
 
     public function testEmptyUrl()
     {
-        $asset = new StringAsset('body { background: url(); }', array(), 'http://www.example.com', 'css/main.css');
+        $asset = new StringAsset('body { background: url(); }', [], 'http://www.example.com', 'css/main.css');
         $asset->setTargetPath('css/packed/main.css');
         $asset->load();
 

@@ -20,7 +20,7 @@ class StylusFilterTest extends FilterTestCase
             $this->markTestSkipped('The "stylus" module is not installed.');
         }
 
-        $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+        $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : []);
     }
 
     protected function tearDown(): void

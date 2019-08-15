@@ -22,7 +22,7 @@ class AssetWriter
      *
      * @throws \InvalidArgumentException if a variable value is not a string
      */
-    public function __construct($dir, array $values = array())
+    public function __construct($dir, array $values = [])
     {
         foreach ($values as $var => $vals) {
             foreach ($vals as $value) {

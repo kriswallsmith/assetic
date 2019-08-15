@@ -14,7 +14,7 @@ class PackagerFilter implements FilterInterface
 {
     private $packages;
 
-    public function __construct(array $packages = array())
+    public function __construct(array $packages = [])
     {
         $this->packages = $packages;
     }
@@ -40,7 +40,7 @@ EOF;
         file_put_contents($package.'/source.js', $asset->getContent());
 
         $packager = new \Packager(array_merge(array($package), $this->packages));
-        $content = $packager->build(array(), array(), array('Application'.$hash));
+        $content = $packager->build([], [], array('Application'.$hash));
 
         unlink($package.'/package.yml');
         unlink($package.'/source.js');

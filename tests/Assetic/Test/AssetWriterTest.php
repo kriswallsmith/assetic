@@ -48,10 +48,10 @@ class AssetWriterTest extends TestCase
             ->will($this->returnValue('content'));
         $asset->expects($this->atLeastOnce())
             ->method('getVars')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
         $asset->expects($this->atLeastOnce())
             ->method('getValues')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->writer->writeManagerAssets($am);
 
@@ -107,7 +107,7 @@ class AssetWriterTest extends TestCase
     public function testAssetWithInputVars()
     {
         $asset = new FileAsset(__DIR__.'/Fixture/messages.{locale}.js',
-            array(), null, null, array('locale'));
+            [], null, null, array('locale'));
         $asset->setTargetPath('messages.{locale}.js');
 
         $this->writer->writeAsset($asset);

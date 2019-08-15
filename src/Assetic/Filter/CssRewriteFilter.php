@@ -74,7 +74,7 @@ class CssRewriteFilter extends BaseCssFilter
                 $url = substr($url, 3);
             }
 
-            $parts = array();
+            $parts = [];
             foreach (explode('/', $host.$path.$url) as $part) {
                 if ('..' === $part && count($parts) && '..' !== end($parts)) {
                     array_pop($parts);

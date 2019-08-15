@@ -21,6 +21,6 @@ CSS;
         $actual = SassUtils::extractImports($content);
 
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
-        $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
+        $this->assertEquals([], array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
 }

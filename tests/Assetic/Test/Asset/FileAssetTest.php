@@ -51,7 +51,7 @@ class FileAssetTest extends TestCase
 
     public function testPathGuessing()
     {
-        $asset = new FileAsset(__FILE__, array(), __DIR__);
+        $asset = new FileAsset(__FILE__, [], __DIR__);
         $this->assertEquals(basename(__FILE__), $asset->getSourcePath(), '->__construct() guesses the asset path');
         $this->assertEquals(__DIR__, $asset->getSourceDirectory(), '->__construct() derives the asset directory');
     }
@@ -60,6 +60,6 @@ class FileAssetTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $asset = new FileAsset(__FILE__, array(), __DIR__.'/foo');
+        $asset = new FileAsset(__FILE__, [], __DIR__.'/foo');
     }
 }

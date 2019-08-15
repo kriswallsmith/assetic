@@ -33,12 +33,12 @@ class VarUtilsTest extends TestCase
 
     public function getCombinationTests()
     {
-        $tests = array();
+        $tests = [];
 
         // no variables
         $tests[] = array(
-            array(),
-            array(array()),
+            [],
+            array([]),
         );
 
         // one variables

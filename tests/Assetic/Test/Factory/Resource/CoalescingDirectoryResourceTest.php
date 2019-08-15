@@ -17,7 +17,7 @@ class CoalescingDirectoryResourceTest extends TestCase
             new DirectoryResource(__DIR__.'/Fixtures/dir2', '/\.txt$/'),
         ));
 
-        $paths = array();
+        $paths = [];
         foreach ($resource as $file) {
             $paths[] = realpath((string) $file);
         }

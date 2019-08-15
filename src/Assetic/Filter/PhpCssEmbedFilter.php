@@ -13,7 +13,7 @@ use CssEmbed\CssEmbed;
  */
 class PhpCssEmbedFilter implements DependencyExtractorInterface
 {
-    private $presets = array();
+    private $presets = [];
 
     public function setPresets(array $presets)
     {
@@ -37,6 +37,6 @@ class PhpCssEmbedFilter implements DependencyExtractorInterface
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo
-        return array();
+        return [];
     }
 }

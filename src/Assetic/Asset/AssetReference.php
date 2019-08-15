@@ -13,7 +13,7 @@ class AssetReference implements AssetInterface
 {
     private $am;
     private $name;
-    private $filters = array();
+    private $filters = [];
     private $clone = false;
     private $asset;
 
@@ -46,7 +46,7 @@ class AssetReference implements AssetInterface
 
     public function clearFilters()
     {
-        $this->filters = array();
+        $this->filters = [];
         $this->callAsset(__FUNCTION__);
     }
 
@@ -121,7 +121,7 @@ class AssetReference implements AssetInterface
 
     // private
 
-    private function callAsset($method, $arguments = array())
+    private function callAsset($method, $arguments = [])
     {
         $asset = $this->resolve();
 

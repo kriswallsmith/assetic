@@ -53,7 +53,7 @@ class GlobAssetTest extends TestCase
 
     public function testVariableInPath()
     {
-        $globasset = new GlobAsset(__DIR__.'/*.php', array(), null, array('testvar'));
+        $globasset = new GlobAsset(__DIR__.'/*.php', [], null, array('testvar'));
         $globasset->setTargetPath('{testvar}_*.php');
         $globasset->setValues(array('testvar' => 'works'));
 

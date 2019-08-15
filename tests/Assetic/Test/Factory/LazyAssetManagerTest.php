@@ -81,7 +81,7 @@ class LazyAssetManagerTest extends TestCase
 
     public function testSetFormula()
     {
-        $this->am->setFormula('foo', array());
+        $this->am->setFormula('foo', []);
         $this->am->load();
         $this->assertTrue($this->am->hasFormula('foo'), '->load() does not remove manually added formulae');
     }

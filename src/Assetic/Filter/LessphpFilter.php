@@ -17,18 +17,18 @@ use Assetic\Util\LessUtils;
  */
 class LessphpFilter implements DependencyExtractorInterface
 {
-    private $presets = array();
+    private $presets = [];
     private $formatter;
     private $preserveComments;
-    private $customFunctions = array();
-    private $options = array();
+    private $customFunctions = [];
+    private $options = [];
 
     /**
      * Lessphp Load Paths
      *
      * @var array
      */
-    protected $loadPaths = array();
+    protected $loadPaths = [];
 
     /**
      * Adds a load path to the paths used by lessphp
@@ -123,10 +123,10 @@ class LessphpFilter implements DependencyExtractorInterface
         }
 
         if (empty($loadPaths)) {
-            return array();
+            return [];
         }
 
-        $children = array();
+        $children = [];
         foreach (LessUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
@@ -140,7 +140,7 @@ class LessphpFilter implements DependencyExtractorInterface
 
             foreach ($loadPaths as $loadPath) {
                 if (file_exists($file = $loadPath.'/'.$reference)) {
-                    $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
+                    $coll = $factory->createAsset($file, [], array('root' => $loadPath));
                     foreach ($coll as $leaf) {
                         $leaf->ensureFilter($this);
                         $children[] = $leaf;

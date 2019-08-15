@@ -57,7 +57,7 @@ class AssetCacheTest extends TestCase
 
         $this->inner->expects($this->once())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
         $this->cache->expects($this->once())
             ->method('has')
             ->with($this->isType('string'))
@@ -79,7 +79,7 @@ class AssetCacheTest extends TestCase
 
         $this->inner->expects($this->once())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
         $this->cache->expects($this->once())
             ->method('has')
             ->with($this->isType('string'))
@@ -98,7 +98,7 @@ class AssetCacheTest extends TestCase
 
         $this->inner->expects($this->once())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
         $this->cache->expects($this->once())
             ->method('has')
             ->with($this->isType('string'))
@@ -124,7 +124,7 @@ class AssetCacheTest extends TestCase
     {
         $this->inner->expects($this->once())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->assertIsArray($this->asset->getFilters(), '->getFilters() returns the inner asset filters');
     }

@@ -41,7 +41,7 @@ class CachedFormulaLoader implements FormulaLoaderInterface
             $resources = array($resources);
         }
 
-        $formulae = array();
+        $formulae = [];
 
         foreach ($resources as $resource) {
             $id = (string) $resource;

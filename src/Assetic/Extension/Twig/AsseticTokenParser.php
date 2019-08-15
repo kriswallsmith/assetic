@@ -23,7 +23,7 @@ class AsseticTokenParser extends \Twig_TokenParser
      * @param Boolean      $single     Whether to force a single asset
      * @param array        $extensions Additional attribute names to look for
      */
-    public function __construct(AssetFactory $factory, $tag, $output, $single = false, array $extensions = array())
+    public function __construct(AssetFactory $factory, $tag, $output, $single = false, array $extensions = [])
     {
         $this->factory    = $factory;
         $this->tag        = $tag;
@@ -34,13 +34,13 @@ class AsseticTokenParser extends \Twig_TokenParser
 
     public function parse(\Twig_Token $token)
     {
-        $inputs = array();
-        $filters = array();
+        $inputs = [];
+        $filters = [];
         $name = null;
         $attributes = array(
             'output'   => $this->output,
             'var_name' => 'asset_url',
-            'vars'     => array(),
+            'vars'     => [],
         );
 
         $stream = $this->parser->getStream();
@@ -147,7 +147,7 @@ class AsseticTokenParser extends \Twig_TokenParser
      *
      * @return \Twig_Node
      */
-    protected function createBodyNode(AssetInterface $asset, \Twig_Node $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
+    protected function createBodyNode(AssetInterface $asset, \Twig_Node $body, array $inputs, array $filters, $name, array $attributes = [], $lineno = 0, $tag = null)
     {
         $reflector = new \ReflectionMethod($this, 'createNode');
 
@@ -174,7 +174,7 @@ class AsseticTokenParser extends \Twig_TokenParser
      *
      * @deprecated since 1.3.0, to be removed in 2.0. Use createBodyNode instead.
      */
-    protected function createNode(AssetInterface $asset, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
+    protected function createNode(AssetInterface $asset, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = [], $lineno = 0, $tag = null)
     {
         @trigger_error(sprintf('The %s method is deprecated since 1.3 and will be removed in 2.0. Use createBodyNode instead.', __METHOD__), E_USER_DEPRECATED);
 

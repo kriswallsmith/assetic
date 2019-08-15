@@ -18,14 +18,14 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
     public function __construct(AssetFactory $factory)
     {
         $this->factory = $factory;
-        $this->prototypes = array();
+        $this->prototypes = [];
 
         foreach ($this->registerPrototypes() as $prototype => $options) {
             $this->addPrototype($prototype, $options);
         }
     }
 
-    public function addPrototype($prototype, array $options = array())
+    public function addPrototype($prototype, array $options = [])
     {
         $tokens = token_get_all('<?php '.$prototype);
         array_shift($tokens);
@@ -41,10 +41,10 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
 
         $buffers = array_fill(0, $nbProtos, '');
         $bufferLevels = array_fill(0, $nbProtos, 0);
-        $buffersInWildcard = array();
+        $buffersInWildcard = [];
 
         $tokens = token_get_all($resource->getContent());
-        $calls = array();
+        $calls = [];
 
         while ($token = array_shift($tokens)) {
             $current = self::tokenToString($token);
@@ -82,7 +82,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
             }
         }
 
-        $formulae = array();
+        $formulae = [];
         foreach ($calls as $call) {
             $formulae += call_user_func_array(array($this, 'processCall'), $call);
         }
@@ -90,7 +90,7 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         return $formulae;
     }
 
-    private function processCall($call, array $protoOptions = array())
+    private function processCall($call, array $protoOptions = [])
     {
         $tmp = FilesystemUtils::createTemporaryFile('php_formula_loader');
         file_put_contents($tmp, implode("\n", array(
@@ -102,9 +102,9 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
         $args = unserialize(shell_exec('php '.escapeshellarg($tmp)));
         unlink($tmp);
 
-        $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : array();
-        $filters = isset($args[1]) ? self::argumentToArray($args[1]) : array();
-        $options = isset($args[2]) ? $args[2] : array();
+        $inputs  = isset($args[0]) ? self::argumentToArray($args[0]) : [];
+        $filters = isset($args[1]) ? self::argumentToArray($args[1]) : [];
+        $options = isset($args[2]) ? $args[2] : [];
 
         if (!isset($options['debug'])) {
             $options['debug'] = $this->factory->isDebug();

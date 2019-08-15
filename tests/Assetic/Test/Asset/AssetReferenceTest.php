@@ -70,7 +70,7 @@ class AssetReferenceTest extends TestCase
         $asset->expects($this->once())->method('ensureFilter');
         $asset->expects($this->once())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->ref->ensureFilter($this->getMockBuilder(FilterInterface::class)->getMock());
 

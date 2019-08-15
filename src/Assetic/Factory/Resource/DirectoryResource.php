@@ -48,7 +48,7 @@ class DirectoryResource implements IteratorResourceInterface
      */
     public function getContent()
     {
-        $content = array();
+        $content = [];
         foreach ($this as $resource) {
             $content[] = $resource->getContent();
         }

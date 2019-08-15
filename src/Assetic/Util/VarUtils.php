@@ -20,7 +20,7 @@ abstract class VarUtils
      */
     public static function resolve($template, array $vars, array $values)
     {
-        $map = array();
+        $map = [];
         foreach ($vars as $var) {
             if (false === strpos($template, '{'.$var.'}')) {
                 continue;
@@ -39,11 +39,11 @@ abstract class VarUtils
     public static function getCombinations(array $vars, array $values)
     {
         if (!$vars) {
-            return array(array());
+            return array([]);
         }
 
-        $combinations = array();
-        $nbValues = array();
+        $combinations = [];
+        $nbValues = [];
         foreach ($values as $var => $vals) {
             if (!in_array($var, $vars, true)) {
                 continue;
@@ -54,7 +54,7 @@ abstract class VarUtils
 
         for ($i = array_product($nbValues), $c = $i * 2; $i < $c; $i++) {
             $k = $i;
-            $combination = array();
+            $combination = [];
 
             foreach ($vars as $var) {
                 $combination[$var] = $values[$var][$k % $nbValues[$var]];

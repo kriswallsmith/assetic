@@ -135,7 +135,7 @@ class AssetFactoryTest extends TestCase
             ->with('foo')
             ->will($this->returnValue($this->getMockBuilder(FilterInterface::class)->getMock()));
 
-        $asset = $this->factory->createAsset(array(), array('foo'));
+        $asset = $this->factory->createAsset([], array('foo'));
         $this->assertEquals(1, count($asset->getFilters()), '->createAsset() adds filters');
     }
 
@@ -148,14 +148,14 @@ class AssetFactoryTest extends TestCase
             ->with('foo')
             ->will($this->throwException(new \InvalidArgumentException()));
 
-        $asset = $this->factory->createAsset(array(), array('foo'));
+        $asset = $this->factory->createAsset([], array('foo'));
     }
 
     public function testOptionalInvalidFilter()
     {
         $this->factory->setDebug(true);
 
-        $asset = $this->factory->createAsset(array(), array('?foo'));
+        $asset = $this->factory->createAsset([], array('?foo'));
 
         $this->assertEquals(0, count($asset->getFilters()), '->createAsset() does not add an optional invalid filter');
     }
@@ -215,7 +215,7 @@ class AssetFactoryTest extends TestCase
             ),
         );
 
-        $asset = $this->factory->createAsset($inputs, array(), array('output' => 'css/*.css'));
+        $asset = $this->factory->createAsset($inputs, [], array('output' => 'css/*.css'));
 
         $i = 0;
         foreach ($asset as $leaf) {
@@ -250,7 +250,7 @@ class AssetFactoryTest extends TestCase
             ->will($this->returnValue(456));
         $child->expects($this->any())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->assertEquals(456, $this->factory->getLastModified($asset));
     }
@@ -283,7 +283,7 @@ class AssetFactoryTest extends TestCase
             ->will($this->returnValue(456));
         $child->expects($this->any())
             ->method('getFilters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->assertEquals(456, $this->factory->getLastModified($asset));
     }

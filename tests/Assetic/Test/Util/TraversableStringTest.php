@@ -15,7 +15,7 @@ class TraversableStringTest extends TestCase
     {
         $foo = new TraversableString('foo', array('foo', 'bar'));
 
-        $values = array();
+        $values = [];
         foreach ($foo as $value) {
             $values[] = $value;
         }

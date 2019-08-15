@@ -37,7 +37,7 @@ class AssetFactory
         $this->root      = rtrim($root, '/');
         $this->debug     = $debug;
         $this->output    = 'assetic/*';
-        $this->workers   = array();
+        $this->workers   = [];
     }
 
     /**
@@ -139,7 +139,7 @@ class AssetFactory
      *
      * @return AssetCollection An asset collection
      */
-    public function createAsset($inputs = array(), $filters = array(), array $options = array())
+    public function createAsset($inputs = [], $filters = [], array $options = [])
     {
         if (!is_array($inputs)) {
             $inputs = array($inputs);
@@ -154,7 +154,7 @@ class AssetFactory
         }
 
         if (!isset($options['vars'])) {
-            $options['vars'] = array();
+            $options['vars'] = [];
         }
 
         if (!isset($options['debug'])) {
@@ -175,8 +175,8 @@ class AssetFactory
             $options['name'] = $this->generateAssetName($inputs, $filters, $options);
         }
 
-        $asset = $this->createAssetCollection(array(), $options);
-        $extensions = array();
+        $asset = $this->createAssetCollection([], $options);
+        $extensions = [];
 
         // inner assets
         foreach ($inputs as $input) {
@@ -200,7 +200,7 @@ class AssetFactory
 
         // append variables
         if (!empty($options['vars'])) {
-            $toAdd = array();
+            $toAdd = [];
             foreach ($options['vars'] as $var) {
                 if (false !== strpos($options['output'], '{'.$var.'}')) {
                     continue;
@@ -226,7 +226,7 @@ class AssetFactory
         return $this->applyWorkers($asset);
     }
 
-    public function generateAssetName($inputs, $filters, $options = array())
+    public function generateAssetName($inputs, $filters, $options = [])
     {
         foreach (array_diff(array_keys($options), array('output', 'debug', 'root')) as $key) {
             unset($options[$key]);
@@ -247,7 +247,7 @@ class AssetFactory
                 continue;
             }
 
-            $prevFilters = array();
+            $prevFilters = [];
             foreach ($filters as $filter) {
                 $prevFilters[] = $filter;
 
@@ -289,7 +289,7 @@ class AssetFactory
      *
      * @return AssetInterface An asset
      */
-    protected function parseInput($input, array $options = array())
+    protected function parseInput($input, array $options = [])
     {
         if ('@' == $input[0]) {
             return $this->createAssetReference(substr($input, 1));
@@ -318,9 +318,9 @@ class AssetFactory
         return $this->createFileAsset($input, $root, $path, $options['vars']);
     }
 
-    protected function createAssetCollection(array $assets = array(), array $options = array())
+    protected function createAssetCollection(array $assets = [], array $options = [])
     {
-        return new AssetCollection($assets, array(), null, isset($options['vars']) ? $options['vars'] : array());
+        return new AssetCollection($assets, [], null, isset($options['vars']) ? $options['vars'] : []);
     }
 
     protected function createAssetReference($name)
@@ -334,17 +334,17 @@ class AssetFactory
 
     protected function createHttpAsset($sourceUrl, $vars)
     {
-        return new HttpAsset($sourceUrl, array(), false, $vars);
+        return new HttpAsset($sourceUrl, [], false, $vars);
     }
 
     protected function createGlobAsset($glob, $root = null, $vars)
     {
-        return new GlobAsset($glob, array(), $root, $vars);
+        return new GlobAsset($glob, [], $root, $vars);
     }
 
     protected function createFileAsset($source, $root = null, $path = null, $vars)
     {
-        return new FileAsset($source, array(), $root, $path, $vars);
+        return new FileAsset($source, [], $root, $path, $vars);
     }
 
     protected function getFilter($name)

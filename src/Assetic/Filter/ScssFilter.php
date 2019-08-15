@@ -18,10 +18,10 @@ use ScssPhp\ScssPhp\Compiler;
 class ScssFilter implements DependencyExtractorInterface
 {
     private $compass = false;
-    private $importPaths = array();
-    private $customFunctions = array();
+    private $importPaths = [];
+    private $customFunctions = [];
     private $formatter;
-    private $variables = array();
+    private $variables = [];
 
     public function enableCompass($enable = true)
     {
@@ -122,11 +122,11 @@ class ScssFilter implements DependencyExtractorInterface
             $sc->addImportPath($path);
         }
 
-        $children = array();
+        $children = [];
         foreach (CssUtils::extractImports($content) as $match) {
             $file = $sc->findImport($match);
             if ($file) {
-                $children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));
+                $children[] = $child = $factory->createAsset($file, [], array('root' => $loadPath));
                 $child->load();
                 $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
             }

@@ -39,7 +39,7 @@ class AssetCollectionTest extends TestCase
         $content = 'foobar';
 
         $count = 0;
-        $matches = array();
+        $matches = [];
         $filter = new CallablesFilter(function ($asset) use ($content, &$matches, &$count) {
             ++$count;
             if ($content == $asset->getContent()) {
@@ -61,7 +61,7 @@ class AssetCollectionTest extends TestCase
         $nestedAsset = new StringAsset('nested');
         $innerColl = new AssetCollection(array($nestedAsset));
 
-        $contents = array();
+        $contents = [];
         $filter = new CallablesFilter(function ($asset) use (&$contents) {
             $contents[] = $asset->getContent();
         });
@@ -74,8 +74,8 @@ class AssetCollectionTest extends TestCase
 
     public function testLoadDedupBySourceUrl()
     {
-        $asset1 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
-        $asset2 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
+        $asset1 = new StringAsset('asset', [], '/some/dir', 'foo.bar');
+        $asset2 = new StringAsset('asset', [], '/some/dir', 'foo.bar');
 
         $coll = new AssetCollection(array($asset1, $asset2));
         $coll->load();
@@ -95,8 +95,8 @@ class AssetCollectionTest extends TestCase
 
     public function testDumpDedupBySourceUrl()
     {
-        $asset1 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
-        $asset2 = new StringAsset('asset', array(), '/some/dir', 'foo.bar');
+        $asset1 = new StringAsset('asset', [], '/some/dir', 'foo.bar');
+        $asset2 = new StringAsset('asset', [], '/some/dir', 'foo.bar');
 
         $coll = new AssetCollection(array($asset1, $asset2));
         $coll->load();
@@ -143,7 +143,7 @@ class AssetCollectionTest extends TestCase
      */
     public function testGetLastModified($timestamps, $expected)
     {
-        $assets = array();
+        $assets = [];
 
         for ($i = 0; $i < count($timestamps); $i++) {
             $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
@@ -161,9 +161,9 @@ class AssetCollectionTest extends TestCase
     public function testGetLastModifiedWithValues()
     {
         $vars = array('locale');
-        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', array(), null, null, $vars);
+        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', [], null, null, $vars);
 
-        $coll = new AssetCollection(array($asset), array(), null, $vars);
+        $coll = new AssetCollection(array($asset), [], null, $vars);
         $coll->setValues(array('locale' => 'en'));
         $mtime = null;
         try {
@@ -222,9 +222,9 @@ class AssetCollectionTest extends TestCase
 
     public function testIteration()
     {
-        $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo.css');
-        $asset2 = new StringAsset('asset2', array(), '/some/dir', 'foo.css');
-        $asset3 = new StringAsset('asset3', array(), '/some/dir', 'bar.css');
+        $asset1 = new StringAsset('asset1', [], '/some/dir', 'foo.css');
+        $asset2 = new StringAsset('asset2', [], '/some/dir', 'foo.css');
+        $asset3 = new StringAsset('asset3', [], '/some/dir', 'bar.css');
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
 
@@ -238,12 +238,12 @@ class AssetCollectionTest extends TestCase
 
     public function testBasenameCollision()
     {
-        $asset1 = new StringAsset('asset1', array(), '/some/dir', 'foo/foo.css');
-        $asset2 = new StringAsset('asset2', array(), '/some/dir', 'bar/foo.css');
+        $asset1 = new StringAsset('asset1', [], '/some/dir', 'foo/foo.css');
+        $asset2 = new StringAsset('asset2', [], '/some/dir', 'bar/foo.css');
 
         $coll = new AssetCollection(array($asset1, $asset2));
 
-        $urls = array();
+        $urls = [];
         foreach ($coll as $leaf) {
             $urls[] = $leaf->getTargetPath();
         }
