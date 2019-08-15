@@ -5,7 +5,9 @@ Asseticの使用方法二つ目は、独立したPHPファイルを使用する�
 テンプレートで「オンザフライ」にアセット定義をする方法です。
 このアプローチでは、PHPテンプレートは下記のようになります。
 
-    <script src="<?php echo assetic_javascripts('js/*', 'yui_js') ?>"></script>
+```php
+<script src="<?php echo assetic_javascripts('js/*', 'yui_js') ?>"></script>
+```
 
 `assetic_javascripts()`の呼び出しは2つの目的を兼ねています。
 まず、「フォーミュラローダー」により走査され、アセットの構築、ダンプ、及び出力を行うための「フォーミュラ(処方箋)」が抽出されます。
@@ -27,28 +29,36 @@ Asseticには下記のようなヘルパー関数があります。
 どのように作成するのか把握しています。
 `assetic_*`ヘルパー関数で使用する記法と同様のものとなります。
 
-    use Assetic\Factory\AssetFactory;
+```php
+<?php
 
-    $factory = new AssetFactory('/path/to/web');
-    $js = $factory->createAsset(array(
-        'js/jquery.js',
-        'js/jquery.plugin.js',
-        'js/application.js',
-    ));
+use Assetic\Factory\AssetFactory;
+
+$factory = new AssetFactory('/path/to/web');
+$js = $factory->createAsset(array(
+    'js/jquery.js',
+    'js/jquery.plugin.js',
+    'js/application.js',
+));
+```
 
 ### フィルタマネージャー
 
 ファクトリによって作成されたアセットに対しても、フィルタを適用することができます。
 そのためには、`FilterManager`を設定して、名前を定義しフィルタを構成します。
 
-    use Assetic\FilterManager;
-    use Assetic\Filter\GoogleClosure\ApiFilter as ClosureFilter;
+```php
+<?php
 
-    $fm = new FilterManager();
-    $fm->set('closure', new ClosureFilter());
-    $factory->setFilterManager($fm);
+use Assetic\FilterManager;
+use Assetic\Filter\GoogleClosure\CompilerApiFilter as ClosureFilter;
 
-    $js = $factory->createAsset('js/*', 'closure');
+$fm = new FilterManager();
+$fm->set('closure', new ClosureFilter());
+$factory->setFilterManager($fm);
+
+$js = $factory->createAsset('js/*', 'closure');
+```
 
 上記の例では、Google Closure Compilerフィルタをインスタンス化し、
 フィルタマネージャーを通じて`closure`という名前をつけています。
@@ -64,11 +74,15 @@ Asseticには下記のようなヘルパー関数があります。
 たとえば、YUI Compressorは大変素晴らしいのですが、圧縮されたJavascriptを
 デバッグするのは大変難しく、プロダクション環境でのみの使用が適切でしょう。
 
-    use Asset\Factory\AssetFactory;
+```php
+<?php
 
-    $factory = new AssetFactory('/path/to/web', true); // デバッグモードON
-    $factory->setFilterManager($fm);
-    $js = $factory->createAsset('js/*', '?closure');
+use Asset\Factory\AssetFactory;
+
+$factory = new AssetFactory('/path/to/web', true); // debug mode is on
+$factory->setFilterManager($fm);
+$js = $factory->createAsset('js/*', '?closure');
+```
 
 フィルタ名`closure`の前にクエスチョンマークを記述すると、ファクトリに対して、
 このフィルタはオプションであり、
@@ -81,31 +95,39 @@ Asseticには下記のようなヘルパー関数があります。
 これを「アセットリファレンス」と呼び、アセットマネージャーを通じて、
 フィルタマネージャーと同様の、名前によるアセットの構成が可能です。
 
-    use Assetic\AssetManager;
-    use Assetic\Asset\FileAsset;
-    use Assetic\Factory\AssetFactory;
+```php
+<?php
 
-    $am = new AssetManager();
-    $am->set('jquery', new FileAsset('/path/to/jquery.js'));
+use Assetic\AssetManager;
+use Assetic\Asset\FileAsset;
+use Assetic\Factory\AssetFactory;
 
-    $factory = new AssetFactory('/path/to/web');
-    $factory->setAssetManager($am);
+$am = new AssetManager();
+$am->set('jquery', new FileAsset('/path/to/jquery.js'));
 
-    $js = $factory->createAsset(array(
-        '@jquery',
-        'js/application.js',
-    ));
+$factory = new AssetFactory('/path/to/web');
+$factory->setAssetManager($am);
+
+$js = $factory->createAsset(array(
+    '@jquery',
+    'js/application.js',
+));
+```
 
 ### テンプレートからのアセット抽出
 
 テンプレート内でアセット群を定義したら、「フォーミュラローダー」サービスを使用して、
 アセットの定義を抽出します。
 
-    use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
-    use Assetic\Factory\Resource\FileResource;
+```php
+<?php
 
-    $loader = new FunctionCallsFormulaLoader($factory);
-    $formulae = $loader->load(new FileResource('/path/to/template.php'));
+use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
+use Assetic\Factory\Resource\FileResource;
+
+$loader = new FunctionCallsFormulaLoader($factory);
+$formulae = $loader->load(new FileResource('/path/to/template.php'));
+```
 
 これらのフォーミュラ自体は、それ自体で使途はあまりなく、
 アセットファクトリが目的のアセットオブジェクトを作成するに足る情報しか持っていません。
@@ -116,25 +138,34 @@ Asseticには下記のようなヘルパー関数があります。
 このサービスは、アセットファクトリと、1つ以上のフォーミュラローダーから成っており、
 裏方のサービス間のグルとして動作しますが、表面上では、通常のアセットマネージャーと同じように使用することができます。
 
-    use Assetic\Asset\FileAsset;
-    use Assetic\Factory\LazyAssetManager;
-    use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
-    use Assetic\Factory\Resource\DirectoryResource;
+```php
+<?php
 
-    $am = new LazyAssetManager($factory);
-    $am->set('jquery', new FileAsset('/path/to/jquery.js'));
-    $am->setLoader('php', new FunctionCallsFormulaLoader($factory));
-    $am->addResource(new DirectoryResource('/path/to/templates', '/\.php$/'), 'php');
+use Assetic\Asset\FileAsset;
+use Assetic\Factory\LazyAssetManager;
+use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
+use Assetic\Factory\Resource\DirectoryResource;
+
+$am = new LazyAssetManager($factory);
+$am->set('jquery', new FileAsset('/path/to/jquery.js'));
+$am->setLoader('php', new FunctionCallsFormulaLoader($factory));
+$am->addResource(new DirectoryResource('/path/to/templates', '/\.php$/'), 'php');
+```
+
 
 ### アセットライター
 
 作成したアセットマネージャーが、テンプレート内で定義した全てのアセットを把握したら、
 アセットライターを使用して、テンプレートが参照することになる実際のファイルを作成します。
 
-    use Assetic\AssetWriter;
+```php
+<?php
 
-    $writer = new AssetWriter('/path/to/web');
-    $writer->writeManagerAssets($am);
+use Assetic\AssetWriter;
+
+$writer = new AssetWriter('/path/to/web');
+$writer->writeManagerAssets($am);
+```
 
 上記のスクリプトを実行すると、アセットマネージャー内のすべてのアセットがメモリに読み込まれ、
 指定したフィルタが適用された後、公開領域に静的ファイルとしてダンプされ、準備完了となります。
