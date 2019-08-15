@@ -12,25 +12,19 @@ use Assetic\Util\FilesystemUtils;
  */
 class JpegtranFilter extends BaseProcessFilter
 {
-    const COPY_NONE = 'none';
-    const COPY_COMMENTS = 'comments';
-    const COPY_ALL = 'all';
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/jpegtran';
 
-    private $jpegtranBin;
+    /*
+     * Filter Options
+     */
+
     private $optimize;
     private $copy;
     private $progressive;
     private $restart;
-
-    /**
-     * Constructor.
-     *
-     * @param string $jpegtranBin Path to the jpegtran binary
-     */
-    public function __construct($jpegtranBin = '/usr/bin/jpegtran')
-    {
-        $this->jpegtranBin = $jpegtranBin;
-    }
 
     public function setOptimize($optimize)
     {
@@ -54,7 +48,7 @@ class JpegtranFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $args[] = $this->jpegtranBin;
+        $args = [];
 
         if ($this->optimize) {
             $args[] = '-optimize';
@@ -69,21 +63,16 @@ class JpegtranFilter extends BaseProcessFilter
             $args[] = '-progressive';
         }
 
-        if (null !== $this->restart) {
+        if (!is_null($this->restart)) {
             $args[] = '-restart';
             $args[] = $this->restart;
         }
 
-        $args[] = $input = FilesystemUtils::createTemporaryFile('jpegtran', $asset->getContent());
+        $args[] = '{INPUT}';
 
-        $process = $this->createProcess($args);
-        $code = $process->run();
-        unlink($input);
+        // Run the filter
+        $result = $this->runProcess($asset->getContent(), $args);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
-        }
-
-        $asset->setContent($process->getOutput());
+        $asset->setContent($result);
     }
 }

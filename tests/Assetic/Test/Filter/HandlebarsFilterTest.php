@@ -70,5 +70,8 @@ class HandlebarsFilterTest extends FilterTestCase
         $asset->load();
 
         $this->filter->filterLoad($asset);
+
+        $this->assertNotContains('{{ var }}', $asset->getContent());
+        $this->assertContains('(function() {', $asset->getContent());
     }
 }

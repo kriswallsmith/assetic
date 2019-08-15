@@ -15,9 +15,16 @@ abstract class BaseProcessFilter extends BaseFilter
     protected $binaryPath;
 
     /**
-     * @var bool Flag to indicate that the process will output the result to the input file
+     * @var boolean Flag to indicate that the process will output the result to the input file
      */
     protected $useInputAsOutput = false;
+
+    protected $debug = false;
+
+    /**
+     * @var boolean Flag to indicate that the output file should not exist before the process is run
+     */
+    protected $deleteOutputFile = false;
 
     /**
      * @var integer Seconds until the process is considered to have timed out
@@ -28,6 +35,11 @@ abstract class BaseProcessFilter extends BaseFilter
      * @var Process The initialized process object
      */
     private $process;
+
+    /**
+     * @var integer The return code from the completed process
+     */
+    protected $processReturnCode;
 
     /**
      * Constructor
@@ -89,17 +101,20 @@ abstract class BaseProcessFilter extends BaseFilter
      */
     protected function runProcess(string $input, array $arguments = [])
     {
-        if (empty($this->binaryPath)) {
-            throw new \Exception('The binaryPath for ' . static::class . ' has not been set. Please set it and try again.');
-        }
-
         // Set the binary path
         $args = $this->getPathArgs();
+
+        if (empty($args)) {
+            throw new \Exception('The binary path for ' . static::class . ' has not been set. Please set it and try again.');
+        }
 
         // Prepare the input & output file paths
         $prefix = preg_replace('/[^\w]/', '', static::class);
         $inputFile = FilesystemUtils::createTemporaryFile($prefix . '-input', $input);
         $outputFile = FilesystemUtils::createTemporaryFile($prefix . '-output');
+        if ($this->deleteOutputFile) {
+            unlink($outputFile);
+        }
         $outputToFile = false;
 
         // Process the input and output argument locations
@@ -117,12 +132,14 @@ abstract class BaseProcessFilter extends BaseFilter
 
         $args = array_merge($args, $arguments);
 
+        $this->debug($args);
+
         // Run the process
         $process = $this->createProcess($args);
-        $code = $process->run();
+        $this->processReturnCode = $process->run();
 
         // Handle any errors
-        if (0 !== $code) {
+        if ($this->processReturnCode !== 0) {
             unlink($inputFile);
             unlink($outputFile);
             throw FilterException::fromProcess($process)->setInput($input);
@@ -135,6 +152,12 @@ abstract class BaseProcessFilter extends BaseFilter
             $output = file_get_contents($outputFile);
         } else {
             $output = $process->getOutput();
+        }
+
+        if (strpos($output, 'Error: ') !== false) {
+            unlink($inputFile);
+            unlink($outputFile);
+            throw FilterException::fromProcess($this->getProcess())->setInput($input);
         }
 
         // Cleanup after ourselves
@@ -159,6 +182,13 @@ abstract class BaseProcessFilter extends BaseFilter
     {
         foreach (array_filter($_SERVER, 'is_scalar') as $key => $value) {
             $process->setEnv([$key => $value]);
+        }
+    }
+
+    protected function debug($args)
+    {
+        if ($this->debug) {
+            var_dump($args); die;
         }
     }
 }

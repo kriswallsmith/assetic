@@ -13,6 +13,7 @@ abstract class BaseNodeFilter extends BaseProcessFilter
      * Constructor
      *
      * @param string $binaryPath Path to the binary to use for this filter, overrides the default path
+     * @param mixed $nodeBinaryPath
      */
     public function __construct($binaryPath = '', $nodeBinaryPath = null)
     {
@@ -33,6 +34,24 @@ abstract class BaseNodeFilter extends BaseProcessFilter
         return $this->nodeBinaryPath
             ? [$this->nodeBinaryPath, $this->binaryPath]
             : [$this->binaryPath];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function runProcess(string $input, array $arguments = [])
+    {
+        try {
+            $result = parent::runProcess($input, $arguments);
+        } catch (\Exception $e) {
+            if ($this->processReturnCode === 127) {
+                throw new \RuntimeException('Path to node executable could not be resolved.');
+            } else {
+                throw $e;
+            }
+        }
+
+        return $result;
     }
 
     public function getNodePaths()

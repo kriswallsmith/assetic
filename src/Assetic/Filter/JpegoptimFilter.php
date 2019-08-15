@@ -7,6 +7,7 @@ use Assetic\Exception\FilterException;
  * Runs assets through Jpegoptim.
  *
  * @link   http://www.kokkonen.net/tjko/projects.html
+ * @link   https://www.systutorials.com/docs/linux/man/1-jpegoptim/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class JpegoptimFilter extends BaseProcessFilter
@@ -25,7 +26,14 @@ class JpegoptimFilter extends BaseProcessFilter
      * Filter Options
      */
 
+    /**
+     * @var boolean Strip all markers from the output
+     */
     private $stripAll;
+
+    /**
+     * @var integer Maximum image quality factor
+     */
     private $max;
 
     public function setStripAll($stripAll)
