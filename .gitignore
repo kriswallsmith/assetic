@@ -6,3 +6,4 @@ vendor/
 node_modules/
 Gemfile.lock
 .idea/
+.phpunit.result.cache
