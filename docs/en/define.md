@@ -43,7 +43,7 @@ You can also apply filters to asset created by the factory. To do this you
 must setup a `FilterManager`, which organizes filters by a name.
 
     use Assetic\FilterManager;
-    use Assetic\Filter\GoogleClosure\ApiFilter as ClosureFilter;
+    use Assetic\Filter\GoogleClosure\CompilerApiFilter as ClosureFilter;
 
     $fm = new FilterManager();
     $fm->set('closure', new ClosureFilter());

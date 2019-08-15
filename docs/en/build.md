@@ -12,13 +12,13 @@ For example, you could create a file in your web directory at
 
     use Assetic\Asset\AssetCollection;
     use Assetic\Asset\FileAsset;
-    use Assetic\Filter\Yui\JsCompressorFilter as YuiCompressorFilter;
+    use Assetic\Filter\JsMinFilter;
 
     $js = new AssetCollection(array(
         new FileAsset(__DIR__.'/jquery.js'),
         new FileAsset(__DIR__.'/application.js'),
     ), array(
-        new YuiCompressorFilter('/path/to/yuicompressor.jar'),
+        new JsMinFilter(),
     ));
 
     header('Content-Type: application/js');

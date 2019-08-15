@@ -29,11 +29,8 @@ filter:
  * LessPHP
  * optipng
  * Packager
- * pngout
- * SASS
- * Sprockets (version 1)
+ * SCSS
  * Stylus
- * YUI Compressor
 
 ### Using Assets and Filters
 
@@ -47,7 +44,7 @@ Once you have an asset you can begin adding filters to it by calling
 `ensureFilter()`. For example, you can add a filter that applies the YUI
 Compressor to the contents of the asset:
 
-    $yui = new Assetic\Filter\Yui\CssCompressorFilter('/path/to/yui.jar');
+    $yui = new Assetic\Filter\ScssFilter();
     $asset->ensureFilter($yui);
 
 Once you've added as many filters as you'd like you can output the finished
@@ -99,13 +96,13 @@ vanilla CSS. You can combine all of these into one seamless CSS asset:
     use Assetic\Asset\AssetCollection;
     use Assetic\Asset\GlobAsset;
     use Assetic\Filter\SassFilter;
-    use Assetic\Filter\Yui\CssCompressorFilter;
+    use Assetic\Filter\CssMinFilter;
 
     $css = new AssetCollection(array(
         new GlobAsset('/path/to/sass/*.sass', array(new SassFilter())),
         new GlobAsset('/path/to/css/*.css'),
     ), array(
-        new YuiCompressorFilter('/path/to/yuicompressor.jar'),
+        new CssMinFilter(),
     ));
 
 You'll notice I've also applied the YUI compressor filter to the combined

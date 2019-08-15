@@ -77,19 +77,11 @@ foreach ($css as $leaf) {
 
 The core provides the following filters in the `Assetic\Filter` namespace:
 
- * `AutoprefixerFilter`: Parse and update vendor-specific properties using autoprefixer
  * `CoffeeScriptFilter`: compiles CoffeeScript into Javascript
- * `CompassFilter`: Compass CSS authoring framework
- * `CssEmbedFilter`: embeds image data in your stylesheets
  * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
- * `CleanCssFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
- * `DartFilter`: compiles Javascript using dart2js
- * `EmberPrecompileFilter`: precompiles Handlebars templates into Javascript for use in the Ember.js framework
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
- * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
- * `GssFilter`: compliles CSS using the Google Closure Stylesheets Compiler
  * `HandlebarsFilter`: compiles Handlebars templates into Javascript
  * `JpegoptimFilter`: optimize your JPEGs
  * `JpegtranFilter`: optimize your JPEGs
@@ -104,12 +96,8 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `PhpCssEmbedFilter`: embeds image data in your stylesheet
  * `PngoutFilter`: optimize your PNGs
  * `ReactJsxFilter`: compiles React JSX into JavaScript
- * `Sass\SassFilter`: parses SASS into CSS
- * `Sass\ScssFilter`: parses SCSS into CSS
- * `SassphpFilter`: parses Sass into CSS using the sassphp bindings for Libsass
- * `ScssphpFilter`: parses SCSS using scssphp
+ * `ScssFilter`: parses SCSS into CSS
  * `SeparatorFilter`: inserts a separator between assets to prevent merge failures
- * `SprocketsFilter`: Sprockets Javascript dependency management
  * `StylusFilter`: parses STYL into CSS
  * `TypeScriptFilter`: parses TypeScript into Javascript
  * `UglifyCssFilter`: minifies CSS
@@ -157,12 +145,12 @@ A filter manager is also provided for organizing filters.
 <?php
 
 use Assetic\FilterManager;
-use Assetic\Filter\Sass\SassFilter;
-use Assetic\Filter\Yui;
+use Assetic\Filter\ScssFilter;
+use Assetic\Filter\CssMinFilter;
 
 $fm = new FilterManager();
-$fm->set('sass', new SassFilter('/path/to/parser/sass'));
-$fm->set('yui_css', new Yui\CssCompressorFilter('/path/to/yuicompressor.jar'));
+$fm->set('sass', new ScssFilter('/path/to/parser/scss'));
+$fm->set('cssmin', new CssMinFilter());
 ```
 
 Asset Factory
@@ -186,7 +174,7 @@ $css = $factory->createAsset(array(
     'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
 ), array(
     'scss',           // filter through the filter manager's "scss" filter
-    '?yui_css',       // don't use this filter in debug mode
+    '?cssmin',        // don't use this filter in debug mode
 ));
 
 echo $css->dump();
@@ -194,7 +182,7 @@ echo $css->dump();
 
 The `AssetFactory` is constructed with a root directory which is used as the base directory for relative asset paths.
 
-Prefixing a filter name with a question mark, as `yui_css` is here, will cause
+Prefixing a filter name with a question mark, as `cssmin` is here, will cause
 that filter to be omitted when the factory is in debug mode.
 
 You can also register [Workers](src/Assetic/Contracts/Factory/Worker/WorkerInterface.php) on the factory and all assets created
@@ -261,15 +249,15 @@ A simple caching mechanism is provided to avoid unnecessary work.
 use Assetic\Asset\AssetCache;
 use Assetic\Asset\FileAsset;
 use Assetic\Cache\FilesystemCache;
-use Assetic\Filter\Yui;
+use Assetic\Filter\JsMinFilter;
 
-$yui = new Yui\JsCompressorFilter('/path/to/yuicompressor.jar');
+$jsMin = new JsMinFilter();
 $js = new AssetCache(
-    new FileAsset('/path/to/some.js', array($yui)),
+    new FileAsset('/path/to/some.js', array($jsMin)),
     new FilesystemCache('/path/to/cache')
 );
 
-// the YUI compressor will only run on the first call
+// the JsMin compressor will only run on the first call
 $js->dump();
 $js->dump();
 $js->dump();
