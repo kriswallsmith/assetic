@@ -1,5 +1,6 @@
 # Assetic
 [![Build Status](https://travis-ci.org/assetic-php/assetic.svg?branch=master)](https://travis-ci.org/assetic-php/assetic)
+[![Coverage Status](https://coveralls.io/repos/github/assetic-php/assetic/badge.svg?branch=master)](https://coveralls.io/github/assetic-php/assetic?branch=master)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/assetic-php/assetic.svg)](http://isitmaintained.com/project/assetic-php/assetic "Average time to resolve an issue")
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/assetic-php/assetic.svg)](https://isitmaintained.com/project/assetic-php/assetic "Percentage of issues still open")
 
