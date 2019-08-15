@@ -1,8 +1,7 @@
 <?php namespace Assetic\Filter;
 
-use Assetic\Contracts\Asset\AssetInterface;
-use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Util\FilesystemUtils;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Runs assets through Packager.
@@ -10,7 +9,7 @@ use Assetic\Util\FilesystemUtils;
  * @link https://github.com/kamicane/packager
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class PackagerFilter implements FilterInterface
+class PackagerFilter extends BaseFilter
 {
     private $packages;
 
@@ -47,9 +46,5 @@ EOF;
         rmdir($package);
 
         $asset->setContent($content);
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
     }
 }

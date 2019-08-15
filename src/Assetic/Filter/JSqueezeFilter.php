@@ -1,7 +1,6 @@
 <?php namespace Assetic\Filter;
 
 use Assetic\Contracts\Asset\AssetInterface;
-use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * JSqueeze filter.
@@ -9,7 +8,7 @@ use Assetic\Contracts\Filter\FilterInterface;
  * @link https://github.com/nicolas-grekas/JSqueeze
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class JSqueezeFilter implements FilterInterface
+class JSqueezeFilter extends BaseFilter
 {
     private $singleLine = true;
     private $keepImportantComments = true;
@@ -48,10 +47,6 @@ class JSqueezeFilter implements FilterInterface
     public function keepImportantComments($bool)
     {
         $this->keepImportantComments = (bool) $bool;
-    }
-
-    public function filterLoad(AssetInterface $asset)
-    {
     }
 
     public function filterDump(AssetInterface $asset)

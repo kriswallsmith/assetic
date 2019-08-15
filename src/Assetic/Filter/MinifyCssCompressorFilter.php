@@ -1,7 +1,6 @@
 <?php namespace Assetic\Filter;
 
 use Assetic\Contracts\Asset\AssetInterface;
-use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * Filters assets through Minify_CSS_Compressor.
@@ -12,12 +11,8 @@ use Assetic\Contracts\Filter\FilterInterface;
  * @author Stephen Clay <steve@mrclay.org>
  * @author http://code.google.com/u/1stvamp/ (Issue 64 patch)
  */
-class MinifyCssCompressorFilter implements FilterInterface
+class MinifyCssCompressorFilter extends BaseFilter
 {
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $asset->setContent(\Minify_CSS_Compressor::process($asset->getContent()));

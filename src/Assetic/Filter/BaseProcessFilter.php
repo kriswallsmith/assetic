@@ -3,12 +3,11 @@
 use Assetic\Util\FilesystemUtils;
 use Assetic\Exception\FilterException;
 use Symfony\Component\Process\Process;
-use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * An external process based filter which provides a way to set a timeout on the process.
  */
-abstract class BaseProcessFilter implements FilterInterface
+abstract class BaseProcessFilter extends BaseFilter
 {
     /**
      * @var string Path to the binary for this process based filter

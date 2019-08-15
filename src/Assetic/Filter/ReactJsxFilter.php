@@ -66,8 +66,4 @@ class ReactJsxFilter extends BaseNodeFilter
         unlink($outputFile);
         rmdir($outputDir);
     }
-
-    public function filterDump(AssetInterface $asset)
-    {
-    }
 }

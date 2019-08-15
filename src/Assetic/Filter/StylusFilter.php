@@ -99,13 +99,6 @@ EOF;
         $asset->setContent($process->getOutput());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function filterDump(AssetInterface $asset)
-    {
-    }
-
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo

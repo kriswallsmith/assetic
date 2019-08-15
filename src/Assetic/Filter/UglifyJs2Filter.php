@@ -63,10 +63,6 @@ class UglifyJs2Filter extends BaseNodeFilter
         $this->defines = $defines;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $args = $this->nodeBin

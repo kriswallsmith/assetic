@@ -54,8 +54,4 @@ class CoffeeScriptFilter extends BaseNodeFilter
 
         $asset->setContent($result);
     }
-
-    public function filterDump(AssetInterface $asset)
-    {
-    }
 }

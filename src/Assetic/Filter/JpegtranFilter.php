@@ -52,10 +52,6 @@ class JpegtranFilter extends BaseProcessFilter
         $this->restart = $restart;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $args[] = $this->jpegtranBin;

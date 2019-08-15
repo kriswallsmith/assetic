@@ -38,10 +38,6 @@ class JpegoptimFilter extends BaseProcessFilter
         $this->max = $max;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $args = [];

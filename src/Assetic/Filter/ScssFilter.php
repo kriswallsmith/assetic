@@ -15,7 +15,7 @@ use ScssPhp\ScssPhp\Compiler;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssFilter implements DependencyExtractorInterface
+class ScssFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $compass = false;
     private $importPaths = [];
@@ -105,10 +105,6 @@ class ScssFilter implements DependencyExtractorInterface
         }
 
         $asset->setContent($sc->compile($asset->getContent()));
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)

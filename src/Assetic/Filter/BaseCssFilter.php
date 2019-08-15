@@ -1,14 +1,13 @@
 <?php namespace Assetic\Filter;
 
 use Assetic\Util\CssUtils;
-use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * An abstract filter for dealing with CSS.
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCssFilter implements FilterInterface
+abstract class BaseCssFilter extends BaseFilter
 {
     /**
      * @see CssUtils::filterReferences()

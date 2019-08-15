@@ -57,13 +57,6 @@ class UglifyCssFilter extends BaseNodeFilter
     }
 
     /**
-     * @see Assetic\Filter\FilterInterface::filterLoad()
-     */
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
-    /**
      * Run the asset through UglifyJs
      *
      * @see Assetic\Filter\FilterInterface::filterDump()

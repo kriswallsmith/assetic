@@ -9,10 +9,6 @@ use Assetic\Contracts\Asset\AssetInterface;
  */
 class CssRewriteFilter extends BaseCssFilter
 {
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $sourceBase = $asset->getSourceRoot();

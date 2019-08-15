@@ -144,10 +144,6 @@ EOF;
         $asset->setContent($process->getOutput());
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
-
     /**
      * @param AssetFactory $factory
      * @param $content

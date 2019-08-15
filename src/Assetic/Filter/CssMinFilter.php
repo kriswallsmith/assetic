@@ -1,7 +1,6 @@
 <?php namespace Assetic\Filter;
 
 use Assetic\Contracts\Asset\AssetInterface;
-use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * Filters assets through CssMin.
@@ -9,7 +8,7 @@ use Assetic\Contracts\Filter\FilterInterface;
  * @link http://code.google.com/p/cssmin
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CssMinFilter implements FilterInterface
+class CssMinFilter extends BaseFilter
 {
     private $filters;
     private $plugins;
@@ -38,10 +37,6 @@ class CssMinFilter implements FilterInterface
     public function setPlugin($name, $value)
     {
         $this->plugins[$name] = $value;
-    }
-
-    public function filterLoad(AssetInterface $asset)
-    {
     }
 
     public function filterDump(AssetInterface $asset)

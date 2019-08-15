@@ -1,7 +1,6 @@
 <?php namespace Assetic\Filter;
 
 use Assetic\Contracts\Asset\AssetInterface;
-use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * Inserts a separator between assets to prevent merge failures
@@ -9,7 +8,7 @@ use Assetic\Contracts\Filter\FilterInterface;
  *
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
  */
-class SeparatorFilter implements FilterInterface
+class SeparatorFilter extends BaseFilter
 {
     /**
      * @var string
@@ -24,10 +23,6 @@ class SeparatorFilter implements FilterInterface
     public function __construct($separator = ';')
     {
         $this->separator = $separator;
-    }
-
-    public function filterLoad(AssetInterface $asset)
-    {
     }
 
     public function filterDump(AssetInterface $asset)

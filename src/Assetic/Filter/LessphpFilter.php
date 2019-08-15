@@ -15,7 +15,7 @@ use Assetic\Util\LessUtils;
  * @author David Buchmann <david@liip.ch>
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class LessphpFilter implements DependencyExtractorInterface
+class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $presets = [];
     private $formatter;
@@ -109,10 +109,6 @@ class LessphpFilter implements DependencyExtractorInterface
     public function registerFunction($name, $callable)
     {
         $this->customFunctions[$name] = $callable;
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
