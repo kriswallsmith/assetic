@@ -2,9 +2,10 @@
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Contracts\ValueSupplierInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
-class AsseticExtension extends \Twig_Extension implements GlobalsInterface
+class AsseticExtension extends AbstractExtension implements GlobalsInterface
 {
     protected $factory;
     protected $functions;

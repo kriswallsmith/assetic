@@ -12,6 +12,7 @@ use Assetic\FilterManager;
 use Assetic\AssetManager;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\Error\SyntaxError;
 
 class AsseticExtensionTest extends TestCase
 {
@@ -242,7 +243,7 @@ class AsseticExtensionTest extends TestCase
 
     public function testUnclosedTag()
     {
-        $this->expectException(\Twig_Error_Syntax::class);
+        $this->expectException(SyntaxError::class);
         $this->renderXml('unclosed_tag.twig');
     }
 
