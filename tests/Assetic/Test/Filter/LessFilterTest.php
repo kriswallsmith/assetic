@@ -24,7 +24,11 @@ class LessFilterTest extends FilterTestCase
             $this->markTestSkipped('The "less" module is not installed.');
         }
 
-        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : []);
+        if (!$lesscBin = $this->findExecutable('lessc', 'LESSC_BIN')) {
+            $this->markTestSkipped('The "lessc" bin could not be found.');
+        }
+
+        $this->filter = new LessFilter($lesscBin);
     }
 
     protected function tearDown(): void
@@ -71,7 +75,7 @@ EOF;
         $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
         $asset->load();
 
-        $this->filter->addTreeOption('compress', true);
+        $this->filter->setCompress(true);
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
