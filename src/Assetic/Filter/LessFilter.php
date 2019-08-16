@@ -17,10 +17,12 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
     private $nodeBin;
 
+    protected $binaryPath = '/usr/bin/lessc';
+
     /**
-     * @var array
+     * @var bool
      */
-    private $treeOptions;
+    private $compress;
 
     /**
      * @var array
@@ -37,25 +39,11 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     protected $loadPaths = [];
 
     /**
-     * Constructor.
-     *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
-     */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = [])
-    {
-        $this->nodeBin = $nodeBin;
-        $this->setNodePaths($nodePaths);
-        $this->treeOptions = [];
-        $this->parserOptions = [];
-    }
-
-    /**
      * @param bool $compress
      */
     public function setCompress($compress)
     {
-        $this->addTreeOption('compress', $compress);
+        $this->compress = $compress;
     }
 
     public function setLoadPaths(array $loadPaths)
@@ -73,75 +61,33 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $this->loadPaths[] = $path;
     }
 
-    /**
-     * @param string $code
-     * @param string $value
-     */
-    public function addTreeOption($code, $value)
-    {
-        $this->treeOptions[$code] = $value;
-    }
-
-    /**
-     * @param string $code
-     * @param string $value
-     */
-    public function addParserOption($code, $value)
-    {
-        $this->parserOptions[$code] = $value;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<'EOF'
-var less = require('less');
-var sys  = require(process.binding('natives').util ? 'util' : 'sys');
+        $args = $paths = [];
 
-less.render(%s, %s, function(error, css) {
-    if (error) {
-        less.writeError(error);
-        process.exit(2);
-    }
-    try {
-        if (typeof css == 'string') {
-            sys.print(css);
-        } else {
-            sys.print(css.css);
+        if (null !== $this->compress && $this->compress) {
+            $args[] = '--compress';
         }
-    } catch (e) {
-        less.writeError(error);
-        process.exit(3);
-    }
-});
 
-EOF;
-
-        // parser options
-        $parserOptions = $this->parserOptions;
         if ($dir = $asset->getSourceDirectory()) {
-            $parserOptions['paths'] = array($dir);
-            $parserOptions['filename'] = basename($asset->getSourcePath());
+            $paths[] = $dir;
         }
 
         foreach ($this->loadPaths as $loadPath) {
-            $parserOptions['paths'][] = $loadPath;
+            $paths[] = $loadPath;
         }
 
-        $input = FilesystemUtils::createTemporaryFile('less', sprintf($format,
-            json_encode($asset->getContent()),
-            json_encode(array_merge($parserOptions, $this->treeOptions))
-        ));
-
-        $process = $this->createProcess([$this->nodeBin, $input]);
-
-        $code = $process->run();
-        unlink($input);
-
-        if (0 !== $code) {
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
+        if ($paths) {
+            $args[] = '--include-path=' . implode(':', $paths);
         }
 
-        $asset->setContent($process->getOutput());
+        $args[] = '{INPUT}';
+        $args[] = '{OUTPUT}';
+
+        // Run the filter
+        $result = $this->runProcess($asset->getContent(), $args);
+
+        $asset->setContent($result);
     }
 
     /**
