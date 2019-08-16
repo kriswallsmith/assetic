@@ -28,6 +28,9 @@ a simplified tool set of php and javascript based utilities.
 -
 
 
+# Filters Removed:
+- Roole | Roole was a language that compiles to CSS, the project is now dead and has been for at least 6 years | Use LESS \ SCSS instead
+
 
 * Removed autoprefixer filter as autoprefixer cli is deprecated
 * Removed pngout filter as npm package is abandoned
