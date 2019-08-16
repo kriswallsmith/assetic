@@ -17,11 +17,6 @@ class OptiPngFilter extends BaseProcessFilter
      */
     protected $binaryPath = '/usr/bin/optipng';
 
-    /**
-     * @var boolean Flag to indicate that the output file should not exist before the process is run
-     */
-    protected $deleteOutputFile = true;
-
     /*
      * Filter Options
      */
@@ -31,6 +26,16 @@ class OptiPngFilter extends BaseProcessFilter
     public function setLevel($level)
     {
         $this->level = $level;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getOutputPath()
+    {
+        $path = parent::getOutputPath();
+        unlink($path);
+        return $path;
     }
 
     public function filterDump(AssetInterface $asset)

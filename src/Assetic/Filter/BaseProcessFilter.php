@@ -19,12 +19,22 @@ abstract class BaseProcessFilter extends BaseFilter
      */
     protected $useInputAsOutput = false;
 
-    protected $debug = false;
+    /**
+     * @var boolean Flag to indicate that the process will output the result to the output path instead of the process output
+     */
+    protected $outputToFile = false;
 
     /**
-     * @var boolean Flag to indicate that the output file should not exist before the process is run
+     * @var string Path to the process input
      */
-    protected $deleteOutputFile = false;
+    protected $inputPath;
+
+    /**
+     * @var string Path to the process output
+     */
+    protected $outputPath;
+
+    protected $debug = false;
 
     /**
      * @var integer Seconds until the process is considered to have timed out
@@ -91,6 +101,29 @@ abstract class BaseProcessFilter extends BaseFilter
     }
 
     /**
+     * Prepare the input and return the path to be used for {INPUT}
+     *
+     * @param string $input
+     * @return string
+     */
+    protected function getInputPath(string $input)
+    {
+        $prefix = preg_replace('/[^\w]/', '', static::class);
+        return FilesystemUtils::createTemporaryFile($prefix . '-input', $input);
+    }
+
+    /**
+     * Prepare the output and return the path to be used for {OUTPUT}
+     *
+     * @return string
+     */
+    protected function getOutputPath()
+    {
+        $prefix = preg_replace('/[^\w]/', '', static::class);
+        return FilesystemUtils::createTemporaryFile($prefix . '-output');
+    }
+
+    /**
      * Runs a process with the provided argument and returns the output
      *
      * @param string $input The input to provide the process
@@ -109,23 +142,18 @@ abstract class BaseProcessFilter extends BaseFilter
         }
 
         // Prepare the input & output file paths
-        $prefix = preg_replace('/[^\w]/', '', static::class);
-        $inputFile = FilesystemUtils::createTemporaryFile($prefix . '-input', $input);
-        $outputFile = FilesystemUtils::createTemporaryFile($prefix . '-output');
-        if ($this->deleteOutputFile) {
-            unlink($outputFile);
-        }
-        $outputToFile = false;
+        $this->inputPath = $this->getInputPath($input);
+        $this->outputPath = $this->getOutputPath();
 
         // Process the input and output argument locations
         foreach ($arguments as &$arg) {
             if (is_string($arg)) {
-                $arg = str_replace('{INPUT}', $inputFile, $arg);
+                $arg = str_replace('{INPUT}', $this->inputPath, $arg);
 
                 // Only some processes output to file, others just use $process->getOutput()
                 if (strpos($arg, '{OUTPUT}') !== false) {
-                    $arg = str_replace('{OUTPUT}', $outputFile, $arg);
-                    $outputToFile = true;
+                    $arg = str_replace('{OUTPUT}', $this->outputPath, $arg);
+                    $this->outputToFile = true;
                 }
             }
         }
@@ -140,32 +168,66 @@ abstract class BaseProcessFilter extends BaseFilter
 
         // Handle any errors
         if ($this->processReturnCode !== 0) {
-            unlink($inputFile);
-            unlink($outputFile);
+            $this->cleanUp();
             throw FilterException::fromProcess($process)->setInput($input);
         }
 
         // Retrieve the output
-        if ($this->useInputAsOutput) {
-            $output = file_get_contents($inputFile);
-        } elseif ($outputToFile) {
-            $output = file_get_contents($outputFile);
-        } else {
-            $output = $process->getOutput();
-        }
+        $output = $this->getOutput();
 
+        // Check for errors
         if (strpos($output, 'Error: ') !== false) {
-            unlink($inputFile);
-            unlink($outputFile);
+            $this->cleanUp();
             throw FilterException::fromProcess($this->getProcess())->setInput($input);
         }
 
         // Cleanup after ourselves
-        unlink($inputFile);
-        unlink($outputFile);
+        $this->cleanUp();
 
         // Return the final result
         return $output;
+    }
+
+    /**
+     * Retrieve the output from the process
+     *
+     * @return string
+     */
+    protected function getOutput()
+    {
+        $ouput = null;
+
+        if ($this->useInputAsOutput) {
+            $output = file_get_contents($this->inputPath);
+        } elseif ($this->outputToFile) {
+            $output = file_get_contents($this->outputPath);
+        } else {
+            $output = $this->getProcess()->getOutput();
+        }
+
+        return $output;
+    }
+
+    /**
+     * Clean up after the process
+     */
+    protected function cleanUp()
+    {
+        if (file_exists($this->inputPath)) {
+            if (is_dir($this->inputPath)) {
+                FilesystemUtils::removeDirectory($this->inputPath);
+            } else {
+                unlink($this->inputPath);
+            }
+        }
+
+        if (file_exists($this->outputPath)) {
+            if (is_dir($this->outputPath)) {
+                FilesystemUtils::removeDirectory($this->outputPath);
+            } else {
+                unlink($this->outputPath);
+            }
+        }
     }
 
     /**

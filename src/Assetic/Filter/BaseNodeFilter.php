@@ -44,6 +44,7 @@ abstract class BaseNodeFilter extends BaseProcessFilter
         try {
             $result = parent::runProcess($input, $arguments);
         } catch (\Exception $e) {
+            $this->cleanUp();
             if ($this->processReturnCode === 127) {
                 throw new \RuntimeException('Path to node executable could not be resolved.');
             } else {
