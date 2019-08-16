@@ -15,12 +15,17 @@ use Assetic\Util\LessUtils;
  */
 class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
-    private $nodeBin;
-
+    /**
+     * @var string Path to the binary for this process based filter
+     */
     protected $binaryPath = '/usr/bin/lessc';
 
+    /*
+     * Filter Options
+     */
+
     /**
-     * @var bool
+     * @var boolean
      */
     private $compress;
 
@@ -30,11 +35,7 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
     private $parserOptions;
 
     /**
-     * Load Paths
-     *
-     * A list of paths which less will search for includes.
-     *
-     * @var array
+     * @var array List of paths which less will search for includes.
      */
     protected $loadPaths = [];
 
@@ -61,6 +62,9 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
         $this->loadPaths[] = $path;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function filterLoad(AssetInterface $asset)
     {
         $args = $paths = [];
@@ -86,7 +90,6 @@ class LessFilter extends BaseNodeFilter implements DependencyExtractorInterface
 
         // Run the filter
         $result = $this->runProcess($asset->getContent(), $args);
-
         $asset->setContent($result);
     }
 

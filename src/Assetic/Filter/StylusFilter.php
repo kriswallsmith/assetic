@@ -15,11 +15,16 @@ use Assetic\Contracts\Filter\DependencyExtractorInterface;
  */
 class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
+    /**
+     * @var string Path to the binary for this process based filter
+     */
     protected $binaryPath = '/usr/local/bin/stylus';
 
-    private $nodeBin;
+    /*
+     * Filter Options
+     */
+
     private $compress;
-    private $useNib;
 
     /**
      * Enable output compression.
@@ -55,7 +60,6 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
 
         if ($dir = $asset->getSourceDirectory()) {
             $args[] = $dir;
-
         } else {
             $args[] = '{INPUT}';
         }
