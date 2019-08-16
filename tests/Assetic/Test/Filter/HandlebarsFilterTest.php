@@ -65,13 +65,12 @@ class HandlebarsFilterTest extends FilterTestCase
 
     public function testStringAssset()
     {
-        $this->expectException(\LogicException::class);
         $asset = new StringAsset(file_get_contents(__DIR__.'/fixtures/handlebars/template.handlebars'));
         $asset->load();
 
         $this->filter->filterLoad($asset);
 
-        $this->assertNotContains('{{ var }}', $asset->getContent());
-        $this->assertContains('(function() {', $asset->getContent());
+        $this->assertStringNotContainsString('{{ var }}', $asset->getContent());
+        $this->assertStringContainsString('(function() {', $asset->getContent());
     }
 }
