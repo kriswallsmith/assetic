@@ -12,22 +12,18 @@ use Assetic\Util\FilesystemUtils;
  */
 class UglifyCssFilter extends BaseNodeFilter
 {
-    private $uglifycssBin;
-    private $nodeBin;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/uglifycss';
+
+    /*
+     * Filter Options
+     */
 
     private $expandVars;
     private $uglyComments;
     private $cuteComments;
-
-    /**
-     * @param string $uglifycssBin Absolute path to the uglifycss executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
-     */
-    public function __construct($uglifycssBin = '/usr/bin/uglifycss', $nodeBin = null)
-    {
-        $this->uglifycssBin = $uglifycssBin;
-        $this->nodeBin = $nodeBin;
-    }
 
     /**
      * Expand variables
@@ -57,15 +53,11 @@ class UglifyCssFilter extends BaseNodeFilter
     }
 
     /**
-     * Run the asset through UglifyJs
-     *
-     * @see Assetic\Filter\FilterInterface::filterDump()
+     * {@inheritDoc}
      */
     public function filterDump(AssetInterface $asset)
     {
-        $args = $this->nodeBin
-            ? array($this->nodeBin, $this->uglifycssBin)
-            : array($this->uglifycssBin);
+        $args = [];
 
         if ($this->expandVars) {
             $args[] = '--expand-vars';
@@ -79,24 +71,9 @@ class UglifyCssFilter extends BaseNodeFilter
             $args[] = '--cute-comments';
         }
 
-        // input and output files
-        $input = FilesystemUtils::createTemporaryFile('uglifycss', $asset->getContent());
+        $args[] = '{INPUT}';
 
-        $args[] = $input;
-
-        $process = $this->createProcess($args);
-
-        $code = $process->run();
-        unlink($input);
-
-        if (127 === $code) {
-            throw new \RuntimeException('Path to node executable could not be resolved.');
-        }
-
-        if (0 !== $code) {
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
-        }
-
-        $asset->setContent($process->getOutput());
+        $result = $this->runProcess($asset->getContent(), $args);
+        $asset->setContent($result);
     }
 }

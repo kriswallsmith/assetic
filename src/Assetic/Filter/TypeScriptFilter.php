@@ -12,57 +12,34 @@ use Assetic\Util\FilesystemUtils;
  */
 class TypeScriptFilter extends BaseNodeFilter
 {
-    private $tscBin;
-    private $nodeBin;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/tsc';
 
-    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null)
+    /**
+     * {@inheritDoc}
+     */
+    protected function getInputPath(string $input)
     {
-        $this->tscBin = $tscBin;
-        $this->nodeBin = $nodeBin;
+        $prefix = preg_replace('/[^\w]/', '', static::class);
+        $path = FilesystemUtils::createThrowAwayDirectory($prefix) . '/input.ts';
+        file_put_contents($path, $input);
+        return $path;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function filterLoad(AssetInterface $asset)
     {
-        $args = $this->nodeBin
-            ? array($this->nodeBin, $this->tscBin)
-            : array($this->tscBin);
+        $args = [
+            '{INPUT}',
+            '--out',
+            '{OUTPUT}'
+        ];
 
-        if ($sourcePath = $asset->getSourcePath()) {
-            $templateName = basename($sourcePath);
-        } else {
-            $templateName = 'asset';
-        }
-
-        $inputDirPath = FilesystemUtils::createThrowAwayDirectory('typescript_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
-        $outputPath = FilesystemUtils::createTemporaryFile('typescript_out');
-
-        file_put_contents($inputPath, $asset->getContent());
-
-        $args[] = $inputPath;
-        $args[] = '--out';
-        $args[] = $outputPath;
-
-
-        $process = $this->createProcess($args);
-        $code = $process->run();
-        unlink($inputPath);
-        rmdir($inputDirPath);
-
-        if (0 !== $code) {
-            if (file_exists($outputPath)) {
-                unlink($outputPath);
-            }
-            throw FilterException::fromProcess($process)->setInput($asset->getContent());
-        }
-
-        if (!file_exists($outputPath)) {
-            throw new \RuntimeException('Error creating output file.');
-        }
-
-        $compiledJs = file_get_contents($outputPath);
-        unlink($outputPath);
-
-        $asset->setContent($compiledJs);
+        $result = $this->runProcess($asset->getContent(), $args);
+        $asset->setContent($result);
     }
 }

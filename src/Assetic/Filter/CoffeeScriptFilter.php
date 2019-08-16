@@ -59,7 +59,6 @@ class CoffeeScriptFilter extends BaseNodeFilter
         $args[] = '{INPUT}';
 
         $result = $this->runProcess($asset->getContent(), $args);
-
         $asset->setContent($result);
     }
 }

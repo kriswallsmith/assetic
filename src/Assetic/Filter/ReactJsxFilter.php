@@ -57,7 +57,6 @@ class ReactJsxFilter extends BaseNodeFilter
         ];
 
         $result = $this->runProcess($asset->getContent(), $args);
-
         $asset->setContent($result);
     }
 }
