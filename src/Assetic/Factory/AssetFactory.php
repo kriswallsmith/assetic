@@ -216,6 +216,7 @@ class AssetFactory
                     $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
                 }
             }
+        }
 
         // filters
         foreach ($filters as $filter) {

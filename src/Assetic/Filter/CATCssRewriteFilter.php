@@ -73,7 +73,6 @@ class CATCssRewriteFilter extends BaseCssFilter
                 }
                 $path .= ltrim(substr(dirname($sourcePath).'/', strlen($targetDir)), '/');
                 $path = str_replace('../', '', $path);
-
             }
         }
 
@@ -90,26 +89,29 @@ class CATCssRewriteFilter extends BaseCssFilter
 
             // document relative
             $url = $matches['url'];
+            if (empty($url)) {
+                return;
+            }
 //            while (0 === strpos($url, '../') && 2 <= substr_count($path, '/')) {
 
                 $pathinfo = pathinfo($url);
                 $filename = $pathinfo['basename'];
 
-                if(substr_count($pathinfo['basename'],'?'))
-                    list($filename,$ignore) = explode('?',$pathinfo['basename'],2);
+            if (substr_count($pathinfo['basename'], '?')) {
+                list($filename, $ignore) = explode('?', $pathinfo['basename'], 2);
+            }
                 $fullpath = Directory::sanitizePath(CAT_ENGINE_PATH.'/'.$path.'/'.$pathinfo['dirname'].'/'.$filename);
 
-                if(file_exists($fullpath))
-                {
-                    if(!file_exists(CAT_PATH.'/assets') || !is_dir(CAT_PATH.'/assets'))
+            if (file_exists($fullpath)) {
+                if (!file_exists(CAT_PATH.'/assets') || !is_dir(CAT_PATH.'/assets')) {
                         Directory::createDirectory(CAT_PATH.'/assets');
-                    if(!file_exists(CAT_PATH.'/assets/'.$filename))
-                        copy($fullpath,CAT_PATH.'/assets/'.$filename);
+                }
+                if (!file_exists(CAT_PATH.'/assets/'.$filename)) {
+                    copy($fullpath, CAT_PATH.'/assets/'.$filename);
+                }
                     $url = CAT_SITE_URL.'/assets/'.$pathinfo['basename'];
                     $path = '';
-                }
-                else
-                {
+            } else {
                     $path = substr($path, 0, strrpos(rtrim($path, '/'), '/') + 1);
                     $url = substr($url, 3);
                 }
@@ -127,6 +129,8 @@ class CATCssRewriteFilter extends BaseCssFilter
 
             return str_replace($matches['url'], implode('/', $parts), $matches[0]);
         });
+
+        $content = "/*** ".$asset->getSourcePath()." ***/\n\n".$content;
 
         $asset->setContent($content);
     }
