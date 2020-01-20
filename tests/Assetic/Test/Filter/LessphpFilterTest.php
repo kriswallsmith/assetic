@@ -36,7 +36,7 @@ class LessphpFilterTest extends FilterTestCase
 
         $this->filter->filterLoad($asset);
 
-        $this->assertEquals(".foo .bar {\n  width: 2;\n}\n", $asset->getContent(), '->filterLoad() parses the content');
+        $this->assertEquals('.foo .bar{width:2}', $asset->getContent(), '->filterLoad() parses the content');
     }
 
     /**
@@ -44,15 +44,7 @@ class LessphpFilterTest extends FilterTestCase
      */
     public function testImport()
     {
-        $expected = <<<EOF
-.foo {
-  color: blue;
-}
-.foo {
-  color: red;
-}
-
-EOF;
+        $expected = '.foo{color:blue}.foo{color:red}';
 
         $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
         $asset->load();
@@ -67,15 +59,7 @@ EOF;
      */
     public function testLoadPath()
     {
-        $expected = <<<EOF
-.foo {
-  color: blue;
-}
-.foo {
-  color: red;
-}
-
-EOF;
+        $expected = '.foo{color:blue}.foo{color:red}';
 
         $this->filter->addLoadPath(__DIR__.'/fixtures/less');
 
@@ -98,7 +82,7 @@ EOF;
         $this->filter->setPresets(array('bar' => 'green'));
         $this->filter->filterLoad($asset);
 
-        $this->assertStringContainsString('green', $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
+        $this->assertStringContainsString('#008000', $asset->getContent(), '->setPresets() to pass variables into lessphp filter');
     }
 
     /**
@@ -109,7 +93,9 @@ EOF;
         $asset = new StringAsset('.foo { color: bar(); }');
         $asset->load();
 
-        $this->filter->registerFunction('bar', function () { return 'red';});
+        $this->filter->registerFunction('bar', function () {
+            return 'red';
+        });
         $this->filter->filterLoad($asset);
 
         $expected = new StringAsset('.foo { color: red; }');
@@ -130,7 +116,7 @@ EOF;
         $this->filter->setFormatter('lessjs');
         $this->filter->filterLoad($asset);
 
-        $this->assertStringContainsString("\n  color", $asset->getContent(), '->setFormatter("lessjs")');
+        $this->assertStringContainsString("color", $asset->getContent(), '->setFormatter("lessjs")');
     }
 
     /**
@@ -158,7 +144,7 @@ EOF;
         $this->filter->setFormatter('classic');
         $this->filter->filterLoad($asset);
 
-        $this->assertStringContainsString('{ color:green; }', $asset->getContent(), '->setFormatter("classic")');
+        $this->assertStringContainsString('{color:green}', $asset->getContent(), '->setFormatter("classic")');
     }
 
     /**
