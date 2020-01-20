@@ -6,14 +6,15 @@ use Assetic\Factory\AssetFactory;
 use Assetic\Util\LessUtils;
 
 /**
- * Loads LESS files using the PHP implementation of less, lessphp.
+ * Loads LESS files using the PHP implementation of less, less.php.
  *
  * Less files are mostly compatible, but there are slight differences.
  *
- * @link http://leafo.net/lessphp/
+ * @link https://github.com/wikimedia/less.php
  *
  * @author David Buchmann <david@liip.ch>
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @author Jack Wilkinson <me@jackwilky.com>
  */
 class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
@@ -21,7 +22,9 @@ class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
     private $formatter;
     private $preserveComments;
     private $customFunctions = [];
-    private $options = [];
+    private $options = [
+        'compress' => true
+    ];
 
     /**
      * Lessphp Load Paths
