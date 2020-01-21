@@ -25,7 +25,8 @@ a simplified tool set of php and javascript based utilities.
 ### BC breaks
 
 - Minimum PHP version required is now PHP 7.2
--
+- Switching from `leafo/lessphp` to `wikimedia/less.php`
+    - Due to this switch support has been dropped for `setPreserveComments` & `registerFunction` by the `LessphpFilter`.
 
 
 # Filters Removed:
