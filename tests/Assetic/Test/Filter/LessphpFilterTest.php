@@ -128,20 +128,6 @@ class LessphpFilterTest extends FilterTestCase
     }
 
     /**
-     * @group integration
-     */
-    public function testPreserveCommentsFalse()
-    {
-        $asset = new StringAsset("/* Line 1 */\n.foo { color: green }");
-        $asset->load();
-
-        $this->filter->setPreserveComments(false);
-        $this->filter->filterLoad($asset);
-
-        $this->assertStringNotContainsString('/* Line 1 */', $asset->getContent(), '->setPreserveComments(false)');
-    }
-
-    /**
      * @dataProvider provideImports
      */
     public function testGetChildren($import)
