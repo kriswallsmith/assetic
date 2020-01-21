@@ -1,5 +1,7 @@
 language: php
 
+os: linux
+
 dist: bionic
 
 addons:
@@ -8,8 +10,6 @@ addons:
             - jpegoptim
             - libjpeg-progs
             - optipng
-
-sudo: false
 
 cache:
     directories:
