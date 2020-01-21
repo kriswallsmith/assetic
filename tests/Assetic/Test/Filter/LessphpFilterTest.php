@@ -88,26 +88,6 @@ class LessphpFilterTest extends FilterTestCase
     /**
      * @group integration
      */
-    public function testRegisterFunction()
-    {
-        $asset = new StringAsset('.foo { color: bar(); }');
-        $asset->load();
-
-        $this->filter->registerFunction('bar', function () {
-            return 'red';
-        });
-        $this->filter->filterLoad($asset);
-
-        $expected = new StringAsset('.foo { color: red; }');
-        $expected->load();
-        $this->filter->filterLoad($expected);
-
-        $this->assertEquals($expected->getContent(), $asset->getContent(), 'custom function can be registered');
-    }
-
-    /**
-     * @group integration
-     */
     public function testFormatterLessjs()
     {
         $asset = new StringAsset('.foo { color: green; }');
@@ -145,20 +125,6 @@ class LessphpFilterTest extends FilterTestCase
         $this->filter->filterLoad($asset);
 
         $this->assertStringContainsString('{color:green}', $asset->getContent(), '->setFormatter("classic")');
-    }
-
-    /**
-     * @group integration
-     */
-    public function testPreserveCommentsTrue()
-    {
-        $asset = new StringAsset("/* Line 1 */\n.foo { color: green }");
-        $asset->load();
-
-        $this->filter->setPreserveComments(true);
-        $this->filter->filterLoad($asset);
-
-        $this->assertStringContainsString('/* Line 1 */', $asset->getContent(), '->setPreserveComments(true)');
     }
 
     /**
