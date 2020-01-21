@@ -28,7 +28,6 @@ a simplified tool set of php and javascript based utilities.
 - Switching from `leafo/lessphp` to `wikimedia/less.php`
     - Due to this switch support has been dropped for `setPreserveComments` & `registerFunction` by the `LessphpFilter`.
 
-
 # Filters Removed:
 - Roole | Roole was a language that compiles to CSS, the project is now dead and has been for at least 6 years | Use LESS \ SCSS instead
 
@@ -42,3 +41,4 @@ a simplified tool set of php and javascript based utilities.
 * Removed Gemfile as ruby is no longer in use
 * Replaced SassFilter/ScssFilter with their php alternatives
 * Removed Yui compressor
+* Removed Packager filter as it throws deprecation notices in php7.4

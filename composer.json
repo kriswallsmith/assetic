@@ -44,8 +44,7 @@
         "psr/log": "~1.0",
         "ptachoire/cssembed": "~1.0",
         "symfony/phpunit-bridge": "~2.7|~3.0",
-        "twig/twig": "~2.11",
-        "yfix/packager": "dev-master"
+        "twig/twig": "~2.11"
     },
     "suggest": {
         "twig/twig": "Assetic provides the integration with the Twig templating engine",
