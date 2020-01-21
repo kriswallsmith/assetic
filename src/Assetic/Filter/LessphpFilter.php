@@ -20,8 +20,6 @@ class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $presets = [];
     private $formatter;
-    private $preserveComments;
-    private $customFunctions = [];
     private $options = [
         'compress' => true
     ];
@@ -71,14 +69,6 @@ class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
         $this->formatter = $formatter;
     }
 
-    /**
-     * @param boolean $preserveComments
-     */
-    public function setPreserveComments($preserveComments)
-    {
-        $this->preserveComments = $preserveComments;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
         $lc = new \lessc();
@@ -90,16 +80,8 @@ class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
             $lc->addImportDir($loadPath);
         }
 
-        foreach ($this->customFunctions as $name => $callable) {
-            $lc->registerFunction($name, $callable);
-        }
-
         if ($this->formatter) {
             $lc->setFormatter($this->formatter);
-        }
-
-        if (null !== $this->preserveComments) {
-            $lc->setPreserveComments($this->preserveComments);
         }
 
         if (method_exists($lc, 'setOptions') && count($this->options) > 0 ) {
@@ -107,11 +89,6 @@ class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
-    }
-
-    public function registerFunction($name, $callable)
-    {
-        $this->customFunctions[$name] = $callable;
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
