@@ -14,14 +14,13 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\CssUtils;
-use Leafo\ScssPhp\Compiler;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
  *
  * Scss files are mostly compatible, but there are slight differences.
  *
- * @link http://leafo.net/scssphp/
+ * @link https://scssphp.github.io/scssphp/
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
@@ -46,16 +45,33 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function setFormatter($formatter)
     {
         $legacyFormatters = array(
-            'scss_formatter' => 'Leafo\ScssPhp\Formatter\Expanded',
-            'scss_formatter_nested' => 'Leafo\ScssPhp\Formatter\Nested',
-            'scss_formatter_compressed' => 'Leafo\ScssPhp\Formatter\Compressed',
-            'scss_formatter_crunched' => 'Leafo\ScssPhp\Formatter\Crunched',
+            'scss_formatter' => array(
+                'leafo' => 'Leafo\ScssPhp\Formatter\Expanded',
+                'scssphp' => 'ScssPhp\ScssPhp\Formatter\Expanded'
+            ),
+            'scss_formatter_nested' => array(
+                'leafo' => 'Leafo\ScssPhp\Formatter\Nested',
+                'scssphp' => 'ScssPhp\ScssPhp\Formatter\Nested'
+            ),
+            'scss_formatter_compressed' => array(
+                'leafo' => 'Leafo\ScssPhp\Formatter\Compressed',
+                'scssphp' => 'ScssPhp\ScssPhp\Formatter\Compressed'
+            ),
+            'scss_formatter_crunched' => array(
+                'leafo' => 'Leafo\ScssPhp\Formatter\Crunched',
+                'scssphp' => 'ScssPhp\ScssPhp\Formatter\Crunched'
+            ),
         );
 
         if (isset($legacyFormatters[$formatter])) {
-            @trigger_error(sprintf('The scssphp formatter `%s` is deprecated. Use `%s` instead.', $formatter, $legacyFormatters[$formatter]), E_USER_DEPRECATED);
+            if (class_exists($legacyFormatters[$formatter]['scssphp'])) {
+                $legacyFormatter = $legacyFormatters[$formatter]['scssphp'];
+            } else {
+                $legacyFormatter = $legacyFormatters[$formatter]['leafo'];
+            }
+            @trigger_error(sprintf('The scssphp formatter `%s` is deprecated. Use `%s` instead.', $formatter, $legacyFormatter), E_USER_DEPRECATED);
 
-            $formatter = $legacyFormatters[$formatter];
+            $formatter = $legacyFormatter;
         }
 
         $this->formatter = $formatter;
@@ -88,7 +104,7 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function filterLoad(AssetInterface $asset)
     {
-        $sc = new Compiler();
+        $sc = $this->newCompiler();
 
         if ($this->compass) {
             new \scss_compass($sc);
@@ -123,7 +139,7 @@ class ScssphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        $sc = new Compiler();
+        $sc = $this->newCompiler();
         if ($loadPath !== null) {
             $sc->addImportPath($loadPath);
         }
@@ -143,5 +159,13 @@ class ScssphpFilter implements DependencyExtractorInterface
         }
 
         return $children;
+    }
+
+    protected function newCompiler()
+    {
+        if (class_exists('ScssPhp\ScssPhp\Compiler')) {
+            return new \ScssPhp\ScssPhp\Compiler();
+        }
+        return new \Leafo\ScssPhp\Compiler();
     }
 }
