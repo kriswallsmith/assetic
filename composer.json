@@ -47,9 +47,14 @@
         "twig/twig": "~2.11"
     },
     "suggest": {
-        "twig/twig": "Assetic provides the integration with the Twig templating engine",
-        "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
-        "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor"
+        "wikimedia/less.php": "The Assetic\\Filter\\LessphpFilter requires wikimedia/less.php",
+        "scssphp/scssphp": "The Assetic\\Filter\\ScssphpFilter requires scssphp/scssphp",
+        "meenie/javascript-packer": "The Assetic\\Filter\\PackerFilter requires meenie/javascript-packer",
+        "mrclay/minify": "The Assetic\\Filter\\JSMinFilter requires mrclay/minify",
+        "natxet/cssmin": "The Assetic\\Filter\\CssMinFilter requires natxet/cssmin",
+        "patchwork/jsqueeze": "The Assetic\\Filter\\JSqueezeFilter requires patchwork/jsqueeze",
+        "ptachoire/cssembed": "The Assetic\\Filter\\PhpCssEmbedFilter requires ptachoire/cssembed",
+        "twig/twig": "Assetic provides an integration with the Twig templating engine"
     },
     "replace": {
         "kriswallsmith/assetic": "*"
