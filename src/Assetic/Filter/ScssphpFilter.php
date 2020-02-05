@@ -15,7 +15,7 @@ use ScssPhp\ScssPhp\Compiler;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssFilter extends BaseFilter implements DependencyExtractorInterface
+class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $compass = false;
     private $importPaths = [];

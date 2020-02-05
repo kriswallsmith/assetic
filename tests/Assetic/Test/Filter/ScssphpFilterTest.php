@@ -4,12 +4,12 @@ use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
-use Assetic\Filter\ScssFilter;
+use Assetic\Filter\ScssphpFilter;
 
 /**
  * @group integration
  */
-class ScssFilterTest extends TestCase
+class ScssphpFilterTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -150,7 +150,7 @@ EOF;
 
     private function getFilter($compass = false)
     {
-        $filter = new ScssFilter();
+        $filter = new ScssphpFilter();
 
         if ($compass) {
             $filter->enableCompass();

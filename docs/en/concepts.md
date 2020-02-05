@@ -51,7 +51,7 @@ Compressor to the contents of the asset:
 ```php
 <?php
 
-$scss = new Assetic\Filter\ScssFilter();
+$scss = new Assetic\Filter\ScssphpFilter();
 $asset->ensureFilter($scss);
 ```
 

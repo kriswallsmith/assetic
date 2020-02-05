@@ -49,7 +49,7 @@ $asset = new Assetic\Asset\FileAsset('/path/to/main.css');
 ```php
 <?php
 
-$scss = new Assetic\Filter\ScssFilter();
+$scss = new Assetic\Filter\ScssphpFilter();
 $asset->ensureFilter($scss);
 ```
 
