@@ -58,7 +58,7 @@ class AssetWriter
     {
         foreach (VarUtils::getCombinations($asset->getVars(), $this->values) as $combination) {
             $asset->setValues($combination);
-
+            try {
             static::write(
                 $this->dir.'/'.VarUtils::resolve(
                     $asset->getTargetPath(),
@@ -67,6 +67,12 @@ class AssetWriter
                 ),
                 $asset->dump()
             );
+            } catch ( \Exception $e ) {
+                echo "WRITE ERROR ", $e->getMessage(), "<br />";
+echo "FILE [",__FILE__,"] FUNC [",__FUNCTION__,"] LINE [",__LINE__,"]<br /><textarea style=\"width:100%;height:200px;color:#000;background-color:#fff;\">";
+print_r($asset);
+echo "</textarea><br />";
+            }
         }
     }
 
@@ -75,7 +81,6 @@ class AssetWriter
         if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
             throw new \RuntimeException('Unable to create directory '.$dir);
         }
-
         if (false === @file_put_contents($path, $contents)) {
             throw new \RuntimeException('Unable to write file '.$path);
         }
