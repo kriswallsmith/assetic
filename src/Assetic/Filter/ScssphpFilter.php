@@ -122,9 +122,10 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
         foreach (CssUtils::extractImports($content) as $match) {
             $file = $sc->findImport($match);
             if ($file) {
-                $children[] = $child = $factory->createAsset($file, [], array('root' => $loadPath));
+                $children[] = $child = $factory->createAsset($file, [], ['root' => $loadPath]);
                 $child->load();
-                $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
+                $childLoadPath = $child->all()[0]->getSourceDirectory();
+                $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $childLoadPath));
             }
         }
 
