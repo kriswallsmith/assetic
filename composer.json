@@ -61,7 +61,10 @@
     },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
-        "files": [ "src/functions.php" ]
+        "files": [
+            "src/functions.php",
+            "src/aliasing.php"
+        ]
     },
     "config": {
         "bin-dir": "bin"
