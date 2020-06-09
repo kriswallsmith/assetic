@@ -51,6 +51,7 @@ class CssRewriteFilterTest extends TestCase
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/bar.gif', 'http://foo.com/bar.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '/images/foo.gif', '/images/foo.gif'),
             array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', 'http://foo.com/images/foo.gif', 'http://foo.com/images/foo.gif'),
+            array('body { background: url(%s); }', 'css/body.css', 'css/build/main.css', '#foobar', '#foobar'),
 
             // IE AlphaImageLoader filter
             array('.fix { filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'%s\'); }', 'css/ie.css', 'css/build/ie.css', '../images/fix.png', '../../images/fix.png'),
