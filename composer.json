@@ -1,8 +1,8 @@
 {
     "name": "assetic/framework",
     "description": "Asset Management for PHP",
-    "keywords": [ "assets", "compression", "minification" ],
-    "homepage": "https://github.com/JaxWilko/assetic",
+    "keywords": ["assets", "compression", "minification"],
+    "homepage": "https://github.com/assetic-php/assetic",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -55,6 +55,9 @@
         "patchwork/jsqueeze": "The Assetic\\Filter\\JSqueezeFilter requires patchwork/jsqueeze",
         "ptachoire/cssembed": "The Assetic\\Filter\\PhpCssEmbedFilter requires ptachoire/cssembed",
         "twig/twig": "Assetic provides an integration with the Twig templating engine"
+    },
+    "replace": {
+        "kriswallsmith/assetic": "*"
     },
     "replace": {
         "kriswallsmith/assetic": "*"
