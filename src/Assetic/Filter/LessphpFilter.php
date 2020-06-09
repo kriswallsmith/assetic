@@ -1,44 +1,35 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\LessUtils;
 
 /**
- * Loads LESS files using the PHP implementation of less, lessphp.
+ * Loads LESS files using the PHP implementation of less, less.php.
  *
  * Less files are mostly compatible, but there are slight differences.
  *
- * @link http://leafo.net/lessphp/
+ * @link https://github.com/wikimedia/less.php
  *
  * @author David Buchmann <david@liip.ch>
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
+ * @author Jack Wilkinson <me@jackwilky.com>
  */
-class LessphpFilter implements DependencyExtractorInterface
+class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
-    private $presets = array();
+    private $presets = [];
     private $formatter;
-    private $preserveComments;
-    private $customFunctions = array();
-    private $options = array();
+    private $options = [
+        'compress' => true
+    ];
 
     /**
      * Lessphp Load Paths
      *
      * @var array
      */
-    protected $loadPaths = array();
+    protected $loadPaths = [];
 
     /**
      * Adds a load path to the paths used by lessphp
@@ -64,7 +55,7 @@ class LessphpFilter implements DependencyExtractorInterface
     {
         $this->presets = $presets;
     }
-    
+
     public function setOptions(array $options)
     {
     	$this->options = $options;
@@ -78,14 +69,6 @@ class LessphpFilter implements DependencyExtractorInterface
         $this->formatter = $formatter;
     }
 
-    /**
-     * @param boolean $preserveComments
-     */
-    public function setPreserveComments($preserveComments)
-    {
-        $this->preserveComments = $preserveComments;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
         $lc = new \lessc();
@@ -97,32 +80,15 @@ class LessphpFilter implements DependencyExtractorInterface
             $lc->addImportDir($loadPath);
         }
 
-        foreach ($this->customFunctions as $name => $callable) {
-            $lc->registerFunction($name, $callable);
-        }
-
         if ($this->formatter) {
             $lc->setFormatter($this->formatter);
         }
 
-        if (null !== $this->preserveComments) {
-            $lc->setPreserveComments($this->preserveComments);
-        }
-        
         if (method_exists($lc, 'setOptions') && count($this->options) > 0 ) {
         	$lc->setOptions($this->options);
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
-    }
-
-    public function registerFunction($name, $callable)
-    {
-        $this->customFunctions[$name] = $callable;
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
@@ -133,10 +99,10 @@ class LessphpFilter implements DependencyExtractorInterface
         }
 
         if (empty($loadPaths)) {
-            return array();
+            return [];
         }
 
-        $children = array();
+        $children = [];
         foreach (LessUtils::extractImports($content) as $reference) {
             if ('.css' === substr($reference, -4)) {
                 // skip normal css imports
@@ -150,7 +116,7 @@ class LessphpFilter implements DependencyExtractorInterface
 
             foreach ($loadPaths as $loadPath) {
                 if (file_exists($file = $loadPath.'/'.$reference)) {
-                    $coll = $factory->createAsset($file, array(), array('root' => $loadPath));
+                    $coll = $factory->createAsset($file, [], array('root' => $loadPath));
                     foreach ($coll as $leaf) {
                         $leaf->ensureFilter($this);
                         $children[] = $leaf;

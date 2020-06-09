@@ -1,27 +1,17 @@
-<?php
+<?php namespace Assetic\Test\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssRewriteFilter;
 
-class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
+class CssRewriteFilterTest extends TestCase
 {
     /**
      * @dataProvider provideUrls
      */
     public function testUrls($format, $sourcePath, $targetPath, $inputUrl, $expectedUrl)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl), array(), null, $sourcePath);
+        $asset = new StringAsset(sprintf($format, $inputUrl), [], null, $sourcePath);
         $asset->setTargetPath($targetPath);
         $asset->load();
 
@@ -72,7 +62,7 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testMultipleUrls($format, $sourcePath, $targetPath, $inputUrl1, $inputUrl2, $expectedUrl1, $expectedUrl2)
     {
-        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2), array(), null, $sourcePath);
+        $asset = new StringAsset(sprintf($format, $inputUrl1, $inputUrl2), [], null, $sourcePath);
         $asset->setTargetPath($targetPath);
         $asset->load();
 
@@ -115,37 +105,37 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testExternalSource()
     {
-        $asset = new StringAsset('body { background: url(../images/bg.gif); }', array(), 'http://www.example.com', 'css/main.css');
+        $asset = new StringAsset('body { background: url(../images/bg.gif); }', [], 'http://www.example.com', 'css/main.css');
         $asset->setTargetPath('css/packed/main.css');
         $asset->load();
 
         $filter = new CssRewriteFilter();
         $filter->filterDump($asset);
 
-        $this->assertContains('http://www.example.com/images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
+        $this->assertStringContainsString('http://www.example.com/images/bg.gif', $asset->getContent(), '->filterDump() rewrites references in external stylesheets');
     }
 
     public function testEmptySrcAttributeSelector()
     {
-        $asset = new StringAsset('img[src=""] { border: red; }', array(), 'http://www.example.com', 'css/main.css');
+        $asset = new StringAsset('img[src=""] { border: red; }', [], 'http://www.example.com', 'css/main.css');
         $asset->setTargetPath('css/packed/main.css');
         $asset->load();
 
         $filter = new CssRewriteFilter();
         $filter->filterDump($asset);
 
-        // no error is thrown
+        $this->assertEquals('img[src=""] { border: red; }', $asset->getContent());
     }
 
     public function testEmptyUrl()
     {
-        $asset = new StringAsset('body { background: url(); }', array(), 'http://www.example.com', 'css/main.css');
+        $asset = new StringAsset('body { background: url(); }', [], 'http://www.example.com', 'css/main.css');
         $asset->setTargetPath('css/packed/main.css');
         $asset->load();
 
         $filter = new CssRewriteFilter();
         $filter->filterDump($asset);
 
-        // no error is thrown
+        $this->assertEquals('body { background: url(); }', $asset->getContent());
     }
 }

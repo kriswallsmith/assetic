@@ -1,18 +1,8 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset;
+<?php namespace Assetic\Asset;
 
 use Assetic\Filter\FilterCollection;
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * A base abstract asset.
@@ -42,7 +32,7 @@ abstract class BaseAsset implements AssetInterface
      * @param string $sourcePath The asset path
      * @param array  $vars
      */
-    public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
+    public function __construct($filters = [], $sourceRoot = null, $sourcePath = null, array $vars = [])
     {
         $this->filters = new FilterCollection($filters);
         $this->sourceRoot = $sourceRoot;
@@ -51,7 +41,7 @@ abstract class BaseAsset implements AssetInterface
             $this->sourceDir = dirname("$sourceRoot/$sourcePath");
         }
         $this->vars = $vars;
-        $this->values = array();
+        $this->values = [];
         $this->loaded = false;
     }
 

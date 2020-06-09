@@ -1,19 +1,9 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Factory\Loader;
+<?php namespace Assetic\Factory\Loader;
 
 use Assetic\Cache\ConfigCache;
-use Assetic\Factory\Resource\IteratorResourceInterface;
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Resource\IteratorResourceInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
 
 /**
  * Adds a caching layer to a loader.
@@ -51,7 +41,7 @@ class CachedFormulaLoader implements FormulaLoaderInterface
             $resources = array($resources);
         }
 
-        $formulae = array();
+        $formulae = [];
 
         foreach ($resources as $resource) {
             $id = (string) $resource;

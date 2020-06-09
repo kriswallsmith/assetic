@@ -1,16 +1,6 @@
-<?php
+<?php namespace Assetic\Test\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
@@ -19,12 +9,12 @@ use Assetic\Filter\ScssphpFilter;
 /**
  * @group integration
  */
-class ScssphpFilterTest extends \PHPUnit_Framework_TestCase
+class ScssphpFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
-        if (!class_exists('Leafo\ScssPhp\Compiler')) {
-            $this->markTestSkipped('leafo/scssphp is not installed');
+        if (!class_exists('ScssPhp\ScssPhp\Compiler')) {
+            $this->markTestSkipped('scssphp/scssphp is not installed');
         }
     }
 
@@ -63,44 +53,6 @@ EOF;
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');
     }
 
-    public function testCompassExtensionCanBeEnabled()
-    {
-        if (!class_exists('scss_compass')) {
-            $this->markTestSkipped('leafo/scssphp-compass is not installed');
-        }
-
-        $expected = <<<EOF
-.shadow {
-  -webkit-box-shadow: 10px 10px 8px red;
-  -moz-box-shadow: 10px 10px 8px red;
-  box-shadow: 10px 10px 8px red; }
-
-EOF;
-
-        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
-        $asset->load();
-
-        $this->getFilter(true)->filterLoad($asset);
-        $this->assertEquals(
-            $expected,
-            $asset->getContent(),
-            'compass plugin can be enabled'
-        );
-    }
-
-    public function testCompassExtensionCanBeDisabled()
-    {
-        $this->setExpectedExceptionRegExp(
-            'Exception',
-            '/^Undefined mixin box-shadow:.*line:* 4$/'
-        );
-
-        $asset = new FileAsset(__DIR__.'/fixtures/sass/main_compass.scss');
-        $asset->load();
-
-        $this->getFilter(false)->filterLoad($asset);
-    }
-
     public function testSetImportPath()
     {
         $filter = $this->getFilter();
@@ -110,7 +62,7 @@ EOF;
         $asset->load();
         $filter->filterLoad($asset);
 
-        $this->assertContains('color: red', $asset->getContent(), 'Import paths are correctly used');
+        $this->assertStringContainsString('color: red', $asset->getContent(), 'Import paths are correctly used');
     }
 
     public function testRegisterFunction()
@@ -122,7 +74,7 @@ EOF;
         $filter->registerFunction('bar',function () { return 'red';});
         $filter->filterLoad($asset);
 
-        $this->assertContains('color: red', $asset->getContent(), 'custom function can be registered');
+        $this->assertStringContainsString('color: red', $asset->getContent(), 'custom function can be registered');
     }
 
     public function testSetFormatter()
@@ -131,7 +83,7 @@ EOF;
         $actual->load();
 
         $filter = $this->getFilter();
-        $filter->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+        $filter->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
         $filter->filterLoad($actual);
 
         $this->assertRegExp(
@@ -191,7 +143,7 @@ EOF;
         $asset->load();
         $filter->filterLoad($asset);
 
-        $this->assertContains('color: red', $asset->getContent(), 'Variables can be added');
+        $this->assertStringContainsString('color: red', $asset->getContent(), 'Variables can be added');
     }
 
     // private

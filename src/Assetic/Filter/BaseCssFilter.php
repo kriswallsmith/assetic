@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
+<?php namespace Assetic\Filter;
 
 use Assetic\Util\CssUtils;
 
@@ -18,7 +7,7 @@ use Assetic\Util\CssUtils;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCssFilter implements FilterInterface
+abstract class BaseCssFilter extends BaseFilter
 {
     /**
      * @see CssUtils::filterReferences()

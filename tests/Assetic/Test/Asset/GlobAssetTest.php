@@ -1,25 +1,16 @@
-<?php
+<?php namespace Assetic\Test\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Asset;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\GlobAsset;
 use Assetic\Util\VarUtils;
 
-class GlobAssetTest extends \PHPUnit_Framework_TestCase
+class GlobAssetTest extends TestCase
 {
     public function testInterface()
     {
         $asset = new GlobAsset(__DIR__.'/*.php');
-        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
+        $this->assertInstanceOf(AssetInterface::class, $asset, 'Asset implements AssetInterface');
     }
 
     public function testIteration()
@@ -37,7 +28,7 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
     public function testGetLastModifiedType()
     {
         $assets = new GlobAsset(__DIR__.'/*.php');
-        $this->assertInternalType('integer', $assets->getLastModified(), '->getLastModified() returns an integer');
+        $this->assertIsInt($assets->getLastModified(), '->getLastModified() returns an integer');
     }
 
     public function testGetLastModifiedValue()
@@ -62,13 +53,13 @@ class GlobAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testVariableInPath()
     {
-        $globasset = new GlobAsset(__DIR__.'/*.php', array(), null, array('testvar'));
+        $globasset = new GlobAsset(__DIR__.'/*.php', [], null, array('testvar'));
         $globasset->setTargetPath('{testvar}_*.php');
         $globasset->setValues(array('testvar' => 'works'));
 
         foreach ($globasset as $asset) {
             $target = VarUtils::resolve($asset->getTargetPath(), $asset->getVars(), $asset->getValues());
-            $this->assertContains('works', $target);
+            $this->assertStringContainsString('works', $target);
         }
     }
 }

@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
 
@@ -27,6 +16,7 @@ class UglifyJsFilter extends BaseNodeFilter
     private $nodeBin;
 
     private $noCopyright;
+    private $comments;
     private $beautify;
     private $unsafe;
     private $mangle;
@@ -49,6 +39,15 @@ class UglifyJsFilter extends BaseNodeFilter
     public function setNoCopyright($noCopyright)
     {
         $this->noCopyright = $noCopyright;
+    }
+
+    /**
+     * Allow comments
+     * @param mixed $comments True to enable all comments
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
     }
 
     /**
@@ -84,56 +83,54 @@ class UglifyJsFilter extends BaseNodeFilter
     }
 
     /**
-     * @see Assetic\Filter\FilterInterface::filterLoad()
-     */
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
-    /**
      * Run the asset through UglifyJs
      *
      * @see Assetic\Filter\FilterInterface::filterDump()
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(
-            $this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
-        );
+            : array($this->uglifyjsBin);
 
         if ($this->noCopyright) {
-            $pb->add('--no-copyright');
+            $args[] = '--no-copyright';
+        }
+
+        if ($this->comments) {
+            $args[] = '--comments';
+            $args[] = true === $this->comments ? 'all' : $this->comments;
         }
 
         if ($this->beautify) {
-            $pb->add('--beautify');
+            $args[] = '--beautify';
         }
 
         if ($this->unsafe) {
-            $pb->add('--unsafe');
+            $args[] = '--unsafe';
         }
 
         if (false === $this->mangle) {
-            $pb->add('--no-mangle');
+            $args[] = '--no-mangle';
         }
 
         if ($this->defines) {
             foreach ($this->defines as $define) {
-                $pb->add('-d')->add($define);
+                $args[] = '-d';
+                $args[] = $define;
             }
         }
 
         // input and output files
-        $input  = FilesystemUtils::createTemporaryFile('uglifyjs_in');
+        $input  = FilesystemUtils::createTemporaryFile('uglifyjs_in', $asset->getContent());
         $output = FilesystemUtils::createTemporaryFile('uglifyjs_out');
 
-        file_put_contents($input, $asset->getContent());
-        $pb->add('-o')->add($output)->add($input);
+        $args[] = '-o';
+        $args[] = $output;
+        $args[] = $input;
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $process = $this->createProcess($args);
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
@@ -145,7 +142,7 @@ class UglifyJsFilter extends BaseNodeFilter
                 throw new \RuntimeException('Path to node executable could not be resolved.');
             }
 
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
         if (!file_exists($output)) {

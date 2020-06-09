@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Inserts a separator between assets to prevent merge failures
@@ -19,7 +8,7 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
  */
-class SeparatorFilter implements FilterInterface
+class SeparatorFilter extends BaseFilter
 {
     /**
      * @var string
@@ -34,10 +23,6 @@ class SeparatorFilter implements FilterInterface
     public function __construct($separator = ';')
     {
         $this->separator = $separator;
-    }
-
-    public function filterLoad(AssetInterface $asset)
-    {
     }
 
     public function filterDump(AssetInterface $asset)

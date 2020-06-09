@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Util;
+<?php namespace Assetic\Util;
 
 /**
  * Filesystem utilities.
@@ -59,24 +48,36 @@ class FilesystemUtils
      */
     public static function createThrowAwayDirectory($prefix)
     {
-        $directory = self::getTemporaryDirectory().DIRECTORY_SEPARATOR.uniqid('assetic_'.$prefix);
+        $directory = static::getTemporaryDirectory() . DIRECTORY_SEPARATOR . uniqid('assetic_' . $prefix);
         mkdir($directory);
 
         return $directory;
     }
 
     /**
-     * Creates a temporary file.
+     * Creates a temporary file and optionally writes to it.
      *
      * @param string $prefix A prefix for the file name
+     * @param string|null $contents Contents to be written to the file, optional
      *
      * @return string The file path
      */
-    public static function createTemporaryFile($prefix)
+    public static function createTemporaryFile($prefix, $contents = null)
     {
-        return tempnam(self::getTemporaryDirectory(), 'assetic_'.$prefix);
+        $tmpFile = tempnam(static::getTemporaryDirectory(), 'assetic_' . $prefix);
+
+        if (!is_null($contents)) {
+            file_put_contents($tmpFile, $contents);
+        }
+
+        return $tmpFile;
     }
 
+    /**
+     * Gets the path to the temporary directory
+     *
+     * @return string
+     */
     public static function getTemporaryDirectory()
     {
         return realpath(sys_get_temp_dir());

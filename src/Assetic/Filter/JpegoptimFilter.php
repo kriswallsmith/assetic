@@ -1,41 +1,40 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through Jpegoptim.
  *
  * @link   http://www.kokkonen.net/tjko/projects.html
+ * @link   https://www.systutorials.com/docs/linux/man/1-jpegoptim/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
 class JpegoptimFilter extends BaseProcessFilter
 {
-    private $jpegoptimBin;
-    private $stripAll;
-    private $max;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/jpegoptim';
 
     /**
-     * Constructor.
-     *
-     * @param string $jpegoptimBin Path to the jpegoptim binary
+     * @var bool Flag to indicate that the process will output the result to the input file
      */
-    public function __construct($jpegoptimBin = '/usr/bin/jpegoptim')
-    {
-        $this->jpegoptimBin = $jpegoptimBin;
-    }
+    protected $useInputAsOutput = true;
+
+    /*
+     * Filter Options
+     */
+
+    /**
+     * @var boolean Strip all markers from the output
+     */
+    private $stripAll;
+
+    /**
+     * @var integer Maximum image quality factor
+     */
+    private $max;
 
     public function setStripAll($stripAll)
     {
@@ -47,35 +46,28 @@ class JpegoptimFilter extends BaseProcessFilter
         $this->max = $max;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->jpegoptimBin));
+        $args = [];
 
         if ($this->stripAll) {
-            $pb->add('--strip-all');
+            $args[] = '--strip-all';
         }
 
         if ($this->max) {
-            $pb->add('--max='.$this->max);
+            $args[] = '--max=' . $this->max;
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('jpegoptim'));
-        file_put_contents($input, $asset->getContent());
+        $args[] = '{INPUT}';
 
-        $proc = $pb->getProcess();
-        $proc->run();
+        // Run the filter
+        $result = $this->runProcess($asset->getContent(), $args);
 
-        if (false !== strpos($proc->getOutput(), 'ERROR')) {
-            unlink($input);
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+        // Check for any issues
+        if (strpos($result, 'ERROR') !== false) {
+            throw FilterException::fromProcess($this->getProcess())->setInput($asset->getContent());
         }
 
-        $asset->setContent(file_get_contents($input));
-
-        unlink($input);
+        $asset->setContent($result);
     }
 }

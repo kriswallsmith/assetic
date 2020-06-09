@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Manages assets.
@@ -20,7 +9,7 @@ use Assetic\Asset\AssetInterface;
  */
 class AssetManager
 {
-    private $assets = array();
+    private $assets = [];
 
     /**
      * Gets an asset by name.
@@ -84,6 +73,6 @@ class AssetManager
      */
     public function clear()
     {
-        $this->assets = array();
+        $this->assets = [];
     }
 }

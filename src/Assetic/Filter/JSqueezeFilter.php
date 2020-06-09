@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * JSqueeze filter.
@@ -19,7 +8,7 @@ use Assetic\Asset\AssetInterface;
  * @link https://github.com/nicolas-grekas/JSqueeze
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class JSqueezeFilter implements FilterInterface
+class JSqueezeFilter extends BaseFilter
 {
     private $singleLine = true;
     private $keepImportantComments = true;
@@ -58,10 +47,6 @@ class JSqueezeFilter implements FilterInterface
     public function keepImportantComments($bool)
     {
         $this->keepImportantComments = (bool) $bool;
-    }
-
-    public function filterLoad(AssetInterface $asset)
-    {
     }
 
     public function filterDump(AssetInterface $asset)

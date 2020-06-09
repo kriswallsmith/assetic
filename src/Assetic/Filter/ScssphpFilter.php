@@ -1,20 +1,10 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\CssUtils;
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
@@ -25,13 +15,13 @@ use Leafo\ScssPhp\Compiler;
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssphpFilter implements DependencyExtractorInterface
+class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
 {
     private $compass = false;
-    private $importPaths = array();
-    private $customFunctions = array();
+    private $importPaths = [];
+    private $customFunctions = [];
     private $formatter;
-    private $variables = array();
+    private $variables = [];
 
     public function enableCompass($enable = true)
     {
@@ -46,10 +36,10 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function setFormatter($formatter)
     {
         $legacyFormatters = array(
-            'scss_formatter' => 'Leafo\ScssPhp\Formatter\Expanded',
-            'scss_formatter_nested' => 'Leafo\ScssPhp\Formatter\Nested',
-            'scss_formatter_compressed' => 'Leafo\ScssPhp\Formatter\Compressed',
-            'scss_formatter_crunched' => 'Leafo\ScssPhp\Formatter\Crunched',
+            'scss_formatter' => 'ScssPhp\ScssPhp\Formatter\Expanded',
+            'scss_formatter_nested' => 'ScssPhp\ScssPhp\Formatter\Nested',
+            'scss_formatter_compressed' => 'ScssPhp\ScssPhp\Formatter\Compressed',
+            'scss_formatter_crunched' => 'ScssPhp\ScssPhp\Formatter\Crunched',
         );
 
         if (isset($legacyFormatters[$formatter])) {
@@ -117,10 +107,6 @@ class ScssphpFilter implements DependencyExtractorInterface
         $asset->setContent($sc->compile($asset->getContent()));
     }
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
-
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         $sc = new Compiler();
@@ -132,13 +118,14 @@ class ScssphpFilter implements DependencyExtractorInterface
             $sc->addImportPath($path);
         }
 
-        $children = array();
+        $children = [];
         foreach (CssUtils::extractImports($content) as $match) {
             $file = $sc->findImport($match);
             if ($file) {
-                $children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));
+                $children[] = $child = $factory->createAsset($file, [], ['root' => $loadPath]);
                 $child->load();
-                $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
+                $childLoadPath = $child->all()[0]->getSourceDirectory();
+                $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $childLoadPath));
             }
         }
 

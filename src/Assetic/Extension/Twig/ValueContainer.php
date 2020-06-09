@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Extension\Twig;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Extension\Twig;
-
-use Assetic\ValueSupplierInterface;
+use Assetic\Contracts\ValueSupplierInterface;
 
 /**
  * Container for values initialized lazily from a ValueSupplierInterface.

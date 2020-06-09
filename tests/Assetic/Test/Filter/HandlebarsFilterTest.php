@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
+<?php namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
@@ -22,7 +11,7 @@ class HandlebarsFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $handlebarsBin = $this->findExecutable('handlebars', 'HANDLEBARS_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -34,7 +23,7 @@ class HandlebarsFilterTest extends FilterTestCase
         $this->filter = new HandlebarsFilter($handlebarsBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }
@@ -46,8 +35,8 @@ class HandlebarsFilterTest extends FilterTestCase
 
         $this->filter->filterLoad($asset);
 
-        $this->assertNotContains('{{ var }}', $asset->getContent());
-        $this->assertContains('(function() {', $asset->getContent());
+        $this->assertStringNotContainsString('{{ var }}', $asset->getContent());
+        $this->assertStringContainsString('(function() {', $asset->getContent());
     }
 
     public function testSimpleHandlebars()
@@ -58,8 +47,8 @@ class HandlebarsFilterTest extends FilterTestCase
         $this->filter->setSimple(true);
         $this->filter->filterLoad($asset);
 
-        $this->assertNotContains('{{ var }}', $asset->getContent());
-        $this->assertNotContains('(function() {', $asset->getContent());
+        $this->assertStringNotContainsString('{{ var }}', $asset->getContent());
+        $this->assertStringNotContainsString('(function() {', $asset->getContent());
     }
 
     public function testMinimizeHandlebars()
@@ -70,18 +59,18 @@ class HandlebarsFilterTest extends FilterTestCase
         $this->filter->setMinimize(true);
         $this->filter->filterLoad($asset);
 
-        $this->assertNotContains('{{ var }}', $asset->getContent());
-        $this->assertNotContains("\n", $asset->getContent());
+        $this->assertStringNotContainsString('{{ var }}', $asset->getContent());
+        $this->assertStringNotContainsString("\n", $asset->getContent());
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testStringAssset()
     {
         $asset = new StringAsset(file_get_contents(__DIR__.'/fixtures/handlebars/template.handlebars'));
         $asset->load();
 
         $this->filter->filterLoad($asset);
+
+        $this->assertStringNotContainsString('{{ var }}', $asset->getContent());
+        $this->assertStringContainsString('(function() {', $asset->getContent());
     }
 }

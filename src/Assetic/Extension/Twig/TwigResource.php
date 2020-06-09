@@ -1,17 +1,8 @@
-<?php
+<?php namespace Assetic\Extension\Twig;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Extension\Twig;
-
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
+use Twig\Loader\LoaderInterface;
+use Twig\Error\LoaderError;
 
 /**
  * A Twig template resource.
@@ -23,7 +14,7 @@ class TwigResource implements ResourceInterface
     private $loader;
     private $name;
 
-    public function __construct(\Twig_LoaderInterface $loader, $name)
+    public function __construct(LoaderInterface $loader, $name)
     {
         $this->loader = $loader;
         $this->name = $name;
@@ -35,7 +26,7 @@ class TwigResource implements ResourceInterface
             return method_exists($this->loader, 'getSourceContext')
                 ? $this->loader->getSourceContext($this->name)->getCode()
                 : $this->loader->getSource($this->name);
-        } catch (\Twig_Error_Loader $e) {
+        } catch (LoaderError $e) {
             return '';
         }
     }
@@ -44,7 +35,7 @@ class TwigResource implements ResourceInterface
     {
         try {
             return $this->loader->isFresh($this->name, $timestamp);
-        } catch (\Twig_Error_Loader $e) {
+        } catch (LoaderError $e) {
             return false;
         }
     }

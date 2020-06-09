@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset;
-
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Util\VarUtils;
 
 /**
@@ -34,7 +23,7 @@ class HttpAsset extends BaseAsset
      *
      * @throws \InvalidArgumentException If the first argument is not an URL
      */
-    public function __construct($sourceUrl, $filters = array(), $ignoreErrors = false, array $vars = array())
+    public function __construct($sourceUrl, $filters = [], $ignoreErrors = false, array $vars = [])
     {
         if (0 === strpos($sourceUrl, '//')) {
             $sourceUrl = 'http:'.$sourceUrl;

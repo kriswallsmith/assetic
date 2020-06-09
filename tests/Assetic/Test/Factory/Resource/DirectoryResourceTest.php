@@ -1,19 +1,10 @@
-<?php
+<?php namespace Assetic\Test\Factory\Resource;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Factory\Resource;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Factory\Resource\DirectoryResource;
 
-class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
+class DirectoryResourceTest extends TestCase
 {
     public function testIsFresh()
     {
@@ -30,7 +21,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $resource = new DirectoryResource(__DIR__, $pattern);
         $content = $resource->getContent();
 
-        $this->assertInternalType('string', $content);
+        $this->assertIsString($content);
     }
 
     public function getPatterns()
@@ -52,7 +43,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $count = 0;
         foreach ($resource as $r) {
             ++$count;
-            $this->assertInstanceOf('Assetic\\Factory\\Resource\\ResourceInterface', $r);
+            $this->assertInstanceOf(ResourceInterface::class, $r);
         }
 
         if ($empty) {
@@ -123,7 +114,7 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(7, $count);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (is_dir(__DIR__.'/Fixtures/dir3') && is_link(__DIR__.'/Fixtures/dir3')) {
             if (defined('PHP_WINDOWS_VERSION_MAJOR')) {

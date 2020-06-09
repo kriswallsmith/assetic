@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset;
-
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * Represents a string asset.
@@ -31,7 +20,7 @@ class StringAsset extends BaseAsset
      * @param string $sourceRoot The source asset root directory
      * @param string $sourcePath The source asset path
      */
-    public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null)
+    public function __construct($content, $filters = [], $sourceRoot = null, $sourcePath = null)
     {
         $this->string = $content;
 

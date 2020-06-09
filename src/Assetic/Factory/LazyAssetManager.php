@@ -1,20 +1,9 @@
-<?php
+<?php namespace Assetic\Factory;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Factory;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\AssetManager;
-use Assetic\Factory\Loader\FormulaLoaderInterface;
-use Assetic\Factory\Resource\ResourceInterface;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 
 /**
  * A lazy asset manager is a composition of a factory and many formula loaders.
@@ -36,12 +25,12 @@ class LazyAssetManager extends AssetManager
      * @param AssetFactory $factory The asset factory
      * @param array        $loaders An array of loaders indexed by alias
      */
-    public function __construct(AssetFactory $factory, $loaders = array())
+    public function __construct(AssetFactory $factory, $loaders = [])
     {
         $this->factory = $factory;
-        $this->loaders = array();
-        $this->resources = array();
-        $this->formulae = array();
+        $this->loaders = [];
+        $this->resources = [];
+        $this->formulae = [];
         $this->loaded = false;
         $this->loading = false;
 
@@ -81,7 +70,7 @@ class LazyAssetManager extends AssetManager
      */
     public function getResources()
     {
-        $resources = array();
+        $resources = [];
         foreach ($this->resources as $r) {
             $resources = array_merge($resources, $r);
         }

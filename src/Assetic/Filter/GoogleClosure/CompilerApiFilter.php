@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter\GoogleClosure;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter\GoogleClosure;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Filter for the Google Closure Compiler API.
@@ -21,6 +10,8 @@ use Assetic\Asset\AssetInterface;
  */
 class CompilerApiFilter extends BaseCompilerFilter
 {
+    const CLOSURE_COMPILER_API = 'https://closure-compiler.appspot.com/compile';
+
     private $proxy;
     private $proxyFullUri;
 
@@ -89,14 +80,14 @@ class CompilerApiFilter extends BaseCompilerFilter
             }
             $context = stream_context_create($contextOptions);
 
-            $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
+            $response = file_get_contents(static::CLOSURE_COMPILER_API, false, $context);
             $data = json_decode($response);
         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
-            $ch = curl_init('http://closure-compiler.appspot.com/compile');
+            $ch = curl_init(static::CLOSURE_COMPILER_API);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded'));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($query));
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
             if (null !== $this->timeout) {
                 curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);

@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
+<?php namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\JpegoptimFilter;
@@ -21,7 +10,7 @@ class JpegoptimFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$jpegoptimBin = $this->findExecutable('jpegoptim', 'JPEGOPTIM_BIN')) {
             $this->markTestSkipped('Unable to find `jpegoptim` executable.');
@@ -30,7 +19,7 @@ class JpegoptimFilterTest extends FilterTestCase
         $this->filter = new JpegoptimFilter($jpegoptimBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }

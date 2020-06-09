@@ -1,19 +1,41 @@
 {
-  "devDependencies": {
-    "uglifycss": "*",
-    "coffee-script": "*",
-    "stylus": "*",
-    "nib": "*",
-    "ember-precompile": "*",
-    "typescript": "*",
-    "less": "*",
-    "handlebars": "*",
-    "uglify-js": "*",
+  "name": "assetic",
+  "version": "1.0.0",
+  "description": "Asset Management for PHP",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
     "autoprefixer": "*",
     "autoprefixer-5": "^1.x",
     "autoprefixer-cli": "*",
-    "roole": "*",
+    "clean-css": "^4.2.1",
+    "coffee-script": "*",
+    "handlebars": "*",
+    "jpegtran": "^1.0.6",
+    "less": "^3.9.0",
+    "nib": "*",
+    "pngout": "^1.0.0",
     "react-tools": "*",
-    "clean-css": "*"
-  }
+    "roole": "*",
+    "stylus": "*",
+    "typescript": "*",
+    "uglify-js": "*",
+    "uglifycss": "*"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/assetic-php/assetic.git"
+  },
+  "keywords": [
+    "php7"
+  ],
+  "author": "JaxWilko <me@jackwilky.com>",
+  "license": "SEE LICENSE IN LICENCE",
+  "bugs": {
+    "url": "https://github.com/assetic-php/assetic/issues"
+  },
+  "homepage": "https://github.com/assetic-php/assetic#readme"
 }

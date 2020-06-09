@@ -1,34 +1,27 @@
-<?php
+<?php namespace Assetic\Test\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CallablesFilter;
 use Assetic\Factory\AssetFactory;
 
-class CallablesFilterTest extends \PHPUnit_Framework_TestCase
+class CallablesFilterTest extends TestCase
 {
     public function testInterface()
     {
         $filter = new CallablesFilter();
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'CallablesFilter implements FilterInterface');
-        $this->assertInstanceOf('Assetic\\Filter\\DependencyExtractorInterface', $filter, 'CallablesFilter implements DependencyExtractorInterface');
+        $this->assertInstanceOf(FilterInterface::class, $filter, 'CallablesFilter implements FilterInterface');
+        $this->assertInstanceOf(DependencyExtractorInterface::class, $filter, 'CallablesFilter implements DependencyExtractorInterface');
     }
 
     public function testLoader()
     {
         $nb = 0;
         $filter = new CallablesFilter(function ($asset) use (&$nb) { $nb++; });
-        $filter->filterLoad($this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock());
+        $filter->filterLoad($this->getMockBuilder(AssetInterface::class)->getMock());
         $this->assertEquals(1, $nb, '->filterLoad() calls the loader callable');
     }
 
@@ -36,7 +29,7 @@ class CallablesFilterTest extends \PHPUnit_Framework_TestCase
     {
         $nb = 0;
         $filter = new CallablesFilter(null, function ($asset) use (&$nb) { $nb++; });
-        $filter->filterDump($this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock());
+        $filter->filterDump($this->getMockBuilder(AssetInterface::class)->getMock());
         $this->assertEquals(1, $nb, '->filterDump() calls the loader callable');
     }
 
@@ -64,6 +57,6 @@ class CallablesFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $nb, '->getChildren() calls the extractor callable');
 
         $filter = new CallablesFilter();
-        $this->assertEquals(array(), $filter->getChildren($assetFactoryMock, 'ignored', 'ignored'), '-> without an extractor callable, the filter just returns an empty array (of assets)');
+        $this->assertEquals([], $filter->getChildren($assetFactoryMock, 'ignored', 'ignored'), '-> without an extractor callable, the filter just returns an empty array (of assets)');
     }
 }

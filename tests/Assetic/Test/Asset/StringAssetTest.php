@@ -1,29 +1,21 @@
-<?php
+<?php namespace Assetic\Test\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Asset;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\StringAsset;
 
-class StringAssetTest extends \PHPUnit_Framework_TestCase
+class StringAssetTest extends TestCase
 {
     public function testInterface()
     {
         $asset = new StringAsset('');
-        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
+        $this->assertInstanceOf(AssetInterface::class, $asset, 'Asset implements AssetInterface');
     }
 
     public function testLoadAppliesFilters()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())->method('filterLoad');
 
         $asset = new StringAsset('foo', array($filter));
@@ -32,7 +24,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testAutomaticLoad()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())->method('filterLoad');
 
         $asset = new StringAsset('foo', array($filter));
@@ -42,7 +34,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
     public function testGetFilters()
     {
         $asset = new StringAsset('');
-        $this->assertInternalType('array', $asset->getFilters(), '->getFilters() returns an array');
+        $this->assertIsArray($asset->getFilters(), '->getFilters() returns an array');
     }
 
     public function testLoadAppliesAdditionalFilter()
@@ -50,7 +42,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
         $asset = new StringAsset('');
         $asset->load();
 
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())
             ->method('filterLoad')
             ->with($asset);
@@ -62,7 +54,7 @@ class StringAssetTest extends \PHPUnit_Framework_TestCase
     {
         $asset = new StringAsset('');
 
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $filter->expects($this->once())
             ->method('filterDump')
             ->with($asset);

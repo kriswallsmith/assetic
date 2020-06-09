@@ -1,26 +1,17 @@
-<?php
+<?php namespace Assetic\Test;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
 use Assetic\AssetWriter;
 
-class AssetWriterTest extends \PHPUnit_Framework_TestCase
+class AssetWriterTest extends TestCase
 {
     private $dir;
     /** @var AssetWriter */
     private $writer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dir = sys_get_temp_dir().'/assetic_tests_'.rand(11111, 99999);
         mkdir($this->dir);
@@ -31,7 +22,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         array_map('unlink', glob($this->dir.'/*'));
         rmdir($this->dir);
@@ -39,7 +30,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteManagerAssets()
     {
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
         $am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
 
         $am->expects($this->once())
@@ -57,10 +48,10 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('content'));
         $asset->expects($this->atLeastOnce())
             ->method('getVars')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
         $asset->expects($this->atLeastOnce())
             ->method('getValues')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->writer->writeManagerAssets($am);
 
@@ -70,7 +61,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteAssetWithVars()
     {
-        $asset = $this->getMockBuilder('Assetic\Asset\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
         $asset->expects($this->atLeastOnce())
             ->method('getVars')
             ->will($this->returnValue(array('locale')));
@@ -116,7 +107,7 @@ class AssetWriterTest extends \PHPUnit_Framework_TestCase
     public function testAssetWithInputVars()
     {
         $asset = new FileAsset(__DIR__.'/Fixture/messages.{locale}.js',
-            array(), null, null, array('locale'));
+            [], null, null, array('locale'));
         $asset->setTargetPath('messages.{locale}.js');
 
         $this->writer->writeAsset($asset);

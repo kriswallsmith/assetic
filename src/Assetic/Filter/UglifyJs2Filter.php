@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
 
@@ -74,59 +63,58 @@ class UglifyJs2Filter extends BaseNodeFilter
         $this->defines = $defines;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(
-            $this->nodeBin
+        $args = $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
-        );
+            : array($this->uglifyjsBin);
 
         if ($this->compress) {
-            $pb->add('--compress');
+            $args[] = '--compress';
 
             if (is_string($this->compress) && !empty($this->compress)) {
-                $pb->add($this->compress);
+                $args[] = $this->compress;
             }
         }
 
         if ($this->beautify) {
-            $pb->add('--beautify');
+            $args[] = '--beautify';
         }
 
         if ($this->mangle) {
-            $pb->add('--mangle');
+            $args[] = '--mangle';
         }
 
         if ($this->screwIe8) {
-            $pb->add('--screw-ie8');
+            $args[] = '--screw-ie8';
         }
 
         if ($this->comments) {
-            $pb->add('--comments')->add(true === $this->comments ? 'all' : $this->comments);
+            $args[] = '--comments';
+            $args[] = true === $this->comments ? 'all' : $this->comments;
         }
 
         if ($this->wrap) {
-            $pb->add('--wrap')->add($this->wrap);
+            $args[] = '--wrap';
+            $args[] = $this->wrap;
         }
 
         if ($this->defines) {
-            $pb->add('--define')->add(implode(',', $this->defines));
+            $args[] = '--define';
+            $args[] = implode(',', $this->defines);
         }
 
         // input and output files
-        $input  = FilesystemUtils::createTemporaryFile('uglifyjs2_in');
+        $input  = FilesystemUtils::createTemporaryFile('uglifyjs2_in', $asset->getContent());
         $output = FilesystemUtils::createTemporaryFile('uglifyjs2_out');
 
-        file_put_contents($input, $asset->getContent());
-        $pb->add('-o')->add($output)->add($input);
+        $args[] = '-o';
+        $args[] = $output;
+        $args[] = $input;
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
+        $process = $this->createProcess($args);
+
+        $code = $process->run();
         unlink($input);
 
         if (0 !== $code) {
@@ -138,7 +126,7 @@ class UglifyJs2Filter extends BaseNodeFilter
                 throw new \RuntimeException('Path to node executable could not be resolved.');
             }
 
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw FilterException::fromProcess($process)->setInput($asset->getContent());
         }
 
         if (!file_exists($output)) {

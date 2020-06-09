@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
 
@@ -23,22 +12,18 @@ use Assetic\Util\FilesystemUtils;
  */
 class UglifyCssFilter extends BaseNodeFilter
 {
-    private $uglifycssBin;
-    private $nodeBin;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/uglifycss';
+
+    /*
+     * Filter Options
+     */
 
     private $expandVars;
     private $uglyComments;
     private $cuteComments;
-
-    /**
-     * @param string $uglifycssBin Absolute path to the uglifycss executable
-     * @param string $nodeBin      Absolute path to the folder containg node.js executable
-     */
-    public function __construct($uglifycssBin = '/usr/bin/uglifycss', $nodeBin = null)
-    {
-        $this->uglifycssBin = $uglifycssBin;
-        $this->nodeBin = $nodeBin;
-    }
 
     /**
      * Expand variables
@@ -68,53 +53,27 @@ class UglifyCssFilter extends BaseNodeFilter
     }
 
     /**
-     * @see Assetic\Filter\FilterInterface::filterLoad()
-     */
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
-    /**
-     * Run the asset through UglifyJs
-     *
-     * @see Assetic\Filter\FilterInterface::filterDump()
+     * {@inheritDoc}
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->uglifycssBin)
-            : array($this->uglifycssBin));
+        $args = [];
 
         if ($this->expandVars) {
-            $pb->add('--expand-vars');
+            $args[] = '--expand-vars';
         }
 
         if ($this->uglyComments) {
-            $pb->add('--ugly-comments');
+            $args[] = '--ugly-comments';
         }
 
         if ($this->cuteComments) {
-            $pb->add('--cute-comments');
+            $args[] = '--cute-comments';
         }
 
-        // input and output files
-        $input = FilesystemUtils::createTemporaryFile('uglifycss');
+        $args[] = '{INPUT}';
 
-        file_put_contents($input, $asset->getContent());
-        $pb->add($input);
-
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
-
-        if (127 === $code) {
-            throw new \RuntimeException('Path to node executable could not be resolved.');
-        }
-
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
-
-        $asset->setContent($proc->getOutput());
+        $result = $this->runProcess($asset->getContent(), $args);
+        $asset->setContent($result);
     }
 }

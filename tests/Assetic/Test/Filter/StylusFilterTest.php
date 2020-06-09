@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
+<?php namespace Assetic\Test\Filter;
 
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\StylusFilter;
@@ -21,7 +10,7 @@ class StylusFilterTest extends FilterTestCase
 {
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
             $this->markTestSkipped('Unable to find `node` executable.');
@@ -31,10 +20,14 @@ class StylusFilterTest extends FilterTestCase
             $this->markTestSkipped('The "stylus" module is not installed.');
         }
 
-        $this->filter = new StylusFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+        if (!$stylusBin = $this->findExecutable('stylus', 'STYLUS_BIN')) {
+            $this->markTestSkipped('The "stylus" bin could not be found.');
+        }
+
+        $this->filter = new StylusFilter($stylusBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }
@@ -59,16 +52,5 @@ class StylusFilterTest extends FilterTestCase
 
         $this->assertEquals("body{font:12px Helvetica,Arial,sans-serif;color:#000}", $asset->getContent(), '->filterLoad() parses the content and compress it');
 
-    }
-
-    public function testFilterLoadWithUseNib()
-    {
-        $asset = new StringAsset("@import 'nib'\nbody\n  whitespace nowrap\n  font 12px Helvetica, Arial, sans-serif\n  color black");
-        $asset->load();
-
-        $this->filter->setUseNib(true);
-        $this->filter->filterLoad($asset);
-
-        $this->assertEquals("body {\n  white-space: nowrap;\n  font: 12px Helvetica, Arial, sans-serif;\n  color: #000;\n}\n", $asset->getContent(), '->filterLoad() parses the content using the nib extension');
     }
 }

@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
+<?php namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
@@ -25,7 +14,7 @@ class LessFilterTest extends FilterTestCase
      */
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$nodeBin = $this->findExecutable('node', 'NODE_BIN')) {
             $this->markTestSkipped('Unable to find `node` executable.');
@@ -35,10 +24,14 @@ class LessFilterTest extends FilterTestCase
             $this->markTestSkipped('The "less" module is not installed.');
         }
 
-        $this->filter = new LessFilter($nodeBin, isset($_SERVER['NODE_PATH']) ? array($_SERVER['NODE_PATH']) : array());
+        if (!$lesscBin = $this->findExecutable('lessc', 'LESSC_BIN')) {
+            $this->markTestSkipped('The "lessc" bin could not be found.');
+        }
+
+        $this->filter = new LessFilter($lesscBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->filter = null;
     }
@@ -82,7 +75,7 @@ EOF;
         $asset = new FileAsset(__DIR__.'/fixtures/less/main.less');
         $asset->load();
 
-        $this->filter->addTreeOption('compress', true);
+        $this->filter->setCompress(true);
         $this->filter->filterLoad($asset);
 
         $this->assertEquals($expected, $asset->getContent(), '->filterLoad() sets an include path based on source url');

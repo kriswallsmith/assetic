@@ -1,14 +1,6 @@
-<?php
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-namespace Assetic\Test\Filter;
+<?php namespace Assetic\Test\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssCacheBustingFilter;
 
@@ -17,7 +9,7 @@ use Assetic\Filter\CssCacheBustingFilter;
  * @package Assetic\Test\Filter
  * @author Maximilian Reichel <info@phramz.com>
  */
-class CssCacheBustingFilterTest extends \PHPUnit_Framework_TestCase
+class CssCacheBustingFilterTest extends TestCase
 {
     /**
      * @dataProvider provideUrls

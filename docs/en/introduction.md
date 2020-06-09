@@ -1,7 +1,7 @@
 What is Assetic?
 ----------------
 
-Assetic is an asset management framework for PHP 5.3. Assetic enables you to
+Assetic is an asset management framework for PHP 7.2. Assetic enables you to
 use a variety of third party tools that will help bring order to your
 application's Javascripts, stylesheets and images.
 
