@@ -59,9 +59,6 @@
     "replace": {
         "kriswallsmith/assetic": "*"
     },
-    "replace": {
-        "kriswallsmith/assetic": "*"
-    },
     "autoload": {
         "psr-0": { "Assetic": "src/" },
         "files": [
