@@ -23,28 +23,28 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": "^7.2",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "symfony/process": "~3.4|~4.0",
-        "twig/extensions": "^1.5"
+        "symfony/process": "~3.4 || ~4.0 || ~5.0"
     },
     "conflict": {
         "twig/twig": "<1.27"
     },
     "require-dev": {
         "wikimedia/less.php": "dev-master",
-        "scssphp/scssphp": "~1.0",
+        "scssphp/scssphp": "^1.0",
         "meenie/javascript-packer": "^1.1",
         "mrclay/minify": "<2.3",
-        "natxet/cssmin": "3.0.6",
-        "patchwork/jsqueeze": "~1.0|~2.0",
-        "phpunit/phpunit": "~8.0",
-        "psr/log": "~1.0",
-        "ptachoire/cssembed": "~1.0",
-        "symfony/phpunit-bridge": "~2.7|~3.0",
-        "twig/twig": "~2.11"
+        "natxet/cssmin": "^3.0.6",
+        "patchwork/jsqueeze": "^1.0 || ^2.0",
+        "phpunit/phpunit": "^8.0",
+        "psr/log": "^1.0",
+        "ptachoire/cssembed": "^1.0",
+        "symfony/phpunit-bridge": "^2.7 || ^3.0",
+        "twig/twig": "^2.11",
+        "twig/extensions": "^1.5"
     },
     "suggest": {
         "wikimedia/less.php": "The Assetic\\Filter\\LessphpFilter requires wikimedia/less.php",
@@ -54,7 +54,8 @@
         "natxet/cssmin": "The Assetic\\Filter\\CssMinFilter requires natxet/cssmin",
         "patchwork/jsqueeze": "The Assetic\\Filter\\JSqueezeFilter requires patchwork/jsqueeze",
         "ptachoire/cssembed": "The Assetic\\Filter\\PhpCssEmbedFilter requires ptachoire/cssembed",
-        "twig/twig": "Assetic provides an integration with the Twig templating engine"
+        "twig/twig": "Assetic provides an integration with the Twig templating engine",
+        "twig/extensions": "Assetic provides an integration with the Twig templating engine"
     },
     "replace": {
         "kriswallsmith/assetic": "*"
