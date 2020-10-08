@@ -111,7 +111,7 @@ class AsseticTokenParser extends AbstractTokenParser
                     Token::typeToEnglish($token->getType()),
                     $token->getValue()),
                     $token->getLine(),
-                    $stream->getFilename()
+                    $stream->getSourceContext()->getName()
                 );
             }
         }
