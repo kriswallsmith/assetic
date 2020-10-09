@@ -5,12 +5,12 @@ use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
 
 /**
- * UglifyJs filter.
+ * UglifyJs version 3 filter.
  *
  * @link https://github.com/mishoo/UglifyJS
  * @author André Roaldseth <andre@roaldseth.net>
  */
-class UglifyJsFilter extends BaseNodeFilter
+class UglifyJs3Filter extends BaseNodeFilter
 {
     private $uglifyjsBin;
     private $nodeBin;
@@ -93,13 +93,14 @@ class UglifyJsFilter extends BaseNodeFilter
             ? array($this->nodeBin, $this->uglifyjsBin)
             : array($this->uglifyjsBin);
 
-        if ($this->noCopyright) {
-            $args[] = '--no-copyright';
-        }
-
-        if ($this->comments) {
+        if ($this->comments || !$this->noCopyright) {
             $args[] = '--comments';
-            $args[] = true === $this->comments ? 'all' : $this->comments;
+
+            if ($this->comments === true && !$this->noCopyright) {
+                $args[] = 'all';
+            } else if (is_string($this->comments)) {
+                $args[] = $this->comments;
+            }
         }
 
         if ($this->beautify) {
@@ -107,11 +108,12 @@ class UglifyJsFilter extends BaseNodeFilter
         }
 
         if ($this->unsafe) {
-            $args[] = '--unsafe';
+            $args[] = '--compress';
+            $args[] = 'unsafe';
         }
 
-        if (false === $this->mangle) {
-            $args[] = '--no-mangle';
+        if (true === $this->mangle) {
+            $args[] = '--mangle';
         }
 
         if ($this->defines) {

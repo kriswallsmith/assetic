@@ -1,29 +1,38 @@
 <?php namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
-use Assetic\Filter\UglifyJsFilter;
+use Assetic\Filter\UglifyJs3Filter;
 use Symfony\Component\Process\Process;
 
 /**
  * @group integration
  */
-class UglifyJsFilterTest extends FilterTestCase
+class UglifyJs3FilterTest extends FilterTestCase
 {
     private $asset;
     private $filter;
 
     protected function setUp(): void
     {
-        $uglifyjsBin = $this->findExecutable('uglifyjs', 'UGLIFYJS_BIN');
+        $uglifyjsBin = $this->findExecutable('uglifyjs', 'UGLIFYJS2_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
         if (!$uglifyjsBin) {
             $this->markTestSkipped('Unable to find `uglifyjs` executable.');
         }
 
+        // verify uglifyjs version
+        $pb = new Process(array_merge($nodeBin ? array($nodeBin, $uglifyjsBin) : array($uglifyjsBin), ['--version']));
+        if (isset($_SERVER['NODE_PATH'])) {
+            $pb->setEnv(['NODE_PATH' => $_SERVER['NODE_PATH']]);
+        }
+        if (0 !== $pb->run()) {
+            $this->markTestSkipped('Incorrect version of UglifyJs');
+        }
+
         $this->asset = new FileAsset(__DIR__.'/fixtures/uglifyjs/script.js');
         $this->asset->load();
 
-        $this->filter = new UglifyJsFilter($uglifyjsBin, $nodeBin);
+        $this->filter = new UglifyJs3Filter($uglifyjsBin, $nodeBin);
     }
 
     protected function tearDown(): void
@@ -87,7 +96,7 @@ JS;
 /**
  * Copyright
  */
-if(typeof DEBUG==="undefined"){DEBUG=true}if(typeof FOO==="undefined"){FOO=1}(function(){var foo=new Array(FOO,2,3,4);var bar=Array(a,b,c);var var1=new Array(5);var var2=new Array(a);function bar(foo){var2.push(foo);return foo}var foo=function(var1){DEBUG&&console.log("hellow world");return var1};foo("abc123");bar("abc123")})();
+"undefined"==typeof DEBUG&&(DEBUG=!0),"undefined"==typeof FOO&&(FOO=1),function(){FOO;var bar=[a,b,c],var2=Array(a);function bar(foo){return var2.push(foo),foo}DEBUG&&console.log("hellow world"),bar("abc123")}();
 JS;
         $this->assertEquals($expected, $this->asset->getContent());
     }
