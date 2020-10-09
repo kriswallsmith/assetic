@@ -1,6 +1,11 @@
 name: Checks
 
-on: [push, pull_request]
+on:
+    push:
+      branches:
+        - master
+        - 2.0/dev
+    pull_request:
 
 jobs:
   codeQuality:
