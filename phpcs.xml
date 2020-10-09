@@ -20,6 +20,7 @@
     </rule>
 
     <file>src/</file>
+    <file>tests/</file>
 
     <!-- Ignore vendor files -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
