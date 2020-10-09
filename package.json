@@ -1,6 +1,6 @@
 {
   "name": "assetic",
-  "version": "1.0.0",
+  "version": "2.0.0-dev",
   "description": "Asset Management for PHP",
   "directories": {
     "doc": "docs"
