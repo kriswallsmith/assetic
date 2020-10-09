@@ -4,6 +4,7 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\LessFilter;
+
 /**
  * @group integration
  */

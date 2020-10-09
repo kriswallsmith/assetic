@@ -71,7 +71,9 @@ EOF;
         $asset->load();
 
         $filter = $this->getFilter();
-        $filter->registerFunction('bar',function () { return 'red';});
+        $filter->registerFunction('bar', function () {
+            return 'red';
+        });
         $filter->filterLoad($asset);
 
         $this->assertStringContainsString('color: red', $asset->getContent(), 'custom function can be registered');
