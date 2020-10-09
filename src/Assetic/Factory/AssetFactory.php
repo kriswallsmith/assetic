@@ -332,17 +332,17 @@ class AssetFactory
         return new AssetReference($this->am, $name);
     }
 
-    protected function createHttpAsset($sourceUrl, $vars)
+    protected function createHttpAsset($sourceUrl, $vars = [])
     {
         return new HttpAsset($sourceUrl, [], false, $vars);
     }
 
-    protected function createGlobAsset($glob, $root = null, $vars)
+    protected function createGlobAsset($glob, $root = null, $vars = [])
     {
         return new GlobAsset($glob, [], $root, $vars);
     }
 
-    protected function createFileAsset($source, $root = null, $path = null, $vars)
+    protected function createFileAsset($source, $root = null, $path = null, $vars = [])
     {
         return new FileAsset($source, [], $root, $path, $vars);
     }

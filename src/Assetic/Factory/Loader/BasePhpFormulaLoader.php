@@ -57,8 +57,12 @@ abstract class BasePhpFormulaLoader implements FormulaLoaderInterface
 
                 if (isset($buffersInWildcard[$i])) {
                     switch ($current) {
-                        case '(': ++$level; break;
-                        case ')': --$level; break;
+                        case '(':
+                            ++$level;
+                            break;
+                        case ')':
+                            --$level;
+                            break;
                     }
 
                     $buffer .= $current;
