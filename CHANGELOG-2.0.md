@@ -41,3 +41,4 @@ a simplified tool set of php and javascript based utilities.
 * Replaced SassFilter/ScssFilter with their php alternatives
 * Removed Yui compressor
 * Removed Packager filter as it throws deprecation notices in php7.4
+* Removed UglifyJS version 1 filter as it is no longer supported. Use the `Assetic\Filter\UglifyJs2Filter` for version 2 or `UglifyJs3Filter` for version 3 instead.

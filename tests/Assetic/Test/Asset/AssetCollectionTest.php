@@ -117,7 +117,9 @@ class AssetCollectionTest extends TestCase
     public function testIterationFilters()
     {
         $count = 0;
-        $filter = new CallablesFilter(function () use (&$count) { ++$count; });
+        $filter = new CallablesFilter(function () use (&$count) {
+            ++$count;
+        });
 
         $coll = new AssetCollection();
         $coll->add(new StringAsset(''));

@@ -106,8 +106,13 @@ class AssetWriterTest extends TestCase
 
     public function testAssetWithInputVars()
     {
-        $asset = new FileAsset(__DIR__.'/Fixture/messages.{locale}.js',
-            [], null, null, array('locale'));
+        $asset = new FileAsset(
+            __DIR__.'/Fixture/messages.{locale}.js',
+            [],
+            null,
+            null,
+            array('locale')
+        );
         $asset->setTargetPath('messages.{locale}.js');
 
         $this->writer->writeAsset($asset);
@@ -115,11 +120,17 @@ class AssetWriterTest extends TestCase
         $this->assertFileExists($this->dir.'/messages.en.js');
         $this->assertFileExists($this->dir.'/messages.de.js');
         $this->assertFileExists($this->dir.'/messages.fr.js');
-        $this->assertEquals('var messages = {"text.greeting": "Hello %name%!"};',
-            file_get_contents($this->dir.'/messages.en.js'));
-        $this->assertEquals('var messages = {"text.greeting": "Hallo %name%!"};',
-            file_get_contents($this->dir.'/messages.de.js'));
-        $this->assertEquals('var messages = {"text.greet": "All\u00f4 %name%!"};',
-            file_get_contents($this->dir.'/messages.fr.js'));
+        $this->assertEquals(
+            'var messages = {"text.greeting": "Hello %name%!"};',
+            file_get_contents($this->dir.'/messages.en.js')
+        );
+        $this->assertEquals(
+            'var messages = {"text.greeting": "Hallo %name%!"};',
+            file_get_contents($this->dir.'/messages.de.js')
+        );
+        $this->assertEquals(
+            'var messages = {"text.greet": "All\u00f4 %name%!"};',
+            file_get_contents($this->dir.'/messages.fr.js')
+        );
     }
 }

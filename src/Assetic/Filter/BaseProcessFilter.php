@@ -250,7 +250,8 @@ abstract class BaseProcessFilter extends BaseFilter
     protected function debug($args)
     {
         if ($this->debug) {
-            var_dump($args); die;
+            var_dump($args);
+            die;
         }
     }
 }

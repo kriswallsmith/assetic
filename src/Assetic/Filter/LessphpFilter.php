@@ -58,7 +58,7 @@ class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
 
     public function setOptions(array $options)
     {
-    	$this->options = $options;
+        $this->options = $options;
     }
 
     /**
@@ -84,8 +84,8 @@ class LessphpFilter extends BaseFilter implements DependencyExtractorInterface
             $lc->setFormatter($this->formatter);
         }
 
-        if (method_exists($lc, 'setOptions') && count($this->options) > 0 ) {
-        	$lc->setOptions($this->options);
+        if (method_exists($lc, 'setOptions') && count($this->options) > 0) {
+            $lc->setOptions($this->options);
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));

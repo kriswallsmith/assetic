@@ -20,7 +20,9 @@ class CallablesFilterTest extends TestCase
     public function testLoader()
     {
         $nb = 0;
-        $filter = new CallablesFilter(function ($asset) use (&$nb) { $nb++; });
+        $filter = new CallablesFilter(function ($asset) use (&$nb) {
+            $nb++;
+        });
         $filter->filterLoad($this->getMockBuilder(AssetInterface::class)->getMock());
         $this->assertEquals(1, $nb, '->filterLoad() calls the loader callable');
     }
@@ -28,7 +30,9 @@ class CallablesFilterTest extends TestCase
     public function testDumper()
     {
         $nb = 0;
-        $filter = new CallablesFilter(null, function ($asset) use (&$nb) { $nb++; });
+        $filter = new CallablesFilter(null, function ($asset) use (&$nb) {
+            $nb++;
+        });
         $filter->filterDump($this->getMockBuilder(AssetInterface::class)->getMock());
         $this->assertEquals(1, $nb, '->filterDump() calls the loader callable');
     }

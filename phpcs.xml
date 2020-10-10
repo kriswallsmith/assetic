@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="October CMS">
+    <description>The coding standard for October CMS.</description>
+    <rule ref="PSR2">
+        <!--
+        Exceptions to the PSR-2 guidelines as per our Developer Guide:
+        https://octobercms.com/help/guidelines/developer#psr-exceptions
+        -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps" />
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace" />
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace" />
+    </rule>
+
+    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+        <!--
+        Test fixtures and cases can have multiple classes defined, only if they are directly related to the test, or are
+        extended classes
+        -->
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <file>src/</file>
+    <file>tests/</file>
+
+    <!-- Ignore vendor files -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+</ruleset>
