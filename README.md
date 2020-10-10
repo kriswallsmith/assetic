@@ -1,10 +1,8 @@
 # Assetic
-[![Build Status](https://travis-ci.org/assetic-php/assetic.svg?branch=master)](https://travis-ci.org/assetic-php/assetic)
-[![Coverage Status](https://coveralls.io/repos/github/assetic-php/assetic/badge.svg?branch=master)](https://coveralls.io/github/assetic-php/assetic?branch=master)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/assetic-php/assetic.svg)](http://isitmaintained.com/project/assetic-php/assetic "Average time to resolve an issue")
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/assetic-php/assetic.svg)](https://isitmaintained.com/project/assetic-php/assetic "Percentage of issues still open")
 
-Assetic is an asset management framework for PHP maintained by the [OctoberCMS team](https://github.com/octobercms).
+Assetic is an asset management framework for PHP maintained by the [October CMS team](https://github.com/octobercms).
 
 ``` php
 <?php
@@ -92,18 +90,16 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `LessFilter`: parses LESS into CSS (using less.js with node.js)
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
  * `OptiPngFilter`: optimize your PNGs
- * `PackagerFilter`: parses Javascript for packager tags
  * `PackerFilter`: compresses Javascript using Dean Edwards's Packer
  * `PhpCssEmbedFilter`: embeds image data in your stylesheet
- * `PngoutFilter`: optimize your PNGs
  * `ReactJsxFilter`: compiles React JSX into JavaScript
- * `ScssFilter`: parses SCSS into CSS
+ * `ScssphpFilter`: parses SCSS into CSS
  * `SeparatorFilter`: inserts a separator between assets to prevent merge failures
  * `StylusFilter`: parses STYL into CSS
  * `TypeScriptFilter`: parses TypeScript into Javascript
  * `UglifyCssFilter`: minifies CSS
  * `UglifyJs2Filter`: minifies Javascript
- * `UglifyJsFilter`: minifies Javascript
+ * `UglifyJs3Filter`: minifies Javascript
 
 Asset Manager
 -------------
