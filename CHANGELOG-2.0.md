@@ -1,10 +1,11 @@
-2.0.0 (2020-10-11)
+v2.0.0 (2020-10-11)
 ------------------
 
 ### Project update
 
 The project `kriswallsmith/assetic` is currently unmaintained, and has not been
-updated in 4 years.
+updated in 4 years. You can replace `kriswallsmith/assetic` by swapping it out for
+`"assetic/framework": "~2.0.0"` via composer.
 
 This fork aims to bring Assetic up to date with modern libraries and allow for it
 to be used in conjunction with modern frameworks.
