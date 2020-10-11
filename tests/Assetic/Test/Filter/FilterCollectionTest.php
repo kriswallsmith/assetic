@@ -1,30 +1,22 @@
-<?php
+<?php namespace Assetic\Test\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Filter\FilterCollection;
 
-class FilterCollectionTest extends \PHPUnit_Framework_TestCase
+class FilterCollectionTest extends TestCase
 {
     public function testInterface()
     {
         $filter = new FilterCollection();
-        $this->assertInstanceOf('Assetic\\Filter\\FilterInterface', $filter, 'FilterCollection implements FilterInterface');
+        $this->assertInstanceOf(FilterInterface::class, $filter, 'FilterCollection implements FilterInterface');
     }
 
     public function testEnsure()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
 
         $filter->expects($this->once())->method('filterLoad');
 
@@ -37,22 +29,22 @@ class FilterCollectionTest extends \PHPUnit_Framework_TestCase
     public function testAll()
     {
         $filter = new FilterCollection(array(
-            $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock(),
-            $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock(),
+            $this->getMockBuilder(FilterInterface::class)->getMock(),
+            $this->getMockBuilder(FilterInterface::class)->getMock(),
         ));
 
-        $this->assertInternalType('array', $filter->all(), '->all() returns an array');
+        $this->assertIsArray($filter->all(), '->all() returns an array');
     }
 
     public function testEmptyAll()
     {
         $filter = new FilterCollection();
-        $this->assertInternalType('array', $filter->all(), '->all() returns an array');
+        $this->assertIsArray($filter->all(), '->all() returns an array');
     }
 
     public function testCountable()
     {
-        $filters = new FilterCollection(array($this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock()));
+        $filters = new FilterCollection(array($this->getMockBuilder(FilterInterface::class)->getMock()));
 
         $this->assertEquals(1, count($filters), 'Countable returns the count');
     }

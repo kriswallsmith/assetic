@@ -1,38 +1,29 @@
-<?php
+<?php namespace Assetic\Test;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\FilterManager;
 
-class FilterManagerTest extends \PHPUnit_Framework_TestCase
+class FilterManagerTest extends TestCase
 {
     /** @var FilterManager */
     private $fm;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fm = new FilterManager();
     }
 
     public function testInvalidName()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->fm->get('foo');
     }
 
     public function testGetFilter()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
         $name = 'foo';
 
         $this->fm->set($name, $filter);
@@ -42,7 +33,7 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $this->fm->set('foo', $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock());
+        $this->fm->set('foo', $this->getMockBuilder(FilterInterface::class)->getMock());
         $this->assertTrue($this->fm->has('foo'), '->has() returns true if the filter is set');
     }
 
@@ -53,7 +44,7 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidAlias()
     {
-        $this->setExpectedException('InvalidArgumentException');
-        $this->fm->set('@foo', $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock());
+        $this->expectException('InvalidArgumentException');
+        $this->fm->set('@foo', $this->getMockBuilder(FilterInterface::class)->getMock());
     }
 }

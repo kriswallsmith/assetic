@@ -1,28 +1,20 @@
-<?php
+<?php namespace Assetic\Test\Factory\Worker;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Factory\Worker;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Worker\CacheBustingWorker;
 
-class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
+class CacheBustingWorkerTest extends TestCase
 {
     private $worker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->worker = new CacheBustingWorker();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->worker = null;
     }
@@ -32,8 +24,8 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldApplyHash()
     {
-        $asset = $this->getMockBuilder('Assetic\Asset\AssetInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -58,11 +50,11 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldApplyConsistentHash()
     {
-        $asset = $this->getMockBuilder('Assetic\Asset\AssetInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $paths = array();
+        $paths = [];
 
         $asset->expects($this->any())
             ->method('getTargetPath')
@@ -88,8 +80,8 @@ class CacheBustingWorkerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotReapplyHash()
     {
-        $asset = $this->getMockBuilder('Assetic\Asset\AssetInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
         $path = null;

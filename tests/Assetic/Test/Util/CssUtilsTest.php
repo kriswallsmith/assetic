@@ -1,25 +1,15 @@
-<?php
+<?php namespace Assetic\Test\Util;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Util;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Util\CssUtils;
 
-class CssUtilsTest extends \PHPUnit_Framework_TestCase
+class CssUtilsTest extends TestCase
 {
     public function testFilterUrls()
     {
         $content = 'body { background: url(../images/bg.gif); }';
 
-        $matches = array();
+        $matches = [];
         $actual = CssUtils::filterUrls($content, function ($match) use (&$matches) {
             $matches[] = $match['url'];
         });
@@ -44,7 +34,7 @@ CSS;
         $actual = CssUtils::extractImports($content);
 
         $this->assertEquals($expected, array_intersect($expected, $actual), '::extractImports() returns all expected URLs');
-        $this->assertEquals(array(), array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
+        $this->assertEquals([], array_diff($actual, $expected), '::extractImports() does not return unexpected URLs');
     }
 
     public function testFilterCommentless()

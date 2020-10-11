@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Filters assets through CssMin.
@@ -19,15 +8,15 @@ use Assetic\Asset\AssetInterface;
  * @link http://code.google.com/p/cssmin
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CssMinFilter implements FilterInterface
+class CssMinFilter extends BaseFilter
 {
     private $filters;
     private $plugins;
 
     public function __construct()
     {
-        $this->filters = array();
-        $this->plugins = array();
+        $this->filters = [];
+        $this->plugins = [];
     }
 
     public function setFilters(array $filters)
@@ -48,10 +37,6 @@ class CssMinFilter implements FilterInterface
     public function setPlugin($name, $value)
     {
         $this->plugins[$name] = $value;
-    }
-
-    public function filterLoad(AssetInterface $asset)
-    {
     }
 
     public function filterDump(AssetInterface $asset)

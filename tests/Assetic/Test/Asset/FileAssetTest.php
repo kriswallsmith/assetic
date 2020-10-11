@@ -1,24 +1,15 @@
-<?php
+<?php namespace Assetic\Test\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Asset;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
 
-class FileAssetTest extends \PHPUnit_Framework_TestCase
+class FileAssetTest extends TestCase
 {
     public function testInterface()
     {
         $asset = new FileAsset(__FILE__);
-        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $asset, 'Asset implements AssetInterface');
+        $this->assertInstanceOf(AssetInterface::class, $asset, 'Asset implements AssetInterface');
     }
 
     public function testLazyLoading()
@@ -33,14 +24,14 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
     public function testGetLastModifiedType()
     {
         $asset = new FileAsset(__FILE__);
-        $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
+        $this->assertIsInt($asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
     public function testGetLastModifiedTypeFileNotFound()
     {
         $asset = new FileAsset(__DIR__."/foo/bar/baz.css");
 
-        $this->setExpectedException("RuntimeException", "The source file");
+        $this->expectException("RuntimeException", "The source file");
         $asset->getLastModified();
     }
 
@@ -60,15 +51,15 @@ class FileAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testPathGuessing()
     {
-        $asset = new FileAsset(__FILE__, array(), __DIR__);
+        $asset = new FileAsset(__FILE__, [], __DIR__);
         $this->assertEquals(basename(__FILE__), $asset->getSourcePath(), '->__construct() guesses the asset path');
         $this->assertEquals(__DIR__, $asset->getSourceDirectory(), '->__construct() derives the asset directory');
     }
 
     public function testInvalidBase()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
 
-        $asset = new FileAsset(__FILE__, array(), __DIR__.'/foo');
+        $asset = new FileAsset(__FILE__, [], __DIR__.'/foo');
     }
 }

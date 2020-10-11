@@ -1,19 +1,9 @@
-<?php
+<?php namespace Assetic\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset;
-
-use Assetic\Cache\CacheInterface;
-use Assetic\Filter\FilterInterface;
-use Assetic\Filter\HashableInterface;
+use Assetic\Contracts\Cache\CacheInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Filter\HashableInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Caches an asset to avoid the cost of loading and dumping.

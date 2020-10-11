@@ -1,28 +1,18 @@
-<?php
+<?php namespace Assetic\Test\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\CssImportFilter;
 use Assetic\Filter\CssRewriteFilter;
 
-class CssImportFilterTest extends \PHPUnit_Framework_TestCase
+class CssImportFilterTest extends TestCase
 {
     /**
      * @dataProvider getFilters
      */
     public function testImport($filter1, $filter2)
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/main.css', array(), __DIR__.'/fixtures/cssimport', 'main.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/main.css', [], __DIR__.'/fixtures/cssimport', 'main.css');
         $asset->setTargetPath('foo/bar.css');
         $asset->ensureFilter($filter1);
         $asset->ensureFilter($filter2);
@@ -60,7 +50,7 @@ CSS;
 
     public function testNonCssImport()
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/noncssimport.css', array(), __DIR__.'/fixtures/cssimport', 'noncssimport.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/noncssimport.css', [], __DIR__.'/fixtures/cssimport', 'noncssimport.css');
         $asset->load();
 
         $filter = new CssImportFilter();
@@ -74,7 +64,7 @@ CSS;
      */
     public function testCommentedImport($filter1, $filter2)
     {
-        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/commentedimport.css', array(), __DIR__.'/fixtures/cssimport', 'commentedimport.css');
+        $asset = new FileAsset(__DIR__.'/fixtures/cssimport/commentedimport.css', [], __DIR__.'/fixtures/cssimport', 'commentedimport.css');
         $asset->setTargetPath('foo/bar.css');
         $asset->ensureFilter($filter1);
         $asset->ensureFilter($filter2);

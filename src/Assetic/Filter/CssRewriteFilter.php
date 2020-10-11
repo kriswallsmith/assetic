@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * Fixes relative CSS urls.
@@ -20,10 +9,6 @@ use Assetic\Asset\AssetInterface;
  */
 class CssRewriteFilter extends BaseCssFilter
 {
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
         $sourceBase = $asset->getSourceRoot();
@@ -68,7 +53,11 @@ class CssRewriteFilter extends BaseCssFilter
         }
 
         $content = $this->filterReferences($asset->getContent(), function ($matches) use ($host, $path) {
-            if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
+            if (false !== strpos($matches['url'], '://')
+                || 0 === strpos($matches['url'], '//')
+                || 0 === strpos($matches['url'], 'data:')
+                || '#' === substr($matches['url'], 0, 1)
+            ) {
                 // absolute or protocol-relative or data uri
                 return $matches[0];
             }
@@ -85,7 +74,7 @@ class CssRewriteFilter extends BaseCssFilter
                 $url = substr($url, 3);
             }
 
-            $parts = array();
+            $parts = [];
             foreach (explode('/', $host.$path.$url) as $part) {
                 if ('..' === $part && count($parts) && '..' !== end($parts)) {
                     array_pop($parts);

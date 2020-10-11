@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
 
@@ -23,25 +12,19 @@ use Assetic\Util\FilesystemUtils;
  */
 class JpegtranFilter extends BaseProcessFilter
 {
-    const COPY_NONE = 'none';
-    const COPY_COMMENTS = 'comments';
-    const COPY_ALL = 'all';
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/jpegtran';
 
-    private $jpegtranBin;
+    /*
+     * Filter Options
+     */
+
     private $optimize;
     private $copy;
     private $progressive;
     private $restart;
-
-    /**
-     * Constructor.
-     *
-     * @param string $jpegtranBin Path to the jpegtran binary
-     */
-    public function __construct($jpegtranBin = '/usr/bin/jpegtran')
-    {
-        $this->jpegtranBin = $jpegtranBin;
-    }
 
     public function setOptimize($optimize)
     {
@@ -63,41 +46,33 @@ class JpegtranFilter extends BaseProcessFilter
         $this->restart = $restart;
     }
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
-
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->jpegtranBin));
+        $args = [];
 
         if ($this->optimize) {
-            $pb->add('-optimize');
+            $args[] = '-optimize';
         }
 
         if ($this->copy) {
-            $pb->add('-copy')->add($this->copy);
+            $args[] = '-copy';
+            $args[] = $this->copy;
         }
 
         if ($this->progressive) {
-            $pb->add('-progressive');
+            $args[] = '-progressive';
         }
 
-        if (null !== $this->restart) {
-            $pb->add('-restart')->add($this->restart);
+        if (!is_null($this->restart)) {
+            $args[] = '-restart';
+            $args[] = $this->restart;
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('jpegtran'));
-        file_put_contents($input, $asset->getContent());
+        $args[] = '{INPUT}';
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
+        // Run the filter
+        $result = $this->runProcess($asset->getContent(), $args);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
-
-        $asset->setContent($proc->getOutput());
+        $asset->setContent($result);
     }
 }

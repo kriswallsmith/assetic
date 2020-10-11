@@ -1,15 +1,7 @@
-<?php
+<?php namespace Assetic\Factory\Resource;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Factory\Resource;
+use Assetic\Contracts\Factory\Resource\IteratorResourceInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
 
 /**
  * Coalesces multiple directories together into one merged resource.
@@ -22,7 +14,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
 
     public function __construct($directories)
     {
-        $this->directories = array();
+        $this->directories = [];
 
         foreach ($directories as $directory) {
             $this->addDirectory($directory);
@@ -47,7 +39,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
 
     public function getContent()
     {
-        $parts = array();
+        $parts = [];
         foreach ($this->getFileResources() as $file) {
             $parts[] = $file->getContent();
         }
@@ -62,7 +54,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
      */
     public function __toString()
     {
-        $parts = array();
+        $parts = [];
         foreach ($this->directories as $directory) {
             $parts[] = (string) $directory;
         }
@@ -95,7 +87,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
      */
     private function getFileResources()
     {
-        $paths = array();
+        $paths = [];
 
         foreach ($this->directories as $directory) {
             foreach ($directory as $file) {

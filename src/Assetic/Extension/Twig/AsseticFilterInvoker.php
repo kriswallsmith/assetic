@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Extension\Twig;
+<?php namespace Assetic\Extension\Twig;
 
 /**
  * Filters a single asset.
@@ -28,10 +17,10 @@ class AsseticFilterInvoker
 
         if (is_array($filter) && isset($filter['filter'])) {
             $this->filters = (array) $filter['filter'];
-            $this->options = isset($filter['options']) ? (array) $filter['options'] : array();
+            $this->options = isset($filter['options']) ? (array) $filter['options'] : [];
         } else {
             $this->filters = (array) $filter;
-            $this->options = array();
+            $this->options = [];
         }
     }
 
@@ -50,7 +39,7 @@ class AsseticFilterInvoker
         return $this->options;
     }
 
-    public function invoke($input, array $options = array())
+    public function invoke($input, array $options = [])
     {
         $asset = $this->factory->createAsset($input, $this->filters, $options + $this->options);
 

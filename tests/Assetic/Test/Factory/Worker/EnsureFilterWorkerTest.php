@@ -1,25 +1,18 @@
-<?php
+<?php namespace Assetic\Test\Factory\Worker;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Factory\Worker;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Worker\EnsureFilterWorker;
 
-class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
+class EnsureFilterWorkerTest extends TestCase
 {
     public function testMatch()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -36,9 +29,9 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function testNonMatch()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
-        $factory = $this->getMockBuilder('Assetic\Factory\AssetFactory')
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
+        $factory = $this->getMockBuilder(AssetFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
 

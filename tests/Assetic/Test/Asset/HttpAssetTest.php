@@ -1,19 +1,9 @@
-<?php
+<?php namespace Assetic\Test\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Asset;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\HttpAsset;
 
-class HttpAssetTest extends \PHPUnit_Framework_TestCase
+class HttpAssetTest extends TestCase
 {
     const JQUERY = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js';
 
@@ -23,7 +13,7 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
     public function testGetLastModified()
     {
         $asset = new HttpAsset(self::JQUERY);
-        $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
+        $this->assertIsInt($asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
     /**
@@ -38,14 +28,14 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testMalformedUrl()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
 
         new HttpAsset(__FILE__);
     }
 
     public function testInvalidUrl()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(\Throwable::class);
 
         $asset = new HttpAsset('http://invalid.com/foobar');
         $asset->load();

@@ -1,25 +1,15 @@
-<?php
+<?php namespace Assetic\Test\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\CssMinFilter;
 
 /**
  * @group integration
  */
-class CssMinFilterTest extends \PHPUnit_Framework_TestCase
+class CssMinFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('CssMin')) {
             $this->markTestSkipped('CssMin is not installed.');

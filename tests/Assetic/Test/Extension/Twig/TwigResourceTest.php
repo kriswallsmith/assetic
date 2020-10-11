@@ -1,66 +1,40 @@
-<?php
+<?php namespace Assetic\Test\Extension\Twig;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Extension\Twig;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Extension\Twig\TwigResource;
+use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
+use Twig\Error\LoaderError;
 
-class TwigResourceTest extends \PHPUnit_Framework_TestCase
+class TwigResourceTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
-        if (!class_exists('Twig_Environment')) {
+        if (!class_exists('Twig\Environment')) {
             $this->markTestSkipped('Twig is not installed.');
         }
     }
 
     public function testInvalidTemplateNameGetContent()
     {
-        $loader = $this->prophesize('Twig_LoaderInterface');
-        if (!method_exists('Twig_LoaderInterface', 'getSourceContext')) {
-            $loader->willImplement('Twig_SourceContextLoaderInterface');
+        $loader = $this->prophesize(LoaderInterface::class);
+        if (!method_exists(LoaderInterface::class, 'getSourceContext')) {
+            $loader->willImplement(SourceContextLoaderInterface::class);
         }
 
-        $loader->getSourceContext('asdf')->willThrow(new \Twig_Error_Loader(''));
+        $loader->getSourceContext('asdf')->willThrow(new LoaderError(''));
 
         $resource = new TwigResource($loader->reveal(), 'asdf');
         $this->assertEquals('', $resource->getContent());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testInvalidTemplateNameGetContentWithLegacyLoader()
-    {
-        if (!method_exists('Twig_LoaderInterface', 'getSource')) {
-            $this->markTestSkipped('This test does not make sense on Twig 2.x.');
-        }
-
-        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
-        $loader->expects($this->once())
-            ->method('getSource')
-            ->with('asdf')
-            ->will($this->throwException(new \Twig_Error_Loader('')));
-
-        $resource = new TwigResource($loader, 'asdf');
-        $this->assertEquals('', $resource->getContent());
-    }
-
     public function testInvalidTemplateNameIsFresh()
     {
-        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
+        $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
         $loader->expects($this->once())
             ->method('isFresh')
             ->with('asdf', 1234)
-            ->will($this->throwException(new \Twig_Error_Loader('')));
+            ->will($this->throwException(new LoaderError('')));
 
         $resource = new TwigResource($loader, 'asdf');
         $this->assertFalse($resource->isFresh(1234));

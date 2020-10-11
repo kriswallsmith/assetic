@@ -1,20 +1,11 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Filter\BaseNodeFilter;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\FilesystemUtils;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 
 /**
  * Loads STYL files.
@@ -24,40 +15,36 @@ use Assetic\Util\FilesystemUtils;
  */
 class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterface
 {
-    private $nodeBin;
-    private $compress;
-    private $useNib;
-
     /**
-     * Constructs filter.
-     *
-     * @param string $nodeBin   The path to the node binary
-     * @param array  $nodePaths An array of node paths
+     * @var string Path to the binary for this process based filter
      */
-    public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
-    {
-        $this->nodeBin = $nodeBin;
-        $this->setNodePaths($nodePaths);
-    }
+    protected $binaryPath = '/usr/local/bin/stylus';
+
+    /*
+     * Filter Options
+     */
+
+    private $compress;
 
     /**
      * Enable output compression.
      *
      * @param boolean $compress
      */
-    public function setCompress($compress)
+    public function setCompress(bool $compress)
     {
         $this->compress = $compress;
     }
 
     /**
-     * Enable the use of Nib
-     *
-     * @param boolean $useNib
+     * {@inheritDoc}
      */
-    public function setUseNib($useNib)
+    protected function getOutputPath()
     {
-        $this->useNib = $useNib;
+        $prefix = preg_replace('/[^\w]/', '', static::class);
+        $path = FilesystemUtils::createThrowAwayDirectory($prefix) . '/output.css';
+        touch($path);
+        return $path;
     }
 
     /**
@@ -65,62 +52,30 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
      */
     public function filterLoad(AssetInterface $asset)
     {
-        static $format = <<<'EOF'
-var stylus = require('stylus');
-var sys    = require(process.binding('natives').util ? 'util' : 'sys');
+        $args = [];
 
-stylus(%s, %s)%s.render(function(e, css){
-    if (e) {
-        throw e;
-    }
+        if (null !== $this->compress && $this->compress) {
+            $args[] = '--compress';
+        }
 
-    sys.print(css);
-    process.exit(0);
-});
-
-EOF;
-
-        // parser options
-        $parserOptions = array();
         if ($dir = $asset->getSourceDirectory()) {
-            $parserOptions['paths'] = array($dir);
-            $parserOptions['filename'] = basename($asset->getSourcePath());
+            $args[] = $dir;
+        } else {
+            $args[] = '{INPUT}';
         }
 
-        if (null !== $this->compress) {
-            $parserOptions['compress'] = $this->compress;
-        }
+        $args[] = '--out';
+        $args[] = '{OUTPUT}';
 
-        $pb = $this->createProcessBuilder();
+        // Run the filter
+        $result = $this->runProcess($asset->getContent(), $args);
 
-        $pb->add($this->nodeBin)->add($input = FilesystemUtils::createTemporaryFile('stylus'));
-        file_put_contents($input, sprintf($format,
-            json_encode($asset->getContent()),
-            json_encode($parserOptions),
-            $this->useNib ? '.use(require(\'nib\')())' : ''
-        ));
-
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
-
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
-
-        $asset->setContent($proc->getOutput());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function filterDump(AssetInterface $asset)
-    {
+        $asset->setContent($result);
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo
-        return array();
+        return [];
     }
 }

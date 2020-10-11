@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Util;
+<?php namespace Assetic\Util;
 
 /**
  * CSS Utils.
@@ -53,7 +42,7 @@ abstract class CssUtils
     {
         $pattern = static::REGEX_URLS;
 
-        return static::filterCommentless($content, function ($part) use (& $callback, $pattern) {
+        return static::filterCommentless($content, function ($part) use (&$callback, $pattern) {
             return preg_replace_callback($pattern, $callback, $part);
         });
     }
@@ -71,7 +60,7 @@ abstract class CssUtils
     {
         $pattern = $includeUrl ? static::REGEX_IMPORTS : static::REGEX_IMPORTS_NO_URLS;
 
-        return static::filterCommentless($content, function ($part) use (& $callback, $pattern) {
+        return static::filterCommentless($content, function ($part) use (&$callback, $pattern) {
             return preg_replace_callback($pattern, $callback, $part);
         });
     }
@@ -88,7 +77,7 @@ abstract class CssUtils
     {
         $pattern = static::REGEX_IE_FILTERS;
 
-        return static::filterCommentless($content, function ($part) use (& $callback, $pattern) {
+        return static::filterCommentless($content, function ($part) use (&$callback, $pattern) {
             return preg_replace_callback($pattern, $callback, $part);
         });
     }
@@ -124,7 +113,7 @@ abstract class CssUtils
      */
     public static function extractImports($content)
     {
-        $imports = array();
+        $imports = [];
         static::filterImports($content, function ($matches) use (&$imports) {
             $imports[] = $matches['url'];
         });

@@ -1,20 +1,11 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset;
+<?php namespace Assetic\Asset;
 
 use Assetic\Asset\Iterator\AssetCollectionFilterIterator;
 use Assetic\Asset\Iterator\AssetCollectionIterator;
 use Assetic\Filter\FilterCollection;
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetCollectionInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * A collection of assets.
@@ -40,9 +31,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
      * @param string $sourceRoot The root directory
      * @param array  $vars
      */
-    public function __construct($assets = array(), $filters = array(), $sourceRoot = null, array $vars = array())
+    public function __construct($assets = [], $filters = [], $sourceRoot = null, array $vars = [])
     {
-        $this->assets = array();
+        $this->assets = [];
         foreach ($assets as $asset) {
             $this->add($asset);
         }
@@ -51,7 +42,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->sourceRoot = $sourceRoot;
         $this->clones = new \SplObjectStorage();
         $this->vars = $vars;
-        $this->values = array();
+        $this->values = [];
     }
 
     public function __clone()
@@ -134,7 +125,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function load(FilterInterface $additionalFilter = null)
     {
         // loop through leaves and load each asset
-        $parts = array();
+        $parts = [];
         foreach ($this as $asset) {
             $asset->load($additionalFilter);
             $parts[] = $asset->getContent();
@@ -146,7 +137,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     public function dump(FilterInterface $additionalFilter = null)
     {
         // loop through leaves and dump each asset
-        $parts = array();
+        $parts = [];
         foreach ($this as $asset) {
             $parts[] = $asset->dump($additionalFilter);
         }

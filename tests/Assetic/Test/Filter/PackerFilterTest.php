@@ -1,25 +1,15 @@
-<?php
+<?php namespace Assetic\Test\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2011 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\PackerFilter;
 
 /**
  * @group integration
  */
-class PackerFilterTest extends \PHPUnit_Framework_TestCase
+class PackerFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('JavaScriptPacker')) {
             $this->markTestSkipped('JavaScriptPacker is not installed.');

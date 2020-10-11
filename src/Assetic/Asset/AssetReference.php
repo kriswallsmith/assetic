@@ -1,18 +1,8 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset;
+<?php namespace Assetic\Asset;
 
 use Assetic\AssetManager;
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 
 /**
  * A reference to an asset in the asset manager.
@@ -23,7 +13,7 @@ class AssetReference implements AssetInterface
 {
     private $am;
     private $name;
-    private $filters = array();
+    private $filters = [];
     private $clone = false;
     private $asset;
 
@@ -56,7 +46,7 @@ class AssetReference implements AssetInterface
 
     public function clearFilters()
     {
-        $this->filters = array();
+        $this->filters = [];
         $this->callAsset(__FUNCTION__);
     }
 
@@ -131,7 +121,7 @@ class AssetReference implements AssetInterface
 
     // private
 
-    private function callAsset($method, $arguments = array())
+    private function callAsset($method, $arguments = [])
     {
         $asset = $this->resolve();
 

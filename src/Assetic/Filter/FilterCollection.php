@@ -1,17 +1,7 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 
 /**
  * A collection of filters.
@@ -20,9 +10,9 @@ use Assetic\Asset\AssetInterface;
  */
 class FilterCollection implements FilterInterface, \IteratorAggregate, \Countable
 {
-    private $filters = array();
+    private $filters = [];
 
-    public function __construct($filters = array())
+    public function __construct($filters = [])
     {
         foreach ($filters as $filter) {
             $this->ensure($filter);
@@ -53,7 +43,7 @@ class FilterCollection implements FilterInterface, \IteratorAggregate, \Countabl
 
     public function clear()
     {
-        $this->filters = array();
+        $this->filters = [];
     }
 
     public function filterLoad(AssetInterface $asset)

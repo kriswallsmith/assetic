@@ -1,30 +1,28 @@
-<?php
+<?php namespace Assetic\Test\Extension\Twig;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Extension\Twig;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Asset\AssetInterface;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\ValueSupplierInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Extension\Twig\AsseticExtension;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
+use Assetic\FilterManager;
+use Assetic\AssetManager;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Error\SyntaxError;
 
-class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
+class AsseticExtensionTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\AssetManager
+     * @var \PHPUnit_Framework_MockObject_MockObject|AssetManager
      */
     private $am;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\FilterManager
+     * @var \PHPUnit_Framework_MockObject_MockObject|FilterManager
      */
     private $fm;
 
@@ -34,35 +32,35 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     private $factory;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Assetic\ValueSupplierInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|ValueSupplierInterface
      */
     private $valueSupplier;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        if (!class_exists('Twig_Environment')) {
+        if (!class_exists('\Twig\Environment')) {
             $this->markTestSkipped('Twig is not installed.');
         }
 
-        $this->am = $this->getMockBuilder('Assetic\\AssetManager')->getMock();
-        $this->fm = $this->getMockBuilder('Assetic\\FilterManager')->getMock();
+        $this->am = $this->getMockBuilder(AssetManager::class)->getMock();
+        $this->fm = $this->getMockBuilder(FilterManager::class)->getMock();
 
-        $this->valueSupplier = $this->getMockBuilder('Assetic\ValueSupplierInterface')->getMock();
+        $this->valueSupplier = $this->getMockBuilder(ValueSupplierInterface::class)->getMock();
 
         $this->factory = new AssetFactory(__DIR__.'/templates');
         $this->factory->setAssetManager($this->am);
         $this->factory->setFilterManager($this->fm);
 
-        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
-        $this->twig->addExtension(new AsseticExtension($this->factory, array(), $this->valueSupplier));
+        $this->twig = new Environment(new FilesystemLoader(__DIR__.'/templates'));
+        $this->twig->addExtension(new AsseticExtension($this->factory, [], $this->valueSupplier));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->am = null;
         $this->fm = null;
@@ -73,7 +71,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testReference()
     {
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
         $this->am->expects($this->any())
             ->method('get')
             ->with('foo')
@@ -100,7 +98,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testFilters()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
 
         $this->fm->expects($this->at(0))
             ->method('get')
@@ -118,7 +116,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testOptionalFilter()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')
@@ -147,7 +145,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testMixture()
     {
-        $asset = $this->getMockBuilder('Assetic\\Asset\\AssetInterface')->getMock();
+        $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
         $this->am->expects($this->any())
             ->method('get')
             ->with('foo')
@@ -160,7 +158,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testDebug()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')
@@ -175,7 +173,7 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testCombine()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')
@@ -196,14 +194,14 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterFunction()
     {
-        $filter = $this->getMockBuilder('Assetic\\Filter\\FilterInterface')->getMock();
+        $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
 
         $this->fm->expects($this->once())
             ->method('get')
             ->with('some_filter')
             ->will($this->returnValue($filter));
 
-        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__.'/templates'));
+        $this->twig = new Environment(new FilesystemLoader(__DIR__.'/templates'));
         $this->twig->addExtension(new AsseticExtension($this->factory, array(
             'some_func' => array(
                 'filter' => 'some_filter',
@@ -231,9 +229,9 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
     public function testMultipleSameVariableValues()
     {
         $vars = array('locale');
-        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', array(), null, null, $vars);
+        $asset = new FileAsset(__DIR__.'/../Fixture/messages.{locale}.js', [], null, null, $vars);
 
-        $coll = new AssetCollection(array($asset), array(), null, $vars);
+        $coll = new AssetCollection(array($asset), [], null, $vars);
 
         $coll->setTargetPath('output.{locale}.js');
 
@@ -243,15 +241,13 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException \Twig_Error_Syntax
-     */
     public function testUnclosedTag()
     {
+        $this->expectException(SyntaxError::class);
         $this->renderXml('unclosed_tag.twig');
     }
 
-    private function renderXml($name, $context = array())
+    private function renderXml($name, $context = [])
     {
         return new \SimpleXMLElement($this->twig->loadTemplate($name)->render($context));
     }

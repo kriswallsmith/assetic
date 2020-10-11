@@ -1,19 +1,10 @@
-<?php
+<?php namespace Assetic\Extension\Twig;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+use Assetic\Contracts\Asset\AssetInterface;
+use Twig\Compiler;
+use Twig\Node\Node;
 
-namespace Assetic\Extension\Twig;
-
-use Assetic\Asset\AssetInterface;
-
-class AsseticNode extends \Twig_Node
+class AsseticNode extends Node
 {
     /**
      * Constructor.
@@ -25,7 +16,7 @@ class AsseticNode extends \Twig_Node
      *  * var_name: The name of the variable to expose to the body node
      *
      * @param AssetInterface $asset      The asset
-     * @param \Twig_Node     $body       The body node
+     * @param Node           $body       The body node
      * @param array          $inputs     An array of input strings
      * @param array          $filters    An array of filter strings
      * @param string         $name       The name of the asset
@@ -33,7 +24,7 @@ class AsseticNode extends \Twig_Node
      * @param integer        $lineno     The line number
      * @param string         $tag        The tag name
      */
-    public function __construct(AssetInterface $asset, \Twig_Node $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
+    public function __construct(AssetInterface $asset, Node $body, array $inputs, array $filters, $name, array $attributes = [], $lineno = 0, $tag = null)
     {
         $nodes = array('body' => $body);
 
@@ -46,7 +37,7 @@ class AsseticNode extends \Twig_Node
         parent::__construct($nodes, $attributes, $lineno, $tag);
     }
 
-    public function compile(\Twig_Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
 
@@ -90,7 +81,7 @@ class AsseticNode extends \Twig_Node
         ;
     }
 
-    protected function compileDebug(\Twig_Compiler $compiler)
+    protected function compileDebug(Compiler $compiler)
     {
         $i = 0;
         foreach ($this->getAttribute('asset') as $leaf) {
@@ -99,7 +90,7 @@ class AsseticNode extends \Twig_Node
         }
     }
 
-    protected function compileAsset(\Twig_Compiler $compiler, AssetInterface $asset, $name)
+    protected function compileAsset(Compiler $compiler, AssetInterface $asset, $name)
     {
         if ($vars = $asset->getVars()) {
             $compiler->write("// check variable conditions\n");
@@ -132,7 +123,7 @@ class AsseticNode extends \Twig_Node
         ;
     }
 
-    protected function compileAssetUrl(\Twig_Compiler $compiler, AssetInterface $asset, $name)
+    protected function compileAssetUrl(Compiler $compiler, AssetInterface $asset, $name)
     {
         if (!$vars = $asset->getVars()) {
             $compiler->repr($asset->getTargetPath());

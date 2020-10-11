@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset\Iterator;
+<?php namespace Assetic\Asset\Iterator;
 
 /**
  * Asset collection filter iterator.
@@ -31,7 +20,7 @@ class AssetCollectionFilterIterator extends \RecursiveFilterIterator
      * @param array                   $visited  An array of visited asset objects
      * @param array                   $sources  An array of visited source strings
      */
-    public function __construct(AssetCollectionIterator $iterator, array $visited = array(), array $sources = array())
+    public function __construct(AssetCollectionIterator $iterator, array $visited = [], array $sources = [])
     {
         parent::__construct($iterator);
 

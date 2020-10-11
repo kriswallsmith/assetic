@@ -1,18 +1,9 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\Contracts\Filter\FilterInterface;
+use Assetic\Contracts\Filter\DependencyExtractorInterface;
 
 /**
  * A filter that wraps callables.
@@ -57,6 +48,6 @@ class CallablesFilter implements FilterInterface, DependencyExtractorInterface
             return $callable($factory, $content, $loadPath);
         }
 
-        return array();
+        return [];
     }
 }

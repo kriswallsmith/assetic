@@ -1,34 +1,27 @@
-<?php
+<?php namespace Assetic\Test\Factory\Loader;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Factory\Loader;
-
+use PHPUnit\Framework\TestCase;
+use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
+use Assetic\Contracts\Factory\Resource\ResourceInterface;
+use Assetic\Cache\ConfigCache;
 use Assetic\Factory\Loader\CachedFormulaLoader;
 
-class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
+class CachedFormulaLoaderTest extends TestCase
 {
     protected $loader;
     protected $configCache;
     protected $resource;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->loader = $this->getMockBuilder('Assetic\\Factory\\Loader\\FormulaLoaderInterface')->getMock();
-        $this->configCache = $this->getMockBuilder('Assetic\\Cache\\ConfigCache')
+        $this->loader = $this->getMockBuilder(FormulaLoaderInterface::class)->getMock();
+        $this->configCache = $this->getMockBuilder(ConfigCache::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->resource = $this->getMockBuilder('Assetic\\Factory\\Resource\\ResourceInterface')->getMock();
+        $this->resource = $this->getMockBuilder(ResourceInterface::class)->getMock();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->loader = null;
         $this->configCache = null;
@@ -38,8 +31,8 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
     public function testNotDebug()
     {
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())
@@ -61,8 +54,8 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
     public function testNotDebugCached()
     {
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())
@@ -84,8 +77,8 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $timestamp = 123;
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())
@@ -115,8 +108,8 @@ class CachedFormulaLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $timestamp = 123;
         $expected = array(
-            'foo' => array(array(), array(), array()),
-            'bar' => array(array(), array(), array()),
+            'foo' => array([], [], []),
+            'bar' => array([], [], []),
         );
 
         $this->configCache->expects($this->once())

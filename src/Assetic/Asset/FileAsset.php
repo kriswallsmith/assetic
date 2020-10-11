@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Asset;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Asset;
-
-use Assetic\Filter\FilterInterface;
+use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Util\VarUtils;
 
 /**
@@ -34,7 +23,7 @@ class FileAsset extends BaseAsset
      *
      * @throws \InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
-    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
+    public function __construct($source, $filters = [], $sourceRoot = null, $sourcePath = null, array $vars = [])
     {
         if (null === $sourceRoot) {
             $sourceRoot = dirname($source);

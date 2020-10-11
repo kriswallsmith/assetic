@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Filter;
+<?php namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\UglifyCssFilter;
@@ -22,7 +11,7 @@ class UglifyCssFilterTest extends FilterTestCase
     private $asset;
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $uglifycssBin = $this->findExecutable('uglifycss', 'UGLIFYCSS_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
@@ -36,7 +25,7 @@ class UglifyCssFilterTest extends FilterTestCase
         $this->filter = new UglifyCssFilter($uglifycssBin, $nodeBin);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->asset = null;
         $this->filter = null;

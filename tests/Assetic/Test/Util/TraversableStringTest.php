@@ -1,19 +1,9 @@
-<?php
+<?php namespace Assetic\Test\Util;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Util;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Util\TraversableString;
 
-class TraversableStringTest extends \PHPUnit_Framework_TestCase
+class TraversableStringTest extends TestCase
 {
     public function testString()
     {
@@ -25,7 +15,7 @@ class TraversableStringTest extends \PHPUnit_Framework_TestCase
     {
         $foo = new TraversableString('foo', array('foo', 'bar'));
 
-        $values = array();
+        $values = [];
         foreach ($foo as $value) {
             $values[] = $value;
         }

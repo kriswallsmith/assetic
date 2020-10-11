@@ -1,17 +1,6 @@
-<?php
+<?php namespace Assetic\Filter;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Filter;
-
-use Assetic\Asset\AssetInterface;
+use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
 
@@ -23,58 +12,34 @@ use Assetic\Util\FilesystemUtils;
  */
 class TypeScriptFilter extends BaseNodeFilter
 {
-    private $tscBin;
-    private $nodeBin;
+    /**
+     * @var string Path to the binary for this process based filter
+     */
+    protected $binaryPath = '/usr/bin/tsc';
 
-    public function __construct($tscBin = '/usr/bin/tsc', $nodeBin = null)
+    /**
+     * {@inheritDoc}
+     */
+    protected function getInputPath(string $input)
     {
-        $this->tscBin = $tscBin;
-        $this->nodeBin = $nodeBin;
+        $prefix = preg_replace('/[^\w]/', '', static::class);
+        $path = FilesystemUtils::createThrowAwayDirectory($prefix) . '/input.ts';
+        file_put_contents($path, $input);
+        return $path;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function filterLoad(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->tscBin)
-            : array($this->tscBin));
+        $args = [
+            '{INPUT}',
+            '--out',
+            '{OUTPUT}'
+        ];
 
-        if ($sourcePath = $asset->getSourcePath()) {
-            $templateName = basename($sourcePath);
-        } else {
-            $templateName = 'asset';
-        }
-
-        $inputDirPath = FilesystemUtils::createThrowAwayDirectory('typescript_in');
-        $inputPath = $inputDirPath.DIRECTORY_SEPARATOR.$templateName.'.ts';
-        $outputPath = FilesystemUtils::createTemporaryFile('typescript_out');
-
-        file_put_contents($inputPath, $asset->getContent());
-
-        $pb->add($inputPath)->add('--out')->add($outputPath);
-
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($inputPath);
-        rmdir($inputDirPath);
-
-        if (0 !== $code) {
-            if (file_exists($outputPath)) {
-                unlink($outputPath);
-            }
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
-
-        if (!file_exists($outputPath)) {
-            throw new \RuntimeException('Error creating output file.');
-        }
-
-        $compiledJs = file_get_contents($outputPath);
-        unlink($outputPath);
-
-        $asset->setContent($compiledJs);
-    }
-
-    public function filterDump(AssetInterface $asset)
-    {
+        $result = $this->runProcess($asset->getContent(), $args);
+        $asset->setContent($result);
     }
 }

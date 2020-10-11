@@ -1,20 +1,10 @@
-<?php
+<?php namespace Assetic\Test\Factory\Resource;
 
-/*
- * This file is part of the Assetic package, an OpenSky project.
- *
- * (c) 2010-2014 OpenSky Project Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Assetic\Test\Factory\Resource;
-
+use PHPUnit\Framework\TestCase;
 use Assetic\Factory\Resource\CoalescingDirectoryResource;
 use Assetic\Factory\Resource\DirectoryResource;
 
-class CoalescingDirectoryResourceTest extends \PHPUnit_Framework_TestCase
+class CoalescingDirectoryResourceTest extends TestCase
 {
     /**
      * @test
@@ -27,7 +17,7 @@ class CoalescingDirectoryResourceTest extends \PHPUnit_Framework_TestCase
             new DirectoryResource(__DIR__.'/Fixtures/dir2', '/\.txt$/'),
         ));
 
-        $paths = array();
+        $paths = [];
         foreach ($resource as $file) {
             $paths[] = realpath((string) $file);
         }

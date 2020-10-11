@@ -12,7 +12,7 @@ class ReactJsxFilterTest extends FilterTestCase
      */
     private $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $jsxBin = $this->findExecutable('jsx', 'JSX_BIN');
         $nodeBin = $this->findExecutable('node', 'NODE_BIN');
