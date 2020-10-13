@@ -1,6 +1,14 @@
-# Assetic [![Build Status](https://travis-ci.org/kriswallsmith/assetic.png?branch=master)](https://travis-ci.org/kriswallsmith/assetic) ![project status](http://stillmaintained.com/kriswallsmith/assetic.png) #
+# Assetic [![Build Status](https://travis-ci.org/kriswallsmith/assetic.png?branch=master)](https://travis-ci.org/kriswallsmith/assetic)
 
 Assetic is an asset management framework for PHP.
+
+Project status
+--------------
+
+This project is not maintained anymore. Development has been taken over at https://github.com/assetic-php/assetic under the package name `assetic/framework`.
+
+Example
+-------
 
 ``` php
 <?php
