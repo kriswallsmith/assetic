@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * UglifyCss filter.
@@ -68,7 +69,7 @@ class UglifyCssFilter extends BaseNodeFilter
     }
 
     /**
-     * @see Assetic\Filter\FilterInterface::filterLoad()
+     * @see \Assetic\Filter\FilterInterface::filterLoad()
      */
     public function filterLoad(AssetInterface $asset)
     {
@@ -77,33 +78,33 @@ class UglifyCssFilter extends BaseNodeFilter
     /**
      * Run the asset through UglifyJs
      *
-     * @see Assetic\Filter\FilterInterface::filterDump()
+     * @see \Assetic\Filter\FilterInterface::filterDump()
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $commandline =$this->nodeBin
             ? array($this->nodeBin, $this->uglifycssBin)
-            : array($this->uglifycssBin));
+            : array($this->uglifycssBin);
 
         if ($this->expandVars) {
-            $pb->add('--expand-vars');
+            array_push($commandline, '--expand-vars');
         }
 
         if ($this->uglyComments) {
-            $pb->add('--ugly-comments');
+            array_push($commandline, '--ugly-comments');
         }
 
         if ($this->cuteComments) {
-            $pb->add('--cute-comments');
+            array_push($commandline, '--cute-comments');
         }
 
         // input and output files
         $input = FilesystemUtils::createTemporaryFile('uglifycss');
 
         file_put_contents($input, $asset->getContent());
-        $pb->add($input);
+        array_push($commandline, $input);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

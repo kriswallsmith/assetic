@@ -45,7 +45,6 @@ CSS;
         //TODO in some point of future this test will fail. Update test when new versions come out?
         $expected = <<<CSS
 a {
-  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }

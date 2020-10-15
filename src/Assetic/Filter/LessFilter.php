@@ -16,6 +16,7 @@ use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\FilesystemUtils;
 use Assetic\Util\LessUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Loads LESS files.
@@ -137,15 +138,15 @@ EOF;
             $parserOptions['paths'][] = $loadPath;
         }
 
-        $pb = $this->createProcessBuilder();
+        $commandline = array();
 
-        $pb->add($this->nodeBin)->add($input = FilesystemUtils::createTemporaryFile('less'));
+        array_push($commandline, $this->nodeBin, $input = FilesystemUtils::createTemporaryFile('less'));
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
             json_encode(array_merge($parserOptions, $this->treeOptions))
         ));
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

@@ -15,6 +15,7 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Filter\BaseProcessFilter;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Base YUI compressor filter.
@@ -66,24 +67,24 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = $this->createProcessBuilder(array($this->javaPath));
+        $commandline =array($this->javaPath);
 
         if (null !== $this->stackSize) {
-            $pb->add('-Xss'.$this->stackSize);
+            array_push($commandline, '-Xss'.$this->stackSize);
         }
 
-        $pb->add('-jar')->add($this->jarPath);
+        array_push($commandline, '-jar', $this->jarPath);
 
         foreach ($options as $option) {
-            $pb->add($option);
+            array_push($commandline, $option);
         }
 
         if (null !== $this->charset) {
-            $pb->add('--charset')->add($this->charset);
+            array_push($commandline, '--charset', $this->charset);
         }
 
         if (null !== $this->lineBreak) {
-            $pb->add('--line-break')->add($this->lineBreak);
+            array_push($commandline, '--line-break', $this->lineBreak);
         }
 
         // input and output files
@@ -91,9 +92,9 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $input = tempnam($tempDir, 'assetic_yui_input');
         $output = tempnam($tempDir, 'assetic_yui_output');
         file_put_contents($input, $content);
-        $pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
+        array_push($commandline, '-o', $output, '--type', $type, $input);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

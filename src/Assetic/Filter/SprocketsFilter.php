@@ -15,14 +15,15 @@ use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Runs assets through Sprockets.
  *
  * Requires Sprockets 1.0.x.
  *
- * @link http://getsprockets.org/
- * @link http://github.com/sstephenson/sprockets/tree/1.0.x
+ * @link   http://getsprockets.org/
+ * @link   http://github.com/sstephenson/sprockets/tree/1.0.x
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
@@ -79,11 +80,11 @@ EOF;
         $more = '';
 
         foreach ($this->includeDirs as $directory) {
-            $more .= 'options[:load_path] << '.var_export($directory, true)."\n";
+            $more .= 'options[:load_path] << ' . var_export($directory, true) . "\n";
         }
 
         if (null !== $this->assetRoot) {
-            $more .= 'options[:asset_root] = '.var_export($this->assetRoot, true)."\n";
+            $more .= 'options[:asset_root] = ' . var_export($this->assetRoot, true) . "\n";
         }
 
         if ($more) {
@@ -103,12 +104,12 @@ EOF;
             $more
         ));
 
-        $pb = $this->createProcessBuilder(array(
+        $commandline = array(
             $this->rubyBin,
             $input,
-        ));
+        );
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($tmpAsset);
         unlink($input);

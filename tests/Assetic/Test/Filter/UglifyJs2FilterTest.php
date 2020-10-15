@@ -13,7 +13,7 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\UglifyJs2Filter;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * @group integration
@@ -39,12 +39,15 @@ class UglifyJs2FilterTest extends FilterTestCase
         }
 
         // verify uglifyjs version
-        $pb = new ProcessBuilder($nodeBin ? array($nodeBin, $uglifyjsBin) : array($uglifyjsBin));
-        $pb->add('--version');
+        $commandline = $nodeBin ? array($nodeBin, $uglifyjsBin) : array($uglifyjsBin);
+        $commandline[] = '--version';
+
+        $process = new Process($commandline);
+
         if (isset($_SERVER['NODE_PATH'])) {
-            $pb->setEnv('NODE_PATH', $_SERVER['NODE_PATH']);
+            $process->setEnv(array('NODE_PATH' => $_SERVER['NODE_PATH']));
         }
-        if (0 !== $pb->getProcess()->run()) {
+        if (0 !== $process->run()) {
             $this->markTestSkipped('Incorrect version of UglifyJs');
         }
 
@@ -93,7 +96,7 @@ class UglifyJs2FilterTest extends FilterTestCase
         $this->filter->setCompress(true);
         $this->filter->filterDump($this->asset);
 
-        $this->assertContains('var foo', $this->asset->getContent());
+        $this->assertContains('console.log("hellow world")', $this->asset->getContent());
         $this->assertNotContains('var var1', $this->asset->getContent());
     }
 

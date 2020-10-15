@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Compiles Dart into Javascript.
@@ -36,13 +37,12 @@ class DartFilter extends BaseProcessFilter
 
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder()
-            ->add($this->dartBin)
-            ->add('-o'.$output)
-            ->add($input)
-        ;
+        $commandline =array(
+            $this->dartBin,
+            '-o'.$output,
+            $input);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

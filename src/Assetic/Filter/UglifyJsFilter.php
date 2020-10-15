@@ -14,11 +14,12 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * UglifyJs filter.
  *
- * @link https://github.com/mishoo/UglifyJS
+ * @link   https://github.com/mishoo/UglifyJS
  * @author André Roaldseth <andre@roaldseth.net>
  */
 class UglifyJsFilter extends BaseNodeFilter
@@ -44,6 +45,7 @@ class UglifyJsFilter extends BaseNodeFilter
 
     /**
      * Removes the first block of comments as well
+     *
      * @param bool $noCopyright True to enable
      */
     public function setNoCopyright($noCopyright)
@@ -53,6 +55,7 @@ class UglifyJsFilter extends BaseNodeFilter
 
     /**
      * Output indented code
+     *
      * @param bool $beautify True to enable
      */
     public function setBeautify($beautify)
@@ -62,6 +65,7 @@ class UglifyJsFilter extends BaseNodeFilter
 
     /**
      * Enable additional optimizations that are known to be unsafe in some situations.
+     *
      * @param bool $unsafe True to enable
      */
     public function setUnsafe($unsafe)
@@ -71,6 +75,7 @@ class UglifyJsFilter extends BaseNodeFilter
 
     /**
      * Safely mangle variable and function names for greater file compress.
+     *
      * @param bool $mangle True to enable
      */
     public function setMangle($mangle)
@@ -84,7 +89,7 @@ class UglifyJsFilter extends BaseNodeFilter
     }
 
     /**
-     * @see Assetic\Filter\FilterInterface::filterLoad()
+     * @see \Assetic\Filter\FilterInterface::filterLoad()
      */
     public function filterLoad(AssetInterface $asset)
     {
@@ -93,46 +98,44 @@ class UglifyJsFilter extends BaseNodeFilter
     /**
      * Run the asset through UglifyJs
      *
-     * @see Assetic\Filter\FilterInterface::filterDump()
+     * @see \Assetic\Filter\FilterInterface::filterDump()
      */
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(
-            $this->nodeBin
+        $commandline = $this->nodeBin
             ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
-        );
+            : array($this->uglifyjsBin);
 
         if ($this->noCopyright) {
-            $pb->add('--no-copyright');
+            array_push($commandline, '--no-copyright');
         }
 
         if ($this->beautify) {
-            $pb->add('--beautify');
+            array_push($commandline, '--beautify');
         }
 
         if ($this->unsafe) {
-            $pb->add('--unsafe');
+            array_push($commandline, '--unsafe');
         }
 
         if (false === $this->mangle) {
-            $pb->add('--no-mangle');
+            array_push($commandline, '--no-mangle');
         }
 
         if ($this->defines) {
             foreach ($this->defines as $define) {
-                $pb->add('-d')->add($define);
+                array_push($commandline, '-d', $define);
             }
         }
 
         // input and output files
-        $input  = FilesystemUtils::createTemporaryFile('uglifyjs_in');
+        $input = FilesystemUtils::createTemporaryFile('uglifyjs_in');
         $output = FilesystemUtils::createTemporaryFile('uglifyjs_out');
 
         file_put_contents($input, $asset->getContent());
-        $pb->add('-o')->add($output)->add($input);
+        array_push($commandline, '-o', $output, $input);
 
-        $proc = $pb->getProcess();
+        $proc = new Process($commandline);
         $code = $proc->run();
         unlink($input);
 

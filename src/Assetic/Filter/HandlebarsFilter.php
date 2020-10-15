@@ -14,6 +14,7 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Util\FilesystemUtils;
+use Symfony\Component\Process\Process;
 
 /**
  * Compiles Handlebars templates into Javascript.
@@ -47,9 +48,9 @@ class HandlebarsFilter extends BaseNodeFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder($this->nodeBin
+        $commandline = $this->nodeBin
             ? array($this->nodeBin, $this->handlebarsBin)
-            : array($this->handlebarsBin));
+            : array($this->handlebarsBin);
 
         if ($sourcePath = $asset->getSourcePath()) {
             $templateName = basename($sourcePath);
@@ -63,17 +64,17 @@ class HandlebarsFilter extends BaseNodeFilter
 
         file_put_contents($inputPath, $asset->getContent());
 
-        $pb->add($inputPath)->add('-f')->add($outputPath);
+        array_push($commandline, $inputPath,'-f',$outputPath);
 
         if ($this->minimize) {
-            $pb->add('--min');
+            array_push($commandline, '--min');
         }
 
         if ($this->simple) {
-            $pb->add('--simple');
+            array_push($commandline, '--simple');
         }
 
-        $process = $pb->getProcess();
+        $process = new Process($commandline);
         $returnCode = $process->run();
 
         unlink($inputPath);
