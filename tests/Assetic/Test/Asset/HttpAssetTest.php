@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Asset\HttpAsset;
-use PHPUnit\Framework\TestCase;
 
 class HttpAssetTest extends TestCase
 {

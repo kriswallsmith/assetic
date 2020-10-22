@@ -5,7 +5,6 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\ScssphpFilter;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration

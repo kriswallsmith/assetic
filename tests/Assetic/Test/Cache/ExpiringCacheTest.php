@@ -3,7 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Cache\CacheInterface;
 use Assetic\Cache\ExpiringCache;
-use PHPUnit\Framework\TestCase;
 
 class ExpiringCacheTest extends TestCase
 {

@@ -3,7 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
-use PHPUnit\Framework\TestCase;
 
 class FileAssetTest extends TestCase
 {
@@ -61,6 +60,6 @@ class FileAssetTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $asset = new FileAsset(__FILE__, [], __DIR__.'/foo');
+        new FileAsset(__FILE__, [], __DIR__.'/foo');
     }
 }

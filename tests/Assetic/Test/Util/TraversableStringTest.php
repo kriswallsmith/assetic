@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Util\TraversableString;
-use PHPUnit\Framework\TestCase;
 
 class TraversableStringTest extends TestCase
 {

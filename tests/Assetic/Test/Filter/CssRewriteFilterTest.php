@@ -3,7 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssRewriteFilter;
-use PHPUnit\Framework\TestCase;
 
 class CssRewriteFilterTest extends TestCase
 {

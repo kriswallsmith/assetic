@@ -3,7 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\GoogleClosure\CompilerApiFilter;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration

@@ -4,7 +4,6 @@ use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Worker\CacheBustingWorker;
-use PHPUnit\Framework\TestCase;
 
 class CacheBustingWorkerTest extends TestCase
 {

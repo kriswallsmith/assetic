@@ -11,11 +11,8 @@ use Assetic\FilterManager;
 use Assetic\Asset\HttpAsset;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\AssetCollection;
-use Assetic\Asset\AssetCollectionInterface;
-use Assetic\Asset\AssetInterface;
 use Assetic\Asset\AssetReference;
 use Assetic\Factory\AssetFactory;
-use PHPUnit\Framework\TestCase;
 
 class AssetFactoryTest extends TestCase
 {
@@ -151,7 +148,7 @@ class AssetFactoryTest extends TestCase
             ->with('foo')
             ->will($this->throwException(new \InvalidArgumentException()));
 
-        $asset = $this->factory->createAsset([], array('foo'));
+        $this->factory->createAsset([], array('foo'));
     }
 
     public function testOptionalInvalidFilter()
@@ -224,12 +221,7 @@ class AssetFactoryTest extends TestCase
 
         $asset = $this->factory->createAsset($inputs, [], array('output' => 'css/*.css'));
 
-        $i = 0;
-        foreach ($asset as $leaf) {
-            $i++;
-        }
-
-        $this->assertEquals(2, $i);
+        $this->assertCount(2, $asset);
     }
 
     public function testGetLastModified()

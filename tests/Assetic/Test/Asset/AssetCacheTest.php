@@ -5,7 +5,6 @@ use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Cache\CacheInterface;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\AssetCache;
-use PHPUnit\Framework\TestCase;
 
 class AssetCacheTest extends TestCase
 {

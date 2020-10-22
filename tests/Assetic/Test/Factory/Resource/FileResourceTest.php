@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Factory\Resource\FileResource;
-use PHPUnit\Framework\TestCase;
 
 class FileResourceTest extends TestCase
 {

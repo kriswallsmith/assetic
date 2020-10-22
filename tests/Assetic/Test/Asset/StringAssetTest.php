@@ -4,7 +4,6 @@ use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Asset\StringAsset;
-use PHPUnit\Framework\TestCase;
 
 class StringAssetTest extends TestCase
 {

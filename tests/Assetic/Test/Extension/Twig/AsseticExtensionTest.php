@@ -14,8 +14,6 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Error\SyntaxError;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Twig\Error\SyntaxError;
 
 class AsseticExtensionTest extends TestCase
 {

@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Util\VarUtils;
-use PHPUnit\Framework\TestCase;
 
 class VarUtilsTest extends TestCase
 {

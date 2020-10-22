@@ -7,7 +7,6 @@ use Assetic\Asset\StringAsset;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\AssetCollection;
 use Assetic\Filter\CallablesFilter;
-use PHPUnit\Framework\TestCase;
 
 class AssetCollectionTest extends TestCase
 {
@@ -199,12 +198,7 @@ class AssetCollectionTest extends TestCase
         $coll2 = new AssetCollection(array($asset3, $coll3));
         $coll1 = new AssetCollection(array($asset4, $coll2));
 
-        $i = 0;
-        foreach ($coll1 as $a) {
-            $i++;
-        }
-
-        $this->assertEquals(4, $i, 'iteration with a recursive iterator is recursive');
+        $this->assertCount(4, $coll1, 'iteration with a recursive iterator is recursive');
     }
 
     public function testRecursiveDeduplication()
@@ -215,12 +209,7 @@ class AssetCollectionTest extends TestCase
         $coll2 = new AssetCollection(array($asset, $coll3));
         $coll1 = new AssetCollection(array($asset, $coll2));
 
-        $i = 0;
-        foreach ($coll1 as $a) {
-            $i++;
-        }
-
-        $this->assertEquals(1, $i, 'deduplication is performed recursively');
+        $this->assertCount(1, $coll1, 'deduplication is performed recursively');
     }
 
     public function testIteration()
@@ -231,12 +220,7 @@ class AssetCollectionTest extends TestCase
 
         $coll = new AssetCollection(array($asset1, $asset2, $asset3));
 
-        $count = 0;
-        foreach ($coll as $a) {
-            ++$count;
-        }
-
-        $this->assertEquals(2, $count, 'iterator filters duplicates based on url');
+        $this->assertCount(2, $coll, 'iterator filters duplicates based on url');
     }
 
     public function testBasenameCollision()
