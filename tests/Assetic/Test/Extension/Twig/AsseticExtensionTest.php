@@ -13,16 +13,19 @@ use Assetic\AssetManager;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Error\SyntaxError;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Twig\Error\SyntaxError;
 
 class AsseticExtensionTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|AssetManager
+     * @var MockObject|AssetManager
      */
     private $am;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|FilterManager
+     * @var MockObject|FilterManager
      */
     private $fm;
 
@@ -37,7 +40,7 @@ class AsseticExtensionTest extends TestCase
     private $twig;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ValueSupplierInterface
+     * @var MockObject|ValueSupplierInterface
      */
     private $valueSupplier;
 
@@ -100,17 +103,19 @@ class AsseticExtensionTest extends TestCase
     {
         $filter = $this->getMockBuilder(FilterInterface::class)->getMock();
 
-        $this->fm->expects($this->at(0))
+        $this->fm->expects($this->exactly(2))
             ->method('get')
-            ->with('foo')
-            ->will($this->returnValue($filter));
-        $this->fm->expects($this->at(1))
-            ->method('get')
-            ->with('bar')
-            ->will($this->returnValue($filter));
+            ->withConsecutive(
+                ['foo'],
+                ['bar']
+            )
+            ->willReturnOnConsecutiveCalls(
+                $this->returnValue($filter),
+                $this->returnValue($filter)
+            );
 
         $xml = $this->renderXml('filters.twig');
-        $this->assertEquals(1, count($xml->asset));
+        $this->assertCount(1, $xml->asset);
         $this->assertStringStartsWith('css/', (string) $xml->asset['url']);
     }
 

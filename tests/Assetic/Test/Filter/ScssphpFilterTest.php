@@ -5,6 +5,7 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\ScssphpFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
@@ -88,7 +89,7 @@ EOF;
         $filter->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
         $filter->filterLoad($actual);
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/^\.foo{color:#fff;?}$/',
             $actual->getContent(),
             'scss_formatter can be changed'
@@ -107,7 +108,7 @@ EOF;
         $filter->setFormatter('scss_formatter_compressed');
         $filter->filterLoad($actual);
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/^\.foo{color:#fff;?}$/',
             $actual->getContent(),
             'scss_formatter can be changed'

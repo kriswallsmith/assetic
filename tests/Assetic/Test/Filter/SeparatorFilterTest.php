@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\SeparatorFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration

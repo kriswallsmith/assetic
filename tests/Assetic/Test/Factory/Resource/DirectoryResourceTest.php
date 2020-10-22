@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Factory\Resource\DirectoryResource;
+use PHPUnit\Framework\TestCase;
 
 class DirectoryResourceTest extends TestCase
 {

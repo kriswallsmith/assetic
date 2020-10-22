@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\FileAsset;
+use PHPUnit\Framework\TestCase;
 
 class FileAssetTest extends TestCase
 {
@@ -31,7 +32,7 @@ class FileAssetTest extends TestCase
     {
         $asset = new FileAsset(__DIR__."/foo/bar/baz.css");
 
-        $this->expectException("RuntimeException", "The source file");
+        $this->expectException("RuntimeException");
         $asset->getLastModified();
     }
 

@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Asset\GlobAsset;
 use Assetic\Util\VarUtils;
+use PHPUnit\Framework\TestCase;
 
 class GlobAssetTest extends TestCase
 {

@@ -5,6 +5,7 @@ use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
 use Assetic\Factory\Resource\FileResource;
+use PHPUnit\Framework\TestCase;
 
 class FunctionCallsFormulaLoaderTest extends TestCase
 {

@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Cache\FilesystemCache;
+use PHPUnit\Framework\TestCase;
 
 class FilesystemCacheTest extends TestCase
 {

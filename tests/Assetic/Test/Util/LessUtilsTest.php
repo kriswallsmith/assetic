@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Util\LessUtils;
+use PHPUnit\Framework\TestCase;
 
 class LessUtilsTest extends TestCase
 {

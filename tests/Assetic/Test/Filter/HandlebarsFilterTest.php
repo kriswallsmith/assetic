@@ -3,6 +3,7 @@
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\HandlebarsFilter;
+use LogicException;
 
 /**
  * @group integration
@@ -65,6 +66,7 @@ class HandlebarsFilterTest extends FilterTestCase
 
     public function testStringAssset()
     {
+        $this->expectException(LogicException::class);
         $asset = new StringAsset(file_get_contents(__DIR__.'/fixtures/handlebars/template.handlebars'));
         $asset->load();
 

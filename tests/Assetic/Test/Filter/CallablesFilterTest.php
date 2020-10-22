@@ -7,6 +7,7 @@ use Assetic\Contracts\Filter\DependencyExtractorInterface;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CallablesFilter;
 use Assetic\Factory\AssetFactory;
+use PHPUnit\Framework\TestCase;
 
 class CallablesFilterTest extends TestCase
 {

@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Cache\ArrayCache;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration

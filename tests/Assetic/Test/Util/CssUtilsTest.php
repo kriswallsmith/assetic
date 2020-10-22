@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Util\CssUtils;
+use PHPUnit\Framework\TestCase;
 
 class CssUtilsTest extends TestCase
 {

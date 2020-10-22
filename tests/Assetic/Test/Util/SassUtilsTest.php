@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Assetic\Util\SassUtils;
+use PHPUnit\Framework\TestCase;
 
 class SassUtilsTest extends TestCase
 {

@@ -5,6 +5,7 @@ use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Contracts\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Worker\EnsureFilterWorker;
+use PHPUnit\Framework\TestCase;
 
 class EnsureFilterWorkerTest extends TestCase
 {

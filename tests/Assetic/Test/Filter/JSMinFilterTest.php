@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\JSMinFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration

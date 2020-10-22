@@ -11,8 +11,11 @@ use Assetic\FilterManager;
 use Assetic\Asset\HttpAsset;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetCollectionInterface;
+use Assetic\Asset\AssetInterface;
 use Assetic\Asset\AssetReference;
 use Assetic\Factory\AssetFactory;
+use PHPUnit\Framework\TestCase;
 
 class AssetFactoryTest extends TestCase
 {
@@ -188,15 +191,19 @@ class AssetFactoryTest extends TestCase
         $worker = $this->getMockBuilder(WorkerInterface::class)->getMock();
         $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
 
-        $worker->expects($this->at(2))
+        $worker->expects($this->exactly(3))
             ->method('process')
-            ->with($this->isInstanceOf(AssetCollectionInterface::class))
+            ->withConsecutive(
+                [$this->isInstanceOf(AssetInterface::class)],
+                [$this->isInstanceOf(AssetInterface::class)],
+                [$this->isInstanceOf(AssetCollectionInterface::class)],
+            )
             ->will($this->returnValue($asset));
 
         $this->factory->addWorker($worker);
         $coll = $this->factory->createAsset(array('foo.js', 'bar.js'));
 
-        $this->assertEquals(1, count(iterator_to_array($coll)));
+        $this->assertCount(1, iterator_to_array($coll));
     }
 
     public function testNestedFormula()

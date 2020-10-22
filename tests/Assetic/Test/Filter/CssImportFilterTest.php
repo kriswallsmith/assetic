@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\CssImportFilter;
 use Assetic\Filter\CssRewriteFilter;
+use PHPUnit\Framework\TestCase;
 
 class CssImportFilterTest extends TestCase
 {

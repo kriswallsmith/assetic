@@ -5,6 +5,7 @@ use Assetic\Contracts\Factory\Loader\FormulaLoaderInterface;
 use Assetic\Contracts\Factory\Resource\ResourceInterface;
 use Assetic\Cache\ConfigCache;
 use Assetic\Factory\Loader\CachedFormulaLoader;
+use PHPUnit\Framework\TestCase;
 
 class CachedFormulaLoaderTest extends TestCase
 {

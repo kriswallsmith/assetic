@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use Assetic\Contracts\Filter\FilterInterface;
 use Assetic\Filter\BaseProcessFilter;
 use Assetic\Contracts\Asset\AssetInterface;
+use PHPUnit\Framework\TestCase;
 
 class BaseProcessFilterTest extends TestCase
 {
