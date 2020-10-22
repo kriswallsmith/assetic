@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Assetic\Factory\Resource\CoalescingDirectoryResource;
 use Assetic\Factory\Resource\DirectoryResource;
+
 class CoalescingDirectoryResourceTest extends TestCase
 {
     /**

@@ -23,11 +23,11 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^7.2|^8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "symfony/process": "~3.4 || ~4.0 || ~5.0|~4.0|^5.0"
+        "symfony/process": "~3.4 || ~4.0 || ~5.0"
     },
     "require-dev": {
         "wikimedia/less.php": "dev-master",
@@ -36,10 +36,10 @@
         "mrclay/minify": "<2.3",
         "natxet/cssmin": "^3.0.6",
         "patchwork/jsqueeze": "^1.0 || ^2.0",
-        "phpunit/phpunit": "^9.4",
+        "phpunit/phpunit": "~8.0 || ^9.4",
         "psr/log": "^1.0",
         "ptachoire/cssembed": "^1.0",
-        "symfony/phpunit-bridge": "^2.7 || ^3.0|~4.0",
+        "symfony/phpunit-bridge": "^2.7 || ^3.0 || ^4.0",
         "twig/twig": "^2.11",
         "twig/extensions": "^1.5"
     },

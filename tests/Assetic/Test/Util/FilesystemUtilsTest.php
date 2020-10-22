@@ -38,6 +38,6 @@ class FilesystemUtilsTest extends TestCase
         $dirPath = FilesystemUtils::createThrowAwayDirectory(__METHOD__);
         file_put_contents($dirPath . DIRECTORY_SEPARATOR . 'test', 'hello world');
         FilesystemUtils::removeDirectory($dirPath);
-        $this->assertDirectoryNotExists($dirPath);
+        $this->assertDirectoryDoesNotExist($dirPath);
     }
 }
