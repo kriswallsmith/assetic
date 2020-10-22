@@ -193,7 +193,7 @@ class AssetFactoryTest extends TestCase
             ->withConsecutive(
                 [$this->isInstanceOf(AssetInterface::class)],
                 [$this->isInstanceOf(AssetInterface::class)],
-                [$this->isInstanceOf(AssetCollectionInterface::class)],
+                [$this->isInstanceOf(AssetCollectionInterface::class)]
             )
             ->will($this->returnValue($asset));
 
