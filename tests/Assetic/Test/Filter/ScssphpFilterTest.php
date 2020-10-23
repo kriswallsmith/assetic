@@ -88,7 +88,7 @@ EOF;
         $filter->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
         $filter->filterLoad($actual);
 
-        $this->assertMatchesRegularExpression(
+        $this->assertRegExp(
             '/^\.foo{color:#fff;?}$/',
             $actual->getContent(),
             'scss_formatter can be changed'
@@ -107,7 +107,7 @@ EOF;
         $filter->setFormatter('scss_formatter_compressed');
         $filter->filterLoad($actual);
 
-        $this->assertMatchesRegularExpression(
+        $this->assertRegExp(
             '/^\.foo{color:#fff;?}$/',
             $actual->getContent(),
             'scss_formatter can be changed'

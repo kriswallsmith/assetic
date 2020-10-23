@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./tests/bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage>
-    <include>
-      <directory suffix=".php">./src/Assetic/</directory>
-    </include>
-  </coverage>
-  <testsuites>
-    <testsuite name="Assetic Test Suite">
-      <directory suffix="Test.php">./tests/Assetic/Test/</directory>
-    </testsuite>
-  </testsuites>
-  <php>
-    <server name="NODE_PATH" value="./node_modules/"/>
-  </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./tests/bootstrap.php" colors="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    <coverage>
+        <include>
+            <directory suffix=".php">./src/Assetic/</directory>
+        </include>
+    </coverage>
+    <testsuites>
+        <testsuite name="Assetic Test Suite">
+            <directory suffix="Test.php">./tests/Assetic/Test/</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <server name="NODE_PATH" value="./node_modules/"/>
+    </php>
 </phpunit>
