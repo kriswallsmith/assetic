@@ -113,7 +113,7 @@ class AsseticTokenParser extends \Twig_TokenParser
                 $attributes[$key] = $stream->expect(\Twig_Token::STRING_TYPE)->getValue();
             } else {
                 $token = $stream->getCurrent();
-                throw new \Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', \Twig_Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $stream->getFilename());
+                throw new \Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', \Twig_Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $stream->getSourceContext()->getName());
             }
         }
 
