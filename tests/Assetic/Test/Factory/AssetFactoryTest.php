@@ -148,7 +148,7 @@ class AssetFactoryTest extends TestCase
             ->with('foo')
             ->will($this->throwException(new \InvalidArgumentException()));
 
-        $asset = $this->factory->createAsset([], array('foo'));
+        $this->factory->createAsset([], array('foo'));
     }
 
     public function testOptionalInvalidFilter()
@@ -188,15 +188,19 @@ class AssetFactoryTest extends TestCase
         $worker = $this->getMockBuilder(WorkerInterface::class)->getMock();
         $asset = $this->getMockBuilder(AssetInterface::class)->getMock();
 
-        $worker->expects($this->at(2))
+        $worker->expects($this->exactly(3))
             ->method('process')
-            ->with($this->isInstanceOf(AssetCollectionInterface::class))
+            ->withConsecutive(
+                [$this->isInstanceOf(AssetInterface::class)],
+                [$this->isInstanceOf(AssetInterface::class)],
+                [$this->isInstanceOf(AssetCollectionInterface::class)]
+            )
             ->will($this->returnValue($asset));
 
         $this->factory->addWorker($worker);
         $coll = $this->factory->createAsset(array('foo.js', 'bar.js'));
 
-        $this->assertEquals(1, count(iterator_to_array($coll)));
+        $this->assertCount(1, iterator_to_array($coll));
     }
 
     public function testNestedFormula()
@@ -217,12 +221,7 @@ class AssetFactoryTest extends TestCase
 
         $asset = $this->factory->createAsset($inputs, [], array('output' => 'css/*.css'));
 
-        $i = 0;
-        foreach ($asset as $leaf) {
-            $i++;
-        }
-
-        $this->assertEquals(2, $i);
+        $this->assertCount(2, $asset);
     }
 
     public function testGetLastModified()

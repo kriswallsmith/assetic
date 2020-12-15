@@ -66,12 +66,7 @@ class DirectoryResourceTest extends TestCase
     {
         $resource = new DirectoryResource(realpath(__DIR__.'/..'), '/^'.preg_quote(basename(__FILE__)).'$/');
 
-        $count = 0;
-        foreach ($resource as $r) {
-            ++$count;
-        }
-
-        $this->assertEquals(1, $count);
+        $this->assertCount(1, $resource);
     }
 
     /**
@@ -106,12 +101,7 @@ class DirectoryResourceTest extends TestCase
 
         $resource = new DirectoryResource(__DIR__.'/Fixtures');
 
-        $count = 0;
-        foreach ($resource as $r) {
-            ++$count;
-        }
-
-        $this->assertEquals(7, $count);
+        $this->assertCount(7, $resource);
     }
 
     protected function tearDown(): void

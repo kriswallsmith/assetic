@@ -33,17 +33,17 @@ class ExpiringCacheTest extends TestCase
         $this->inner->expects($this->once())
             ->method('has')
             ->with($key)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->inner->expects($this->once())
             ->method('get')
             ->with($expiresKey)
-            ->will($this->returnValue($thePast));
-        $this->inner->expects($this->at(2))
+            ->willReturn($thePast);
+        $this->inner->expects($this->exactly(2))
             ->method('remove')
-            ->with($expiresKey);
-        $this->inner->expects($this->at(3))
-            ->method('remove')
-            ->with($key);
+            ->withConsecutive(
+                [$expiresKey],
+                [$key]
+            );
 
         $this->assertFalse($this->cache->has($key), '->has() returns false if an expired value exists');
     }
@@ -72,12 +72,12 @@ class ExpiringCacheTest extends TestCase
         $expiresKey = 'asdf.expires';
         $value = 'qwerty';
 
-        $this->inner->expects($this->at(0))
+        $this->inner->expects($this->exactly(2))
             ->method('set')
-            ->with($expiresKey, $this->greaterThanOrEqual(time() + $this->lifetime));
-        $this->inner->expects($this->at(1))
-            ->method('set')
-            ->with($key, $value);
+            ->withConsecutive(
+                [$expiresKey, $this->greaterThanOrEqual(time() + $this->lifetime)],
+                [$key, $value]
+            );
 
         $this->cache->set($key, $value);
     }
@@ -87,12 +87,12 @@ class ExpiringCacheTest extends TestCase
         $key = 'asdf';
         $expiresKey = 'asdf.expires';
 
-        $this->inner->expects($this->at(0))
+        $this->inner->expects($this->exactly(2))
             ->method('remove')
-            ->with($expiresKey);
-        $this->inner->expects($this->at(1))
-            ->method('remove')
-            ->with($key);
+            ->withConsecutive(
+                [$expiresKey],
+                [$key]
+            );
 
         $this->cache->remove($key);
     }
