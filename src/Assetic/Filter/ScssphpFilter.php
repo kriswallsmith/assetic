@@ -37,7 +37,13 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
 
     public function setFormatter($formatter)
     {
-        @trigger_error('The method "setFormatter" is deprecated. Use "setOutputStyle" instead.', E_USER_DEPRECATED);
+        trigger_deprecation(
+            'scssphp/scssphp',
+            '1.4.0',
+            'The method "%s" is deprecated. Use "%s" instead.',
+            'setFormatter',
+            'setOutputStyle'
+        );
 
         $legacyFormatters = array(
             'scss_formatter' => 'ScssPhp\ScssPhp\Formatter\Expanded',

@@ -82,6 +82,9 @@ EOF;
         $this->assertStringContainsString('color: red', $asset->getContent(), 'custom function can be registered');
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetFormatter()
     {
         $actual = new StringAsset(".foo {\n  color: #fff;\n}");
