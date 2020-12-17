@@ -199,14 +199,8 @@ EOF;
 
     // private
 
-    private function getFilter($compass = false)
+    private function getFilter()
     {
-        $filter = new ScssphpFilter();
-
-        if ($compass) {
-            $filter->enableCompass();
-        }
-
-        return $filter;
+        return new ScssphpFilter();
     }
 }
