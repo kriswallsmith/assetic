@@ -27,7 +27,7 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
     public function enableCompass($enable = true)
     {
         trigger_deprecation(
-            'assetic-php/assetic',
+            'assetic/framework',
             '2.0.0',
             'Compass for scssphp is deprecated and no longer supported.'
         );
@@ -36,7 +36,7 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
     public function isCompassEnabled()
     {
         trigger_deprecation(
-            'assetic-php/assetic',
+            'assetic/framework',
             '2.0.0',
             'Compass for scssphp is deprecated and no longer supported.'
         );
