@@ -5,6 +5,7 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\ScssphpFilter;
+use ScssPhp\ScssPhp\OutputStyle;
 
 /**
  * @group integration
@@ -22,7 +23,8 @@ class ScssphpFilterTest extends TestCase
     {
         $expected = <<<EOF
 .foo .bar {
-  width: 2; }
+  width: 2;
+}
 
 EOF;
 
@@ -38,10 +40,11 @@ EOF;
     {
         $expected = <<<EOF
 .foo {
-  color: blue; }
-
+  color: blue;
+}
 .foo {
-  color: red; }
+  color: red;
+}
 
 EOF;
 
@@ -79,6 +82,9 @@ EOF;
         $this->assertStringContainsString('color: red', $asset->getContent(), 'custom function can be registered');
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetFormatter()
     {
         $actual = new StringAsset(".foo {\n  color: #fff;\n}");
@@ -93,6 +99,49 @@ EOF;
             $actual->getContent(),
             'scss_formatter can be changed'
         );
+    }
+
+    public function testSetOutputFormatExpanded()
+    {
+        $expected = <<<EOF
+.foo {
+  color: #fff;
+}
+
+EOF;
+
+        $actual = new StringAsset(".foo {\n  color: #fff;\n}");
+        $actual->load();
+
+        $filter = $this->getFilter();
+        $filter->setOutputStyle(OutputStyle::EXPANDED);
+        $filter->filterLoad($actual);
+
+        $this->assertEquals($expected, $actual->getContent());
+    }
+
+    public function testSetOutputFormatCompressed()
+    {
+        $actual = new StringAsset(".foo {\n  color: #fff;\n}");
+        $actual->load();
+
+        $filter = $this->getFilter();
+        $filter->setOutputStyle(OutputStyle::COMPRESSED);
+        $filter->filterLoad($actual);
+
+        $this->assertEquals('.foo{color:#fff}', $actual->getContent());
+    }
+
+    public function testSetOutputFormatInvalid()
+    {
+        $actual = new StringAsset(".foo {\n  color: #fff;\n}");
+        $actual->load();
+
+        $this->expectExceptionMessage('The output style must be compatible with `ScssPhp\ScssPhp\OutputStyle`');
+
+        $filter = $this->getFilter();
+        $filter->setOutputStyle('invalid');
+        $filter->filterLoad($actual);
     }
 
     /**
