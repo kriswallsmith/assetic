@@ -12,6 +12,7 @@
 namespace Assetic\Asset\Iterator;
 
 use Assetic\Asset\AssetCollectionInterface;
+use Assetic\Asset\AssetReference;
 
 /**
  * Iterates over an asset collection.
@@ -64,7 +65,10 @@ class AssetCollectionIterator implements \RecursiveIterator
             $clone = $this->clones[$asset] = clone $asset;
 
             // generate a target path based on asset name
-            $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
+            $partName = $asset instanceof AssetReference
+                ? $asset->getName()
+                : pathinfo($asset->getSourcePath(), PATHINFO_FILENAME);
+            $name = sprintf('%s_%d', $partName ?: 'part', $this->key() + 1);
 
             $name = $this->removeDuplicateVar($name);
 
