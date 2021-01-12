@@ -14,14 +14,14 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\CssUtils;
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
  *
  * Scss files are mostly compatible, but there are slight differences.
  *
- * @link http://leafo.net/scssphp/
+ * @link https://scssphp.github.io/scssphp/
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
@@ -46,10 +46,10 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function setFormatter($formatter)
     {
         $legacyFormatters = array(
-            'scss_formatter' => 'Leafo\ScssPhp\Formatter\Expanded',
-            'scss_formatter_nested' => 'Leafo\ScssPhp\Formatter\Nested',
-            'scss_formatter_compressed' => 'Leafo\ScssPhp\Formatter\Compressed',
-            'scss_formatter_crunched' => 'Leafo\ScssPhp\Formatter\Crunched',
+            'scss_formatter' => 'ScssPhp\ScssPhp\Formatter\Expanded',
+            'scss_formatter_nested' => 'ScssPhp\ScssPhp\Formatter\Nested',
+            'scss_formatter_compressed' => 'ScssPhp\ScssPhp\Formatter\Compressed',
+            'scss_formatter_crunched' => 'ScssPhp\ScssPhp\Formatter\Crunched',
         );
 
         if (isset($legacyFormatters[$formatter])) {
