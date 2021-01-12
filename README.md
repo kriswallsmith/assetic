@@ -83,6 +83,7 @@ foreach ($css as $leaf) {
 The core provides the following filters in the `Assetic\Filter` namespace:
 
  * `AutoprefixerFilter`: Parse and update vendor-specific properties using autoprefixer
+ * `BrowserifyFilter`: Compile JavaScript files using Browserify
  * `CoffeeScriptFilter`: compiles CoffeeScript into Javascript
  * `CompassFilter`: Compass CSS authoring framework
  * `CssEmbedFilter`: embeds image data in your stylesheets
