@@ -17,7 +17,7 @@
         "symfony/process": "~2.1|~3.0"
     },
     "conflict": {
-        "twig/twig": "<1.27"
+        "twig/twig": "<1.27 || 2.7.0 || 1.38.0"
     },
     "require-dev": {
         "leafo/lessphp": "^0.3.7",
