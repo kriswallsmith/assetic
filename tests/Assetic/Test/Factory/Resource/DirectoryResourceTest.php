@@ -110,7 +110,13 @@ class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
     {
         // Create the symlink if it doesn't already exist yet (if someone broke the entire testsuite perhaps)
         if (!is_dir(__DIR__.'/Fixtures/dir3')) {
-            symlink(__DIR__.'/Fixtures/dir2', __DIR__.'/Fixtures/dir3');
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                if (!@symlink(__DIR__.'/Fixtures/dir2', __DIR__.'/Fixtures/dir3')) {
+                    $this->markTestSkipped("Symlink testing requires Administrator permissions.");
+                }
+            } else {
+                symlink(__DIR__.'/Fixtures/dir2', __DIR__.'/Fixtures/dir3');
+            }
         }
 
         $resource = new DirectoryResource(__DIR__.'/Fixtures');
