@@ -1,0 +1,1 @@
+/* lib/bar/bar.js */

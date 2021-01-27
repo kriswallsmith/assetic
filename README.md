@@ -115,6 +115,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `ScssphpFilter`: parses SCSS using scssphp
  * `SeparatorFilter`: inserts a separator between assets to prevent merge failures
  * `SprocketsFilter`: Sprockets Javascript dependency management
+ * `Sprockets3Filter`: Sprockets v3 Javascript/CSS dependency management
  * `StylusFilter`: parses STYL into CSS
  * `TypeScriptFilter`: parses TypeScript into Javascript
  * `UglifyCssFilter`: minifies CSS
