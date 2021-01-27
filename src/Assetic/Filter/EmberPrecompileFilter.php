@@ -27,11 +27,31 @@ class EmberPrecompileFilter extends BaseNodeFilter
 {
     private $emberBin;
     private $nodeBin;
+    private $includeBaseDir;
 
     public function __construct($handlebarsBin = '/usr/bin/ember-precompile', $nodeBin = null)
     {
         $this->emberBin = $handlebarsBin;
         $this->nodeBin = $nodeBin;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIncludeBaseDir() {
+        return $this->includeBaseDir;
+    }
+
+    /**
+     * Set the --baseDir parameter when precompiling. Helps get correct template names in Windows, for example. The
+     * baseDir will be automatically calculated.
+     *
+     * @author Gabriel Somoza (work@gabrielsomoza.com)
+     *
+     * @param boolean $includeBaseDir
+     */
+    public function setIncludeBaseDir( $includeBaseDir = true ) {
+        $this->includeBaseDir = $includeBaseDir;
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -53,6 +73,10 @@ class EmberPrecompileFilter extends BaseNodeFilter
         file_put_contents($inputPath, $asset->getContent());
 
         $pb->add($inputPath)->add('-f')->add($outputPath);
+
+        if($this->includeBaseDir) {
+            $pb->add('-b')->add($inputDirPath.DIRECTORY_SEPARATOR);
+        }
 
         $process = $pb->getProcess();
         $returnCode = $process->run();
