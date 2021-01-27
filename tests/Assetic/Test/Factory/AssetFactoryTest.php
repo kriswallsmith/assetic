@@ -12,7 +12,10 @@
 namespace Assetic\Test\Factory;
 
 use Assetic\Asset\AssetCollection;
+use Assetic\Asset\AssetInterface;
+use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
+use Assetic\Filter\CallablesFilter;
 
 class AssetFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -286,5 +289,144 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array()));
 
         $this->assertEquals(456, $this->factory->getLastModified($asset));
+    }
+
+    public function testDependencyExtractorsSeeValueBeforeTransformation_Asset()
+    {
+        $getChildrenCalledCount = 0;
+        $asset = new StringAsset("A", array(
+            $this->createDependencyExtractorForTransformation("A", "B", $getChildrenCalledCount),
+            $this->createDependencyExtractorForTransformation("B", "C", $getChildrenCalledCount)
+        ));
+
+        $this->factory->getLastModified($asset); // filters will run assertions
+
+        $this->assertEquals(2, $getChildrenCalledCount); // ensure both filters were used for extraction
+    }
+
+    public function testDependencyExtractorsSeeValueBeforeTransformation_AssetCollection()
+    {
+        $getChildrenCalledCount = 0;
+        $asset = new AssetCollection(array(new StringAsset("A")), array(
+            $this->createDependencyExtractorForTransformation("A", "B", $getChildrenCalledCount),
+            $this->createDependencyExtractorForTransformation("B", "C", $getChildrenCalledCount)
+        ));
+
+        $this->factory->getLastModified($asset); // filters will run assertions
+
+        $this->assertEquals(2, $getChildrenCalledCount); // ensure both filters were used for extraction
+    }
+
+    public function testDependencyExtractorsSeeValueBeforeTransformation_IncludingLeafAssets()
+    {
+        $getChildrenCalledCount = 0;
+
+        $leaf = new StringAsset("A");
+        $leaf->ensureFilter($this->createDependencyExtractorForTransformation("A", "B", $getChildrenCalledCount));
+
+        $coll = new AssetCollection(array($leaf));
+        $coll->ensureFilter($this->createDependencyExtractorForTransformation("B", "C", $getChildrenCalledCount));
+
+        $this->factory->getLastModified($coll); // filters will run assertions
+
+        $this->assertEquals(2, $getChildrenCalledCount); // ensure both filters were used for extraction
+    }
+
+    public function testDependencyExtractionGetsMaxLastmod_1()
+    {
+        $asset = $this->createLastmodAsset(123);
+        $asset->ensureFilter($this->createAssetDependencyWithLastmod(null));
+        $this->assertEquals(123, $this->factory->getLastModified($asset));
+    }
+
+    public function testDependencyExtractionGetsMaxLastmod_2()
+    {
+
+        $asset = $this->createLastmodAsset(123);
+        $asset->ensureFilter($this->createAssetDependencyWithLastmod(456));
+        $this->assertEquals(456, $this->factory->getLastModified($asset));
+    }
+
+    public function testDependencyExtractionGetsMaxLastmod_3()
+    {
+        $asset = $this->createLastmodAsset(123);
+        $asset->ensureFilter($this->createAssetDependencyWithLastmod(789, 456));
+        $this->assertEquals(789, $this->factory->getLastModified($asset));
+    }
+
+    public function testDependencyExtractionGetsMaxLastmod_4()
+    {
+        $asset = $this->createLastmodAsset(456);
+        $asset->ensureFilter($this->createAssetDependencyWithLastmod(123));
+        $this->assertEquals(456, $this->factory->getLastModified($asset));
+    }
+
+    /**
+     * This helper method creates a filter that turns $from into $to.
+     * It asserts that $from is given both for the transformation and
+     * for dependency extraction.
+     *
+     * A counter is incremented for every dependency extraction call to
+     * make sure it actually happened.
+     *
+     * @param $from The expected value before transformation (and for dependency extraction)
+     * @param $to The value to transform to.
+     * @param $callCount The variable to increment when getChildren() is called
+     * @return CallablesFilter The filter
+     */
+    protected function createDependencyExtractorForTransformation($from, $to, &$callCount)
+    {
+        $self = $this;
+
+        return new CallablesFilter(
+            function (AssetInterface $asset) use ($self, $from, $to) {
+                $self->assertEquals($from, $asset->getContent(), '-> the filter is passed the expected content for transformation');
+                $asset->setContent($to);
+            },
+            null,
+            function (AssetFactory $factory, $content, $loadPath = null) use ($self, $from, &$callCount) {
+                $self->assertEquals($from, $content);
+                $callCount++;
+                return array();
+            }
+        );
+    }
+
+    /**
+     * This helper method creates a dependency-extracting filter that
+     * will return one or several assets showing the given lastmod
+     * timestamp(s).
+     * @param $lastmod A single timestamp or an array of timestamp values
+     * @return The filter
+     */
+    protected function createAssetDependencyWithLastmod($lastmod = array())
+    {
+        $lastmod = (array) $lastmod;
+
+        return new CallablesFilter(
+            null,
+            null,
+            function (AssetFactory $factory, $content, $loadPath = null) use ($lastmod)
+            {
+                $r = array();
+                foreach ($lastmod as $lm) {
+                    $a = new StringAsset("");
+                    $a->setLastModified($lm);
+                    $r[] = $a;
+                }
+                return $r;
+            }
+        );
+    }
+
+    /**
+     * This helper method creates an asset that exposes a given lastmod time.
+     * @param $lastmod The lastmod time
+     * @return AssetInterface The asset
+     */
+    public function createLastmodAsset($lastmod) {
+        $a = new StringAsset("");
+        $a->setLastModified($lastmod);
+        return $a;
     }
 }
