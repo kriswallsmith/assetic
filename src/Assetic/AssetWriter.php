@@ -22,8 +22,8 @@ use Assetic\Util\VarUtils;
  */
 class AssetWriter
 {
-    private $dir;
-    private $values;
+    protected $dir;
+    protected $values;
 
     /**
      * Constructor.
