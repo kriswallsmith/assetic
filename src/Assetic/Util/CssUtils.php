@@ -24,6 +24,8 @@ abstract class CssUtils
     const REGEX_IE_FILTERS      = '/src=(["\']?)(?P<url>.*?)\\1/';
     const REGEX_COMMENTS        = '/(\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\/)/';
 
+    const ANALYZER = '\Assetic\Util\Analyzer\CssAnalyzer';
+
     /**
      * Filters all references -- url() and "@import" -- through a callable.
      *
@@ -103,14 +105,22 @@ abstract class CssUtils
      */
     public static function filterCommentless($content, $callback)
     {
+        $analyzerClass = static::ANALYZER;
+        $analyzer = new $analyzerClass($content);
         $result = '';
-        foreach (preg_split(static::REGEX_COMMENTS, $content, -1, PREG_SPLIT_DELIM_CAPTURE) as $part) {
-            if (!preg_match(static::REGEX_COMMENTS, $part, $match) || $part != $match[0]) {
-                $part = call_user_func($callback, $part);
-            }
+        $buffer = '';
 
-            $result .= $part;
+        while ($analyzer->hasSteps()) {
+            $step = $analyzer->step();
+
+            if ($step['type'] === 'comment') {
+                $result .= call_user_func($callback, $buffer).$step['part'];
+                $buffer = '';
+            } else {
+                $buffer .= $step['part'];
+            }
         }
+        $result .= call_user_func($callback, $buffer);
 
         return $result;
     }

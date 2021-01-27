@@ -26,6 +26,8 @@ class AutoprefixerFilterTest extends FilterTestCase
 
     protected function setUp()
     {
+        // either autoprefixer or autoprefixer-cli could load here
+        // depending on node.js version (authoprefixer-cli makes use of Promise)
         $autoprefixerBin = $this->findExecutable('autoprefixer', 'AUTOPREFIXER_BIN');
 
         if (!$autoprefixerBin) {
