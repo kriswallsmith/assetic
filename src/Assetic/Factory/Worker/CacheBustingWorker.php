@@ -36,19 +36,24 @@ class CacheBustingWorker implements WorkerInterface
             return;
         }
 
-        if (!$search = pathinfo($path, PATHINFO_EXTENSION)) {
+        $parts = pathinfo($path);
+        if (!isset($parts['extension'])) {
             // nothing to replace
             return;
         }
 
-        $replace = $this->separator.$this->getHash($asset, $factory).'.'.$search;
-        if (preg_match('/'.preg_quote($replace, '/').'$/', $path)) {
+        $replace = $this->separator.$this->getHash($asset, $factory);
+        if (preg_match('/'.preg_quote($replace, '/').'$/', $parts['filename'])) {
             // already replaced
             return;
         }
 
         $asset->setTargetPath(
-            preg_replace('/\.'.preg_quote($search, '/').'$/', $replace, $path)
+            ('.' === $parts['dirname'] ? '' : $parts['dirname'] . DIRECTORY_SEPARATOR).
+            preg_replace('/'.preg_quote($this->separator).'[a-z0-9]{7}_(?=.)/', '_', $parts['filename'], 1) .
+            $replace .
+            '.' .
+            $parts['extension']
         );
     }
 
