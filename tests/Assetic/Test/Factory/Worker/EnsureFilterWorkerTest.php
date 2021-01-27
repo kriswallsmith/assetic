@@ -31,7 +31,7 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
             ->with($filter);
 
         $worker = new EnsureFilterWorker('/\.css$/', $filter);
-        $worker->process($asset, $factory);
+        $this->assertInstanceOf('Assetic\\Asset\\AssetInterface', $worker->process($asset, $factory));
     }
 
     public function testNonMatch()
@@ -48,6 +48,6 @@ class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
         $asset->expects($this->never())->method('ensureFilter');
 
         $worker = new EnsureFilterWorker('/\.css$/', $filter);
-        $worker->process($asset, $factory);
+        $this->assertNull($worker->process($asset, $factory));
     }
 }

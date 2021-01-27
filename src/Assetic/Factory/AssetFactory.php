@@ -383,7 +383,7 @@ class AssetFactory
             foreach ($this->workers as $worker) {
                 $retval = $worker->process($leaf, $this);
 
-                if ($retval instanceof AssetInterface && $leaf !== $retval) {
+                if ($retval instanceof AssetInterface) {
                     $asset->replaceLeaf($leaf, $retval);
                 }
             }
