@@ -4,11 +4,11 @@ namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
-use Assetic\Filter\BaseProcessFilter;
+use Assetic\Filter\BaseRubyFilter;
 use Assetic\Filter\DependencyExtractorInterface;
 use Assetic\Util\SassUtils;
 
-abstract class BaseSassFilter extends BaseProcessFilter implements DependencyExtractorInterface
+abstract class BaseSassFilter extends BaseRubyFilter implements DependencyExtractorInterface
 {
     protected $loadPaths = array();
 
