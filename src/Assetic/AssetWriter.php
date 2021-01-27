@@ -56,6 +56,12 @@ class AssetWriter
 
     public function writeAsset(AssetInterface $asset)
     {
+        if (null === $asset->getTargetPath()) {
+            throw new \RuntimeException(
+                'Asset targetPath has not been set'
+            );
+        }
+            
         foreach (VarUtils::getCombinations($asset->getVars(), $this->values) as $combination) {
             $asset->setValues($combination);
 

@@ -142,4 +142,8 @@ create the files your templates are going to be referencing.
 
 After running this script, all of the assets in your asset manager will be
 loaded into memory, filtered with their configured filters and dumped to your
-web directory as static files, ready to be served.
+web directory as static files, ready to be served. Just remember to give each
+asset the path to where it should be dumped to.
+
+    $asset = new FileAsset('/path/to/jquery.js');
+    $asset->setTargetPath('jquery.js');
