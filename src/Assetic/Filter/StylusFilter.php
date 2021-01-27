@@ -27,6 +27,7 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
     private $nodeBin;
     private $compress;
     private $useNib;
+    private $parserOptions;
 
     /**
      * Constructs filter.
@@ -38,6 +39,7 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
     {
         $this->nodeBin = $nodeBin;
         $this->setNodePaths($nodePaths);
+        $this->parserOptions = array();
     }
 
     /**
@@ -61,6 +63,15 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
     }
 
     /**
+     * Allow for configuration of stylus parser
+     *
+     * @param $parserOptions
+     */
+    public function setOptions($parserOptions) {
+        $this->parserOptions = array_merge($this->parserOptions, $parserOptions);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function filterLoad(AssetInterface $asset)
@@ -81,14 +92,13 @@ stylus(%s, %s)%s.render(function(e, css){
 EOF;
 
         // parser options
-        $parserOptions = array();
         if ($dir = $asset->getSourceDirectory()) {
-            $parserOptions['paths'] = array($dir);
-            $parserOptions['filename'] = basename($asset->getSourcePath());
+            $this->parserOptions['paths'] = array($dir);
+            $this->parserOptions['filename'] = basename($asset->getSourcePath());
         }
 
         if (null !== $this->compress) {
-            $parserOptions['compress'] = $this->compress;
+            $this->parserOptions['compress'] = $this->compress;
         }
 
         $pb = $this->createProcessBuilder();
@@ -96,7 +106,7 @@ EOF;
         $pb->add($this->nodeBin)->add($input = FilesystemUtils::createTemporaryFile('stylus'));
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
-            json_encode($parserOptions),
+            json_encode($this->parserOptions),
             $this->useNib ? '.use(require(\'nib\')())' : ''
         ));
 
