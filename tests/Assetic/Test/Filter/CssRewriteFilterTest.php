@@ -148,4 +148,19 @@ class CssRewriteFilterTest extends \PHPUnit_Framework_TestCase
 
         // no error is thrown
     }
+    
+    public function testPathWithRootRelativePathNotThrowError()
+    {
+        $format     = 'body { color: red; }';
+        $sourcePath = '/body.css';
+        $targetPath = '/css/main.css';
+
+        $asset = new StringAsset($format, array(), null, $sourcePath);
+        $asset->setTargetPath($targetPath);
+        $asset->load();
+
+        $filter = new CssRewriteFilter();
+        $filter->filterLoad($asset);
+        $filter->filterDump($asset);
+    }
 }
