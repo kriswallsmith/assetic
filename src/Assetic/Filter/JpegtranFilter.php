@@ -69,7 +69,7 @@ class JpegtranFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->jpegtranBin));
+        $pb = $this->createProcessBuilder([$this->jpegtranBin]);
 
         if ($this->optimize) {
             $pb->add('-optimize');

@@ -82,8 +82,8 @@ class UglifyJs2Filter extends BaseNodeFilter
     {
         $pb = $this->createProcessBuilder(
             $this->nodeBin
-            ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
+            ? [$this->nodeBin, $this->uglifyjsBin]
+            : [$this->uglifyjsBin]
         );
 
         if ($this->compress) {

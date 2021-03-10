@@ -33,14 +33,14 @@ class AsseticNode extends \Twig_Node
      * @param integer        $lineno     The line number
      * @param string         $tag        The tag name
      */
-    public function __construct(AssetInterface $asset, \Twig_Node $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
+    public function __construct(AssetInterface $asset, \Twig_Node $body, array $inputs, array $filters, $name, array $attributes = [], $lineno = 0, $tag = null)
     {
-        $nodes = array('body' => $body);
+        $nodes = ['body' => $body];
 
         $attributes = array_replace(
-            array('debug' => null, 'combine' => null, 'var_name' => 'asset_url'),
+            ['debug' => null, 'combine' => null, 'var_name' => 'asset_url'],
             $attributes,
-            array('asset' => $asset, 'inputs' => $inputs, 'filters' => $filters, 'name' => $name)
+            ['asset' => $asset, 'inputs' => $inputs, 'filters' => $filters, 'name' => $name]
         );
 
         parent::__construct($nodes, $attributes, $lineno, $tag);

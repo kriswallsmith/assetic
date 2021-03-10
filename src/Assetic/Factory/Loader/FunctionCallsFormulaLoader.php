@@ -20,11 +20,11 @@ class FunctionCallsFormulaLoader extends BasePhpFormulaLoader
 {
     protected function registerPrototypes()
     {
-        return array(
-            'assetic_javascripts(*)' => array('output' => 'js/*.js'),
-            'assetic_stylesheets(*)' => array('output' => 'css/*.css'),
-            'assetic_image(*)'       => array('output' => 'images/*'),
-        );
+        return [
+            'assetic_javascripts(*)' => ['output' => 'js/*.js'],
+            'assetic_stylesheets(*)' => ['output' => 'css/*.css'],
+            'assetic_image(*)'       => ['output' => 'images/*'],
+        ];
     }
 
     protected function registerSetupCode()

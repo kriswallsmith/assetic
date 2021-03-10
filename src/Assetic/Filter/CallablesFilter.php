@@ -57,6 +57,6 @@ class CallablesFilter implements FilterInterface, DependencyExtractorInterface
             return $callable($factory, $content, $loadPath);
         }
 
-        return array();
+        return [];
     }
 }

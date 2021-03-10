@@ -99,8 +99,8 @@ class UglifyJsFilter extends BaseNodeFilter
     {
         $pb = $this->createProcessBuilder(
             $this->nodeBin
-            ? array($this->nodeBin, $this->uglifyjsBin)
-            : array($this->uglifyjsBin)
+            ? [$this->nodeBin, $this->uglifyjsBin]
+            : [$this->uglifyjsBin]
         );
 
         if ($this->noCopyright) {

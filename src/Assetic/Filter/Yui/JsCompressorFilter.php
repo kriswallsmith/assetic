@@ -42,7 +42,7 @@ class JsCompressorFilter extends BaseCompressorFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $options = array();
+        $options = [];
 
         if ($this->nomunge) {
             $options[] = '--nomunge';

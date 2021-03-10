@@ -23,7 +23,7 @@ use Assetic\Util\CssUtils;
  */
 class SassphpFilter implements DependencyExtractorInterface
 {
-    private $includePaths = array();
+    private $includePaths = [];
     private $outputStyle;
 
     public function filterLoad(AssetInterface $asset)
@@ -31,7 +31,7 @@ class SassphpFilter implements DependencyExtractorInterface
         $sass = new \Sass();
 
         $includePaths = array_merge(
-            array($asset->getSourceDirectory()),
+            [$asset->getSourceDirectory()],
             $this->includePaths
         );
         $sass->setIncludePath(implode(':', $includePaths));
@@ -66,7 +66,7 @@ class SassphpFilter implements DependencyExtractorInterface
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
-        $children = array();
+        $children = [];
 
         $includePaths = $this->includePaths;
         if (null !== $loadPath && !in_array($loadPath, $includePaths)) {
@@ -83,22 +83,20 @@ class SassphpFilter implements DependencyExtractorInterface
             }
 
             // the reference may or may not have an extension or be a partial
-            if (pathinfo($reference, PATHINFO_EXTENSION)) {
-                $needles = array(
+            $needles = pathinfo($reference, PATHINFO_EXTENSION)
+                ? [
                     $reference,
                     $this->partialize($reference),
-                );
-            } else {
-                $needles = array(
+                ]
+                : [
                     $reference . '.scss',
                     $this->partialize($reference) . '.scss',
-                );
-            }
+                ];
 
             foreach ($includePaths as $includePath) {
                 foreach ($needles as $needle) {
                     if (file_exists($file = $includePath . '/' . $needle)) {
-                        $child = $factory->createAsset($file, array(), array('root' => $includePath));
+                        $child = $factory->createAsset($file, [], ['root' => $includePath]);
                         $children[] = $child;
                         $child->load();
                         $children = array_merge(

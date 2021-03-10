@@ -81,11 +81,11 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array(
+        $pb = $this->createProcessBuilder([
             $this->javaPath,
             '-jar',
             $this->jarPath,
-        ));
+        ]);
 
         if (null !== $this->charset) {
             $pb->add('--charset')->add($this->charset);
@@ -138,6 +138,6 @@ class CssEmbedFilter extends BaseProcessFilter implements DependencyExtractorInt
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo
-        return array();
+        return [];
     }
 }

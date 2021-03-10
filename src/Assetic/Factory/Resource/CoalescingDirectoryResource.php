@@ -22,7 +22,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
 
     public function __construct($directories)
     {
-        $this->directories = array();
+        $this->directories = [];
 
         foreach ($directories as $directory) {
             $this->addDirectory($directory);
@@ -47,7 +47,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
 
     public function getContent()
     {
-        $parts = array();
+        $parts = [];
         foreach ($this->getFileResources() as $file) {
             $parts[] = $file->getContent();
         }
@@ -62,7 +62,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
      */
     public function __toString()
     {
-        $parts = array();
+        $parts = [];
         foreach ($this->directories as $directory) {
             $parts[] = (string) $directory;
         }
@@ -95,7 +95,7 @@ class CoalescingDirectoryResource implements IteratorResourceInterface
      */
     private function getFileResources()
     {
-        $paths = array();
+        $paths = [];
 
         foreach ($this->directories as $directory) {
             foreach ($directory as $file) {

@@ -72,12 +72,12 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
 
             $importSource = $importRoot.'/'.$importPath;
             if (false !== strpos($importSource, '://') || 0 === strpos($importSource, '//')) {
-                $import = new HttpAsset($importSource, array($importFilter), true);
+                $import = new HttpAsset($importSource, [$importFilter], true);
             } elseif ('css' != pathinfo($importPath, PATHINFO_EXTENSION) || !file_exists($importSource)) {
                 // ignore non-css and non-existant imports
                 return $matches[0];
             } else {
-                $import = new FileAsset($importSource, array($importFilter), $importRoot, $importPath);
+                $import = new FileAsset($importSource, [$importFilter], $importRoot, $importPath);
             }
 
             $import->setTargetPath($sourcePath);
@@ -103,6 +103,6 @@ class CssImportFilter extends BaseCssFilter implements DependencyExtractorInterf
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {
         // todo
-        return array();
+        return [];
     }
 }

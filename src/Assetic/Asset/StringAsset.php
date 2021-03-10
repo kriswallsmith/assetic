@@ -31,7 +31,7 @@ class StringAsset extends BaseAsset
      * @param string $sourceRoot The source asset root directory
      * @param string $sourcePath The source asset path
      */
-    public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null)
+    public function __construct($content, $filters = [], $sourceRoot = null, $sourcePath = null)
     {
         $this->string = $content;
 

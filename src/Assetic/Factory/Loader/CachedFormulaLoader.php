@@ -48,10 +48,10 @@ class CachedFormulaLoader implements FormulaLoaderInterface
     public function load(ResourceInterface $resources)
     {
         if (!$resources instanceof IteratorResourceInterface) {
-            $resources = array($resources);
+            $resources = [$resources];
         }
 
-        $formulae = array();
+        $formulae = [];
 
         foreach ($resources as $resource) {
             $id = (string) $resource;

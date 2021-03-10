@@ -48,8 +48,8 @@ class HandlebarsFilter extends BaseNodeFilter
     public function filterLoad(AssetInterface $asset)
     {
         $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->handlebarsBin)
-            : array($this->handlebarsBin));
+            ? [$this->nodeBin, $this->handlebarsBin]
+            : [$this->handlebarsBin]);
 
         if ($sourcePath = $asset->getSourcePath()) {
             $templateName = basename($sourcePath);

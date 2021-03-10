@@ -41,7 +41,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $this->logger->error(sprintf('The template "%s" contains an error: %s', $resource, $e->getMessage()));
             }
 
-            return array();
+            return [];
         }
 
         return $this->loadNode($nodes);
@@ -56,39 +56,39 @@ class TwigFormulaLoader implements FormulaLoaderInterface
      */
     private function loadNode(\Twig_Node $node)
     {
-        $formulae = array();
+        $formulae = [];
 
         if ($node instanceof AsseticNode) {
-            $formulae[$node->getAttribute('name')] = array(
+            $formulae[$node->getAttribute('name')] = [
                 $node->getAttribute('inputs'),
                 $node->getAttribute('filters'),
-                array(
+                [
                     'output'  => $node->getAttribute('asset')->getTargetPath(),
                     'name'    => $node->getAttribute('name'),
                     'debug'   => $node->getAttribute('debug'),
                     'combine' => $node->getAttribute('combine'),
                     'vars'    => $node->getAttribute('vars'),
-                ),
-            );
+                ],
+            ];
         } elseif ($node instanceof AsseticFilterNode) {
             $name = $node->getAttribute('name');
 
-            $arguments = array();
+            $arguments = [];
             foreach ($node->getNode('arguments') as $argument) {
                 $arguments[] = eval('return '.$this->twig->compile($argument).';');
             }
 
             $invoker = $this->twig->getExtension('Assetic\Extension\Twig\AsseticExtension')->getFilterInvoker($name);
 
-            $inputs  = isset($arguments[0]) ? (array) $arguments[0] : array();
+            $inputs  = (array) $arguments[0] ?? [];
             $filters = $invoker->getFilters();
-            $options = array_replace($invoker->getOptions(), isset($arguments[1]) ? $arguments[1] : array());
+            $options = array_replace($invoker->getOptions(), $arguments[1] ?? []);
 
             if (!isset($options['name'])) {
                 $options['name'] = $invoker->getFactory()->generateAssetName($inputs, $filters, $options);
             }
 
-            $formulae[$options['name']] = array($inputs, $filters, $options);
+            $formulae[$options['name']] = [$inputs, $filters, $options];
         }
 
         foreach ($node as $child) {

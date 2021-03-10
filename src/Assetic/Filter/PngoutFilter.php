@@ -87,7 +87,7 @@ class PngoutFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->pngoutBin));
+        $pb = $this->createProcessBuilder([$this->pngoutBin]);
 
         if (null !== $this->color) {
             $pb->add('-c'.$this->color);
