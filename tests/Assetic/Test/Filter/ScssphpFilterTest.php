@@ -193,6 +193,17 @@ EOF;
 
         $this->assertContains('color: red', $asset->getContent(), 'Variables can be added');
     }
+    
+    public function testIgnorePartials() {
+        $asset = new FileAsset(__DIR__.'/fixtures/sass/_include.scss');
+        $asset->load();
+
+        $filter = $this->getFilter();
+        $filter->ignorePartial(true);
+        $filter->filterLoad($asset);
+
+        $this->assertEquals(' ', $asset->getContent(), '->filterLoad() should ignore partial scss files');
+    }
 
     // private
 
