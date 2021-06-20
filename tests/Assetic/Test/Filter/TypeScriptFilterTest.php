@@ -11,6 +11,7 @@
 
 namespace Assetic\Test\Filter;
 
+use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\TypeScriptFilter;
 
@@ -66,5 +67,29 @@ TYPESCRIPT;
 
         $this->assertContains('function greeter(person)', $asset->getContent());
         $this->assertNotContains('interface Person', $asset->getContent());
+    }
+
+    /**
+     * @dataProvider relativeToAbsolutePathsDataProvider
+     */
+    public function testRelativeToAbsolutePaths($sourceFile)
+    {
+        $this->filter->setUseAbsolutePath(true);
+        $asset = new FileAsset($sourceFile);
+        $asset->load($this->filter);
+
+        $this->assertStringStartsWith("var a = 'test';", $asset->getContent());
+    }
+
+    public function relativeToAbsolutePathsDataProvider()
+    {
+        return array(
+            array(__DIR__ . '/fixtures/typescript/relative_path/test1.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test2.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test3.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test4.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test5.ts'),
+            array(__DIR__ . '/fixtures/typescript/relative_path/test6.ts'),
+        );
     }
 }
