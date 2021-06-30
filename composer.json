@@ -31,7 +31,7 @@
         "symfony/deprecation-contracts": "^2.2.0"
     },
     "require-dev": {
-        "wikimedia/less.php": "dev-master",
+        "wikimedia/less.php": "~3.0.0",
         "scssphp/scssphp": "^1.0",
         "meenie/javascript-packer": "^1.1",
         "mrclay/minify": "<2.3",
