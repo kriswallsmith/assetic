@@ -48,7 +48,7 @@
         "wikimedia/less.php": "The Assetic\\Filter\\LessphpFilter requires wikimedia/less.php",
         "scssphp/scssphp": "The Assetic\\Filter\\ScssphpFilter requires scssphp/scssphp",
         "meenie/javascript-packer": "The Assetic\\Filter\\PackerFilter requires meenie/javascript-packer",
-        "mrclay/minify": "The Assetic\\Filter\\JSMinFilter requires mrclay/minify",
+        "mrclay/minify": "The Assetic\\Filter\\JSMinFilter requires mrclay/minify < 2.3",
         "natxet/cssmin": "The Assetic\\Filter\\CssMinFilter requires natxet/cssmin",
         "patchwork/jsqueeze": "The Assetic\\Filter\\JSqueezeFilter requires patchwork/jsqueeze",
         "ptachoire/cssembed": "The Assetic\\Filter\\PhpCssEmbedFilter requires ptachoire/cssembed",
