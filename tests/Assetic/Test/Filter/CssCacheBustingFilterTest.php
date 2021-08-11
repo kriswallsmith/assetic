@@ -48,6 +48,11 @@ class CssCacheBustingFilterTest extends \PHPUnit_Framework_TestCase
             array('123', '%s?version=%s', '@import url(%s);', 'css/imports.css', 'css/imports.css?version=123'),
             array('bar', '%s?foo=%s', '@import url("%s");', 'css/imports.css', 'css/imports.css?foo=bar'),
             array('v123', '%s?%s', '@import url(\'%s\');', 'css/imports.css', 'css/imports.css?v123'),
+            array('v123', '%s?%s', '@import url(\'%s\');', 'css/imports.css?query=1', 'css/imports.css?v123&query=1'),
+            array('v123', '%s?%s', '@import url(\'%s\');', 'css/imports.css?query=1#frag', 'css/imports.css?v123&query=1#frag'),
+            array('v123', '%s?%s', '@import url(\'%s\');', 'css/imports.css#frag', 'css/imports.css?v123#frag'),
+
+            array('v123', '%s?%s', '@font-face { src: url(\'%s\'); }', 'font.eot?#iefix', 'font.eot?v123#iefix'),
 
             // IE AlphaImageLoader filter
             array('v123', '%s?%s', '.fix { filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'%s\'); }', 'css/ie.css', 'css/ie.css?v123'),
