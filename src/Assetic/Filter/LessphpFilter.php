@@ -32,6 +32,7 @@ class LessphpFilter implements DependencyExtractorInterface
     private $preserveComments;
     private $customFunctions = array();
     private $options = array();
+    private $variables = array();
 
     /**
      * Lessphp Load Paths
@@ -77,6 +78,18 @@ class LessphpFilter implements DependencyExtractorInterface
     {
         $this->formatter = $formatter;
     }
+    
+    public function setVariables(array $variables)
+    {
+        foreach($variables as $name => $value) {
+            $this->addVariable($name, $value);
+        }
+    }
+
+    public function addVariable($name, $value)
+    {
+        $this->variables[$name] = $value;
+    }
 
     /**
      * @param boolean $preserveComments
@@ -111,6 +124,10 @@ class LessphpFilter implements DependencyExtractorInterface
         
         if (method_exists($lc, 'setOptions') && count($this->options) > 0 ) {
         	$lc->setOptions($this->options);
+        }
+        
+        if (!empty($this->variables)) {
+            $lc->setVariables($this->variables);
         }
 
         $asset->setContent($lc->parse($asset->getContent(), $this->presets));
