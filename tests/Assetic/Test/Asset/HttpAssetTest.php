@@ -15,14 +15,14 @@ use Assetic\Asset\HttpAsset;
 
 class HttpAssetTest extends \PHPUnit_Framework_TestCase
 {
-    const JQUERY = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js';
+    const ASSET_URL = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css';
 
     /**
      * @group http
      */
     public function testGetLastModified()
     {
-        $asset = new HttpAsset(self::JQUERY);
+        $asset = new HttpAsset(self::ASSET_URL);
         $this->assertInternalType('integer', $asset->getLastModified(), '->getLastModified() returns an integer');
     }
 
@@ -31,7 +31,7 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
      */
     public function testProtocolRelativeUrl()
     {
-        $asset = new HttpAsset(substr(self::JQUERY, 5));
+        $asset = new HttpAsset(substr(self::ASSET_URL, 6));
         $asset->load();
         $this->assertNotEmpty($asset->getContent());
     }
@@ -53,9 +53,9 @@ class HttpAssetTest extends \PHPUnit_Framework_TestCase
 
     public function testSourceMetadata()
     {
-        $asset = new HttpAsset(self::JQUERY);
-        $this->assertEquals('http://ajax.googleapis.com', $asset->getSourceRoot(), '->__construct() set the source root');
-        $this->assertEquals('ajax/libs/jquery/1.6.1/jquery.min.js', $asset->getSourcePath(), '->__construct() set the source path');
-        $this->assertEquals('http://ajax.googleapis.com/ajax/libs/jquery/1.6.1', $asset->getSourceDirectory(), '->__construct() sets the source directory');
+        $asset = new HttpAsset(self::ASSET_URL);
+        $this->assertEquals('https://maxcdn.bootstrapcdn.com', $asset->getSourceRoot(), '->__construct() set the source root');
+        $this->assertEquals('bootstrap/3.3.7/css/bootstrap.min.css', $asset->getSourcePath(), '->__construct() set the source path');
+        $this->assertEquals('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css', $asset->getSourceDirectory(), '->__construct() sets the source directory');
     }
 }
