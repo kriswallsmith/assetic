@@ -14,8 +14,9 @@ namespace Assetic\Test\Factory\Loader;
 use Assetic\Factory\AssetFactory;
 use Assetic\Factory\Loader\FunctionCallsFormulaLoader;
 use Assetic\Factory\Resource\FileResource;
+use PHPUnit\Framework\TestCase;
 
-class FunctionCallsFormulaLoaderTest extends \PHPUnit_Framework_TestCase
+class FunctionCallsFormulaLoaderTest extends TestCase
 {
     /**
      * @dataProvider getJavascriptInputs

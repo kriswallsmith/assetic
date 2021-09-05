@@ -15,8 +15,9 @@ use Assetic\Factory\AssetFactory;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\SassphpFilter;
+use PHPUnit\Framework\TestCase;
 
-class SassphpFilterTest extends \PHPUnit_Framework_TestCase
+class SassphpFilterTest extends TestCase
 {
     private $filter;
 

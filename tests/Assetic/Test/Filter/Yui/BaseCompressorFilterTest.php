@@ -13,8 +13,9 @@ namespace Assetic\Test\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\Yui\BaseCompressorFilter;
+use PHPUnit\Framework\TestCase;
 
-class BaseCompressorFilterTest extends \PHPUnit_Framework_TestCase
+class BaseCompressorFilterTest extends TestCase
 {
     public function testInterface()
     {

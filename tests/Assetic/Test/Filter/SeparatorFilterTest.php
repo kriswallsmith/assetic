@@ -13,11 +13,12 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\SeparatorFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class SeparatorFilterTest extends \PHPUnit_Framework_TestCase
+class SeparatorFilterTest extends TestCase
 {
     public function testAppend()
     {

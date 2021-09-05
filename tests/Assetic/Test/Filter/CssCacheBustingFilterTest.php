@@ -11,13 +11,14 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\StringAsset;
 use Assetic\Filter\CssCacheBustingFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class CssCacheBustingFilterTest
  * @package Assetic\Test\Filter
  * @author Maximilian Reichel <info@phramz.com>
  */
-class CssCacheBustingFilterTest extends \PHPUnit_Framework_TestCase
+class CssCacheBustingFilterTest extends TestCase
 {
     /**
      * @dataProvider provideUrls

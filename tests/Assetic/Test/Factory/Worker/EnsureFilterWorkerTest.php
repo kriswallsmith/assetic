@@ -12,8 +12,9 @@
 namespace Assetic\Test\Factory\Worker;
 
 use Assetic\Factory\Worker\EnsureFilterWorker;
+use PHPUnit\Framework\TestCase;
 
-class EnsureFilterWorkerTest extends \PHPUnit_Framework_TestCase
+class EnsureFilterWorkerTest extends TestCase
 {
     public function testMatch()
     {

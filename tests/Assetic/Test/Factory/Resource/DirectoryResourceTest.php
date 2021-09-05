@@ -12,8 +12,9 @@
 namespace Assetic\Test\Factory\Resource;
 
 use Assetic\Factory\Resource\DirectoryResource;
+use PHPUnit\Framework\TestCase;
 
-class DirectoryResourceTest extends \PHPUnit_Framework_TestCase
+class DirectoryResourceTest extends TestCase
 {
     public function testIsFresh()
     {

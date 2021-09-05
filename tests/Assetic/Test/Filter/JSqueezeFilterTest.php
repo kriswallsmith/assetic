@@ -13,11 +13,12 @@ namespace Assetic\Test\Filter;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Filter\JSqueezeFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group integration
  */
-class JSqueezeFilterTest extends \PHPUnit_Framework_TestCase
+class JSqueezeFilterTest extends TestCase
 {
     protected function setUp()
     {
