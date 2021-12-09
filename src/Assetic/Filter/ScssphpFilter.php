@@ -6,6 +6,7 @@ use Assetic\Factory\AssetFactory;
 use Assetic\Util\CssUtils;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
+use ScssPhp\ScssPhp\ValueConverter;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
@@ -81,7 +82,11 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
 
     public function setVariables(array $variables)
     {
-        $this->variables = $variables;
+        $this->variables = [];
+
+        foreach ($variables as $name => $value) {
+            $this->variables[$name] = ValueConverter::parseValue($value);
+        }
     }
 
     public function addVariable($variable)
@@ -99,9 +104,12 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
         $this->importPaths[] = $path;
     }
 
-    public function registerFunction($name, $callable)
+    public function registerFunction($name, $callable, array $argumentDeclaration = null)
     {
-        $this->customFunctions[$name] = $callable;
+        $this->customFunctions[$name] = [
+            'callable' => $callable,
+            'argumentDeclaration' => $argumentDeclaration,
+        ];
     }
 
     public function filterLoad(AssetInterface $asset)
@@ -116,8 +124,8 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
             $sc->addImportPath($path);
         }
 
-        foreach ($this->customFunctions as $name => $callable) {
-            $sc->registerFunction($name, $callable);
+        foreach ($this->customFunctions as $name => $function) {
+            $sc->registerFunction($name, $function['callable'], $function['argumentDeclaration']);
         }
 
         if ($this->formatter) {
@@ -129,10 +137,10 @@ class ScssphpFilter extends BaseFilter implements DependencyExtractorInterface
         }
 
         if (!empty($this->variables)) {
-            $sc->setVariables($this->variables);
+            $sc->addVariables($this->variables);
         }
 
-        $asset->setContent($sc->compile($asset->getContent()));
+        $asset->setContent($sc->compileString($asset->getContent())->getCss());
     }
 
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)

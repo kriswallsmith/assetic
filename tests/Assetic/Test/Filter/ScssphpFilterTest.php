@@ -6,6 +6,7 @@ use Assetic\Asset\StringAsset;
 use Assetic\Factory\AssetFactory;
 use Assetic\Filter\ScssphpFilter;
 use ScssPhp\ScssPhp\OutputStyle;
+use ScssPhp\ScssPhp\ValueConverter;
 
 /**
  * @group integration
@@ -75,8 +76,8 @@ EOF;
 
         $filter = $this->getFilter();
         $filter->registerFunction('bar', function () {
-            return 'red';
-        });
+            return ValueConverter::parseValue('red');
+        }, []);
         $filter->filterLoad($asset);
 
         $this->assertStringContainsString('color: red', $asset->getContent(), 'custom function can be registered');
@@ -188,13 +189,21 @@ EOF;
     public function testSetVariables()
     {
         $filter = $this->getFilter();
-        $filter->setVariables(array('color' => 'red'));
+        $filter->setVariables([
+            'color' => 'red',
+            'lineHeight' => 1.4,
+            'border' => '1px solid red',
+            'content' => '\'extra content\'',
+        ]);
 
-        $asset = new StringAsset("#test { color: \$color; }");
+        $asset = new StringAsset("#test { color: \$color; line-height: \$lineHeight; border: \$border; } #test::after { content: \$content; }");
         $asset->load();
         $filter->filterLoad($asset);
 
         $this->assertStringContainsString('color: red', $asset->getContent(), 'Variables can be added');
+        $this->assertStringContainsString('line-height: 1.4', $asset->getContent(), 'Variables can be added');
+        $this->assertStringContainsString('border: 1px solid red', $asset->getContent(), 'Variables can be added');
+        $this->assertStringContainsString('content: \'extra content\'', $asset->getContent(), 'Variables can be added');
     }
 
     // private
