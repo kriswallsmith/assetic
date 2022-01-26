@@ -6,6 +6,11 @@
  * @author Jack Wilkinson <me@jackwilky.com>
  */
 
+// Only run the aliasing once - Fixes preloading support on PHP 7.4+
+if (interface_exists(Assetic\Asset\AssetInterface::class, false)) {
+    return;
+}
+
 class_alias(
     Assetic\Contracts\Asset\AssetInterface::class,
     Assetic\Asset\AssetInterface::class
