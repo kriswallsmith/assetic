@@ -203,7 +203,7 @@ EOF;
         $this->assertStringContainsString('color: red', $asset->getContent(), 'Variables can be added');
         $this->assertStringContainsString('line-height: 1.4', $asset->getContent(), 'Variables can be added');
         $this->assertStringContainsString('border: 1px solid red', $asset->getContent(), 'Variables can be added');
-        $this->assertStringContainsString('content: \'extra content\'', $asset->getContent(), 'Variables can be added');
+        $this->assertStringContainsString('content: "extra content"', $asset->getContent(), 'Variables can be added');
     }
 
     // private
